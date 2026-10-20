@@ -408,17 +408,17 @@ COLUMNS = [
 
 
 def fmt_cell(ns, ref):
-    """`ms (xN)` relative to the Chrome value of the same row, or just `ms` when Chrome has none."""
+    """`ms` and, on a second line, the multiple of the Chrome value of the same row (omitted when Chrome has none)."""
     if ns is None:
         return "-"
     cell = f"{ns / 1e6:.3f}"
     if ref:
-        cell += f" ({ns / ref:.2f}x)"
+        cell += f"<br>{ns / ref:.2f}x"
     return cell
 
 
 def report(results, how, engines):
-    lines = [f"Times in ms, {how} over all rounds and iterations; in brackets the multiple of the Chrome column "
+    lines = [f"Times in ms, {how} over all rounds and iterations; second line of each cell is the multiple of the Chrome column "
              "of the same table (1.00x = Chrome). Servo(n) = `layout_threads=n`; "
              "Firefox(1) = `layout.css.stylo-threads=1` (no style worker threads).", ""]
     for title, cols in COLUMNS:
