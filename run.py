@@ -318,6 +318,7 @@ def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
                 page.goto(blank.as_uri(), wait_until="load")
                 pin_content_processes(int(pidfile.read_text()), cpus)
             page.goto(url, wait_until="load", timeout=600_000)
+            page.wait_for_function("document.getElementById('cb').style.display === 'block'", timeout=600_000)
             page.evaluate("document.body.offsetHeight")
             root = page.evaluate(ROOT_RECT_JS)
             if screenshot and i == iters - 1:
