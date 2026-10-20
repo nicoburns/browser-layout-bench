@@ -146,9 +146,6 @@ def parse_servo_trace(path):
     restyles = [r for r in rows if r.name == "restyle_and_build_trees"]
     if not restyles:
         raise RuntimeError(f"no restyle_and_build_trees span in {path}")
-    main = max(restyles, key=lambda r: r.dur)
-    reflow = by_id[main.parent_id]
-
     children = {}
     for r in rows:
         children.setdefault(r.parent_id, []).append(r)
@@ -163,6 +160,12 @@ def parse_servo_trace(path):
 
     def total(root_id, name):
         return sum(r.dur for r in descendants(root_id) if r.name == name)
+
+    # The reflow that laid the page out, i.e. the one after the reveal: the longest span is not
+    # always it, as the first (`display:none`) reflow's `prepare_stylist_for_reflow` can outlast the
+    # whole layout of a small page.
+    main = max(restyles, key=lambda r: total(r.id, "Box Tree Construction") + total(r.id, "Fragment Tree Construction"))
+    reflow = by_id[main.parent_id]
 
     s = dict(style=total(main.id, "Styling"), box=total(main.id, "Box Tree Construction"),
              fragment=total(main.id, "Fragment Tree Construction"), restyle_and_build=main.dur,
