@@ -276,6 +276,19 @@ def pin_content_processes(parent_pid, cpus):
     return pinned
 
 
+def launch_firefox(p, exe, env, prefs, attempts=3):
+    """Headless Firefox segfaults at launch now and then (5 of 306 launches in a bench run, none in
+    80 back-to-back launches with or without the profiler); retry rather than lose the whole case."""
+    from playwright.sync_api import Error
+    for attempt in range(attempts):
+        try:
+            return p.firefox.launch(executable_path=exe, env=env, firefox_user_prefs=prefs)
+        except Error as ex:
+            if attempt == attempts - 1 or "Failed to launch" not in str(ex):
+                raise
+            print(f"firefox: launch failed (attempt {attempt + 1}), retrying", file=sys.stderr)
+
+
 def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
     from playwright.sync_api import sync_playwright
     url = (REVEAL / case["file"]).resolve().as_uri()
@@ -294,7 +307,7 @@ def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
         for i in range(iters):
             profile = Path(d) / f"profile-{i}.json"
             env = dict(os.environ, **FIREFOX_PROFILER_ENV, MOZ_PROFILER_SHUTDOWN=str(profile))
-            browser = p.firefox.launch(executable_path=exe, env=env, firefox_user_prefs=prefs)
+            browser = launch_firefox(p, exe, env, prefs)
             page = browser.new_page(viewport={"width": WIDTH, "height": HEIGHT})
             if cpus:
                 # a first file:// page puts the tab in its file content process; pin that, then load the case

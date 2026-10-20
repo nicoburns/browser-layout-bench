@@ -45,7 +45,7 @@ an opaque origin); `blitz-runner` serves `file://` URLs itself, synchronously, b
 | `blitz-par` | same with `StyleThreading::Parallel` | same |
 | `servo1` / `servo` | servoshell built with `--features tracing-perfetto`, `--pref layout_threads=1` / `3` (default), one process per iteration, spans read from `servo.pftrace` | `Styling`, `Box Tree Construction`, `Fragment Tree Construction`, `restyle_and_build_trees`, `Stacking Context Tree Construction`, `Display List Construction`, `handle_reflow` |
 | `chrome` | Playwright chromium-headless-shell, CDP `Tracing` with `devtools.timeline` + `blink_style` | `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (= both), `Layout` |
-| `firefox1` / `firefox` | Playwright Firefox, one process per iteration, Gecko profiler started at launch (`MOZ_PROFILER_STARTUP`, markers only) and written at shutdown (`MOZ_PROFILER_SHUTDOWN`); `layout.css.stylo-threads=1` (no style worker threads) / default (6 on this VM) | `Styles` (style traversal + frame construction), `Reflow`, `DoFlushPendingNotifications` (the flush containing both), `DisplayList` |
+| `firefox1` / `firefox` | Playwright Firefox, one process per iteration (launch retried on the occasional startup segfault), Gecko profiler started at launch (`MOZ_PROFILER_STARTUP`, markers only) and written at shutdown (`MOZ_PROFILER_SHUTDOWN`); `layout.css.stylo-threads=1` (no style worker threads) / default (6 on this VM) | `Styles` (style traversal + frame construction), `Reflow`, `DoFlushPendingNotifications` (the flush containing both), `DisplayList` |
 
 Phase mapping used in the report:
 
