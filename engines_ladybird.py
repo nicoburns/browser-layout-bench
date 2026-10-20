@@ -53,8 +53,10 @@ def parse_layout_tree(dump, root_id="cb"):
         if cb_indent is not None and indent <= cb_indent:
             cb_indent = None
         if cb_indent is None:
-            if tag in ("div", "body") and f"#{root_id}" in ids:  # the real pages' `#cb` is the body
+            if tag in ("div", "body") and f"#{root_id}" in ids:
                 cb_indent = indent
+                if tag == "body":  # the real pages' `#cb` is the body: its own size is the root size
+                    root = f"{float(m.group(8)):.1f}x{float(m.group(11)):.1f}"
             continue
         if tag not in ("div", "p", "h3"):
             continue
