@@ -22,6 +22,8 @@ REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display=
 # FontFaceSet.load(), so there `document.fonts.ready` is awaited instead.
 FONT_REVEAL_SCRIPT = ("<script>var F=document.fonts;(F.load?Promise.all([...F].map(f=>f.load())):F.ready).then(()=>{"
                       "var cb=document.getElementById('cb');cb.style.display='block';cb.offsetHeight;});</script>\n")
+ROOT_RECT_JS = ("(()=>{const r=document.getElementById('cb').firstElementChild.getBoundingClientRect();"
+                "return r.width.toFixed(1)+'x'+r.height.toFixed(1)})()")
 
 
 def sh(cmd, cpus=None, **kw):
@@ -172,7 +174,7 @@ def run_chrome(case, iters, cpus, screenshot=None):
             page.goto(url, wait_until="load", timeout=600_000)
             page.wait_for_function("document.getElementById('cb').style.display === 'block'", timeout=600_000)
             page.evaluate("document.body.offsetHeight")
-            root = page.evaluate("(()=>{const r=document.getElementById('cb').firstElementChild.getBoundingClientRect();return r.width.toFixed(1)+'x'+r.height.toFixed(1)})()")
+            root = page.evaluate(ROOT_RECT_JS)
             cdp.send("Tracing.end")
             while not done:
                 page.wait_for_timeout(50)
