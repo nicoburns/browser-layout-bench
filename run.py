@@ -77,7 +77,9 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None):
             phases = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", line.split("|", 1)[1])}
         elif line.startswith("BLITZ"):
             kv = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", line)}
-            s = dict(style=phases["style"], construct=phases["construct"], layout=phases["layout"],
+            # pconstruct = the deferred tasks that run between box construction and layout, where
+            # Blitz builds the Parley layouts, i.e. shapes the text; it belongs with construction
+            s = dict(style=phases["style"], construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
                      paint_tree=phases["paint_tree"], resolve=kv["resolve"], parse=kv["parse"])
             s["construct+layout"] = s["construct"] + s["layout"]
             samples.append(s)
