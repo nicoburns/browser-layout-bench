@@ -27,8 +27,8 @@ def sh(cmd, cpus=None, **kw):
 def read_manifest():
     cases = []
     for line in (CORPUS / "manifest.tsv").read_text().splitlines():
-        name, file, w, h, nodes = line.split("\t")
-        cases.append(dict(name=name, file=file, cb_w=float(w), cb_h=float(h), nodes=int(nodes)))
+        name, file, w, h, nodes, engine = line.split("\t")
+        cases.append(dict(name=name, file=file, cb_w=float(w), cb_h=float(h), nodes=int(nodes), taffy=engine == "taffy"))
     return cases
 
 
@@ -41,6 +41,7 @@ def cmd_gen(args):
         html = (CORPUS / c["file"]).read_text()
         html = html.replace('<div id="cb">', '<div id="cb" style="display:none">')
         html = html.replace("</body>", REVEAL_SCRIPT + "</body>")
+        html = html.replace("url(fonts/", "url(../fonts/")
         (REVEAL / c["file"]).write_text(html)
     print(f"wrote {len(read_manifest())} pages to {CORPUS}")
 
@@ -245,6 +246,8 @@ def cmd_bench(args):
         order = engines if r % 2 == 0 else engines[::-1]
         for c in cases:
             for e in order:
+                if e == "taffy" and not c["taffy"]:
+                    continue
                 try:
                     samples = run_engine(e, c, args.iters, args.cpus)
                 except Exception as ex:
