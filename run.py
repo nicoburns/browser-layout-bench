@@ -123,11 +123,9 @@ def run_servo(case, iters, cpus, threads, screenshot=None):
     env = dict(os.environ, SERVO_TRACING="layout=trace,script=trace")
     for i in range(iters):
         with tempfile.TemporaryDirectory() as d:
-            cmd = [str(SERVOSHELL), "-z", f"--window-size={WIDTH}x{HEIGHT}", "--pref", f"layout_threads={threads}"]
+            cmd = [str(SERVOSHELL), "-z", "-x", f"--window-size={WIDTH}x{HEIGHT}", "--pref", f"layout_threads={threads}"]
             if screenshot and i == iters - 1:
                 cmd += ["-o", str(screenshot)]
-            else:
-                cmd.append("-x")
             cmd.append(url)
             subprocess.run((["taskset", "-c", cpus] if cpus else []) + cmd, check=True, cwd=d, env=env,
                            capture_output=True, text=True, timeout=600)
@@ -174,11 +172,11 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
     if engine == "blitz":
         return run_blitz(case, iters, cpus, screenshot=screenshot)
     if engine == "blitz-par":
-        return run_blitz(case, iters, cpus, parallel=True, screenshot=screenshot)
+        return run_blitz(case, iters, None, parallel=True, screenshot=screenshot)
     if engine == "servo1":
         return run_servo(case, iters, cpus, 1, screenshot=screenshot)
     if engine == "servo":
-        return run_servo(case, iters, cpus, 3, screenshot=screenshot)
+        return run_servo(case, iters, None, 3, screenshot=screenshot)
     if engine == "chrome":
         return run_chrome(case, iters, None, screenshot=screenshot)
     raise ValueError(engine)
@@ -281,7 +279,7 @@ def cmd_verify(args):
         for e in engines[1:]:
             if e in imgs and engines[0] in imgs:
                 diff = ImageChops.difference(imgs[e], imgs[engines[0]]).convert("L").point(lambda v: 255 if v > 24 else 0)
-                frac = sum(1 for v in diff.getdata() if v) / (diff.width * diff.height)
+                frac = diff.histogram()[255] / (diff.width * diff.height)
                 cells.append(f"{frac * 100:.2f}% px")
             else:
                 cells.append("-")
@@ -297,7 +295,7 @@ def main():
     b.add_argument("--rounds", type=int, default=3)
     b.add_argument("--iters", type=int, default=3)
     b.add_argument("--filter", default="")
-    b.add_argument("--cpus", default=None, help="taskset CPU list for the Rust runners and Servo")
+    b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1)")
     b.add_argument("--agg", default="min", choices=["min", "median"])
     v = sub.add_parser("verify")
     v.add_argument("--engines", default="chrome,blitz,servo1")

@@ -56,8 +56,8 @@ cargo build --release
 ```
 
 `bench` runs every engine on every case in each round, alternating engine order between rounds,
-and reports the minimum (or `--agg median`) over all samples. `--cpus` pins the Rust runners and
-Servo with `taskset`.
+and reports the minimum (or `--agg median`) over all samples. `--cpus` pins the single-threaded
+runners (`taffy`, `blitz`, `servo1`) with `taskset`; `blitz-par` and `servo` run unpinned.
 
 `verify` is the equal-work check: before trusting a timing, confirm the engines agree on the layout
 (pixel diff of the 1280×800 viewport, Chrome's `totalObjects` layout-object count, Servo's reflow
