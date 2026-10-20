@@ -133,7 +133,7 @@ index 482b6090..58f5fee6 100644
          // anything else of the update reads the layout.
          document_host.take_frame_in_with(read);
 diff --git a/Libraries/LibWebView/Application.cpp b/Libraries/LibWebView/Application.cpp
-index 716e7002..5caccaac 100644
+index 716e7002..205c1fb2 100644
 --- a/Libraries/LibWebView/Application.cpp
 +++ b/Libraries/LibWebView/Application.cpp
 @@ -2013,7 +2013,9 @@ static NonnullRefPtr<Core::Timer> load_page_for_screenshot_and_exit(Core::EventL
@@ -147,3 +147,76 @@ index 716e7002..5caccaac 100644
                  ->when_resolved([&event_loop](auto const& path) {
                      outln("Saved screenshot to: {}", path);
                      event_loop.quit(0);
+@@ -2024,30 +2026,45 @@ static NonnullRefPtr<Core::Timer> load_page_for_screenshot_and_exit(Core::EventL
+                 });
+         });
+ 
++    // Layout benchmark harness (local patch): count the delay from the load event, so the screenshot does not
++    // depend on how long the page takes to load and lay out.
++    view.on_load_finish = [&timer = *timer, url](auto const& loaded_url) {
++        if (url.equals(loaded_url, URL::ExcludeFragment::Yes))
++            timer.start();
++    };
++
+     view.load(url);
+-    timer->start();
+ 
+     return timer;
+ }
+ 
+-static void load_page_for_info_and_exit(Core::EventLoop& event_loop, HeadlessWebView& view, URL::URL const& url, WebView::PageInfoType type)
++static NonnullRefPtr<Core::Timer> load_page_for_info_and_exit(Core::EventLoop& event_loop, HeadlessWebView& view, URL::URL const& url, WebView::PageInfoType type, u32 delay_seconds)
+ {
+-    view.on_load_finish = [&view, &event_loop, url, type](auto const& loaded_url) {
+-        if (!url.equals(loaded_url, URL::ExcludeFragment::Yes))
+-            return;
++    // Layout benchmark harness (local patch): dump `--screenshot-delay` seconds after the load event rather than
++    // at the load event, so that scripts which run after it (the font pages reveal after `document.fonts`
++    // loads) have taken effect.
++    auto timer = Core::Timer::create_single_shot(
++        AK::Duration::from_seconds(delay_seconds),
++        [&view, &event_loop, type]() {
++            view.request_internal_page_info(type)
++                ->when_resolved([&event_loop](auto const& text) {
++                    outln("{}", text);
++                    event_loop.quit(0);
++                })
++                .when_rejected([&event_loop](auto const& error) {
++                    warnln("Unable to get page info: {}", error);
++                    event_loop.quit(1);
++                });
++        });
+ 
+-        view.request_internal_page_info(type)
+-            ->when_resolved([&event_loop](auto const& text) {
+-                outln("{}", text);
+-                event_loop.quit(0);
+-            })
+-            .when_rejected([&event_loop](auto const& error) {
+-                warnln("Unable to get page info: {}", error);
+-                event_loop.quit(1);
+-            });
++    view.on_load_finish = [&timer = *timer, url](auto const& loaded_url) {
++        if (url.equals(loaded_url, URL::ExcludeFragment::Yes))
++            timer.start();
+     };
+ 
+     view.load(url);
++
++    return timer;
+ }
+ 
+ static void load_page_and_exit_on_close(Core::EventLoop& event_loop, HeadlessWebView& view, URL::URL const& url)
+@@ -2079,10 +2096,10 @@ ErrorOr<int> Application::execute()
+                 screenshot_timer = load_page_for_screenshot_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), m_browser_options.screenshot_delay);
+                 break;
+             case HeadlessMode::LayoutTree:
+-                load_page_for_info_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), WebView::PageInfoType::LayoutTree);
++                screenshot_timer = load_page_for_info_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), WebView::PageInfoType::LayoutTree, m_browser_options.screenshot_delay);
+                 break;
+             case HeadlessMode::Text:
+-                load_page_for_info_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), WebView::PageInfoType::Text);
++                screenshot_timer = load_page_for_info_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), WebView::PageInfoType::Text, m_browser_options.screenshot_delay);
+                 break;
+             case HeadlessMode::Manual:
+                 load_page_and_exit_on_close(*m_event_loop, *view, m_browser_options.urls.first());

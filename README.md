@@ -189,9 +189,13 @@ the process, i.e. the reveal layout (the `display:none` document's round builds 
 handful of boxes), and reports the number of rounds with a full layout as `layouts=N`. `verify`
 uses `--headless=layout-tree` for the box positions (the dump's `at [x,y]` is the content box; the
 runner adds padding and border to get the border boxes it compares with Chrome's
-`getBoundingClientRect()`) and a second `--headless=screenshot` process for the 1280×800 image
-(`LADYBIRD_SCREENSHOT_DELAY`, default 3 s, is how long after the load starts the screenshot is
-requested; the request queues behind the synchronous reveal layout).
+`getBoundingClientRect()`) and a second `--headless=screenshot` process for the 1280×800 image.
+The patch also makes both headless modes wait `--screenshot-delay` seconds *after the load event*
+(upstream dumps the layout tree at the load event and counts the screenshot delay from the start
+of the load): the font pages reveal from a `document.fonts` promise that resolves after the load
+event, and the screenshot has to wait for the reveal to be painted. The runner passes
+`LADYBIRD_SETTLE_SECONDS` (default 2) for that delay, so every Ladybird process costs that much
+extra wall-clock on top of the load; it does not affect the phase timings.
 
 ## Servo tracing filter
 
