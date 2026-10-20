@@ -20,3 +20,6 @@ blitz-traits = { workspace = true }
 anyrender = "0.14"
 anyrender_vello_cpu = "0.18"
 png = "0.18"
+# blitz-dom decodes images with `image` built without default features; enable the PNG decoder so
+# the real pages' placeholder images load (their intrinsic size feeds `max-height`/`height:auto` sizing)
+image = { version = "0.25", default-features = false, features = ["png"] }
