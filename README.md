@@ -22,8 +22,8 @@ Sans shipped in `fonts/` (`@font-face`, four faces, loaded via a relative `url()
 `fonts/LICENSE-DejaVu.txt`), with `line-height: 20px` and `text-rendering: geometricPrecision`
 (without it Chrome rounds each glyph advance to a whole pixel and breaks ~5% of lines differently).
 They have no Taffy tree, so Taffy direct is not measured for them; they compare Blitz (Parley)
-`construct`+`layout` against Servo Box+Fragment Tree and Chrome Layout, i.e. shaping plus line
-breaking (see the phase table below for why shaping lands in the construction phases).
+`construct`+`layout` against Servo Box+Fragment Tree and Chrome `rebuildLayoutTree`+`Layout`, i.e.
+shaping plus line breaking (see the phase table below for why shaping lands in the construction phases).
 
 The root is absolutely positioned inside a `#cb` containing block sized to the Taffy available
 space (`max-content` becomes a 1,000,000px box). `run.py gen` also writes `corpus/reveal/*.html`
@@ -87,7 +87,9 @@ background bands down column x=1 of the screenshots (inside the paragraphs' padd
 leaf boxes' vertical extents and therefore their line counts, and works for Servo, which gives no
 box output. The table is also written to `out/verify.md`.
 
-Cases that cannot be made equal: `pangui/percentage_and_ratio` renders empty in Servo (it gives
+Cases that cannot be made equal: `flex/absolute/10000` (percent insets on a 424,000px-wide root
+amplify f32 rounding, so the three engines place boxes up to ~170px apart although the root sizes
+agree to 0.003%); `pangui/percentage_and_ratio` renders empty in Servo (it gives
 `aspect-ratio` items zero height, in flex and block layout alike), so its Servo timings are not
 comparable; `pangui/fit_nesting` (0.99px leaves) and `pangui/flex_expand_equal_weights` (0.67px
 items) differ by ~11% of pixels against Chrome because Blitz and Servo snap such boxes to the pixel
