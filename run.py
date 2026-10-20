@@ -120,7 +120,7 @@ def parse_servo_trace(path):
 def run_servo(case, iters, cpus, threads, screenshot=None):
     samples = []
     url = (REVEAL / case["file"]).resolve().as_uri()
-    env = dict(os.environ, SERVO_TRACING="layout=trace,script=trace")
+    env = dict(os.environ, SERVO_TRACING="layout::layout_impl=trace,layout::flow::root=trace")
     for i in range(iters):
         with tempfile.TemporaryDirectory() as d:
             cmd = [str(SERVOSHELL), "-z", "-x", f"--window-size={WIDTH}x{HEIGHT}", "--pref", f"layout_threads={threads}"]

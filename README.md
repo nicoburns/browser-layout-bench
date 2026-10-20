@@ -62,3 +62,10 @@ runners (`taffy`, `blitz`, `servo1`) with `taskset`; `blitz-par` and `servo` run
 `verify` is the equal-work check: before trusting a timing, confirm the engines agree on the layout
 (pixel diff of the 1280×800 viewport, Chrome's `totalObjects` layout-object count, Servo's reflow
 count, Blitz's box hash).
+
+## Servo tracing filter
+
+Servo is run with `SERVO_TRACING="layout::layout_impl=trace,layout::flow::root=trace"`, which
+enables only the phase spans. `layout=trace` would also record the per-item spans
+(`FlexItem::layout`, `FlexContainer::layout`, ...), and at ~6 µs per span those inflate
+Fragment Tree Construction by more than 10x on these trees (31 ms vs 2.3 ms for flex/wide/1000).
