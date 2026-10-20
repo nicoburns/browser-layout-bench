@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Driver: generates the corpus, runs each engine on every page in interleaved rounds, and
 writes results.json + a Markdown report. See README.md for the measurement model."""
-import argparse, json, os, re, shutil, statistics, subprocess, sys, tempfile
+import argparse, functools, http.server, json, os, re, shutil, statistics, subprocess, sys, tempfile, threading
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -16,6 +16,12 @@ ENGINES = ["taffy", "blitz", "blitz-par", "servo1", "servo", "chrome"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
                  "cb.offsetHeight;</script>\n")
+# Pages with web fonts reveal the tree only once every @font-face has loaded, so the single timed
+# layout shapes with the right font instead of a fallback (followed by a second layout). Chrome loads
+# fonts lazily, so they are requested explicitly; Servo loads them eagerly and lacks
+# FontFaceSet.load(), so there `document.fonts.ready` is awaited instead.
+FONT_REVEAL_SCRIPT = ("<script>var F=document.fonts;(F.load?Promise.all([...F].map(f=>f.load())):F.ready).then(()=>{"
+                      "var cb=document.getElementById('cb');cb.style.display='block';cb.offsetHeight;});</script>\n")
 
 
 def sh(cmd, cpus=None, **kw):
@@ -40,7 +46,7 @@ def cmd_gen(args):
     for c in read_manifest():
         html = (CORPUS / c["file"]).read_text()
         html = html.replace('<div id="cb">', '<div id="cb" style="display:none">')
-        html = html.replace("</body>", REVEAL_SCRIPT + "</body>")
+        html = html.replace("</body>", (FONT_REVEAL_SCRIPT if "@font-face" in html else REVEAL_SCRIPT) + "</body>")
         html = html.replace("url(fonts/", "url(../fonts/")
         (REVEAL / c["file"]).write_text(html)
     print(f"wrote {len(read_manifest())} pages to {CORPUS}")
@@ -120,9 +126,21 @@ def parse_servo_trace(path):
     return s
 
 
+@functools.cache
+def corpus_server():
+    """Servo's fetch rejects `file://` fonts (CORS mode, opaque origin), so it gets the corpus over
+    localhost HTTP instead. Returns the base URL."""
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, *args):
+            pass
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(Handler, directory=str(CORPUS)))
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    return f"http://127.0.0.1:{server.server_address[1]}"
+
+
 def run_servo(case, iters, cpus, threads, screenshot=None):
     samples = []
-    url = (REVEAL / case["file"]).resolve().as_uri()
+    url = f"{corpus_server()}/reveal/{case['file']}"
     env = dict(os.environ, SERVO_TRACING="layout::layout_impl=trace,layout::flow::root=trace")
     for i in range(iters):
         with tempfile.TemporaryDirectory() as d:
@@ -150,6 +168,7 @@ def run_chrome(case, iters, cpus, screenshot=None):
             cdp.on("Tracing.tracingComplete", lambda e: done.append(True))
             cdp.send("Tracing.start", {"traceConfig": {"includedCategories": ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "blink_style"]}})
             page.goto(url, wait_until="load", timeout=600_000)
+            page.wait_for_function("document.getElementById('cb').style.display === 'block'", timeout=600_000)
             page.evaluate("document.body.offsetHeight")
             root = page.evaluate("(()=>{const r=document.getElementById('cb').firstElementChild.getBoundingClientRect();return r.width.toFixed(1)+'x'+r.height.toFixed(1)})()")
             cdp.send("Tracing.end")
