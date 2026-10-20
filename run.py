@@ -288,19 +288,22 @@ def compare_boxes(a, b, tol=1.0):
             f"{sum(d > tol for d in pos)} positions")
 
 
-def text_rows(img):
-    """Top rows of the horizontal bands that contain text pixels (anything darker than the leaf
-    backgrounds), i.e. the lines of text in the screenshot; lets line breaks be compared with engines
-    that give no box output (Servo)."""
-    dark = img.convert("L").point(lambda v: 255 if v < 72 else 0)
-    data = dark.load()
-    rows, prev = [], False
-    for y in range(dark.height):
-        has = any(data[x, y] for x in range(0, dark.width, 2))
-        if has and not prev:
-            rows.append(y)
-        prev = has
-    return rows
+def bg_bands(img, x=1):
+    """(colour, top, height) of the runs of non-white pixels down column `x` of the screenshot: on the
+    text pages that column is inside the padding of the paragraphs/cards, so the bands are the leaf
+    boxes' vertical extents, i.e. their line counts, independent of glyph anti-aliasing. Lets line
+    breaking be compared with engines that give no box output (Servo)."""
+    data = img.load()
+    bands = []
+    for y in range(img.height):
+        px = data[x, y]
+        if px == (255, 255, 255):
+            continue
+        if bands and bands[-1][0] == px and bands[-1][1] + bands[-1][2] == y:
+            bands[-1][2] += 1
+        else:
+            bands.append([px, y, 1])
+    return bands
 
 
 def cmd_verify(args):
@@ -343,12 +346,14 @@ def cmd_verify(args):
                 cell = f"{frac * 100:.2f}% px"
                 if e in boxes and engines[0] in boxes:
                     cell += ", " + compare_boxes(boxes[e], boxes[engines[0]])
-                ref_rows = text_rows(imgs[engines[0]])
-                if ref_rows:
-                    rows = text_rows(imgs[e])
-                    cell += f", text lines {len(rows)} vs {len(ref_rows)}"
-                    if rows != ref_rows:
-                        cell += f" (rows differ from line {next((i + 1 for i, (a, b) in enumerate(zip(rows, ref_rows)) if a != b), min(len(rows), len(ref_rows)) + 1)})"
+                if c["name"].startswith("text/"):
+                    ref, got = bg_bands(imgs[engines[0]]), bg_bands(imgs[e])
+                    same = sum(a == b for a, b in zip(ref, got))
+                    cell += f", {same}/{len(ref)} bg bands equal"
+                    if len(got) != len(ref):
+                        cell += f" ({len(got)} bands)"
+                    elif same != len(ref):
+                        cell += " (" + "; ".join(f"band {i}: {g[1]}+{g[2]} vs {r[1]}+{r[2]}" for i, (g, r) in enumerate(zip(got, ref)) if g != r) + ")"
                 cells.append(cell)
             else:
                 cells.append("-")
