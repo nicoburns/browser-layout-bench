@@ -16,33 +16,7 @@ The harness does several things well: deterministic inputs, explicit font loadin
 phase timing rather than process startup, raw samples, geometry checks, and the
 correction of Servo's excessive tracing overhead.
 
-## 1. Text phase boundaries are not equivalent
-
-Blitz and Servo perform shaping in construction; Chrome and Firefox perform
-shaping within layout/reflow. Thus Chrome's `Layout` is not equivalent to Blitz's
-`layout` on text. Chromium's `InlineNode::Layout()` calls preparation that includes
-shaping; see [`InlineNode::PrepareLayout()` and `InlineNode::Layout()`](https://chromium.googlesource.com/chromium/src/+/refs/tags/156.0.8078.4/third_party/blink/renderer/core/layout/inline/inline_node.cc).
-
-The saved `text/paragraphs/1000` minima illustrate how much this matters:
-
-| Measured interval | Blitz, sequential | Chrome |
-|---|---:|---:|
-| "Layout only" | 14.74 ms | 70.02 ms |
-| Construction + layout | 137.44 ms | 70.85 ms |
-
-The apparent **4.75× Blitz advantage becomes a 1.94× disadvantage** when shaping
-is included on both sides. These are the recorded configurations, not a controlled
-equal-CPU comparison; see [CPU allocation](#5-cache-state-and-cpu-allocation-are-not-matched).
-
-**Use construction + layout for text comparisons.** Keep the separate phases as
-engine-specific diagnostics, without cross-engine winner highlighting. Likewise,
-Firefox's `Styles` includes frame construction, whereas Chrome's `recalcStyle`
-does not: those "Style" multipliers are not like-for-like either.
-
-Sources: [phase mapping](README.md#engines-and-phases), [runner](run.py), and
-[recorded samples](out/results.json).
-
-## 2. "Whole pipeline" has different endpoints
+## 1. "Whole pipeline" has different endpoints
 
 The report compares:
 
@@ -64,7 +38,7 @@ Sources: [reported intervals](run.py),
 [Blitz's resolve implementation](https://github.com/DioxusLabs/blitz/blob/28f848d/packages/blitz-dom/src/resolve.rs),
 and [Ladybird instrumentation](patches/ladybird-phase-timing.patch).
 
-## 3. Equal-work validation is incomplete
+## 2. Equal-work validation is incomplete
 
 Known failures still receive timings and can win rows. The clearest exclusion is
 Servo's `pangui/percentage_and_ratio`: it renders empty. Its timing should be
@@ -106,7 +80,7 @@ These pages are simplified snapshots: scripts are removed, fonts are replaced,
 images become placeholders, and some CSS and controls are rewritten. They test
 the resulting frozen documents, not the original live sites.
 
-## 4. Minimum-of-nine hides significant instability
+## 3. Minimum-of-nine hides significant instability
 
 For Blitz's `text/paragraphs/1000` resolve time, the saved samples have:
 
@@ -133,7 +107,7 @@ and provenance so later subset updates remain identifiable.
 Sources: [raw samples](out/results.json), [aggregation and merge logic](run.py),
 and [documented protocol](README.md#versions-and-methodology).
 
-## 5. Cache state and CPU allocation are not matched
+## 4. Cache state and CPU allocation are not matched
 
 - **Taffy:** reuses its tree, explicitly warms up twice, then dirties nodes.
 - **Blitz:** fresh document, but several iterations within one process.
@@ -154,7 +128,7 @@ results, with affinity and worker counts stated explicitly.
 Sources: [Taffy runner](gen/src/main.rs), [Blitz runner](blitz-runner/src/main.rs),
 [browser runners](run.py), and [Ladybird runner](engines_ladybird.py).
 
-## 6. Instrumentation and corpus scope limit the conclusions
+## 5. Instrumentation and corpus scope limit the conclusions
 
 The Servo tracing fix was important: the documented example fell from **31 ms to
 2.3 ms** after removing per-item spans. But tracing overhead has not been
@@ -179,7 +153,6 @@ Sources: [Servo tracing filter](README.md#servo-tracing-filter),
 
 - Treat large differences on geometry-validated, text-free cases as useful leads
   for investigation, for the particular configurations measured.
-- For text, prefer combined construction + layout over individual phase ratios.
 - Do not rely on current whole-pipeline rankings or failed-verification rows.
 - Prioritise matching timing boundaries, excluding unequal-work cases, and
   collecting a fresh, consistently warmed and interleaved dataset with dispersion
