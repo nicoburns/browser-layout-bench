@@ -35,6 +35,72 @@
      "reflow": 27578794,
      "n_reflows": 3,
      "box+fragment": 5570404
+    },
+    {
+     "style": 16713056,
+     "box": 2250359,
+     "fragment": 1634030,
+     "restyle_and_build": 22334262,
+     "stacking_context": 239140,
+     "display_list": 1793,
+     "reflow": 22608114,
+     "n_reflows": 2,
+     "box+fragment": 3884389
+    },
+    {
+     "style": 21475314,
+     "box": 1206490,
+     "fragment": 4761437,
+     "restyle_and_build": 29334560,
+     "stacking_context": 230578,
+     "display_list": 1787,
+     "reflow": 29603117,
+     "n_reflows": 2,
+     "box+fragment": 5967927
+    },
+    {
+     "style": 17104422,
+     "box": 1526565,
+     "fragment": 1756215,
+     "restyle_and_build": 31571788,
+     "stacking_context": 235073,
+     "display_list": 1767,
+     "reflow": 31846700,
+     "n_reflows": 2,
+     "box+fragment": 3282780
+    },
+    {
+     "style": 12939317,
+     "box": 1094242,
+     "fragment": 1612408,
+     "restyle_and_build": 17268195,
+     "stacking_context": 196137,
+     "display_list": 1825,
+     "reflow": 17497168,
+     "n_reflows": 2,
+     "box+fragment": 2706650
+    },
+    {
+     "style": 10025722,
+     "box": 1105471,
+     "fragment": 1612201,
+     "restyle_and_build": 17419083,
+     "stacking_context": 224458,
+     "display_list": 1710,
+     "reflow": 17689434,
+     "n_reflows": 2,
+     "box+fragment": 2717672
+    },
+    {
+     "style": 13271938,
+     "box": 1103453,
+     "fragment": 1668398,
+     "restyle_and_build": 20744283,
+     "stacking_context": 207945,
+     "display_list": 1821,
+     "reflow": 20998405,
+     "n_reflows": 2,
+     "box+fragment": 2771851
     }
    ],
    "servo": [
@@ -70,6 +136,72 @@
      "reflow": 11969153,
      "n_reflows": 2,
      "box+fragment": 2442150
+    },
+    {
+     "style": 6560638,
+     "box": 592987,
+     "fragment": 1001320,
+     "restyle_and_build": 9933653,
+     "stacking_context": 198385,
+     "display_list": 1687,
+     "reflow": 10162722,
+     "n_reflows": 2,
+     "box+fragment": 1594307
+    },
+    {
+     "style": 8652976,
+     "box": 571352,
+     "fragment": 1045210,
+     "restyle_and_build": 12252834,
+     "stacking_context": 1261010,
+     "display_list": 2322,
+     "reflow": 13561769,
+     "n_reflows": 2,
+     "box+fragment": 1616562
+    },
+    {
+     "style": 6253909,
+     "box": 592537,
+     "fragment": 1419198,
+     "restyle_and_build": 10293675,
+     "stacking_context": 218008,
+     "display_list": 1712,
+     "reflow": 10544725,
+     "n_reflows": 2,
+     "box+fragment": 2011735
+    },
+    {
+     "style": 5935390,
+     "box": 590244,
+     "fragment": 994786,
+     "restyle_and_build": 9320657,
+     "stacking_context": 205212,
+     "display_list": 1724,
+     "reflow": 9555899,
+     "n_reflows": 2,
+     "box+fragment": 1585030
+    },
+    {
+     "style": 6209567,
+     "box": 558664,
+     "fragment": 1016670,
+     "restyle_and_build": 9576957,
+     "stacking_context": 215770,
+     "display_list": 1765,
+     "reflow": 9824009,
+     "n_reflows": 2,
+     "box+fragment": 1575334
+    },
+    {
+     "style": 6093740,
+     "box": 589821,
+     "fragment": 1051714,
+     "restyle_and_build": 9524957,
+     "stacking_context": 191502,
+     "display_list": 1654,
+     "reflow": 9747257,
+     "n_reflows": 2,
+     "box+fragment": 1641535
     }
    ],
    "ladybird": [
@@ -890,6 +1022,72 @@
      "reflow": 18156529,
      "n_reflows": 2,
      "box+fragment": 3547891
+    },
+    {
+     "style": 11304318,
+     "box": 1411067,
+     "fragment": 2172065,
+     "restyle_and_build": 19884269,
+     "stacking_context": 275070,
+     "display_list": 1689,
+     "reflow": 20197714,
+     "n_reflows": 2,
+     "box+fragment": 3583132
+    },
+    {
+     "style": 27605498,
+     "box": 1357893,
+     "fragment": 5283363,
+     "restyle_and_build": 35918129,
+     "stacking_context": 268713,
+     "display_list": 1825,
+     "reflow": 36227590,
+     "n_reflows": 2,
+     "box+fragment": 6641256
+    },
+    {
+     "style": 9351186,
+     "box": 1347622,
+     "fragment": 2126175,
+     "restyle_and_build": 17696127,
+     "stacking_context": 251416,
+     "display_list": 1729,
+     "reflow": 17981656,
+     "n_reflows": 2,
+     "box+fragment": 3473797
+    },
+    {
+     "style": 12047649,
+     "box": 1399689,
+     "fragment": 2216702,
+     "restyle_and_build": 20309849,
+     "stacking_context": 292621,
+     "display_list": 1837,
+     "reflow": 20640593,
+     "n_reflows": 2,
+     "box+fragment": 3616391
+    },
+    {
+     "style": 12295702,
+     "box": 1465073,
+     "fragment": 2251211,
+     "restyle_and_build": 20720560,
+     "stacking_context": 299404,
+     "display_list": 1789,
+     "reflow": 21066174,
+     "n_reflows": 2,
+     "box+fragment": 3716284
+    },
+    {
+     "style": 12012056,
+     "box": 1383062,
+     "fragment": 2233944,
+     "restyle_and_build": 20282902,
+     "stacking_context": 282743,
+     "display_list": 1882,
+     "reflow": 20605803,
+     "n_reflows": 2,
+     "box+fragment": 3617006
     }
    ],
    "servo": [
@@ -925,6 +1123,72 @@
      "reflow": 10216413,
      "n_reflows": 2,
      "box+fragment": 3499522
+    },
+    {
+     "style": 3989431,
+     "box": 885002,
+     "fragment": 2088259,
+     "restyle_and_build": 8853894,
+     "stacking_context": 256136,
+     "display_list": 1771,
+     "reflow": 9154408,
+     "n_reflows": 2,
+     "box+fragment": 2973261
+    },
+    {
+     "style": 7957527,
+     "box": 2152238,
+     "fragment": 2268029,
+     "restyle_and_build": 14565624,
+     "stacking_context": 313364,
+     "display_list": 1792,
+     "reflow": 14915606,
+     "n_reflows": 2,
+     "box+fragment": 4420267
+    },
+    {
+     "style": 3967306,
+     "box": 1028706,
+     "fragment": 2042825,
+     "restyle_and_build": 8938185,
+     "stacking_context": 238769,
+     "display_list": 1713,
+     "reflow": 9211030,
+     "n_reflows": 2,
+     "box+fragment": 3071531
+    },
+    {
+     "style": 3858643,
+     "box": 832477,
+     "fragment": 1996828,
+     "restyle_and_build": 8495949,
+     "stacking_context": 228740,
+     "display_list": 1695,
+     "reflow": 8757042,
+     "n_reflows": 2,
+     "box+fragment": 2829305
+    },
+    {
+     "style": 3914118,
+     "box": 813613,
+     "fragment": 2009445,
+     "restyle_and_build": 8492791,
+     "stacking_context": 228675,
+     "display_list": 1773,
+     "reflow": 8752612,
+     "n_reflows": 2,
+     "box+fragment": 2823058
+    },
+    {
+     "style": 4110345,
+     "box": 853031,
+     "fragment": 2030590,
+     "restyle_and_build": 8814925,
+     "stacking_context": 225136,
+     "display_list": 1716,
+     "reflow": 9075137,
+     "n_reflows": 2,
+     "box+fragment": 2883621
     }
    ],
    "ladybird": [
@@ -1745,6 +2009,72 @@
      "reflow": 20774584,
      "n_reflows": 2,
      "box+fragment": 3584032
+    },
+    {
+     "style": 24717304,
+     "box": 10827503,
+     "fragment": 7980827,
+     "restyle_and_build": 45493190,
+     "stacking_context": 3760445,
+     "display_list": 2173,
+     "reflow": 49313286,
+     "n_reflows": 2,
+     "box+fragment": 18808330
+    },
+    {
+     "style": 12472022,
+     "box": 1634462,
+     "fragment": 1830887,
+     "restyle_and_build": 17712228,
+     "stacking_context": 664240,
+     "display_list": 1891,
+     "reflow": 18415892,
+     "n_reflows": 2,
+     "box+fragment": 3465349
+    },
+    {
+     "style": 23639586,
+     "box": 4668022,
+     "fragment": 1802509,
+     "restyle_and_build": 31782721,
+     "stacking_context": 3668876,
+     "display_list": 1978,
+     "reflow": 35505804,
+     "n_reflows": 2,
+     "box+fragment": 6470531
+    },
+    {
+     "style": 12652127,
+     "box": 1579200,
+     "fragment": 1778595,
+     "restyle_and_build": 20714087,
+     "stacking_context": 588669,
+     "display_list": 1840,
+     "reflow": 21336212,
+     "n_reflows": 2,
+     "box+fragment": 3357795
+    },
+    {
+     "style": 9154744,
+     "box": 1582281,
+     "fragment": 1791583,
+     "restyle_and_build": 14149548,
+     "stacking_context": 606202,
+     "display_list": 1779,
+     "reflow": 14789652,
+     "n_reflows": 2,
+     "box+fragment": 3373864
+    },
+    {
+     "style": 12890342,
+     "box": 3895592,
+     "fragment": 1789136,
+     "restyle_and_build": 20188899,
+     "stacking_context": 614776,
+     "display_list": 1809,
+     "reflow": 20839365,
+     "n_reflows": 2,
+     "box+fragment": 5684728
     }
    ],
    "servo": [
@@ -1780,6 +2110,72 @@
      "reflow": 9929400,
      "n_reflows": 2,
      "box+fragment": 2732662
+    },
+    {
+     "style": 5585224,
+     "box": 1132235,
+     "fragment": 4902217,
+     "restyle_and_build": 16730867,
+     "stacking_context": 697710,
+     "display_list": 9681,
+     "reflow": 17474115,
+     "n_reflows": 3,
+     "box+fragment": 6034452
+    },
+    {
+     "style": 4069545,
+     "box": 923298,
+     "fragment": 1811703,
+     "restyle_and_build": 8610630,
+     "stacking_context": 571988,
+     "display_list": 1747,
+     "reflow": 9216521,
+     "n_reflows": 2,
+     "box+fragment": 2735001
+    },
+    {
+     "style": 5553156,
+     "box": 950388,
+     "fragment": 1798700,
+     "restyle_and_build": 10158405,
+     "stacking_context": 624350,
+     "display_list": 16192,
+     "reflow": 10831757,
+     "n_reflows": 2,
+     "box+fragment": 2749088
+    },
+    {
+     "style": 4136270,
+     "box": 906669,
+     "fragment": 1881029,
+     "restyle_and_build": 8733532,
+     "stacking_context": 569361,
+     "display_list": 1789,
+     "reflow": 9337186,
+     "n_reflows": 2,
+     "box+fragment": 2787698
+    },
+    {
+     "style": 4044072,
+     "box": 1000619,
+     "fragment": 1789465,
+     "restyle_and_build": 8635762,
+     "stacking_context": 571942,
+     "display_list": 1739,
+     "reflow": 9241155,
+     "n_reflows": 2,
+     "box+fragment": 2790084
+    },
+    {
+     "style": 4008502,
+     "box": 926404,
+     "fragment": 1741901,
+     "restyle_and_build": 8503503,
+     "stacking_context": 569567,
+     "display_list": 1908,
+     "reflow": 9105942,
+     "n_reflows": 2,
+     "box+fragment": 2668305
     }
    ],
    "ladybird": [
@@ -2600,6 +2996,72 @@
      "reflow": 29541309,
      "n_reflows": 2,
      "box+fragment": 11611579
+    },
+    {
+     "style": 12238288,
+     "box": 10434820,
+     "fragment": 2118501,
+     "restyle_and_build": 26405639,
+     "stacking_context": 194505,
+     "display_list": 1668,
+     "reflow": 26628518,
+     "n_reflows": 2,
+     "box+fragment": 12553321
+    },
+    {
+     "style": 6177248,
+     "box": 4413657,
+     "fragment": 4953265,
+     "restyle_and_build": 17231860,
+     "stacking_context": 251288,
+     "display_list": 1616,
+     "reflow": 17513226,
+     "n_reflows": 2,
+     "box+fragment": 9366922
+    },
+    {
+     "style": 6289207,
+     "box": 3515646,
+     "fragment": 2157829,
+     "restyle_and_build": 13736615,
+     "stacking_context": 477015,
+     "display_list": 1811,
+     "reflow": 14252103,
+     "n_reflows": 3,
+     "box+fragment": 5673475
+    },
+    {
+     "style": 9319891,
+     "box": 1388669,
+     "fragment": 3767630,
+     "restyle_and_build": 16255162,
+     "stacking_context": 210950,
+     "display_list": 1814,
+     "reflow": 16498630,
+     "n_reflows": 2,
+     "box+fragment": 5156299
+    },
+    {
+     "style": 6137271,
+     "box": 1450026,
+     "fragment": 2130290,
+     "restyle_and_build": 13743105,
+     "stacking_context": 204435,
+     "display_list": 1821,
+     "reflow": 13976531,
+     "n_reflows": 2,
+     "box+fragment": 3580316
+    },
+    {
+     "style": 6205060,
+     "box": 1352036,
+     "fragment": 4676486,
+     "restyle_and_build": 16945077,
+     "stacking_context": 202576,
+     "display_list": 1659,
+     "reflow": 17177568,
+     "n_reflows": 2,
+     "box+fragment": 6028522
     }
    ],
    "servo": [
@@ -2635,6 +3097,72 @@
      "reflow": 9511395,
      "n_reflows": 2,
      "box+fragment": 4511339
+    },
+    {
+     "style": 5551031,
+     "box": 1311619,
+     "fragment": 4161036,
+     "restyle_and_build": 12865568,
+     "stacking_context": 230950,
+     "display_list": 1739,
+     "reflow": 13129406,
+     "n_reflows": 3,
+     "box+fragment": 5472655
+    },
+    {
+     "style": 2306699,
+     "box": 1356504,
+     "fragment": 2072953,
+     "restyle_and_build": 7487429,
+     "stacking_context": 168851,
+     "display_list": 1647,
+     "reflow": 7685183,
+     "n_reflows": 2,
+     "box+fragment": 3429457
+    },
+    {
+     "style": 2321235,
+     "box": 1342917,
+     "fragment": 2077791,
+     "restyle_and_build": 7486898,
+     "stacking_context": 173505,
+     "display_list": 1671,
+     "reflow": 7688776,
+     "n_reflows": 2,
+     "box+fragment": 3420708
+    },
+    {
+     "style": 2332691,
+     "box": 1614637,
+     "fragment": 2084946,
+     "restyle_and_build": 7800859,
+     "stacking_context": 175646,
+     "display_list": 1687,
+     "reflow": 8003707,
+     "n_reflows": 2,
+     "box+fragment": 3699583
+    },
+    {
+     "style": 2268828,
+     "box": 1416365,
+     "fragment": 2087022,
+     "restyle_and_build": 7529906,
+     "stacking_context": 179502,
+     "display_list": 1673,
+     "reflow": 7737471,
+     "n_reflows": 2,
+     "box+fragment": 3503387
+    },
+    {
+     "style": 2400593,
+     "box": 1363044,
+     "fragment": 2053731,
+     "restyle_and_build": 7555228,
+     "stacking_context": 175046,
+     "display_list": 1696,
+     "reflow": 7758691,
+     "n_reflows": 2,
+     "box+fragment": 3416775
     }
    ],
    "ladybird": [
@@ -3455,6 +3983,72 @@
      "reflow": 18242551,
      "n_reflows": 2,
      "box+fragment": 5905475
+    },
+    {
+     "style": 10859633,
+     "box": 2452727,
+     "fragment": 1628322,
+     "restyle_and_build": 16718761,
+     "stacking_context": 253048,
+     "display_list": 1795,
+     "reflow": 17007274,
+     "n_reflows": 2,
+     "box+fragment": 4081049
+    },
+    {
+     "style": 7422227,
+     "box": 4455859,
+     "fragment": 1600788,
+     "restyle_and_build": 21163140,
+     "stacking_context": 2569882,
+     "display_list": 2051,
+     "reflow": 23775748,
+     "n_reflows": 2,
+     "box+fragment": 6056647
+    },
+    {
+     "style": 10485934,
+     "box": 1497557,
+     "fragment": 4090160,
+     "restyle_and_build": 17717114,
+     "stacking_context": 254010,
+     "display_list": 1746,
+     "reflow": 18002425,
+     "n_reflows": 2,
+     "box+fragment": 5587717
+    },
+    {
+     "style": 7455759,
+     "box": 4465015,
+     "fragment": 2096216,
+     "restyle_and_build": 18722766,
+     "stacking_context": 264471,
+     "display_list": 1670,
+     "reflow": 19018052,
+     "n_reflows": 2,
+     "box+fragment": 6561231
+    },
+    {
+     "style": 7410248,
+     "box": 3722111,
+     "fragment": 1663035,
+     "restyle_and_build": 17451431,
+     "stacking_context": 233714,
+     "display_list": 1780,
+     "reflow": 17717101,
+     "n_reflows": 2,
+     "box+fragment": 5385146
+    },
+    {
+     "style": 9580590,
+     "box": 1392778,
+     "fragment": 1606491,
+     "restyle_and_build": 14266461,
+     "stacking_context": 255809,
+     "display_list": 1714,
+     "reflow": 14552802,
+     "n_reflows": 2,
+     "box+fragment": 2999269
     }
    ],
    "servo": [
@@ -3490,6 +4084,72 @@
      "reflow": 7632605,
      "n_reflows": 2,
      "box+fragment": 3051593
+    },
+    {
+     "style": 2480595,
+     "box": 1450209,
+     "fragment": 1565595,
+     "restyle_and_build": 7301177,
+     "stacking_context": 207658,
+     "display_list": 1695,
+     "reflow": 7542994,
+     "n_reflows": 2,
+     "box+fragment": 3015804
+    },
+    {
+     "style": 2655093,
+     "box": 1403431,
+     "fragment": 1584193,
+     "restyle_and_build": 7453263,
+     "stacking_context": 240041,
+     "display_list": 1790,
+     "reflow": 7732940,
+     "n_reflows": 2,
+     "box+fragment": 2987624
+    },
+    {
+     "style": 2515766,
+     "box": 1401201,
+     "fragment": 1515703,
+     "restyle_and_build": 7209419,
+     "stacking_context": 224832,
+     "display_list": 1768,
+     "reflow": 7469173,
+     "n_reflows": 2,
+     "box+fragment": 2916904
+    },
+    {
+     "style": 3350187,
+     "box": 1490626,
+     "fragment": 1624283,
+     "restyle_and_build": 8301082,
+     "stacking_context": 257853,
+     "display_list": 1805,
+     "reflow": 8594031,
+     "n_reflows": 2,
+     "box+fragment": 3114909
+    },
+    {
+     "style": 2531093,
+     "box": 1384332,
+     "fragment": 1551608,
+     "restyle_and_build": 7207066,
+     "stacking_context": 208769,
+     "display_list": 1783,
+     "reflow": 7458253,
+     "n_reflows": 2,
+     "box+fragment": 2935940
+    },
+    {
+     "style": 2510872,
+     "box": 1416572,
+     "fragment": 1557620,
+     "restyle_and_build": 7296574,
+     "stacking_context": 226466,
+     "display_list": 1756,
+     "reflow": 7557815,
+     "n_reflows": 2,
+     "box+fragment": 2974192
     }
    ],
    "ladybird": [
@@ -4310,6 +4970,72 @@
      "reflow": 107921783,
      "n_reflows": 2,
      "box+fragment": 26301422
+    },
+    {
+     "style": 75664475,
+     "box": 11304586,
+     "fragment": 16595646,
+     "restyle_and_build": 108325443,
+     "stacking_context": 2201478,
+     "display_list": 1959,
+     "reflow": 110572143,
+     "n_reflows": 2,
+     "box+fragment": 27900232
+    },
+    {
+     "style": 74301693,
+     "box": 10920758,
+     "fragment": 18259168,
+     "restyle_and_build": 107339000,
+     "stacking_context": 3419912,
+     "display_list": 2880,
+     "reflow": 110824381,
+     "n_reflows": 2,
+     "box+fragment": 29179926
+    },
+    {
+     "style": 73899802,
+     "box": 9872943,
+     "fragment": 16190774,
+     "restyle_and_build": 103346302,
+     "stacking_context": 2249780,
+     "display_list": 2042,
+     "reflow": 105638519,
+     "n_reflows": 2,
+     "box+fragment": 26063717
+    },
+    {
+     "style": 74900134,
+     "box": 10034438,
+     "fragment": 15881661,
+     "restyle_and_build": 104258461,
+     "stacking_context": 2207680,
+     "display_list": 1919,
+     "reflow": 106510140,
+     "n_reflows": 2,
+     "box+fragment": 25916099
+    },
+    {
+     "style": 74653527,
+     "box": 9913463,
+     "fragment": 16024227,
+     "restyle_and_build": 104290468,
+     "stacking_context": 2218429,
+     "display_list": 1974,
+     "reflow": 106551586,
+     "n_reflows": 2,
+     "box+fragment": 25937690
+    },
+    {
+     "style": 75739102,
+     "box": 10430567,
+     "fragment": 16204251,
+     "restyle_and_build": 106472091,
+     "stacking_context": 2281338,
+     "display_list": 2107,
+     "reflow": 108804606,
+     "n_reflows": 2,
+     "box+fragment": 26634818
     }
    ],
    "servo": [
@@ -4345,6 +5071,72 @@
      "reflow": 79190544,
      "n_reflows": 2,
      "box+fragment": 13104111
+    },
+    {
+     "style": 66704962,
+     "box": 3919685,
+     "fragment": 8974439,
+     "restyle_and_build": 83712477,
+     "stacking_context": 2429758,
+     "display_list": 1946,
+     "reflow": 86187701,
+     "n_reflows": 2,
+     "box+fragment": 12894124
+    },
+    {
+     "style": 61897543,
+     "box": 3847000,
+     "fragment": 9110466,
+     "restyle_and_build": 78553093,
+     "stacking_context": 2214780,
+     "display_list": 1991,
+     "reflow": 80811996,
+     "n_reflows": 2,
+     "box+fragment": 12957466
+    },
+    {
+     "style": 60737836,
+     "box": 4008417,
+     "fragment": 9408858,
+     "restyle_and_build": 78464372,
+     "stacking_context": 2289401,
+     "display_list": 2003,
+     "reflow": 80799174,
+     "n_reflows": 2,
+     "box+fragment": 13417275
+    },
+    {
+     "style": 61093611,
+     "box": 3817585,
+     "fragment": 9274924,
+     "restyle_and_build": 77835473,
+     "stacking_context": 2275954,
+     "display_list": 2124,
+     "reflow": 80154728,
+     "n_reflows": 2,
+     "box+fragment": 13092509
+    },
+    {
+     "style": 64401575,
+     "box": 3868352,
+     "fragment": 8856487,
+     "restyle_and_build": 80821719,
+     "stacking_context": 2260981,
+     "display_list": 1986,
+     "reflow": 83129025,
+     "n_reflows": 2,
+     "box+fragment": 12724839
+    },
+    {
+     "style": 59329989,
+     "box": 4175530,
+     "fragment": 9484640,
+     "restyle_and_build": 77241406,
+     "stacking_context": 2313978,
+     "display_list": 1909,
+     "reflow": 79609233,
+     "n_reflows": 2,
+     "box+fragment": 13660170
     }
    ],
    "ladybird": [
@@ -5165,6 +5957,72 @@
      "reflow": 111179856,
      "n_reflows": 2,
      "box+fragment": 36128125
+    },
+    {
+     "style": 63874079,
+     "box": 12627775,
+     "fragment": 21637484,
+     "restyle_and_build": 101825422,
+     "stacking_context": 2822803,
+     "display_list": 2072,
+     "reflow": 104695743,
+     "n_reflows": 2,
+     "box+fragment": 34265259
+    },
+    {
+     "style": 76892628,
+     "box": 17334045,
+     "fragment": 25635786,
+     "restyle_and_build": 125098021,
+     "stacking_context": 4030113,
+     "display_list": 2399,
+     "reflow": 129212161,
+     "n_reflows": 3,
+     "box+fragment": 42969831
+    },
+    {
+     "style": 64158762,
+     "box": 13074897,
+     "fragment": 22358300,
+     "restyle_and_build": 103261559,
+     "stacking_context": 2914320,
+     "display_list": 2353,
+     "reflow": 106220387,
+     "n_reflows": 2,
+     "box+fragment": 35433197
+    },
+    {
+     "style": 66782826,
+     "box": 13484856,
+     "fragment": 21966194,
+     "restyle_and_build": 106569491,
+     "stacking_context": 2866927,
+     "display_list": 2243,
+     "reflow": 109484551,
+     "n_reflows": 2,
+     "box+fragment": 35451050
+    },
+    {
+     "style": 65181770,
+     "box": 13215175,
+     "fragment": 24530834,
+     "restyle_and_build": 106594724,
+     "stacking_context": 4436462,
+     "display_list": 3004,
+     "reflow": 111105872,
+     "n_reflows": 2,
+     "box+fragment": 37746009
+    },
+    {
+     "style": 83780678,
+     "box": 24879459,
+     "fragment": 28064705,
+     "restyle_and_build": 145346015,
+     "stacking_context": 4883742,
+     "display_list": 3139,
+     "reflow": 150309422,
+     "n_reflows": 3,
+     "box+fragment": 52944164
     }
    ],
    "servo": [
@@ -5200,6 +6058,72 @@
      "reflow": 198948568,
      "n_reflows": 3,
      "box+fragment": 79179739
+    },
+    {
+     "style": 37037615,
+     "box": 6874408,
+     "fragment": 22083850,
+     "restyle_and_build": 70052523,
+     "stacking_context": 3083307,
+     "display_list": 2136,
+     "reflow": 73179693,
+     "n_reflows": 2,
+     "box+fragment": 28958258
+    },
+    {
+     "style": 35873375,
+     "box": 9836224,
+     "fragment": 22256238,
+     "restyle_and_build": 72000043,
+     "stacking_context": 3110035,
+     "display_list": 1971,
+     "reflow": 75153705,
+     "n_reflows": 2,
+     "box+fragment": 32092462
+    },
+    {
+     "style": 37921659,
+     "box": 7275084,
+     "fragment": 22531309,
+     "restyle_and_build": 71786550,
+     "stacking_context": 3678406,
+     "display_list": 2142,
+     "reflow": 75520844,
+     "n_reflows": 2,
+     "box+fragment": 29806393
+    },
+    {
+     "style": 37243735,
+     "box": 7456789,
+     "fragment": 21918672,
+     "restyle_and_build": 70834297,
+     "stacking_context": 3059686,
+     "display_list": 2012,
+     "reflow": 73941474,
+     "n_reflows": 2,
+     "box+fragment": 29375461
+    },
+    {
+     "style": 35689185,
+     "box": 6818007,
+     "fragment": 21688429,
+     "restyle_and_build": 68109505,
+     "stacking_context": 3026403,
+     "display_list": 2066,
+     "reflow": 71183195,
+     "n_reflows": 2,
+     "box+fragment": 28506436
+    },
+    {
+     "style": 36136383,
+     "box": 18064192,
+     "fragment": 25177567,
+     "restyle_and_build": 84850578,
+     "stacking_context": 3416776,
+     "display_list": 2060,
+     "reflow": 88324539,
+     "n_reflows": 2,
+     "box+fragment": 43241759
     }
    ],
    "ladybird": [
@@ -6020,6 +6944,72 @@
      "reflow": 258133558,
      "n_reflows": 3,
      "box+fragment": 85100020
+    },
+    {
+     "style": 66616450,
+     "box": 16007381,
+     "fragment": 19158840,
+     "restyle_and_build": 105290771,
+     "stacking_context": 7045415,
+     "display_list": 2023,
+     "reflow": 112386217,
+     "n_reflows": 2,
+     "box+fragment": 35166221
+    },
+    {
+     "style": 65033077,
+     "box": 15318337,
+     "fragment": 18827921,
+     "restyle_and_build": 102677545,
+     "stacking_context": 6933448,
+     "display_list": 2063,
+     "reflow": 109658813,
+     "n_reflows": 2,
+     "box+fragment": 34146258
+    },
+    {
+     "style": 65334630,
+     "box": 15282578,
+     "fragment": 18839912,
+     "restyle_and_build": 102956798,
+     "stacking_context": 7026478,
+     "display_list": 2526,
+     "reflow": 110031252,
+     "n_reflows": 2,
+     "box+fragment": 34122490
+    },
+    {
+     "style": 65388594,
+     "box": 15304451,
+     "fragment": 18633105,
+     "restyle_and_build": 102796960,
+     "stacking_context": 7088623,
+     "display_list": 2553,
+     "reflow": 109953221,
+     "n_reflows": 2,
+     "box+fragment": 33937556
+    },
+    {
+     "style": 65366230,
+     "box": 15259278,
+     "fragment": 18918404,
+     "restyle_and_build": 103025849,
+     "stacking_context": 7011918,
+     "display_list": 2155,
+     "reflow": 110085819,
+     "n_reflows": 2,
+     "box+fragment": 34177682
+    },
+    {
+     "style": 66240595,
+     "box": 15147425,
+     "fragment": 18648100,
+     "restyle_and_build": 103459701,
+     "stacking_context": 6976285,
+     "display_list": 2030,
+     "reflow": 110482787,
+     "n_reflows": 2,
+     "box+fragment": 33795525
     }
    ],
    "servo": [
@@ -6055,6 +7045,72 @@
      "reflow": 332133606,
      "n_reflows": 3,
      "box+fragment": 64945621
+    },
+    {
+     "style": 35311792,
+     "box": 10935222,
+     "fragment": 18502495,
+     "restyle_and_build": 68547581,
+     "stacking_context": 7087940,
+     "display_list": 2151,
+     "reflow": 75686516,
+     "n_reflows": 2,
+     "box+fragment": 29437717
+    },
+    {
+     "style": 36569502,
+     "box": 8243003,
+     "fragment": 19036081,
+     "restyle_and_build": 68602957,
+     "stacking_context": 7170837,
+     "display_list": 2087,
+     "reflow": 75824145,
+     "n_reflows": 2,
+     "box+fragment": 27279084
+    },
+    {
+     "style": 36204956,
+     "box": 11060795,
+     "fragment": 18788154,
+     "restyle_and_build": 70032553,
+     "stacking_context": 7533406,
+     "display_list": 2128,
+     "reflow": 77618164,
+     "n_reflows": 2,
+     "box+fragment": 29848949
+    },
+    {
+     "style": 36151110,
+     "box": 10692807,
+     "fragment": 18592895,
+     "restyle_and_build": 69332119,
+     "stacking_context": 7336586,
+     "display_list": 1930,
+     "reflow": 76717940,
+     "n_reflows": 2,
+     "box+fragment": 29285702
+    },
+    {
+     "style": 36081984,
+     "box": 7823748,
+     "fragment": 18456294,
+     "restyle_and_build": 66529439,
+     "stacking_context": 7083567,
+     "display_list": 2053,
+     "reflow": 73663073,
+     "n_reflows": 2,
+     "box+fragment": 26280042
+    },
+    {
+     "style": 35217004,
+     "box": 10819882,
+     "fragment": 18711915,
+     "restyle_and_build": 68679490,
+     "stacking_context": 7388647,
+     "display_list": 2780,
+     "reflow": 76128810,
+     "n_reflows": 2,
+     "box+fragment": 29531797
     }
    ],
    "ladybird": [
@@ -6875,6 +7931,72 @@
      "reflow": 172360206,
      "n_reflows": 3,
      "box+fragment": 74136245
+    },
+    {
+     "style": 43746981,
+     "box": 12088626,
+     "fragment": 22829011,
+     "restyle_and_build": 81888144,
+     "stacking_context": 2468600,
+     "display_list": 2036,
+     "reflow": 84404990,
+     "n_reflows": 2,
+     "box+fragment": 34917637
+    },
+    {
+     "style": 44073900,
+     "box": 12844052,
+     "fragment": 23825724,
+     "restyle_and_build": 84721470,
+     "stacking_context": 2717875,
+     "display_list": 2008,
+     "reflow": 87488079,
+     "n_reflows": 2,
+     "box+fragment": 36669776
+    },
+    {
+     "style": 43108510,
+     "box": 11652851,
+     "fragment": 23075078,
+     "restyle_and_build": 81046967,
+     "stacking_context": 2463802,
+     "display_list": 2065,
+     "reflow": 83553512,
+     "n_reflows": 2,
+     "box+fragment": 34727929
+    },
+    {
+     "style": 43953405,
+     "box": 11708995,
+     "fragment": 22979180,
+     "restyle_and_build": 81762528,
+     "stacking_context": 2576379,
+     "display_list": 1949,
+     "reflow": 84383156,
+     "n_reflows": 2,
+     "box+fragment": 34688175
+    },
+    {
+     "style": 42843860,
+     "box": 11329349,
+     "fragment": 22747650,
+     "restyle_and_build": 80097155,
+     "stacking_context": 2418599,
+     "display_list": 2042,
+     "reflow": 82555197,
+     "n_reflows": 2,
+     "box+fragment": 34076999
+    },
+    {
+     "style": 43525111,
+     "box": 11650255,
+     "fragment": 22987206,
+     "restyle_and_build": 81518797,
+     "stacking_context": 2472432,
+     "display_list": 1968,
+     "reflow": 84037963,
+     "n_reflows": 2,
+     "box+fragment": 34637461
     }
    ],
    "servo": [
@@ -6910,6 +8032,72 @@
      "reflow": 182064201,
      "n_reflows": 3,
      "box+fragment": 75732951
+    },
+    {
+     "style": 35173734,
+     "box": 11438826,
+     "fragment": 22656518,
+     "restyle_and_build": 72475378,
+     "stacking_context": 2617813,
+     "display_list": 2194,
+     "reflow": 75139380,
+     "n_reflows": 2,
+     "box+fragment": 34095344
+    },
+    {
+     "style": 32001759,
+     "box": 11865884,
+     "fragment": 23529609,
+     "restyle_and_build": 70849245,
+     "stacking_context": 3971515,
+     "display_list": 2414,
+     "reflow": 74885445,
+     "n_reflows": 2,
+     "box+fragment": 35395493
+    },
+    {
+     "style": 32959907,
+     "box": 11485062,
+     "fragment": 22720265,
+     "restyle_and_build": 70481241,
+     "stacking_context": 2522749,
+     "display_list": 2013,
+     "reflow": 73045103,
+     "n_reflows": 2,
+     "box+fragment": 34205327
+    },
+    {
+     "style": 31889494,
+     "box": 11693528,
+     "fragment": 22979051,
+     "restyle_and_build": 69800953,
+     "stacking_context": 2567074,
+     "display_list": 1941,
+     "reflow": 72407381,
+     "n_reflows": 2,
+     "box+fragment": 34672579
+    },
+    {
+     "style": 35810613,
+     "box": 11635254,
+     "fragment": 22707652,
+     "restyle_and_build": 73405013,
+     "stacking_context": 2622885,
+     "display_list": 1870,
+     "reflow": 76066340,
+     "n_reflows": 2,
+     "box+fragment": 34342906
+    },
+    {
+     "style": 34604575,
+     "box": 11899350,
+     "fragment": 22814811,
+     "restyle_and_build": 72945781,
+     "stacking_context": 2722574,
+     "display_list": 2043,
+     "reflow": 75709750,
+     "n_reflows": 2,
+     "box+fragment": 34714161
     }
    ],
    "ladybird": [
@@ -7730,6 +8918,72 @@
      "reflow": 167466863,
      "n_reflows": 3,
      "box+fragment": 62648087
+    },
+    {
+     "style": 46227897,
+     "box": 12081976,
+     "fragment": 17351331,
+     "restyle_and_build": 78870344,
+     "stacking_context": 2962215,
+     "display_list": 2301,
+     "reflow": 81878272,
+     "n_reflows": 2,
+     "box+fragment": 29433307
+    },
+    {
+     "style": 45524468,
+     "box": 11635978,
+     "fragment": 17361304,
+     "restyle_and_build": 77681164,
+     "stacking_context": 2965524,
+     "display_list": 2432,
+     "reflow": 80693093,
+     "n_reflows": 2,
+     "box+fragment": 28997282
+    },
+    {
+     "style": 45840483,
+     "box": 11585209,
+     "fragment": 17475674,
+     "restyle_and_build": 78049622,
+     "stacking_context": 2950919,
+     "display_list": 2135,
+     "reflow": 81048619,
+     "n_reflows": 2,
+     "box+fragment": 29060883
+    },
+    {
+     "style": 45404915,
+     "box": 11617113,
+     "fragment": 17261770,
+     "restyle_and_build": 77442265,
+     "stacking_context": 2925732,
+     "display_list": 2272,
+     "reflow": 80413892,
+     "n_reflows": 2,
+     "box+fragment": 28878883
+    },
+    {
+     "style": 45421498,
+     "box": 11618921,
+     "fragment": 17248463,
+     "restyle_and_build": 77374351,
+     "stacking_context": 2873438,
+     "display_list": 2309,
+     "reflow": 80289853,
+     "n_reflows": 2,
+     "box+fragment": 28867384
+    },
+    {
+     "style": 45426678,
+     "box": 11600157,
+     "fragment": 17413062,
+     "restyle_and_build": 77596859,
+     "stacking_context": 2967246,
+     "display_list": 2231,
+     "reflow": 80606432,
+     "n_reflows": 2,
+     "box+fragment": 29013219
     }
    ],
    "servo": [
@@ -7765,6 +9019,72 @@
      "reflow": 128391076,
      "n_reflows": 3,
      "box+fragment": 73724419
+    },
+    {
+     "style": 21460054,
+     "box": 12182314,
+     "fragment": 17145873,
+     "restyle_and_build": 54113023,
+     "stacking_context": 3041257,
+     "display_list": 2096,
+     "reflow": 57196553,
+     "n_reflows": 2,
+     "box+fragment": 29328187
+    },
+    {
+     "style": 22161293,
+     "box": 12881133,
+     "fragment": 18918668,
+     "restyle_and_build": 57789700,
+     "stacking_context": 5057278,
+     "display_list": 4087,
+     "reflow": 62927043,
+     "n_reflows": 2,
+     "box+fragment": 31799801
+    },
+    {
+     "style": 21113807,
+     "box": 11980930,
+     "fragment": 17392613,
+     "restyle_and_build": 53766545,
+     "stacking_context": 3024795,
+     "display_list": 2338,
+     "reflow": 56832027,
+     "n_reflows": 2,
+     "box+fragment": 29373543
+    },
+    {
+     "style": 20690288,
+     "box": 11919989,
+     "fragment": 16847848,
+     "restyle_and_build": 52747651,
+     "stacking_context": 2918350,
+     "display_list": 2372,
+     "reflow": 55708063,
+     "n_reflows": 2,
+     "box+fragment": 28767837
+    },
+    {
+     "style": 21644143,
+     "box": 13523369,
+     "fragment": 21692158,
+     "restyle_and_build": 61203032,
+     "stacking_context": 4885874,
+     "display_list": 2206,
+     "reflow": 66156691,
+     "n_reflows": 2,
+     "box+fragment": 35215527
+    },
+    {
+     "style": 21134082,
+     "box": 11887805,
+     "fragment": 17120913,
+     "restyle_and_build": 53591048,
+     "stacking_context": 3113161,
+     "display_list": 2051,
+     "reflow": 56747496,
+     "n_reflows": 2,
+     "box+fragment": 29008718
     }
    ],
    "ladybird": [
@@ -8585,6 +9905,72 @@
      "reflow": 9834106,
      "n_reflows": 2,
      "box+fragment": 6986494
+    },
+    {
+     "style": 1088287,
+     "box": 433457,
+     "fragment": 501364,
+     "restyle_and_build": 6603403,
+     "stacking_context": 51623,
+     "display_list": 1589,
+     "reflow": 6682647,
+     "n_reflows": 2,
+     "box+fragment": 934821
+    },
+    {
+     "style": 1075353,
+     "box": 6518583,
+     "fragment": 489014,
+     "restyle_and_build": 9576315,
+     "stacking_context": 53399,
+     "display_list": 1620,
+     "reflow": 9656677,
+     "n_reflows": 2,
+     "box+fragment": 7007597
+    },
+    {
+     "style": 7215752,
+     "box": 488803,
+     "fragment": 503595,
+     "restyle_and_build": 9850490,
+     "stacking_context": 58562,
+     "display_list": 1614,
+     "reflow": 9939134,
+     "n_reflows": 2,
+     "box+fragment": 992398
+    },
+    {
+     "style": 1112287,
+     "box": 422414,
+     "fragment": 3569727,
+     "restyle_and_build": 6842464,
+     "stacking_context": 54885,
+     "display_list": 1570,
+     "reflow": 6925580,
+     "n_reflows": 2,
+     "box+fragment": 3992141
+    },
+    {
+     "style": 1104552,
+     "box": 444336,
+     "fragment": 472687,
+     "restyle_and_build": 6568822,
+     "stacking_context": 51034,
+     "display_list": 1573,
+     "reflow": 6646649,
+     "n_reflows": 2,
+     "box+fragment": 917023
+    },
+    {
+     "style": 1093870,
+     "box": 3506804,
+     "fragment": 471664,
+     "restyle_and_build": 6593626,
+     "stacking_context": 51125,
+     "display_list": 1662,
+     "reflow": 6685421,
+     "n_reflows": 2,
+     "box+fragment": 3978468
     }
    ],
    "servo": [
@@ -8620,6 +10006,72 @@
      "reflow": 13621496,
      "n_reflows": 3,
      "box+fragment": 2065850
+    },
+    {
+     "style": 1153167,
+     "box": 434956,
+     "fragment": 502144,
+     "restyle_and_build": 3803753,
+     "stacking_context": 52269,
+     "display_list": 1613,
+     "reflow": 3883198,
+     "n_reflows": 2,
+     "box+fragment": 937100
+    },
+    {
+     "style": 1135550,
+     "box": 431732,
+     "fragment": 499038,
+     "restyle_and_build": 3760929,
+     "stacking_context": 45249,
+     "display_list": 10146,
+     "reflow": 3843088,
+     "n_reflows": 2,
+     "box+fragment": 930770
+    },
+    {
+     "style": 1844720,
+     "box": 436876,
+     "fragment": 499470,
+     "restyle_and_build": 5088378,
+     "stacking_context": 49958,
+     "display_list": 1593,
+     "reflow": 5165686,
+     "n_reflows": 2,
+     "box+fragment": 936346
+    },
+    {
+     "style": 1125117,
+     "box": 514220,
+     "fragment": 515627,
+     "restyle_and_build": 3872519,
+     "stacking_context": 50852,
+     "display_list": 1656,
+     "reflow": 3949372,
+     "n_reflows": 2,
+     "box+fragment": 1029847
+    },
+    {
+     "style": 1126026,
+     "box": 421484,
+     "fragment": 512359,
+     "restyle_and_build": 3751665,
+     "stacking_context": 51984,
+     "display_list": 1557,
+     "reflow": 3828646,
+     "n_reflows": 2,
+     "box+fragment": 933843
+    },
+    {
+     "style": 1145527,
+     "box": 471360,
+     "fragment": 483829,
+     "restyle_and_build": 3853083,
+     "stacking_context": 51069,
+     "display_list": 1562,
+     "reflow": 3943566,
+     "n_reflows": 2,
+     "box+fragment": 955189
     }
    ],
    "ladybird": [
@@ -9440,6 +10892,72 @@
      "reflow": 11565122,
      "n_reflows": 2,
      "box+fragment": 4836574
+    },
+    {
+     "style": 4992513,
+     "box": 782544,
+     "fragment": 971211,
+     "restyle_and_build": 11357783,
+     "stacking_context": 100558,
+     "display_list": 1650,
+     "reflow": 11486777,
+     "n_reflows": 2,
+     "box+fragment": 1753755
+    },
+    {
+     "style": 4988431,
+     "box": 944968,
+     "fragment": 4024433,
+     "restyle_and_build": 11487453,
+     "stacking_context": 109417,
+     "display_list": 1607,
+     "reflow": 11626614,
+     "n_reflows": 2,
+     "box+fragment": 4969401
+    },
+    {
+     "style": 8039245,
+     "box": 783839,
+     "fragment": 4057118,
+     "restyle_and_build": 14393174,
+     "stacking_context": 101750,
+     "display_list": 1696,
+     "reflow": 14523847,
+     "n_reflows": 2,
+     "box+fragment": 4840957
+    },
+    {
+     "style": 5192314,
+     "box": 761753,
+     "fragment": 4029738,
+     "restyle_and_build": 11535676,
+     "stacking_context": 116243,
+     "display_list": 1606,
+     "reflow": 11679911,
+     "n_reflows": 2,
+     "box+fragment": 4791491
+    },
+    {
+     "style": 4996933,
+     "box": 783747,
+     "fragment": 973820,
+     "restyle_and_build": 11329250,
+     "stacking_context": 101003,
+     "display_list": 1684,
+     "reflow": 11459674,
+     "n_reflows": 2,
+     "box+fragment": 1757567
+    },
+    {
+     "style": 4989451,
+     "box": 781676,
+     "fragment": 1137378,
+     "restyle_and_build": 11541244,
+     "stacking_context": 104615,
+     "display_list": 1647,
+     "reflow": 11673133,
+     "n_reflows": 2,
+     "box+fragment": 1919054
     }
    ],
    "servo": [
@@ -9475,6 +10993,72 @@
      "reflow": 5652201,
      "n_reflows": 2,
      "box+fragment": 1791109
+    },
+    {
+     "style": 1939345,
+     "box": 846436,
+     "fragment": 969248,
+     "restyle_and_build": 5493020,
+     "stacking_context": 94065,
+     "display_list": 1615,
+     "reflow": 5614283,
+     "n_reflows": 2,
+     "box+fragment": 1815684
+    },
+    {
+     "style": 2062817,
+     "box": 776022,
+     "fragment": 956315,
+     "restyle_and_build": 5588475,
+     "stacking_context": 86231,
+     "display_list": 1598,
+     "reflow": 5700791,
+     "n_reflows": 2,
+     "box+fragment": 1732337
+    },
+    {
+     "style": 2071992,
+     "box": 771639,
+     "fragment": 967900,
+     "restyle_and_build": 5504949,
+     "stacking_context": 99027,
+     "display_list": 1711,
+     "reflow": 5631341,
+     "n_reflows": 2,
+     "box+fragment": 1739539
+    },
+    {
+     "style": 2001215,
+     "box": 766175,
+     "fragment": 963128,
+     "restyle_and_build": 5448578,
+     "stacking_context": 83318,
+     "display_list": 1745,
+     "reflow": 5559341,
+     "n_reflows": 2,
+     "box+fragment": 1729303
+    },
+    {
+     "style": 2024317,
+     "box": 805254,
+     "fragment": 962314,
+     "restyle_and_build": 5597367,
+     "stacking_context": 102710,
+     "display_list": 1782,
+     "reflow": 5728331,
+     "n_reflows": 2,
+     "box+fragment": 1767568
+    },
+    {
+     "style": 2100689,
+     "box": 752109,
+     "fragment": 946511,
+     "restyle_and_build": 5512664,
+     "stacking_context": 105493,
+     "display_list": 1633,
+     "reflow": 5646433,
+     "n_reflows": 2,
+     "box+fragment": 1698620
     }
    ],
    "ladybird": [
@@ -10295,6 +11879,72 @@
      "reflow": 22048786,
      "n_reflows": 2,
      "box+fragment": 5525355
+    },
+    {
+     "style": 11510402,
+     "box": 1233324,
+     "fragment": 4152849,
+     "restyle_and_build": 21618010,
+     "stacking_context": 250252,
+     "display_list": 1778,
+     "reflow": 21901032,
+     "n_reflows": 2,
+     "box+fragment": 5386173
+    },
+    {
+     "style": 17666001,
+     "box": 3652050,
+     "fragment": 4270542,
+     "restyle_and_build": 30247357,
+     "stacking_context": 253935,
+     "display_list": 1818,
+     "reflow": 30535713,
+     "n_reflows": 2,
+     "box+fragment": 7922592
+    },
+    {
+     "style": 14066275,
+     "box": 1242957,
+     "fragment": 4106970,
+     "restyle_and_build": 24093896,
+     "stacking_context": 242612,
+     "display_list": 1732,
+     "reflow": 24371353,
+     "n_reflows": 2,
+     "box+fragment": 5349927
+    },
+    {
+     "style": 14805679,
+     "box": 1535077,
+     "fragment": 4147753,
+     "restyle_and_build": 22127291,
+     "stacking_context": 230189,
+     "display_list": 1814,
+     "reflow": 22390516,
+     "n_reflows": 2,
+     "box+fragment": 5682830
+    },
+    {
+     "style": 10457451,
+     "box": 1227172,
+     "fragment": 4100513,
+     "restyle_and_build": 20486310,
+     "stacking_context": 228828,
+     "display_list": 1877,
+     "reflow": 20750787,
+     "n_reflows": 2,
+     "box+fragment": 5327685
+    },
+    {
+     "style": 17002229,
+     "box": 1230832,
+     "fragment": 4157238,
+     "restyle_and_build": 24046218,
+     "stacking_context": 266258,
+     "display_list": 1938,
+     "reflow": 24348383,
+     "n_reflows": 2,
+     "box+fragment": 5388070
     }
    ],
    "servo": [
@@ -10330,6 +11980,72 @@
      "reflow": 14721048,
      "n_reflows": 2,
      "box+fragment": 5203233
+    },
+    {
+     "style": 7380677,
+     "box": 1199605,
+     "fragment": 4314561,
+     "restyle_and_build": 14674035,
+     "stacking_context": 249144,
+     "display_list": 1941,
+     "reflow": 14962317,
+     "n_reflows": 2,
+     "box+fragment": 5514166
+    },
+    {
+     "style": 7951471,
+     "box": 1264284,
+     "fragment": 4226382,
+     "restyle_and_build": 15472275,
+     "stacking_context": 288614,
+     "display_list": 1981,
+     "reflow": 15809085,
+     "n_reflows": 2,
+     "box+fragment": 5490666
+    },
+    {
+     "style": 8230629,
+     "box": 1202130,
+     "fragment": 4065049,
+     "restyle_and_build": 15285014,
+     "stacking_context": 222373,
+     "display_list": 1737,
+     "reflow": 15537741,
+     "n_reflows": 2,
+     "box+fragment": 5267179
+    },
+    {
+     "style": 8093845,
+     "box": 1198266,
+     "fragment": 3976176,
+     "restyle_and_build": 15157108,
+     "stacking_context": 234135,
+     "display_list": 1756,
+     "reflow": 15435735,
+     "n_reflows": 2,
+     "box+fragment": 5174442
+    },
+    {
+     "style": 7951405,
+     "box": 1284328,
+     "fragment": 4020519,
+     "restyle_and_build": 15020511,
+     "stacking_context": 234844,
+     "display_list": 1770,
+     "reflow": 15287504,
+     "n_reflows": 2,
+     "box+fragment": 5304847
+    },
+    {
+     "style": 7870216,
+     "box": 1286249,
+     "fragment": 4053677,
+     "restyle_and_build": 15046981,
+     "stacking_context": 229932,
+     "display_list": 2016,
+     "reflow": 15309409,
+     "n_reflows": 2,
+     "box+fragment": 5339926
     }
    ],
    "ladybird": [
@@ -11150,6 +12866,72 @@
      "reflow": 210794115,
      "n_reflows": 3,
      "box+fragment": 79062298
+    },
+    {
+     "style": 86441770,
+     "box": 13767592,
+     "fragment": 44846922,
+     "restyle_and_build": 149480840,
+     "stacking_context": 2778704,
+     "display_list": 2600,
+     "reflow": 152320131,
+     "n_reflows": 3,
+     "box+fragment": 58614514
+    },
+    {
+     "style": 87040613,
+     "box": 14428382,
+     "fragment": 46345932,
+     "restyle_and_build": 152679987,
+     "stacking_context": 2878464,
+     "display_list": 2539,
+     "reflow": 155650178,
+     "n_reflows": 3,
+     "box+fragment": 60774314
+    },
+    {
+     "style": 97113636,
+     "box": 18016263,
+     "fragment": 64097747,
+     "restyle_and_build": 185645219,
+     "stacking_context": 4211528,
+     "display_list": 2705,
+     "reflow": 189940715,
+     "n_reflows": 3,
+     "box+fragment": 82114010
+    },
+    {
+     "style": 86090585,
+     "box": 15520162,
+     "fragment": 44036703,
+     "restyle_and_build": 151150442,
+     "stacking_context": 2731267,
+     "display_list": 2249,
+     "reflow": 153942800,
+     "n_reflows": 3,
+     "box+fragment": 59556865
+    },
+    {
+     "style": 86519844,
+     "box": 14384415,
+     "fragment": 42922910,
+     "restyle_and_build": 149032462,
+     "stacking_context": 2738047,
+     "display_list": 2088,
+     "reflow": 151820626,
+     "n_reflows": 3,
+     "box+fragment": 57307325
+    },
+    {
+     "style": 86159656,
+     "box": 13654612,
+     "fragment": 44167765,
+     "restyle_and_build": 149019299,
+     "stacking_context": 2817598,
+     "display_list": 2345,
+     "reflow": 151909620,
+     "n_reflows": 3,
+     "box+fragment": 57822377
     }
    ],
    "servo": [
@@ -11185,6 +12967,72 @@
      "reflow": 187459379,
      "n_reflows": 3,
      "box+fragment": 59873220
+    },
+    {
+     "style": 79146869,
+     "box": 13337801,
+     "fragment": 41732772,
+     "restyle_and_build": 138356778,
+     "stacking_context": 2910958,
+     "display_list": 2113,
+     "reflow": 141314786,
+     "n_reflows": 2,
+     "box+fragment": 55070573
+    },
+    {
+     "style": 82760511,
+     "box": 14166267,
+     "fragment": 42673459,
+     "restyle_and_build": 144478170,
+     "stacking_context": 3001643,
+     "display_list": 2195,
+     "reflow": 147534694,
+     "n_reflows": 3,
+     "box+fragment": 56839726
+    },
+    {
+     "style": 76589909,
+     "box": 12613457,
+     "fragment": 46198093,
+     "restyle_and_build": 139914580,
+     "stacking_context": 3030622,
+     "display_list": 2977,
+     "reflow": 143045970,
+     "n_reflows": 2,
+     "box+fragment": 58811550
+    },
+    {
+     "style": 74109760,
+     "box": 14514696,
+     "fragment": 43034310,
+     "restyle_and_build": 136894966,
+     "stacking_context": 2744622,
+     "display_list": 2320,
+     "reflow": 139697551,
+     "n_reflows": 2,
+     "box+fragment": 57549006
+    },
+    {
+     "style": 81335586,
+     "box": 13212174,
+     "fragment": 42407512,
+     "restyle_and_build": 141208130,
+     "stacking_context": 2987460,
+     "display_list": 2360,
+     "reflow": 144262534,
+     "n_reflows": 2,
+     "box+fragment": 55619686
+    },
+    {
+     "style": 76460037,
+     "box": 12990135,
+     "fragment": 43043206,
+     "restyle_and_build": 136838158,
+     "stacking_context": 2825943,
+     "display_list": 2301,
+     "reflow": 139710104,
+     "n_reflows": 2,
+     "box+fragment": 56033341
     }
    ],
    "ladybird": [
@@ -12005,6 +13853,72 @@
      "reflow": 36177871,
      "n_reflows": 2,
      "box+fragment": 22977013
+    },
+    {
+     "style": 8234528,
+     "box": 1764528,
+     "fragment": 21272839,
+     "restyle_and_build": 35321234,
+     "stacking_context": 408113,
+     "display_list": 1742,
+     "reflow": 35762192,
+     "n_reflows": 2,
+     "box+fragment": 23037367
+    },
+    {
+     "style": 10686160,
+     "box": 1789209,
+     "fragment": 21236817,
+     "restyle_and_build": 38468111,
+     "stacking_context": 383703,
+     "display_list": 1875,
+     "reflow": 38884559,
+     "n_reflows": 2,
+     "box+fragment": 23026026
+    },
+    {
+     "style": 8666314,
+     "box": 1905216,
+     "fragment": 21667831,
+     "restyle_and_build": 37234714,
+     "stacking_context": 564389,
+     "display_list": 1862,
+     "reflow": 37842209,
+     "n_reflows": 2,
+     "box+fragment": 23573047
+    },
+    {
+     "style": 10499341,
+     "box": 1767673,
+     "fragment": 21126948,
+     "restyle_and_build": 35059578,
+     "stacking_context": 434137,
+     "display_list": 1776,
+     "reflow": 35529343,
+     "n_reflows": 2,
+     "box+fragment": 22894621
+    },
+    {
+     "style": 10654876,
+     "box": 1842115,
+     "fragment": 21591623,
+     "restyle_and_build": 38853572,
+     "stacking_context": 582616,
+     "display_list": 2013,
+     "reflow": 39480798,
+     "n_reflows": 2,
+     "box+fragment": 23433738
+    },
+    {
+     "style": 10880940,
+     "box": 1755455,
+     "fragment": 21303992,
+     "restyle_and_build": 38688019,
+     "stacking_context": 431096,
+     "display_list": 1846,
+     "reflow": 39153397,
+     "n_reflows": 2,
+     "box+fragment": 23059447
     }
    ],
    "servo": [
@@ -12040,6 +13954,72 @@
      "reflow": 28981356,
      "n_reflows": 2,
      "box+fragment": 21977302
+    },
+    {
+     "style": 4282281,
+     "box": 821927,
+     "fragment": 21136980,
+     "restyle_and_build": 28246443,
+     "stacking_context": 416215,
+     "display_list": 1961,
+     "reflow": 28697168,
+     "n_reflows": 2,
+     "box+fragment": 21958907
+    },
+    {
+     "style": 4484772,
+     "box": 852001,
+     "fragment": 21196660,
+     "restyle_and_build": 28353041,
+     "stacking_context": 519815,
+     "display_list": 2150,
+     "reflow": 28909309,
+     "n_reflows": 2,
+     "box+fragment": 22048661
+    },
+    {
+     "style": 4736971,
+     "box": 869752,
+     "fragment": 21455629,
+     "restyle_and_build": 29049019,
+     "stacking_context": 573152,
+     "display_list": 2053,
+     "reflow": 29666504,
+     "n_reflows": 2,
+     "box+fragment": 22325381
+    },
+    {
+     "style": 4370894,
+     "box": 984074,
+     "fragment": 21653580,
+     "restyle_and_build": 29024834,
+     "stacking_context": 633659,
+     "display_list": 2631,
+     "reflow": 29705795,
+     "n_reflows": 2,
+     "box+fragment": 22637654
+    },
+    {
+     "style": 4295178,
+     "box": 843266,
+     "fragment": 21103831,
+     "restyle_and_build": 28055829,
+     "stacking_context": 427774,
+     "display_list": 1918,
+     "reflow": 28526942,
+     "n_reflows": 2,
+     "box+fragment": 21947097
+    },
+    {
+     "style": 4392035,
+     "box": 855698,
+     "fragment": 21059424,
+     "restyle_and_build": 28162032,
+     "stacking_context": 442629,
+     "display_list": 1876,
+     "reflow": 28641154,
+     "n_reflows": 2,
+     "box+fragment": 21915122
     }
    ],
    "ladybird": [
@@ -12860,6 +14840,72 @@
      "reflow": 146902306,
      "n_reflows": 3,
      "box+fragment": 95352933
+    },
+    {
+     "style": 47072189,
+     "box": 12532651,
+     "fragment": 83788620,
+     "restyle_and_build": 147357375,
+     "stacking_context": 2510518,
+     "display_list": 2076,
+     "reflow": 149928162,
+     "n_reflows": 3,
+     "box+fragment": 96321271
+    },
+    {
+     "style": 46505706,
+     "box": 11980159,
+     "fragment": 85058094,
+     "restyle_and_build": 147402039,
+     "stacking_context": 2508246,
+     "display_list": 2010,
+     "reflow": 149968880,
+     "n_reflows": 3,
+     "box+fragment": 97038253
+    },
+    {
+     "style": 45889963,
+     "box": 12020501,
+     "fragment": 86217879,
+     "restyle_and_build": 147962417,
+     "stacking_context": 2601528,
+     "display_list": 2467,
+     "reflow": 150626886,
+     "n_reflows": 3,
+     "box+fragment": 98238380
+    },
+    {
+     "style": 45565166,
+     "box": 11373088,
+     "fragment": 82742431,
+     "restyle_and_build": 142566189,
+     "stacking_context": 2508094,
+     "display_list": 2025,
+     "reflow": 145121060,
+     "n_reflows": 3,
+     "box+fragment": 94115519
+    },
+    {
+     "style": 45311408,
+     "box": 10796511,
+     "fragment": 82665897,
+     "restyle_and_build": 141727466,
+     "stacking_context": 2331711,
+     "display_list": 2152,
+     "reflow": 144105046,
+     "n_reflows": 3,
+     "box+fragment": 93462408
+    },
+    {
+     "style": 45405866,
+     "box": 10817212,
+     "fragment": 82924446,
+     "restyle_and_build": 142083775,
+     "stacking_context": 2344487,
+     "display_list": 2063,
+     "reflow": 144475550,
+     "n_reflows": 3,
+     "box+fragment": 93741658
     }
    ],
    "servo": [
@@ -12895,6 +14941,72 @@
      "reflow": 120475439,
      "n_reflows": 2,
      "box+fragment": 91918538
+    },
+    {
+     "style": 22316324,
+     "box": 4016373,
+     "fragment": 83143563,
+     "restyle_and_build": 112846810,
+     "stacking_context": 2663057,
+     "display_list": 1982,
+     "reflow": 115554789,
+     "n_reflows": 2,
+     "box+fragment": 87159936
+    },
+    {
+     "style": 22458942,
+     "box": 3686350,
+     "fragment": 90221650,
+     "restyle_and_build": 119582656,
+     "stacking_context": 4044038,
+     "display_list": 2365,
+     "reflow": 123689949,
+     "n_reflows": 2,
+     "box+fragment": 93908000
+    },
+    {
+     "style": 22588848,
+     "box": 3709502,
+     "fragment": 83091208,
+     "restyle_and_build": 112948682,
+     "stacking_context": 2542437,
+     "display_list": 2117,
+     "reflow": 115533943,
+     "n_reflows": 2,
+     "box+fragment": 86800710
+    },
+    {
+     "style": 22318193,
+     "box": 3702091,
+     "fragment": 82994576,
+     "restyle_and_build": 112049065,
+     "stacking_context": 2420945,
+     "display_list": 1904,
+     "reflow": 114511119,
+     "n_reflows": 2,
+     "box+fragment": 86696667
+    },
+    {
+     "style": 23032193,
+     "box": 3788276,
+     "fragment": 83625640,
+     "restyle_and_build": 114192412,
+     "stacking_context": 2634555,
+     "display_list": 2063,
+     "reflow": 116875944,
+     "n_reflows": 2,
+     "box+fragment": 87413916
+    },
+    {
+     "style": 22194468,
+     "box": 3755185,
+     "fragment": 83824325,
+     "restyle_and_build": 112953840,
+     "stacking_context": 3731475,
+     "display_list": 3054,
+     "reflow": 116760688,
+     "n_reflows": 2,
+     "box+fragment": 87579510
     }
    ],
    "ladybird": [
@@ -13715,6 +15827,72 @@
      "reflow": 280718194,
      "n_reflows": 3,
      "box+fragment": 272149704
+    },
+    {
+     "style": 754689,
+     "box": 640818,
+     "fragment": 270880273,
+     "restyle_and_build": 279883966,
+     "stacking_context": 57526,
+     "display_list": 1622,
+     "reflow": 279973539,
+     "n_reflows": 3,
+     "box+fragment": 271521091
+    },
+    {
+     "style": 768278,
+     "box": 639391,
+     "fragment": 277630032,
+     "restyle_and_build": 280690977,
+     "stacking_context": 76578,
+     "display_list": 1622,
+     "reflow": 280804744,
+     "n_reflows": 3,
+     "box+fragment": 278269423
+    },
+    {
+     "style": 755779,
+     "box": 634909,
+     "fragment": 272131501,
+     "restyle_and_build": 281121240,
+     "stacking_context": 72530,
+     "display_list": 1622,
+     "reflow": 281228263,
+     "n_reflows": 3,
+     "box+fragment": 272766410
+    },
+    {
+     "style": 766124,
+     "box": 650148,
+     "fragment": 276969849,
+     "restyle_and_build": 280034489,
+     "stacking_context": 79178,
+     "display_list": 1956,
+     "reflow": 280150917,
+     "n_reflows": 3,
+     "box+fragment": 277619997
+    },
+    {
+     "style": 759346,
+     "box": 622732,
+     "fragment": 276872722,
+     "restyle_and_build": 279883937,
+     "stacking_context": 83342,
+     "display_list": 1621,
+     "reflow": 280007527,
+     "n_reflows": 3,
+     "box+fragment": 277495454
+    },
+    {
+     "style": 769177,
+     "box": 643172,
+     "fragment": 279147207,
+     "restyle_and_build": 282217412,
+     "stacking_context": 94913,
+     "display_list": 1699,
+     "reflow": 282351930,
+     "n_reflows": 3,
+     "box+fragment": 279790379
     }
    ],
    "servo": [
@@ -13750,6 +15928,72 @@
      "reflow": 265847460,
      "n_reflows": 3,
      "box+fragment": 263224288
+    },
+    {
+     "style": 793739,
+     "box": 692179,
+     "fragment": 265104968,
+     "restyle_and_build": 268308795,
+     "stacking_context": 72635,
+     "display_list": 1587,
+     "reflow": 268417443,
+     "n_reflows": 3,
+     "box+fragment": 265797147
+    },
+    {
+     "style": 800475,
+     "box": 668788,
+     "fragment": 261544807,
+     "restyle_and_build": 264755058,
+     "stacking_context": 77490,
+     "display_list": 1643,
+     "reflow": 264869134,
+     "n_reflows": 3,
+     "box+fragment": 262213595
+    },
+    {
+     "style": 761449,
+     "box": 650959,
+     "fragment": 262513154,
+     "restyle_and_build": 265599901,
+     "stacking_context": 52052,
+     "display_list": 1528,
+     "reflow": 265682785,
+     "n_reflows": 3,
+     "box+fragment": 263164113
+    },
+    {
+     "style": 751345,
+     "box": 657984,
+     "fragment": 261133416,
+     "restyle_and_build": 264187546,
+     "stacking_context": 57412,
+     "display_list": 1668,
+     "reflow": 264276212,
+     "n_reflows": 3,
+     "box+fragment": 261791400
+    },
+    {
+     "style": 884784,
+     "box": 648594,
+     "fragment": 260750056,
+     "restyle_and_build": 263994995,
+     "stacking_context": 57293,
+     "display_list": 9537,
+     "reflow": 264090609,
+     "n_reflows": 3,
+     "box+fragment": 261398650
+    },
+    {
+     "style": 795384,
+     "box": 663125,
+     "fragment": 261416765,
+     "restyle_and_build": 264543957,
+     "stacking_context": 66340,
+     "display_list": 1696,
+     "reflow": 264641102,
+     "n_reflows": 3,
+     "box+fragment": 262079890
     }
    ],
    "ladybird": [
@@ -14570,6 +16814,72 @@
      "reflow": 34503580,
      "n_reflows": 2,
      "box+fragment": 11228081
+    },
+    {
+     "style": 20252592,
+     "box": 4284351,
+     "fragment": 7301265,
+     "restyle_and_build": 34079498,
+     "stacking_context": 807396,
+     "display_list": 2018,
+     "reflow": 34926664,
+     "n_reflows": 2,
+     "box+fragment": 11585616
+    },
+    {
+     "style": 19717913,
+     "box": 3951017,
+     "fragment": 6920392,
+     "restyle_and_build": 32657317,
+     "stacking_context": 751868,
+     "display_list": 1944,
+     "reflow": 33447980,
+     "n_reflows": 2,
+     "box+fragment": 10871409
+    },
+    {
+     "style": 19785667,
+     "box": 3948492,
+     "fragment": 6944881,
+     "restyle_and_build": 32898723,
+     "stacking_context": 731051,
+     "display_list": 1838,
+     "reflow": 33667652,
+     "n_reflows": 2,
+     "box+fragment": 10893373
+    },
+    {
+     "style": 19759772,
+     "box": 3897719,
+     "fragment": 6675519,
+     "restyle_and_build": 32369614,
+     "stacking_context": 646570,
+     "display_list": 1879,
+     "reflow": 33071562,
+     "n_reflows": 2,
+     "box+fragment": 10573238
+    },
+    {
+     "style": 19742969,
+     "box": 3983805,
+     "fragment": 6952646,
+     "restyle_and_build": 32717229,
+     "stacking_context": 715472,
+     "display_list": 1936,
+     "reflow": 33472478,
+     "n_reflows": 2,
+     "box+fragment": 10936451
+    },
+    {
+     "style": 19689936,
+     "box": 3854816,
+     "fragment": 6835619,
+     "restyle_and_build": 32426726,
+     "stacking_context": 641040,
+     "display_list": 1774,
+     "reflow": 33101735,
+     "n_reflows": 2,
+     "box+fragment": 10690435
     }
    ],
    "servo": [
@@ -14605,6 +16915,72 @@
      "reflow": 30603137,
      "n_reflows": 2,
      "box+fragment": 9681076
+    },
+    {
+     "style": 14242531,
+     "box": 2249039,
+     "fragment": 6750542,
+     "restyle_and_build": 25429740,
+     "stacking_context": 649356,
+     "display_list": 2016,
+     "reflow": 26112826,
+     "n_reflows": 2,
+     "box+fragment": 8999581
+    },
+    {
+     "style": 15607907,
+     "box": 2476936,
+     "fragment": 6684686,
+     "restyle_and_build": 26977728,
+     "stacking_context": 686916,
+     "display_list": 1872,
+     "reflow": 27710347,
+     "n_reflows": 2,
+     "box+fragment": 9161622
+    },
+    {
+     "style": 16275167,
+     "box": 2673541,
+     "fragment": 6762356,
+     "restyle_and_build": 27909190,
+     "stacking_context": 651158,
+     "display_list": 1811,
+     "reflow": 28596623,
+     "n_reflows": 2,
+     "box+fragment": 9435897
+    },
+    {
+     "style": 15112438,
+     "box": 2331271,
+     "fragment": 6818015,
+     "restyle_and_build": 26607458,
+     "stacking_context": 715772,
+     "display_list": 1943,
+     "reflow": 27362440,
+     "n_reflows": 2,
+     "box+fragment": 9149286
+    },
+    {
+     "style": 14807402,
+     "box": 2197318,
+     "fragment": 6851182,
+     "restyle_and_build": 26022616,
+     "stacking_context": 661700,
+     "display_list": 1937,
+     "reflow": 26720963,
+     "n_reflows": 2,
+     "box+fragment": 9048500
+    },
+    {
+     "style": 15325457,
+     "box": 2279278,
+     "fragment": 6756276,
+     "restyle_and_build": 26633493,
+     "stacking_context": 688302,
+     "display_list": 1860,
+     "reflow": 27360237,
+     "n_reflows": 2,
+     "box+fragment": 9035554
     }
    ],
    "ladybird": [
@@ -15425,6 +17801,72 @@
      "reflow": 71592620,
      "n_reflows": 2,
      "box+fragment": 23858847
+    },
+    {
+     "style": 20660864,
+     "box": 3969408,
+     "fragment": 6961611,
+     "restyle_and_build": 33602198,
+     "stacking_context": 669253,
+     "display_list": 1950,
+     "reflow": 34309711,
+     "n_reflows": 2,
+     "box+fragment": 10931019
+    },
+    {
+     "style": 20031873,
+     "box": 4255472,
+     "fragment": 7220802,
+     "restyle_and_build": 33691917,
+     "stacking_context": 836998,
+     "display_list": 1991,
+     "reflow": 34570165,
+     "n_reflows": 2,
+     "box+fragment": 11476274
+    },
+    {
+     "style": 19821056,
+     "box": 3998852,
+     "fragment": 6928996,
+     "restyle_and_build": 32759782,
+     "stacking_context": 704213,
+     "display_list": 1794,
+     "reflow": 33502301,
+     "n_reflows": 2,
+     "box+fragment": 10927848
+    },
+    {
+     "style": 19744519,
+     "box": 3922751,
+     "fragment": 6599942,
+     "restyle_and_build": 32351147,
+     "stacking_context": 647124,
+     "display_list": 1919,
+     "reflow": 33034293,
+     "n_reflows": 2,
+     "box+fragment": 10522693
+    },
+    {
+     "style": 19824497,
+     "box": 3939855,
+     "fragment": 6709432,
+     "restyle_and_build": 32587783,
+     "stacking_context": 672472,
+     "display_list": 2049,
+     "reflow": 33299493,
+     "n_reflows": 2,
+     "box+fragment": 10649287
+    },
+    {
+     "style": 19888017,
+     "box": 4295156,
+     "fragment": 6873708,
+     "restyle_and_build": 33106604,
+     "stacking_context": 782966,
+     "display_list": 1938,
+     "reflow": 33926759,
+     "n_reflows": 2,
+     "box+fragment": 11168864
     }
    ],
    "servo": [
@@ -15460,6 +17902,72 @@
      "reflow": 29226225,
      "n_reflows": 2,
      "box+fragment": 9668724
+    },
+    {
+     "style": 15112318,
+     "box": 2554159,
+     "fragment": 6513376,
+     "restyle_and_build": 26396016,
+     "stacking_context": 689025,
+     "display_list": 1907,
+     "reflow": 27122764,
+     "n_reflows": 2,
+     "box+fragment": 9067535
+    },
+    {
+     "style": 15525392,
+     "box": 2273363,
+     "fragment": 6504616,
+     "restyle_and_build": 26480717,
+     "stacking_context": 642253,
+     "display_list": 1803,
+     "reflow": 27161742,
+     "n_reflows": 2,
+     "box+fragment": 8777979
+    },
+    {
+     "style": 13666757,
+     "box": 2316143,
+     "fragment": 6607576,
+     "restyle_and_build": 24760414,
+     "stacking_context": 697017,
+     "display_list": 1844,
+     "reflow": 25494617,
+     "n_reflows": 2,
+     "box+fragment": 8923719
+    },
+    {
+     "style": 14009353,
+     "box": 2284151,
+     "fragment": 6450605,
+     "restyle_and_build": 24917121,
+     "stacking_context": 659744,
+     "display_list": 1807,
+     "reflow": 25612940,
+     "n_reflows": 2,
+     "box+fragment": 8734756
+    },
+    {
+     "style": 16453196,
+     "box": 2969635,
+     "fragment": 6556683,
+     "restyle_and_build": 28154712,
+     "stacking_context": 686749,
+     "display_list": 1919,
+     "reflow": 28876645,
+     "n_reflows": 2,
+     "box+fragment": 9526318
+    },
+    {
+     "style": 15201417,
+     "box": 2341113,
+     "fragment": 6526068,
+     "restyle_and_build": 26427893,
+     "stacking_context": 656083,
+     "display_list": 1810,
+     "reflow": 27121347,
+     "n_reflows": 2,
+     "box+fragment": 8867181
     }
    ],
    "ladybird": [
@@ -16280,6 +18788,72 @@
      "reflow": 2206589982,
      "n_reflows": 3,
      "box+fragment": 781369473
+    },
+    {
+     "style": 981916196,
+     "box": 125852405,
+     "fragment": 640030984,
+     "restyle_and_build": 1786121732,
+     "stacking_context": 40212413,
+     "display_list": 3317,
+     "reflow": 1826448391,
+     "n_reflows": 3,
+     "box+fragment": 765883389
+    },
+    {
+     "style": 1008440134,
+     "box": 135107434,
+     "fragment": 645066754,
+     "restyle_and_build": 1828719673,
+     "stacking_context": 42611692,
+     "display_list": 3830,
+     "reflow": 1871434735,
+     "n_reflows": 3,
+     "box+fragment": 780174188
+    },
+    {
+     "style": 990142737,
+     "box": 128656236,
+     "fragment": 643623502,
+     "restyle_and_build": 1801265477,
+     "stacking_context": 41472627,
+     "display_list": 3338,
+     "reflow": 1842847877,
+     "n_reflows": 3,
+     "box+fragment": 772279738
+    },
+    {
+     "style": 981304935,
+     "box": 123632210,
+     "fragment": 642802466,
+     "restyle_and_build": 1786025008,
+     "stacking_context": 42750767,
+     "display_list": 4023,
+     "reflow": 1828899058,
+     "n_reflows": 3,
+     "box+fragment": 766434676
+    },
+    {
+     "style": 986168174,
+     "box": 126238692,
+     "fragment": 644450946,
+     "restyle_and_build": 1794468928,
+     "stacking_context": 40988932,
+     "display_list": 3194,
+     "reflow": 1835560246,
+     "n_reflows": 3,
+     "box+fragment": 770689638
+    },
+    {
+     "style": 980618462,
+     "box": 124817266,
+     "fragment": 645335560,
+     "restyle_and_build": 1789395637,
+     "stacking_context": 41130842,
+     "display_list": 4556,
+     "reflow": 1830634308,
+     "n_reflows": 3,
+     "box+fragment": 770152826
     }
    ],
    "servo": [
@@ -16315,6 +18889,72 @@
      "reflow": 1300429219,
      "n_reflows": 3,
      "box+fragment": 370858345
+    },
+    {
+     "style": 821858333,
+     "box": 44685730,
+     "fragment": 306967032,
+     "restyle_and_build": 1211729729,
+     "stacking_context": 41619512,
+     "display_list": 3028,
+     "reflow": 1253464957,
+     "n_reflows": 3,
+     "box+fragment": 351652762
+    },
+    {
+     "style": 803395958,
+     "box": 45561611,
+     "fragment": 311644678,
+     "restyle_and_build": 1199361760,
+     "stacking_context": 41777753,
+     "display_list": 3215,
+     "reflow": 1241254233,
+     "n_reflows": 3,
+     "box+fragment": 357206289
+    },
+    {
+     "style": 767416978,
+     "box": 44607515,
+     "fragment": 316330249,
+     "restyle_and_build": 1167519916,
+     "stacking_context": 42043261,
+     "display_list": 2750,
+     "reflow": 1209666883,
+     "n_reflows": 3,
+     "box+fragment": 360937764
+    },
+    {
+     "style": 744859036,
+     "box": 45122778,
+     "fragment": 305160229,
+     "restyle_and_build": 1134808693,
+     "stacking_context": 41219784,
+     "display_list": 2809,
+     "reflow": 1176132604,
+     "n_reflows": 3,
+     "box+fragment": 350283007
+    },
+    {
+     "style": 839281455,
+     "box": 44403745,
+     "fragment": 314314490,
+     "restyle_and_build": 1236439781,
+     "stacking_context": 41531832,
+     "display_list": 3069,
+     "reflow": 1278076471,
+     "n_reflows": 3,
+     "box+fragment": 358718235
+    },
+    {
+     "style": 754240514,
+     "box": 45048428,
+     "fragment": 304869007,
+     "restyle_and_build": 1142655346,
+     "stacking_context": 43040689,
+     "display_list": 2762,
+     "reflow": 1185794972,
+     "n_reflows": 3,
+     "box+fragment": 349917435
     }
    ],
    "ladybird": [
@@ -17135,6 +19775,72 @@
      "reflow": 412853572,
      "n_reflows": 3,
      "box+fragment": 95245409
+    },
+    {
+     "style": 141140654,
+     "box": 18557001,
+     "fragment": 21507122,
+     "restyle_and_build": 186817540,
+     "stacking_context": 4031869,
+     "display_list": 3038,
+     "reflow": 190907166,
+     "n_reflows": 3,
+     "box+fragment": 40064123
+    },
+    {
+     "style": 141648185,
+     "box": 18388247,
+     "fragment": 21570038,
+     "restyle_and_build": 186960747,
+     "stacking_context": 4189929,
+     "display_list": 2241,
+     "reflow": 191208035,
+     "n_reflows": 3,
+     "box+fragment": 39958285
+    },
+    {
+     "style": 140678264,
+     "box": 18189760,
+     "fragment": 21503250,
+     "restyle_and_build": 185610779,
+     "stacking_context": 4252793,
+     "display_list": 2271,
+     "reflow": 189922169,
+     "n_reflows": 3,
+     "box+fragment": 39693010
+    },
+    {
+     "style": 142058159,
+     "box": 19123052,
+     "fragment": 21625476,
+     "restyle_and_build": 189584268,
+     "stacking_context": 4065350,
+     "display_list": 2611,
+     "reflow": 193712481,
+     "n_reflows": 3,
+     "box+fragment": 40748528
+    },
+    {
+     "style": 139970545,
+     "box": 18182769,
+     "fragment": 21761100,
+     "restyle_and_build": 185827458,
+     "stacking_context": 4123227,
+     "display_list": 2352,
+     "reflow": 190010722,
+     "n_reflows": 3,
+     "box+fragment": 39943869
+    },
+    {
+     "style": 140780969,
+     "box": 18037383,
+     "fragment": 21662860,
+     "restyle_and_build": 185747887,
+     "stacking_context": 4187995,
+     "display_list": 2576,
+     "reflow": 189991119,
+     "n_reflows": 3,
+     "box+fragment": 39700243
     }
    ],
    "servo": [
@@ -17170,6 +19876,72 @@
      "reflow": 191094970,
      "n_reflows": 3,
      "box+fragment": 43058723
+    },
+    {
+     "style": 113607970,
+     "box": 17914350,
+     "fragment": 24451068,
+     "restyle_and_build": 162171248,
+     "stacking_context": 5382775,
+     "display_list": 3705,
+     "reflow": 167646098,
+     "n_reflows": 3,
+     "box+fragment": 42365418
+    },
+    {
+     "style": 127247971,
+     "box": 18626513,
+     "fragment": 24836107,
+     "restyle_and_build": 177579541,
+     "stacking_context": 4719938,
+     "display_list": 2376,
+     "reflow": 182370717,
+     "n_reflows": 3,
+     "box+fragment": 43462620
+    },
+    {
+     "style": 119335377,
+     "box": 21047351,
+     "fragment": 24141189,
+     "restyle_and_build": 171949982,
+     "stacking_context": 4425383,
+     "display_list": 2769,
+     "reflow": 176447848,
+     "n_reflows": 3,
+     "box+fragment": 45188540
+    },
+    {
+     "style": 128066447,
+     "box": 17260939,
+     "fragment": 22585476,
+     "restyle_and_build": 173588882,
+     "stacking_context": 4305272,
+     "display_list": 2174,
+     "reflow": 177948176,
+     "n_reflows": 3,
+     "box+fragment": 39846415
+    },
+    {
+     "style": 118418197,
+     "box": 17680066,
+     "fragment": 22921987,
+     "restyle_and_build": 165567715,
+     "stacking_context": 4260078,
+     "display_list": 2297,
+     "reflow": 169881786,
+     "n_reflows": 3,
+     "box+fragment": 40602053
+    },
+    {
+     "style": 117882466,
+     "box": 18697425,
+     "fragment": 24580226,
+     "restyle_and_build": 167902839,
+     "stacking_context": 5093424,
+     "display_list": 2915,
+     "reflow": 173077894,
+     "n_reflows": 3,
+     "box+fragment": 43277651
     }
    ],
    "ladybird": [
@@ -17990,6 +20762,72 @@
      "reflow": 161868268,
      "n_reflows": 3,
      "box+fragment": 50857139
+    },
+    {
+     "style": 98370023,
+     "box": 22815626,
+     "fragment": 25497216,
+     "restyle_and_build": 151490866,
+     "stacking_context": 4587416,
+     "display_list": 2184,
+     "reflow": 156133348,
+     "n_reflows": 3,
+     "box+fragment": 48312842
+    },
+    {
+     "style": 99118682,
+     "box": 22394132,
+     "fragment": 25167196,
+     "restyle_and_build": 151291050,
+     "stacking_context": 4261561,
+     "display_list": 2279,
+     "reflow": 155604036,
+     "n_reflows": 3,
+     "box+fragment": 47561328
+    },
+    {
+     "style": 168610370,
+     "box": 47538159,
+     "fragment": 52970335,
+     "restyle_and_build": 279310879,
+     "stacking_context": 7639726,
+     "display_list": 2354,
+     "reflow": 287032288,
+     "n_reflows": 3,
+     "box+fragment": 100508494
+    },
+    {
+     "style": 97866231,
+     "box": 23581910,
+     "fragment": 25736510,
+     "restyle_and_build": 152093843,
+     "stacking_context": 6288669,
+     "display_list": 3153,
+     "reflow": 158464419,
+     "n_reflows": 3,
+     "box+fragment": 49318420
+    },
+    {
+     "style": 98999813,
+     "box": 23796051,
+     "fragment": 24934422,
+     "restyle_and_build": 154342420,
+     "stacking_context": 4346073,
+     "display_list": 1919,
+     "reflow": 158743768,
+     "n_reflows": 3,
+     "box+fragment": 48730473
+    },
+    {
+     "style": 100080535,
+     "box": 22251466,
+     "fragment": 25057342,
+     "restyle_and_build": 152844712,
+     "stacking_context": 4222621,
+     "display_list": 2355,
+     "reflow": 157136598,
+     "n_reflows": 3,
+     "box+fragment": 47308808
     }
    ],
    "servo": [
@@ -18025,6 +20863,72 @@
      "reflow": 120151921,
      "n_reflows": 3,
      "box+fragment": 38082079
+    },
+    {
+     "style": 78195080,
+     "box": 12501074,
+     "fragment": 26654142,
+     "restyle_and_build": 122687833,
+     "stacking_context": 4373179,
+     "display_list": 2083,
+     "reflow": 127113570,
+     "n_reflows": 3,
+     "box+fragment": 39155216
+    },
+    {
+     "style": 73537750,
+     "box": 11923096,
+     "fragment": 26068981,
+     "restyle_and_build": 116731041,
+     "stacking_context": 4497689,
+     "display_list": 2369,
+     "reflow": 121280767,
+     "n_reflows": 3,
+     "box+fragment": 37992077
+    },
+    {
+     "style": 76820396,
+     "box": 13872118,
+     "fragment": 25742927,
+     "restyle_and_build": 121758702,
+     "stacking_context": 4492524,
+     "display_list": 2059,
+     "reflow": 126309752,
+     "n_reflows": 3,
+     "box+fragment": 39615045
+    },
+    {
+     "style": 75821084,
+     "box": 11825565,
+     "fragment": 25722099,
+     "restyle_and_build": 119540080,
+     "stacking_context": 4434925,
+     "display_list": 1994,
+     "reflow": 124029267,
+     "n_reflows": 3,
+     "box+fragment": 37547664
+    },
+    {
+     "style": 76484771,
+     "box": 14405943,
+     "fragment": 26341655,
+     "restyle_and_build": 123577149,
+     "stacking_context": 4428059,
+     "display_list": 2156,
+     "reflow": 128058099,
+     "n_reflows": 3,
+     "box+fragment": 40747598
+    },
+    {
+     "style": 75496176,
+     "box": 12994691,
+     "fragment": 29304477,
+     "restyle_and_build": 124642992,
+     "stacking_context": 5829992,
+     "display_list": 2170,
+     "reflow": 130547893,
+     "n_reflows": 3,
+     "box+fragment": 42299168
     }
    ],
    "ladybird": [
@@ -18845,6 +21749,72 @@
      "reflow": 139986985,
      "n_reflows": 3,
      "box+fragment": 37708740
+    },
+    {
+     "style": 91579604,
+     "box": 14004697,
+     "fragment": 19549762,
+     "restyle_and_build": 128693080,
+     "stacking_context": 2636449,
+     "display_list": 2113,
+     "reflow": 131378382,
+     "n_reflows": 3,
+     "box+fragment": 33554459
+    },
+    {
+     "style": 156134408,
+     "box": 15897044,
+     "fragment": 21742035,
+     "restyle_and_build": 202126183,
+     "stacking_context": 2714123,
+     "display_list": 2383,
+     "reflow": 204899100,
+     "n_reflows": 3,
+     "box+fragment": 37639079
+    },
+    {
+     "style": 91513810,
+     "box": 15265063,
+     "fragment": 21552977,
+     "restyle_and_build": 133383372,
+     "stacking_context": 2652397,
+     "display_list": 2580,
+     "reflow": 136098677,
+     "n_reflows": 3,
+     "box+fragment": 36818040
+    },
+    {
+     "style": 92207388,
+     "box": 16134331,
+     "fragment": 22082951,
+     "restyle_and_build": 135239617,
+     "stacking_context": 2862259,
+     "display_list": 2565,
+     "reflow": 138162110,
+     "n_reflows": 3,
+     "box+fragment": 38217282
+    },
+    {
+     "style": 92018002,
+     "box": 16117905,
+     "fragment": 22292547,
+     "restyle_and_build": 135307964,
+     "stacking_context": 2923718,
+     "display_list": 2114,
+     "reflow": 138287927,
+     "n_reflows": 3,
+     "box+fragment": 38410452
+    },
+    {
+     "style": 91493025,
+     "box": 14907470,
+     "fragment": 21506537,
+     "restyle_and_build": 132294561,
+     "stacking_context": 3290324,
+     "display_list": 3371,
+     "reflow": 135655756,
+     "n_reflows": 3,
+     "box+fragment": 36414007
     }
    ],
    "servo": [
@@ -18880,6 +21850,72 @@
      "reflow": 161382198,
      "n_reflows": 3,
      "box+fragment": 41579940
+    },
+    {
+     "style": 83108205,
+     "box": 11849078,
+     "fragment": 19493558,
+     "restyle_and_build": 119645685,
+     "stacking_context": 2674101,
+     "display_list": 2017,
+     "reflow": 122363987,
+     "n_reflows": 3,
+     "box+fragment": 31342636
+    },
+    {
+     "style": 94592544,
+     "box": 12637364,
+     "fragment": 20930761,
+     "restyle_and_build": 133383895,
+     "stacking_context": 2799603,
+     "display_list": 2202,
+     "reflow": 136232675,
+     "n_reflows": 3,
+     "box+fragment": 33568125
+    },
+    {
+     "style": 84215088,
+     "box": 11794636,
+     "fragment": 19724350,
+     "restyle_and_build": 120014801,
+     "stacking_context": 2750300,
+     "display_list": 1914,
+     "reflow": 122814996,
+     "n_reflows": 3,
+     "box+fragment": 31518986
+    },
+    {
+     "style": 84776420,
+     "box": 13842551,
+     "fragment": 20604752,
+     "restyle_and_build": 124324309,
+     "stacking_context": 2954876,
+     "display_list": 2425,
+     "reflow": 127337944,
+     "n_reflows": 3,
+     "box+fragment": 34447303
+    },
+    {
+     "style": 77821581,
+     "box": 11552212,
+     "fragment": 19568430,
+     "restyle_and_build": 113424423,
+     "stacking_context": 2653409,
+     "display_list": 2084,
+     "reflow": 116125795,
+     "n_reflows": 2,
+     "box+fragment": 31120642
+    },
+    {
+     "style": 76965065,
+     "box": 11944471,
+     "fragment": 19644079,
+     "restyle_and_build": 112542436,
+     "stacking_context": 2579344,
+     "display_list": 2047,
+     "reflow": 115163874,
+     "n_reflows": 2,
+     "box+fragment": 31588550
     }
    ],
    "ladybird": [
@@ -19700,6 +22736,72 @@
      "reflow": 5395377,
      "n_reflows": 2,
      "box+fragment": 2497973
+    },
+    {
+     "style": 1168911,
+     "box": 227197,
+     "fragment": 296701,
+     "restyle_and_build": 3206057,
+     "stacking_context": 32704,
+     "display_list": 1589,
+     "reflow": 3264864,
+     "n_reflows": 2,
+     "box+fragment": 523898
+    },
+    {
+     "style": 1185365,
+     "box": 3286000,
+     "fragment": 280347,
+     "restyle_and_build": 6258730,
+     "stacking_context": 34402,
+     "display_list": 1581,
+     "reflow": 6319401,
+     "n_reflows": 2,
+     "box+fragment": 3566347
+    },
+    {
+     "style": 1170968,
+     "box": 3280203,
+     "fragment": 286100,
+     "restyle_and_build": 6256493,
+     "stacking_context": 28992,
+     "display_list": 1599,
+     "reflow": 6312118,
+     "n_reflows": 2,
+     "box+fragment": 3566303
+    },
+    {
+     "style": 1288695,
+     "box": 259645,
+     "fragment": 271881,
+     "restyle_and_build": 3391438,
+     "stacking_context": 29039,
+     "display_list": 1562,
+     "reflow": 3446861,
+     "n_reflows": 2,
+     "box+fragment": 531526
+    },
+    {
+     "style": 1177138,
+     "box": 227673,
+     "fragment": 275882,
+     "restyle_and_build": 9254476,
+     "stacking_context": 34714,
+     "display_list": 1618,
+     "reflow": 9314944,
+     "n_reflows": 2,
+     "box+fragment": 503555
+    },
+    {
+     "style": 1165878,
+     "box": 225079,
+     "fragment": 6332884,
+     "restyle_and_build": 9380655,
+     "stacking_context": 39576,
+     "display_list": 1627,
+     "reflow": 9448511,
+     "n_reflows": 2,
+     "box+fragment": 6557963
     }
    ],
    "servo": [
@@ -19735,6 +22837,72 @@
      "reflow": 9397241,
      "n_reflows": 3,
      "box+fragment": 553524
+    },
+    {
+     "style": 981035,
+     "box": 291725,
+     "fragment": 279464,
+     "restyle_and_build": 3235369,
+     "stacking_context": 34470,
+     "display_list": 1573,
+     "reflow": 3297988,
+     "n_reflows": 2,
+     "box+fragment": 571189
+    },
+    {
+     "style": 866252,
+     "box": 289428,
+     "fragment": 273265,
+     "restyle_and_build": 3119489,
+     "stacking_context": 33760,
+     "display_list": 1544,
+     "reflow": 3181726,
+     "n_reflows": 2,
+     "box+fragment": 562693
+    },
+    {
+     "style": 851659,
+     "box": 281651,
+     "fragment": 275482,
+     "restyle_and_build": 3087624,
+     "stacking_context": 33753,
+     "display_list": 1607,
+     "reflow": 3149902,
+     "n_reflows": 2,
+     "box+fragment": 557133
+    },
+    {
+     "style": 895763,
+     "box": 274388,
+     "fragment": 279267,
+     "restyle_and_build": 3157066,
+     "stacking_context": 33678,
+     "display_list": 1590,
+     "reflow": 3219331,
+     "n_reflows": 2,
+     "box+fragment": 553655
+    },
+    {
+     "style": 885977,
+     "box": 278083,
+     "fragment": 270570,
+     "restyle_and_build": 3104337,
+     "stacking_context": 33334,
+     "display_list": 1601,
+     "reflow": 3166256,
+     "n_reflows": 2,
+     "box+fragment": 548653
+    },
+    {
+     "style": 859074,
+     "box": 285390,
+     "fragment": 263347,
+     "restyle_and_build": 3113183,
+     "stacking_context": 27223,
+     "display_list": 1542,
+     "reflow": 3168299,
+     "n_reflows": 2,
+     "box+fragment": 548737
     }
    ],
    "ladybird": [
@@ -20555,6 +23723,72 @@
      "reflow": 134754311,
      "n_reflows": 3,
      "box+fragment": 32786428
+    },
+    {
+     "style": 94485887,
+     "box": 15721050,
+     "fragment": 19949407,
+     "restyle_and_build": 135330409,
+     "stacking_context": 2512962,
+     "display_list": 2336,
+     "reflow": 137908942,
+     "n_reflows": 3,
+     "box+fragment": 35670457
+    },
+    {
+     "style": 95051965,
+     "box": 15755301,
+     "fragment": 18779694,
+     "restyle_and_build": 134865500,
+     "stacking_context": 2805288,
+     "display_list": 2098,
+     "reflow": 137726342,
+     "n_reflows": 3,
+     "box+fragment": 34534995
+    },
+    {
+     "style": 93593057,
+     "box": 14158606,
+     "fragment": 18310893,
+     "restyle_and_build": 129992802,
+     "stacking_context": 3143301,
+     "display_list": 2363,
+     "reflow": 133209992,
+     "n_reflows": 3,
+     "box+fragment": 32469499
+    },
+    {
+     "style": 95571323,
+     "box": 15087332,
+     "fragment": 16817704,
+     "restyle_and_build": 131962271,
+     "stacking_context": 2616245,
+     "display_list": 2125,
+     "reflow": 134632494,
+     "n_reflows": 3,
+     "box+fragment": 31905036
+    },
+    {
+     "style": 94850103,
+     "box": 15491738,
+     "fragment": 17013351,
+     "restyle_and_build": 132608987,
+     "stacking_context": 2666358,
+     "display_list": 2195,
+     "reflow": 135334514,
+     "n_reflows": 3,
+     "box+fragment": 32505089
+    },
+    {
+     "style": 93848053,
+     "box": 15704286,
+     "fragment": 18995939,
+     "restyle_and_build": 132949845,
+     "stacking_context": 3438601,
+     "display_list": 3180,
+     "reflow": 136466215,
+     "n_reflows": 3,
+     "box+fragment": 34700225
     }
    ],
    "servo": [
@@ -20590,6 +23824,72 @@
      "reflow": 116908761,
      "n_reflows": 2,
      "box+fragment": 29852308
+    },
+    {
+     "style": 82919824,
+     "box": 12806185,
+     "fragment": 16503481,
+     "restyle_and_build": 116296771,
+     "stacking_context": 2583733,
+     "display_list": 2034,
+     "reflow": 118925887,
+     "n_reflows": 3,
+     "box+fragment": 29309666
+    },
+    {
+     "style": 76207813,
+     "box": 12117149,
+     "fragment": 17012637,
+     "restyle_and_build": 109565912,
+     "stacking_context": 2638158,
+     "display_list": 2027,
+     "reflow": 112251847,
+     "n_reflows": 3,
+     "box+fragment": 29129786
+    },
+    {
+     "style": 78006704,
+     "box": 12158233,
+     "fragment": 16530047,
+     "restyle_and_build": 111555326,
+     "stacking_context": 2703594,
+     "display_list": 1945,
+     "reflow": 114307352,
+     "n_reflows": 2,
+     "box+fragment": 28688280
+    },
+    {
+     "style": 84503811,
+     "box": 11520845,
+     "fragment": 16427984,
+     "restyle_and_build": 116547230,
+     "stacking_context": 2655241,
+     "display_list": 2199,
+     "reflow": 119246280,
+     "n_reflows": 2,
+     "box+fragment": 27948829
+    },
+    {
+     "style": 88004689,
+     "box": 11731984,
+     "fragment": 16206638,
+     "restyle_and_build": 119969879,
+     "stacking_context": 2604160,
+     "display_list": 2007,
+     "reflow": 122618841,
+     "n_reflows": 3,
+     "box+fragment": 27938622
+    },
+    {
+     "style": 79662771,
+     "box": 13122785,
+     "fragment": 16649023,
+     "restyle_and_build": 114041587,
+     "stacking_context": 2650619,
+     "display_list": 2063,
+     "reflow": 116744990,
+     "n_reflows": 3,
+     "box+fragment": 29771808
     }
    ],
    "ladybird": [
@@ -21410,6 +24710,72 @@
      "reflow": 2615235446,
      "n_reflows": 3,
      "box+fragment": 2495543086
+    },
+    {
+     "style": 106505380,
+     "box": 15736448,
+     "fragment": 2140306931,
+     "restyle_and_build": 2267150848,
+     "stacking_context": 3686071,
+     "display_list": 2415,
+     "reflow": 2270900631,
+     "n_reflows": 3,
+     "box+fragment": 2156043379
+    },
+    {
+     "style": 106320594,
+     "box": 15773582,
+     "fragment": 2137178070,
+     "restyle_and_build": 2263781714,
+     "stacking_context": 4460100,
+     "display_list": 3089,
+     "reflow": 2268326319,
+     "n_reflows": 3,
+     "box+fragment": 2152951652
+    },
+    {
+     "style": 106722231,
+     "box": 16609777,
+     "fragment": 2123797250,
+     "restyle_and_build": 2252751656,
+     "stacking_context": 3848813,
+     "display_list": 2079,
+     "reflow": 2256669509,
+     "n_reflows": 3,
+     "box+fragment": 2140407027
+    },
+    {
+     "style": 105251824,
+     "box": 15417935,
+     "fragment": 2114705571,
+     "restyle_and_build": 2240293943,
+     "stacking_context": 3714840,
+     "display_list": 2416,
+     "reflow": 2244078395,
+     "n_reflows": 3,
+     "box+fragment": 2130123506
+    },
+    {
+     "style": 103873906,
+     "box": 14946427,
+     "fragment": 2127085158,
+     "restyle_and_build": 2250061328,
+     "stacking_context": 3628157,
+     "display_list": 2060,
+     "reflow": 2253758677,
+     "n_reflows": 3,
+     "box+fragment": 2142031585
+    },
+    {
+     "style": 104241054,
+     "box": 14995460,
+     "fragment": 2141751671,
+     "restyle_and_build": 2265087275,
+     "stacking_context": 3633815,
+     "display_list": 2600,
+     "reflow": 2268786845,
+     "n_reflows": 3,
+     "box+fragment": 2156747131
     }
    ],
    "servo": [
@@ -21445,6 +24811,72 @@
      "reflow": 2291199480,
      "n_reflows": 3,
      "box+fragment": 2189030400
+    },
+    {
+     "style": 92045595,
+     "box": 14676795,
+     "fragment": 2113655284,
+     "restyle_and_build": 2225057953,
+     "stacking_context": 4514500,
+     "display_list": 2716,
+     "reflow": 2229654107,
+     "n_reflows": 3,
+     "box+fragment": 2128332079
+    },
+    {
+     "style": 118815764,
+     "box": 19924309,
+     "fragment": 2162463030,
+     "restyle_and_build": 2308083763,
+     "stacking_context": 3732425,
+     "display_list": 2445,
+     "reflow": 2311881030,
+     "n_reflows": 3,
+     "box+fragment": 2182387339
+    },
+    {
+     "style": 90951048,
+     "box": 15704364,
+     "fragment": 2128377458,
+     "restyle_and_build": 2240530210,
+     "stacking_context": 3735101,
+     "display_list": 2487,
+     "reflow": 2244330983,
+     "n_reflows": 3,
+     "box+fragment": 2144081822
+    },
+    {
+     "style": 101255610,
+     "box": 17116622,
+     "fragment": 2128839763,
+     "restyle_and_build": 2252280234,
+     "stacking_context": 3698938,
+     "display_list": 2234,
+     "reflow": 2256043293,
+     "n_reflows": 3,
+     "box+fragment": 2145956385
+    },
+    {
+     "style": 104860987,
+     "box": 15934875,
+     "fragment": 2125422939,
+     "restyle_and_build": 2251724078,
+     "stacking_context": 3839855,
+     "display_list": 2238,
+     "reflow": 2255627242,
+     "n_reflows": 3,
+     "box+fragment": 2141357814
+    },
+    {
+     "style": 97953173,
+     "box": 15841430,
+     "fragment": 2137137257,
+     "restyle_and_build": 2256724835,
+     "stacking_context": 3792105,
+     "display_list": 2812,
+     "reflow": 2260581420,
+     "n_reflows": 3,
+     "box+fragment": 2152978687
     }
    ],
    "ladybird": [
@@ -22265,6 +25697,72 @@
      "reflow": 356189161,
      "n_reflows": 3,
      "box+fragment": 131621625
+    },
+    {
+     "style": 248094931,
+     "box": 68849399,
+     "fragment": 78889351,
+     "restyle_and_build": 405178619,
+     "stacking_context": 11239741,
+     "display_list": 3183,
+     "reflow": 416519549,
+     "n_reflows": 3,
+     "box+fragment": 147738750
+    },
+    {
+     "style": 199876988,
+     "box": 47267433,
+     "fragment": 77465460,
+     "restyle_and_build": 330469548,
+     "stacking_context": 13552867,
+     "display_list": 2702,
+     "reflow": 344102723,
+     "n_reflows": 3,
+     "box+fragment": 124732893
+    },
+    {
+     "style": 201966532,
+     "box": 47832820,
+     "fragment": 75404250,
+     "restyle_and_build": 330933004,
+     "stacking_context": 11393468,
+     "display_list": 2965,
+     "reflow": 342399522,
+     "n_reflows": 3,
+     "box+fragment": 123237070
+    },
+    {
+     "style": 200638276,
+     "box": 52488349,
+     "fragment": 75286965,
+     "restyle_and_build": 336976203,
+     "stacking_context": 11086144,
+     "display_list": 3809,
+     "reflow": 348136442,
+     "n_reflows": 3,
+     "box+fragment": 127775314
+    },
+    {
+     "style": 201989266,
+     "box": 48298852,
+     "fragment": 79137130,
+     "restyle_and_build": 335160824,
+     "stacking_context": 13306318,
+     "display_list": 3733,
+     "reflow": 348554495,
+     "n_reflows": 3,
+     "box+fragment": 127435982
+    },
+    {
+     "style": 201111978,
+     "box": 47699330,
+     "fragment": 73606875,
+     "restyle_and_build": 328207009,
+     "stacking_context": 11155650,
+     "display_list": 2897,
+     "reflow": 339430599,
+     "n_reflows": 3,
+     "box+fragment": 121306205
     }
    ],
    "servo": [
@@ -22300,6 +25798,72 @@
      "reflow": 424466141,
      "n_reflows": 3,
      "box+fragment": 204438066
+    },
+    {
+     "style": 154760724,
+     "box": 24382581,
+     "fragment": 74759619,
+     "restyle_and_build": 260866293,
+     "stacking_context": 10839784,
+     "display_list": 2960,
+     "reflow": 271772181,
+     "n_reflows": 3,
+     "box+fragment": 99142200
+    },
+    {
+     "style": 149582417,
+     "box": 25186073,
+     "fragment": 75268547,
+     "restyle_and_build": 258146067,
+     "stacking_context": 10998148,
+     "display_list": 2698,
+     "reflow": 269229361,
+     "n_reflows": 3,
+     "box+fragment": 100454620
+    },
+    {
+     "style": 191693615,
+     "box": 43944829,
+     "fragment": 106578311,
+     "restyle_and_build": 354424500,
+     "stacking_context": 16103882,
+     "display_list": 2946,
+     "reflow": 370632205,
+     "n_reflows": 3,
+     "box+fragment": 150523140
+    },
+    {
+     "style": 154801649,
+     "box": 26145770,
+     "fragment": 75198361,
+     "restyle_and_build": 264225373,
+     "stacking_context": 11753013,
+     "display_list": 2544,
+     "reflow": 276059335,
+     "n_reflows": 3,
+     "box+fragment": 101344131
+    },
+    {
+     "style": 153065122,
+     "box": 25807811,
+     "fragment": 79629562,
+     "restyle_and_build": 265442554,
+     "stacking_context": 13140057,
+     "display_list": 3044,
+     "reflow": 278649837,
+     "n_reflows": 3,
+     "box+fragment": 105437373
+    },
+    {
+     "style": 147932318,
+     "box": 24953793,
+     "fragment": 74875216,
+     "restyle_and_build": 254645750,
+     "stacking_context": 11142881,
+     "display_list": 2857,
+     "reflow": 265855243,
+     "n_reflows": 3,
+     "box+fragment": 99829009
     }
    ],
    "ladybird": [
@@ -23120,6 +26684,72 @@
      "reflow": 16434981,
      "n_reflows": 2,
      "box+fragment": 2525929
+    },
+    {
+     "style": 11691198,
+     "box": 1102963,
+     "fragment": 1522067,
+     "restyle_and_build": 19155278,
+     "stacking_context": 195057,
+     "display_list": 1709,
+     "reflow": 19391454,
+     "n_reflows": 2,
+     "box+fragment": 2625030
+    },
+    {
+     "style": 15360944,
+     "box": 1989698,
+     "fragment": 1930565,
+     "restyle_and_build": 24000394,
+     "stacking_context": 253244,
+     "display_list": 1877,
+     "reflow": 24289132,
+     "n_reflows": 3,
+     "box+fragment": 3920263
+    },
+    {
+     "style": 14900334,
+     "box": 1129721,
+     "fragment": 1440279,
+     "restyle_and_build": 19123253,
+     "stacking_context": 226392,
+     "display_list": 1750,
+     "reflow": 19382676,
+     "n_reflows": 2,
+     "box+fragment": 2570000
+    },
+    {
+     "style": 18058265,
+     "box": 1224035,
+     "fragment": 1489925,
+     "restyle_and_build": 22406545,
+     "stacking_context": 206962,
+     "display_list": 1715,
+     "reflow": 22644633,
+     "n_reflows": 2,
+     "box+fragment": 2713960
+    },
+    {
+     "style": 17873876,
+     "box": 1091106,
+     "fragment": 1546460,
+     "restyle_and_build": 22092774,
+     "stacking_context": 232929,
+     "display_list": 1699,
+     "reflow": 22358834,
+     "n_reflows": 2,
+     "box+fragment": 2637566
+    },
+    {
+     "style": 11815558,
+     "box": 1080864,
+     "fragment": 1462305,
+     "restyle_and_build": 15979589,
+     "stacking_context": 202483,
+     "display_list": 1777,
+     "reflow": 16214994,
+     "n_reflows": 2,
+     "box+fragment": 2543169
     }
    ],
    "servo": [
@@ -23155,6 +26785,72 @@
      "reflow": 12442939,
      "n_reflows": 2,
      "box+fragment": 2510728
+    },
+    {
+     "style": 7774752,
+     "box": 1099991,
+     "fragment": 1523012,
+     "restyle_and_build": 12255408,
+     "stacking_context": 207881,
+     "display_list": 1715,
+     "reflow": 12495663,
+     "n_reflows": 2,
+     "box+fragment": 2623003
+    },
+    {
+     "style": 8292120,
+     "box": 1087253,
+     "fragment": 1418511,
+     "restyle_and_build": 12626738,
+     "stacking_context": 208386,
+     "display_list": 1739,
+     "reflow": 12866635,
+     "n_reflows": 2,
+     "box+fragment": 2505764
+    },
+    {
+     "style": 7980514,
+     "box": 1067180,
+     "fragment": 1435974,
+     "restyle_and_build": 12305491,
+     "stacking_context": 215154,
+     "display_list": 1681,
+     "reflow": 12554597,
+     "n_reflows": 2,
+     "box+fragment": 2503154
+    },
+    {
+     "style": 8670446,
+     "box": 1080080,
+     "fragment": 1435100,
+     "restyle_and_build": 13018888,
+     "stacking_context": 213737,
+     "display_list": 1799,
+     "reflow": 13265482,
+     "n_reflows": 2,
+     "box+fragment": 2515180
+    },
+    {
+     "style": 7778715,
+     "box": 1083152,
+     "fragment": 1434009,
+     "restyle_and_build": 12104752,
+     "stacking_context": 201636,
+     "display_list": 1683,
+     "reflow": 12338738,
+     "n_reflows": 2,
+     "box+fragment": 2517161
+    },
+    {
+     "style": 8401103,
+     "box": 1099588,
+     "fragment": 1428998,
+     "restyle_and_build": 12756438,
+     "stacking_context": 200122,
+     "display_list": 1769,
+     "reflow": 12988237,
+     "n_reflows": 2,
+     "box+fragment": 2528586
     }
    ],
    "ladybird": [
@@ -23975,6 +27671,72 @@
      "reflow": 1467483438,
      "n_reflows": 3,
      "box+fragment": 424047231
+    },
+    {
+     "style": 1064284932,
+     "box": 193784185,
+     "fragment": 193764823,
+     "restyle_and_build": 1489229976,
+     "stacking_context": 36578892,
+     "display_list": 3818,
+     "reflow": 1525925371,
+     "n_reflows": 3,
+     "box+fragment": 387549008
+    },
+    {
+     "style": 968993064,
+     "box": 198537847,
+     "fragment": 195473904,
+     "restyle_and_build": 1401824140,
+     "stacking_context": 37000506,
+     "display_list": 3225,
+     "reflow": 1438933344,
+     "n_reflows": 3,
+     "box+fragment": 394011751
+    },
+    {
+     "style": 958674471,
+     "box": 198944797,
+     "fragment": 195312781,
+     "restyle_and_build": 1389957770,
+     "stacking_context": 37414322,
+     "display_list": 3638,
+     "reflow": 1427480180,
+     "n_reflows": 3,
+     "box+fragment": 394257578
+    },
+    {
+     "style": 952785143,
+     "box": 196292687,
+     "fragment": 191451041,
+     "restyle_and_build": 1377507775,
+     "stacking_context": 35986647,
+     "display_list": 3570,
+     "reflow": 1413620323,
+     "n_reflows": 3,
+     "box+fragment": 387743728
+    },
+    {
+     "style": 958446498,
+     "box": 197991581,
+     "fragment": 189859391,
+     "restyle_and_build": 1382919239,
+     "stacking_context": 37193271,
+     "display_list": 3588,
+     "reflow": 1420217452,
+     "n_reflows": 3,
+     "box+fragment": 387850972
+    },
+    {
+     "style": 967332530,
+     "box": 200806072,
+     "fragment": 194998715,
+     "restyle_and_build": 1400583375,
+     "stacking_context": 37799346,
+     "display_list": 3063,
+     "reflow": 1438488468,
+     "n_reflows": 3,
+     "box+fragment": 395804787
     }
    ],
    "servo": [
@@ -24010,6 +27772,72 @@
      "reflow": 1332419604,
      "n_reflows": 3,
      "box+fragment": 364547638
+    },
+    {
+     "style": 856848965,
+     "box": 131066046,
+     "fragment": 196334585,
+     "restyle_and_build": 1221361633,
+     "stacking_context": 36929097,
+     "display_list": 2777,
+     "reflow": 1258405803,
+     "n_reflows": 3,
+     "box+fragment": 327400631
+    },
+    {
+     "style": 869821073,
+     "box": 132222298,
+     "fragment": 196783742,
+     "restyle_and_build": 1237051003,
+     "stacking_context": 37044218,
+     "display_list": 2714,
+     "reflow": 1274197541,
+     "n_reflows": 3,
+     "box+fragment": 329006040
+    },
+    {
+     "style": 929056753,
+     "box": 168595202,
+     "fragment": 265782337,
+     "restyle_and_build": 1412919004,
+     "stacking_context": 44201557,
+     "display_list": 3069,
+     "reflow": 1457258887,
+     "n_reflows": 3,
+     "box+fragment": 434377539
+    },
+    {
+     "style": 812370327,
+     "box": 130496660,
+     "fragment": 197744948,
+     "restyle_and_build": 1177207364,
+     "stacking_context": 37619017,
+     "display_list": 3493,
+     "reflow": 1214930484,
+     "n_reflows": 3,
+     "box+fragment": 328241608
+    },
+    {
+     "style": 761880669,
+     "box": 130096269,
+     "fragment": 193206697,
+     "restyle_and_build": 1122501929,
+     "stacking_context": 37858280,
+     "display_list": 3171,
+     "reflow": 1160465347,
+     "n_reflows": 3,
+     "box+fragment": 323302966
+    },
+    {
+     "style": 785302732,
+     "box": 130196767,
+     "fragment": 192809057,
+     "restyle_and_build": 1145323811,
+     "stacking_context": 38261018,
+     "display_list": 3297,
+     "reflow": 1183694345,
+     "n_reflows": 3,
+     "box+fragment": 323005824
     }
    ],
    "ladybird": [
@@ -24830,6 +28658,72 @@
      "reflow": 1354577034,
      "n_reflows": 3,
      "box+fragment": 1141425317
+    },
+    {
+     "style": 98012417,
+     "box": 17242562,
+     "fragment": 633106348,
+     "restyle_and_build": 754262063,
+     "stacking_context": 4265816,
+     "display_list": 3243,
+     "reflow": 758636888,
+     "n_reflows": 3,
+     "box+fragment": 650348910
+    },
+    {
+     "style": 92265225,
+     "box": 14642089,
+     "fragment": 598393806,
+     "restyle_and_build": 709155094,
+     "stacking_context": 2906983,
+     "display_list": 2087,
+     "reflow": 712126900,
+     "n_reflows": 3,
+     "box+fragment": 613035895
+    },
+    {
+     "style": 96112898,
+     "box": 15477202,
+     "fragment": 599150042,
+     "restyle_and_build": 716382205,
+     "stacking_context": 2964416,
+     "display_list": 2205,
+     "reflow": 719420025,
+     "n_reflows": 3,
+     "box+fragment": 614627244
+    },
+    {
+     "style": 92340101,
+     "box": 13727445,
+     "fragment": 591762487,
+     "restyle_and_build": 701554692,
+     "stacking_context": 2882896,
+     "display_list": 2199,
+     "reflow": 704499945,
+     "n_reflows": 3,
+     "box+fragment": 605489932
+    },
+    {
+     "style": 92396499,
+     "box": 13711188,
+     "fragment": 593873184,
+     "restyle_and_build": 703750969,
+     "stacking_context": 2964050,
+     "display_list": 2228,
+     "reflow": 706777391,
+     "n_reflows": 3,
+     "box+fragment": 607584372
+    },
+    {
+     "style": 92743557,
+     "box": 13707189,
+     "fragment": 599109659,
+     "restyle_and_build": 709276897,
+     "stacking_context": 3505259,
+     "display_list": 2528,
+     "reflow": 712855674,
+     "n_reflows": 3,
+     "box+fragment": 612816848
     }
    ],
    "servo": [
@@ -24865,6 +28759,72 @@
      "reflow": 829121239,
      "n_reflows": 3,
      "box+fragment": 724884355
+    },
+    {
+     "style": 82123881,
+     "box": 13426912,
+     "fragment": 630895939,
+     "restyle_and_build": 732895689,
+     "stacking_context": 3913494,
+     "display_list": 2763,
+     "reflow": 736907394,
+     "n_reflows": 3,
+     "box+fragment": 644322851
+    },
+    {
+     "style": 79075781,
+     "box": 13374832,
+     "fragment": 629128802,
+     "restyle_and_build": 727751604,
+     "stacking_context": 4001741,
+     "display_list": 3319,
+     "reflow": 731867891,
+     "n_reflows": 3,
+     "box+fragment": 642503634
+    },
+    {
+     "style": 85523703,
+     "box": 14523173,
+     "fragment": 612180278,
+     "restyle_and_build": 718297391,
+     "stacking_context": 3894092,
+     "display_list": 3201,
+     "reflow": 722296041,
+     "n_reflows": 3,
+     "box+fragment": 626703451
+    },
+    {
+     "style": 86138815,
+     "box": 11894929,
+     "fragment": 593683819,
+     "restyle_and_build": 695797420,
+     "stacking_context": 3531948,
+     "display_list": 2445,
+     "reflow": 699396283,
+     "n_reflows": 3,
+     "box+fragment": 605578748
+    },
+    {
+     "style": 82004250,
+     "box": 13144517,
+     "fragment": 598843921,
+     "restyle_and_build": 698799936,
+     "stacking_context": 3571349,
+     "display_list": 2500,
+     "reflow": 702447631,
+     "n_reflows": 3,
+     "box+fragment": 611988438
+    },
+    {
+     "style": 77397730,
+     "box": 11415817,
+     "fragment": 593267377,
+     "restyle_and_build": 686140007,
+     "stacking_context": 2832978,
+     "display_list": 2211,
+     "reflow": 689032691,
+     "n_reflows": 3,
+     "box+fragment": 604683194
     }
    ],
    "ladybird": [
@@ -25685,6 +29645,72 @@
      "reflow": 23827738,
      "n_reflows": 5,
      "box+fragment": 22438167
+    },
+    {
+     "style": 798832,
+     "box": 19177001,
+     "fragment": 3046539,
+     "restyle_and_build": 23114888,
+     "stacking_context": 382774,
+     "display_list": 1835,
+     "reflow": 23528978,
+     "n_reflows": 5,
+     "box+fragment": 22223540
+    },
+    {
+     "style": 793686,
+     "box": 19346346,
+     "fragment": 3205566,
+     "restyle_and_build": 23428920,
+     "stacking_context": 493783,
+     "display_list": 1867,
+     "reflow": 23957855,
+     "n_reflows": 5,
+     "box+fragment": 22551912
+    },
+    {
+     "style": 797787,
+     "box": 19542249,
+     "fragment": 3011259,
+     "restyle_and_build": 23446594,
+     "stacking_context": 537036,
+     "display_list": 1891,
+     "reflow": 24019839,
+     "n_reflows": 5,
+     "box+fragment": 22553508
+    },
+    {
+     "style": 789405,
+     "box": 19220734,
+     "fragment": 2973894,
+     "restyle_and_build": 23068229,
+     "stacking_context": 362290,
+     "display_list": 1736,
+     "reflow": 23461558,
+     "n_reflows": 5,
+     "box+fragment": 22194628
+    },
+    {
+     "style": 776721,
+     "box": 19370254,
+     "fragment": 3334541,
+     "restyle_and_build": 23560825,
+     "stacking_context": 512977,
+     "display_list": 10248,
+     "reflow": 24119698,
+     "n_reflows": 5,
+     "box+fragment": 22704795
+    },
+    {
+     "style": 850334,
+     "box": 20468193,
+     "fragment": 3214493,
+     "restyle_and_build": 24648426,
+     "stacking_context": 386262,
+     "display_list": 1756,
+     "reflow": 25077001,
+     "n_reflows": 5,
+     "box+fragment": 23682686
     }
    ],
    "servo": [
@@ -25720,6 +29746,72 @@
      "reflow": 21485343,
      "n_reflows": 5,
      "box+fragment": 20222855
+    },
+    {
+     "style": 757358,
+     "box": 16704845,
+     "fragment": 2074266,
+     "restyle_and_build": 19635122,
+     "stacking_context": 438294,
+     "display_list": 2817,
+     "reflow": 20109442,
+     "n_reflows": 5,
+     "box+fragment": 18779111
+    },
+    {
+     "style": 647359,
+     "box": 15489321,
+     "fragment": 2018855,
+     "restyle_and_build": 18251961,
+     "stacking_context": 444628,
+     "display_list": 1770,
+     "reflow": 18731140,
+     "n_reflows": 5,
+     "box+fragment": 17508176
+    },
+    {
+     "style": 675443,
+     "box": 17277269,
+     "fragment": 1846143,
+     "restyle_and_build": 19929952,
+     "stacking_context": 387336,
+     "display_list": 2109,
+     "reflow": 20360970,
+     "n_reflows": 5,
+     "box+fragment": 19123412
+    },
+    {
+     "style": 662148,
+     "box": 16103535,
+     "fragment": 1779091,
+     "restyle_and_build": 18643079,
+     "stacking_context": 447151,
+     "display_list": 1757,
+     "reflow": 19128913,
+     "n_reflows": 5,
+     "box+fragment": 17882626
+    },
+    {
+     "style": 625952,
+     "box": 17099542,
+     "fragment": 2044154,
+     "restyle_and_build": 19862045,
+     "stacking_context": 446139,
+     "display_list": 1762,
+     "reflow": 20343250,
+     "n_reflows": 5,
+     "box+fragment": 19143696
+    },
+    {
+     "style": 706240,
+     "box": 17433747,
+     "fragment": 1366327,
+     "restyle_and_build": 19602723,
+     "stacking_context": 473446,
+     "display_list": 1669,
+     "reflow": 20107709,
+     "n_reflows": 5,
+     "box+fragment": 18800074
     }
    ],
    "ladybird": [
@@ -26512,6 +30604,72 @@
      "reflow": 12851164,
      "n_reflows": 5,
      "box+fragment": 10883457
+    },
+    {
+     "style": 1480154,
+     "box": 8140906,
+     "fragment": 2823931,
+     "restyle_and_build": 12548287,
+     "stacking_context": 220653,
+     "display_list": 1689,
+     "reflow": 12803052,
+     "n_reflows": 5,
+     "box+fragment": 10964837
+    },
+    {
+     "style": 1439927,
+     "box": 7969584,
+     "fragment": 2607643,
+     "restyle_and_build": 12115585,
+     "stacking_context": 181111,
+     "display_list": 1708,
+     "reflow": 12328344,
+     "n_reflows": 5,
+     "box+fragment": 10577227
+    },
+    {
+     "style": 1449534,
+     "box": 8214218,
+     "fragment": 3271001,
+     "restyle_and_build": 13061722,
+     "stacking_context": 225547,
+     "display_list": 1695,
+     "reflow": 13325369,
+     "n_reflows": 5,
+     "box+fragment": 11485219
+    },
+    {
+     "style": 1440367,
+     "box": 7942147,
+     "fragment": 2139811,
+     "restyle_and_build": 11621827,
+     "stacking_context": 212915,
+     "display_list": 1807,
+     "reflow": 11868288,
+     "n_reflows": 5,
+     "box+fragment": 10081958
+    },
+    {
+     "style": 1456110,
+     "box": 8100484,
+     "fragment": 2447984,
+     "restyle_and_build": 12121333,
+     "stacking_context": 223692,
+     "display_list": 1740,
+     "reflow": 12370963,
+     "n_reflows": 6,
+     "box+fragment": 10548468
+    },
+    {
+     "style": 1446272,
+     "box": 7447514,
+     "fragment": 2709787,
+     "restyle_and_build": 11701092,
+     "stacking_context": 207135,
+     "display_list": 1836,
+     "reflow": 11942866,
+     "n_reflows": 5,
+     "box+fragment": 10157301
     }
    ],
    "servo": [
@@ -26547,6 +30705,72 @@
      "reflow": 11254583,
      "n_reflows": 7,
      "box+fragment": 9870761
+    },
+    {
+     "style": 968397,
+     "box": 5301120,
+     "fragment": 1891853,
+     "restyle_and_build": 8277939,
+     "stacking_context": 191885,
+     "display_list": 1606,
+     "reflow": 8499649,
+     "n_reflows": 5,
+     "box+fragment": 7192973
+    },
+    {
+     "style": 916559,
+     "box": 5303567,
+     "fragment": 1897326,
+     "restyle_and_build": 8234860,
+     "stacking_context": 190097,
+     "display_list": 1696,
+     "reflow": 8455918,
+     "n_reflows": 5,
+     "box+fragment": 7200893
+    },
+    {
+     "style": 1204670,
+     "box": 5865450,
+     "fragment": 1965906,
+     "restyle_and_build": 9986866,
+     "stacking_context": 222570,
+     "display_list": 1899,
+     "reflow": 10253382,
+     "n_reflows": 5,
+     "box+fragment": 7831356
+    },
+    {
+     "style": 1021757,
+     "box": 5755050,
+     "fragment": 2034101,
+     "restyle_and_build": 8934452,
+     "stacking_context": 206880,
+     "display_list": 1680,
+     "reflow": 9174623,
+     "n_reflows": 5,
+     "box+fragment": 7789151
+    },
+    {
+     "style": 1040589,
+     "box": 5376718,
+     "fragment": 2256741,
+     "restyle_and_build": 8826365,
+     "stacking_context": 216208,
+     "display_list": 1933,
+     "reflow": 9082393,
+     "n_reflows": 5,
+     "box+fragment": 7633459
+    },
+    {
+     "style": 981504,
+     "box": 5365237,
+     "fragment": 1959892,
+     "restyle_and_build": 8431738,
+     "stacking_context": 190510,
+     "display_list": 1726,
+     "reflow": 8651974,
+     "n_reflows": 5,
+     "box+fragment": 7325129
     }
    ],
    "ladybird": [
@@ -27339,6 +31563,72 @@
      "reflow": 86796987,
      "n_reflows": 6,
      "box+fragment": 79223411
+    },
+    {
+     "style": 2982770,
+     "box": 27544128,
+     "fragment": 8859457,
+     "restyle_and_build": 39629950,
+     "stacking_context": 926883,
+     "display_list": 1908,
+     "reflow": 40594728,
+     "n_reflows": 5,
+     "box+fragment": 36403585
+    },
+    {
+     "style": 2845430,
+     "box": 28456151,
+     "fragment": 8861252,
+     "restyle_and_build": 40414660,
+     "stacking_context": 839565,
+     "display_list": 1967,
+     "reflow": 41291260,
+     "n_reflows": 5,
+     "box+fragment": 37317403
+    },
+    {
+     "style": 3159603,
+     "box": 29093715,
+     "fragment": 8326012,
+     "restyle_and_build": 40857042,
+     "stacking_context": 815481,
+     "display_list": 2046,
+     "reflow": 41715678,
+     "n_reflows": 5,
+     "box+fragment": 37419727
+    },
+    {
+     "style": 2797770,
+     "box": 28146361,
+     "fragment": 8747592,
+     "restyle_and_build": 39937216,
+     "stacking_context": 860027,
+     "display_list": 1868,
+     "reflow": 40836032,
+     "n_reflows": 5,
+     "box+fragment": 36893953
+    },
+    {
+     "style": 3226332,
+     "box": 28805279,
+     "fragment": 9128610,
+     "restyle_and_build": 41458097,
+     "stacking_context": 760752,
+     "display_list": 1842,
+     "reflow": 42260029,
+     "n_reflows": 5,
+     "box+fragment": 37933889
+    },
+    {
+     "style": 2830300,
+     "box": 27773292,
+     "fragment": 8666998,
+     "restyle_and_build": 39497987,
+     "stacking_context": 897697,
+     "display_list": 1815,
+     "reflow": 40439239,
+     "n_reflows": 5,
+     "box+fragment": 36440290
     }
    ],
    "servo": [
@@ -27374,6 +31664,72 @@
      "reflow": 22307585,
      "n_reflows": 5,
      "box+fragment": 19214592
+    },
+    {
+     "style": 1867482,
+     "box": 13984076,
+     "fragment": 2258837,
+     "restyle_and_build": 18397691,
+     "stacking_context": 810331,
+     "display_list": 1911,
+     "reflow": 19246094,
+     "n_reflows": 5,
+     "box+fragment": 16242913
+    },
+    {
+     "style": 1855703,
+     "box": 16872741,
+     "fragment": 2252783,
+     "restyle_and_build": 21271324,
+     "stacking_context": 816268,
+     "display_list": 1779,
+     "reflow": 22126971,
+     "n_reflows": 5,
+     "box+fragment": 19125524
+    },
+    {
+     "style": 1886216,
+     "box": 13683609,
+     "fragment": 2194242,
+     "restyle_and_build": 18041617,
+     "stacking_context": 796176,
+     "display_list": 1922,
+     "reflow": 18874404,
+     "n_reflows": 5,
+     "box+fragment": 15877851
+    },
+    {
+     "style": 1809133,
+     "box": 13968529,
+     "fragment": 2204522,
+     "restyle_and_build": 18242089,
+     "stacking_context": 796011,
+     "display_list": 1860,
+     "reflow": 19074636,
+     "n_reflows": 5,
+     "box+fragment": 16173051
+    },
+    {
+     "style": 1982744,
+     "box": 14470985,
+     "fragment": 2311852,
+     "restyle_and_build": 19076083,
+     "stacking_context": 857637,
+     "display_list": 1864,
+     "reflow": 19975229,
+     "n_reflows": 5,
+     "box+fragment": 16782837
+    },
+    {
+     "style": 1941518,
+     "box": 17076674,
+     "fragment": 2577598,
+     "restyle_and_build": 21875948,
+     "stacking_context": 869234,
+     "display_list": 1880,
+     "reflow": 22781597,
+     "n_reflows": 5,
+     "box+fragment": 19654272
     }
    ],
    "ladybird": [
@@ -28166,6 +32522,72 @@
      "reflow": 233901983,
      "n_reflows": 5,
      "box+fragment": 218555443
+    },
+    {
+     "style": 7686926,
+     "box": 185287603,
+     "fragment": 29976769,
+     "restyle_and_build": 223137797,
+     "stacking_context": 5013148,
+     "display_list": 2080,
+     "reflow": 228194322,
+     "n_reflows": 5,
+     "box+fragment": 215264372
+    },
+    {
+     "style": 8024836,
+     "box": 184474006,
+     "fragment": 30018036,
+     "restyle_and_build": 222719286,
+     "stacking_context": 5235087,
+     "display_list": 1976,
+     "reflow": 227998884,
+     "n_reflows": 5,
+     "box+fragment": 214492042
+    },
+    {
+     "style": 8039452,
+     "box": 186449160,
+     "fragment": 30458848,
+     "restyle_and_build": 225183128,
+     "stacking_context": 5140684,
+     "display_list": 2098,
+     "reflow": 230377322,
+     "n_reflows": 5,
+     "box+fragment": 216908008
+    },
+    {
+     "style": 8131209,
+     "box": 184946916,
+     "fragment": 29740223,
+     "restyle_and_build": 223008303,
+     "stacking_context": 5168956,
+     "display_list": 2100,
+     "reflow": 228225650,
+     "n_reflows": 5,
+     "box+fragment": 214687139
+    },
+    {
+     "style": 7966059,
+     "box": 185515644,
+     "fragment": 30650487,
+     "restyle_and_build": 224386293,
+     "stacking_context": 5592443,
+     "display_list": 2434,
+     "reflow": 230038755,
+     "n_reflows": 5,
+     "box+fragment": 216166131
+    },
+    {
+     "style": 8839643,
+     "box": 185180152,
+     "fragment": 29880578,
+     "restyle_and_build": 224195402,
+     "stacking_context": 4529708,
+     "display_list": 2017,
+     "reflow": 228772659,
+     "n_reflows": 5,
+     "box+fragment": 215060730
     }
    ],
    "servo": [
@@ -28201,6 +32623,72 @@
      "reflow": 190099799,
      "n_reflows": 5,
      "box+fragment": 176001349
+    },
+    {
+     "style": 8095319,
+     "box": 166016593,
+     "fragment": 18761383,
+     "restyle_and_build": 193162851,
+     "stacking_context": 5482051,
+     "display_list": 2056,
+     "reflow": 198697797,
+     "n_reflows": 5,
+     "box+fragment": 184777976
+    },
+    {
+     "style": 9451476,
+     "box": 155953960,
+     "fragment": 16755818,
+     "restyle_and_build": 182459680,
+     "stacking_context": 5187523,
+     "display_list": 2078,
+     "reflow": 187695862,
+     "n_reflows": 5,
+     "box+fragment": 172709778
+    },
+    {
+     "style": 7489619,
+     "box": 158962600,
+     "fragment": 15681031,
+     "restyle_and_build": 182433196,
+     "stacking_context": 4925813,
+     "display_list": 2130,
+     "reflow": 187410731,
+     "n_reflows": 5,
+     "box+fragment": 174643631
+    },
+    {
+     "style": 7674752,
+     "box": 162238661,
+     "fragment": 13995981,
+     "restyle_and_build": 184150043,
+     "stacking_context": 5284845,
+     "display_list": 2086,
+     "reflow": 189478964,
+     "n_reflows": 5,
+     "box+fragment": 176234642
+    },
+    {
+     "style": 8432530,
+     "box": 152439502,
+     "fragment": 13002188,
+     "restyle_and_build": 174100053,
+     "stacking_context": 5188142,
+     "display_list": 2067,
+     "reflow": 179331051,
+     "n_reflows": 5,
+     "box+fragment": 165441690
+    },
+    {
+     "style": 8090531,
+     "box": 160406951,
+     "fragment": 17509449,
+     "restyle_and_build": 186244415,
+     "stacking_context": 5189442,
+     "display_list": 2106,
+     "reflow": 191477367,
+     "n_reflows": 5,
+     "box+fragment": 177916400
     }
    ],
    "ladybird": [
@@ -28993,6 +33481,72 @@
      "reflow": 196268759,
      "n_reflows": 6,
      "box+fragment": 158606456
+    },
+    {
+     "style": 15396895,
+     "box": 67590143,
+     "fragment": 36891892,
+     "restyle_and_build": 120304579,
+     "stacking_context": 2351242,
+     "display_list": 2090,
+     "reflow": 122703394,
+     "n_reflows": 5,
+     "box+fragment": 104482035
+    },
+    {
+     "style": 15369318,
+     "box": 68501378,
+     "fragment": 36380567,
+     "restyle_and_build": 120730922,
+     "stacking_context": 2321684,
+     "display_list": 2183,
+     "reflow": 123097285,
+     "n_reflows": 5,
+     "box+fragment": 104881945
+    },
+    {
+     "style": 15210727,
+     "box": 68605959,
+     "fragment": 36923661,
+     "restyle_and_build": 121211201,
+     "stacking_context": 2273772,
+     "display_list": 2088,
+     "reflow": 123527318,
+     "n_reflows": 5,
+     "box+fragment": 105529620
+    },
+    {
+     "style": 15740066,
+     "box": 69528680,
+     "fragment": 37508271,
+     "restyle_and_build": 123283086,
+     "stacking_context": 2317080,
+     "display_list": 2117,
+     "reflow": 125644566,
+     "n_reflows": 5,
+     "box+fragment": 107036951
+    },
+    {
+     "style": 15193485,
+     "box": 68613056,
+     "fragment": 36567312,
+     "restyle_and_build": 120850453,
+     "stacking_context": 2229521,
+     "display_list": 2116,
+     "reflow": 123122510,
+     "n_reflows": 5,
+     "box+fragment": 105180368
+    },
+    {
+     "style": 15091229,
+     "box": 68515037,
+     "fragment": 37204672,
+     "restyle_and_build": 121249629,
+     "stacking_context": 2292504,
+     "display_list": 2301,
+     "reflow": 123587230,
+     "n_reflows": 5,
+     "box+fragment": 105719709
     }
    ],
    "servo": [
@@ -29028,6 +33582,72 @@
      "reflow": 95590057,
      "n_reflows": 5,
      "box+fragment": 81762979
+    },
+    {
+     "style": 10313492,
+     "box": 49198975,
+     "fragment": 35196158,
+     "restyle_and_build": 95368234,
+     "stacking_context": 2591169,
+     "display_list": 2047,
+     "reflow": 98004352,
+     "n_reflows": 5,
+     "box+fragment": 84395133
+    },
+    {
+     "style": 10372229,
+     "box": 52105098,
+     "fragment": 35971665,
+     "restyle_and_build": 99030964,
+     "stacking_context": 3165353,
+     "display_list": 2746,
+     "reflow": 102259966,
+     "n_reflows": 5,
+     "box+fragment": 88076763
+    },
+    {
+     "style": 9767655,
+     "box": 45748543,
+     "fragment": 35446356,
+     "restyle_and_build": 91496799,
+     "stacking_context": 2488288,
+     "display_list": 2092,
+     "reflow": 94028078,
+     "n_reflows": 5,
+     "box+fragment": 81194899
+    },
+    {
+     "style": 10540692,
+     "box": 46267364,
+     "fragment": 36357866,
+     "restyle_and_build": 93722989,
+     "stacking_context": 2617250,
+     "display_list": 2070,
+     "reflow": 96381499,
+     "n_reflows": 5,
+     "box+fragment": 82625230
+    },
+    {
+     "style": 10702136,
+     "box": 44914923,
+     "fragment": 35741845,
+     "restyle_and_build": 91886253,
+     "stacking_context": 2570968,
+     "display_list": 2013,
+     "reflow": 94499983,
+     "n_reflows": 5,
+     "box+fragment": 80656768
+    },
+    {
+     "style": 11649153,
+     "box": 46598049,
+     "fragment": 39156721,
+     "restyle_and_build": 98242899,
+     "stacking_context": 2652253,
+     "display_list": 2118,
+     "reflow": 100949792,
+     "n_reflows": 5,
+     "box+fragment": 85754770
     }
    ],
    "ladybird": [
@@ -29820,6 +34440,72 @@
      "reflow": 378754165,
      "n_reflows": 6,
      "box+fragment": 332118607
+    },
+    {
+     "style": 30487233,
+     "box": 276209192,
+     "fragment": 57190382,
+     "restyle_and_build": 365777660,
+     "stacking_context": 12224537,
+     "display_list": 3015,
+     "reflow": 378074885,
+     "n_reflows": 5,
+     "box+fragment": 333399574
+    },
+    {
+     "style": 30028924,
+     "box": 271418281,
+     "fragment": 56376124,
+     "restyle_and_build": 359797135,
+     "stacking_context": 12272022,
+     "display_list": 2491,
+     "reflow": 372143669,
+     "n_reflows": 5,
+     "box+fragment": 327794405
+    },
+    {
+     "style": 30513085,
+     "box": 269741402,
+     "fragment": 56891974,
+     "restyle_and_build": 359064682,
+     "stacking_context": 13499508,
+     "display_list": 2757,
+     "reflow": 372650760,
+     "n_reflows": 5,
+     "box+fragment": 326633376
+    },
+    {
+     "style": 33156096,
+     "box": 271830456,
+     "fragment": 55080682,
+     "restyle_and_build": 362028989,
+     "stacking_context": 11856760,
+     "display_list": 2701,
+     "reflow": 373945750,
+     "n_reflows": 6,
+     "box+fragment": 326911138
+    },
+    {
+     "style": 35339402,
+     "box": 270026976,
+     "fragment": 55556692,
+     "restyle_and_build": 363826048,
+     "stacking_context": 12488650,
+     "display_list": 2547,
+     "reflow": 376387435,
+     "n_reflows": 5,
+     "box+fragment": 325583668
+    },
+    {
+     "style": 32188441,
+     "box": 272906648,
+     "fragment": 55969486,
+     "restyle_and_build": 363859301,
+     "stacking_context": 12521732,
+     "display_list": 2251,
+     "reflow": 376451245,
+     "n_reflows": 5,
+     "box+fragment": 328876134
     }
    ],
    "servo": [
@@ -29855,6 +34541,72 @@
      "reflow": 213631394,
      "n_reflows": 5,
      "box+fragment": 173853186
+    },
+    {
+     "style": 19534787,
+     "box": 126888741,
+     "fragment": 20880546,
+     "restyle_and_build": 169505278,
+     "stacking_context": 12265442,
+     "display_list": 2093,
+     "reflow": 181831418,
+     "n_reflows": 5,
+     "box+fragment": 147769287
+    },
+    {
+     "style": 19369024,
+     "box": 160211914,
+     "fragment": 26096618,
+     "restyle_and_build": 207964871,
+     "stacking_context": 12924844,
+     "display_list": 2478,
+     "reflow": 220972999,
+     "n_reflows": 5,
+     "box+fragment": 186308532
+    },
+    {
+     "style": 19231393,
+     "box": 122363368,
+     "fragment": 20033368,
+     "restyle_and_build": 164125565,
+     "stacking_context": 11777124,
+     "display_list": 2270,
+     "reflow": 175963042,
+     "n_reflows": 5,
+     "box+fragment": 142396736
+    },
+    {
+     "style": 20139318,
+     "box": 127780568,
+     "fragment": 28396632,
+     "restyle_and_build": 178928428,
+     "stacking_context": 13192246,
+     "display_list": 2818,
+     "reflow": 192203795,
+     "n_reflows": 5,
+     "box+fragment": 156177200
+    },
+    {
+     "style": 20537624,
+     "box": 126420081,
+     "fragment": 27848929,
+     "restyle_and_build": 177520195,
+     "stacking_context": 11947280,
+     "display_list": 2907,
+     "reflow": 189524347,
+     "n_reflows": 5,
+     "box+fragment": 154269010
+    },
+    {
+     "style": 19830611,
+     "box": 159806947,
+     "fragment": 21418771,
+     "restyle_and_build": 203371073,
+     "stacking_context": 11984864,
+     "display_list": 2653,
+     "reflow": 215421722,
+     "n_reflows": 5,
+     "box+fragment": 181225718
     }
    ],
    "ladybird": [
@@ -30647,6 +35399,72 @@
      "reflow": 396632608,
      "n_reflows": 10,
      "box+fragment": 298018239
+    },
+    {
+     "style": 83330102,
+     "box": 238935236,
+     "fragment": 62065306,
+     "restyle_and_build": 387024805,
+     "stacking_context": 12467595,
+     "display_list": 3146,
+     "reflow": 399566377,
+     "n_reflows": 9,
+     "box+fragment": 301000542
+    },
+    {
+     "style": 85223451,
+     "box": 233916181,
+     "fragment": 60020932,
+     "restyle_and_build": 381898891,
+     "stacking_context": 12695731,
+     "display_list": 2077,
+     "reflow": 394657792,
+     "n_reflows": 10,
+     "box+fragment": 293937113
+    },
+    {
+     "style": 82509745,
+     "box": 241848726,
+     "fragment": 61364321,
+     "restyle_and_build": 389335003,
+     "stacking_context": 12538515,
+     "display_list": 2204,
+     "reflow": 401946068,
+     "n_reflows": 11,
+     "box+fragment": 303213047
+    },
+    {
+     "style": 81770132,
+     "box": 235634948,
+     "fragment": 66661106,
+     "restyle_and_build": 386854344,
+     "stacking_context": 14850192,
+     "display_list": 2502,
+     "reflow": 401797931,
+     "n_reflows": 9,
+     "box+fragment": 302296054
+    },
+    {
+     "style": 82036172,
+     "box": 236256759,
+     "fragment": 60163412,
+     "restyle_and_build": 381497588,
+     "stacking_context": 12414042,
+     "display_list": 2197,
+     "reflow": 393966478,
+     "n_reflows": 10,
+     "box+fragment": 296420171
+    },
+    {
+     "style": 82027556,
+     "box": 233557647,
+     "fragment": 60772321,
+     "restyle_and_build": 379032332,
+     "stacking_context": 13069386,
+     "display_list": 2752,
+     "reflow": 392172596,
+     "n_reflows": 10,
+     "box+fragment": 294329968
     }
    ],
    "servo": [
@@ -30682,6 +35500,72 @@
      "reflow": 205323293,
      "n_reflows": 11,
      "box+fragment": 143963182
+    },
+    {
+     "style": 35475771,
+     "box": 81821264,
+     "fragment": 43566189,
+     "restyle_and_build": 164145181,
+     "stacking_context": 13225301,
+     "display_list": 2267,
+     "reflow": 177431484,
+     "n_reflows": 15,
+     "box+fragment": 125387453
+    },
+    {
+     "style": 35046757,
+     "box": 88547432,
+     "fragment": 42801670,
+     "restyle_and_build": 169603050,
+     "stacking_context": 12578799,
+     "display_list": 2311,
+     "reflow": 182237290,
+     "n_reflows": 13,
+     "box+fragment": 131349102
+    },
+    {
+     "style": 35958157,
+     "box": 99822265,
+     "fragment": 46087776,
+     "restyle_and_build": 185178779,
+     "stacking_context": 13294312,
+     "display_list": 2631,
+     "reflow": 198546669,
+     "n_reflows": 12,
+     "box+fragment": 145910041
+    },
+    {
+     "style": 35984092,
+     "box": 82572942,
+     "fragment": 43903868,
+     "restyle_and_build": 165849942,
+     "stacking_context": 12789739,
+     "display_list": 2110,
+     "reflow": 178697215,
+     "n_reflows": 11,
+     "box+fragment": 126476810
+    },
+    {
+     "style": 35992976,
+     "box": 86052125,
+     "fragment": 42881892,
+     "restyle_and_build": 168286837,
+     "stacking_context": 12673448,
+     "display_list": 3047,
+     "reflow": 181017370,
+     "n_reflows": 13,
+     "box+fragment": 128934017
+    },
+    {
+     "style": 35346220,
+     "box": 96065964,
+     "fragment": 43986686,
+     "restyle_and_build": 178782008,
+     "stacking_context": 12658912,
+     "display_list": 2094,
+     "reflow": 191503336,
+     "n_reflows": 10,
+     "box+fragment": 140052650
     }
    ],
    "taffy": [],
@@ -31474,6 +36358,72 @@
      "reflow": 403631811,
      "n_reflows": 11,
      "box+fragment": 302657690
+    },
+    {
+     "style": 83260345,
+     "box": 236989273,
+     "fragment": 59649733,
+     "restyle_and_build": 382921330,
+     "stacking_context": 12202355,
+     "display_list": 2242,
+     "reflow": 395175440,
+     "n_reflows": 10,
+     "box+fragment": 296639006
+    },
+    {
+     "style": 82042068,
+     "box": 236269368,
+     "fragment": 62141743,
+     "restyle_and_build": 383548884,
+     "stacking_context": 13259726,
+     "display_list": 2469,
+     "reflow": 396880742,
+     "n_reflows": 9,
+     "box+fragment": 298411111
+    },
+    {
+     "style": 81829642,
+     "box": 238362701,
+     "fragment": 58672791,
+     "restyle_and_build": 381597741,
+     "stacking_context": 12022697,
+     "display_list": 2072,
+     "reflow": 393674209,
+     "n_reflows": 10,
+     "box+fragment": 297035492
+    },
+    {
+     "style": 82643270,
+     "box": 236213917,
+     "fragment": 61972106,
+     "restyle_and_build": 383499294,
+     "stacking_context": 12948317,
+     "display_list": 2340,
+     "reflow": 396512732,
+     "n_reflows": 9,
+     "box+fragment": 298186023
+    },
+    {
+     "style": 82953298,
+     "box": 236895990,
+     "fragment": 60215255,
+     "restyle_and_build": 382734491,
+     "stacking_context": 12179335,
+     "display_list": 2646,
+     "reflow": 394972105,
+     "n_reflows": 11,
+     "box+fragment": 297111245
+    },
+    {
+     "style": 82657524,
+     "box": 234300254,
+     "fragment": 57758576,
+     "restyle_and_build": 377434326,
+     "stacking_context": 12163429,
+     "display_list": 2329,
+     "reflow": 389650322,
+     "n_reflows": 11,
+     "box+fragment": 292058830
     }
    ],
    "servo": [
@@ -31509,6 +36459,72 @@
      "reflow": 221209751,
      "n_reflows": 12,
      "box+fragment": 154013031
+    },
+    {
+     "style": 35693013,
+     "box": 81366554,
+     "fragment": 43056421,
+     "restyle_and_build": 163292576,
+     "stacking_context": 12164271,
+     "display_list": 2023,
+     "reflow": 175505353,
+     "n_reflows": 14,
+     "box+fragment": 124422975
+    },
+    {
+     "style": 35888338,
+     "box": 98155640,
+     "fragment": 44074553,
+     "restyle_and_build": 181653631,
+     "stacking_context": 12187107,
+     "display_list": 2523,
+     "reflow": 193894058,
+     "n_reflows": 13,
+     "box+fragment": 142230193
+    },
+    {
+     "style": 36076598,
+     "box": 87849653,
+     "fragment": 42969423,
+     "restyle_and_build": 170125638,
+     "stacking_context": 12214511,
+     "display_list": 2243,
+     "reflow": 182389998,
+     "n_reflows": 13,
+     "box+fragment": 130819076
+    },
+    {
+     "style": 37697740,
+     "box": 92230533,
+     "fragment": 42275804,
+     "restyle_and_build": 176321323,
+     "stacking_context": 12390936,
+     "display_list": 1967,
+     "reflow": 188770881,
+     "n_reflows": 12,
+     "box+fragment": 134506337
+    },
+    {
+     "style": 36083940,
+     "box": 94805287,
+     "fragment": 43641716,
+     "restyle_and_build": 177763697,
+     "stacking_context": 15166976,
+     "display_list": 2928,
+     "reflow": 193020761,
+     "n_reflows": 11,
+     "box+fragment": 138447003
+    },
+    {
+     "style": 36919715,
+     "box": 84231443,
+     "fragment": 42259119,
+     "restyle_and_build": 166706113,
+     "stacking_context": 12485781,
+     "display_list": 2152,
+     "reflow": 179251833,
+     "n_reflows": 14,
+     "box+fragment": 126490562
     }
    ],
    "taffy": [],
@@ -32301,6 +37317,72 @@
      "reflow": 97608263,
      "n_reflows": 9,
      "box+fragment": 71363880
+    },
+    {
+     "style": 9079974,
+     "box": 24046554,
+     "fragment": 10045969,
+     "restyle_and_build": 43542883,
+     "stacking_context": 944116,
+     "display_list": 1826,
+     "reflow": 44531985,
+     "n_reflows": 7,
+     "box+fragment": 34092523
+    },
+    {
+     "style": 20310721,
+     "box": 18418439,
+     "fragment": 8604577,
+     "restyle_and_build": 47650494,
+     "stacking_context": 905984,
+     "display_list": 1848,
+     "reflow": 48587518,
+     "n_reflows": 7,
+     "box+fragment": 27023016
+    },
+    {
+     "style": 12619247,
+     "box": 22753092,
+     "fragment": 9449219,
+     "restyle_and_build": 45131720,
+     "stacking_context": 934220,
+     "display_list": 1859,
+     "reflow": 46112242,
+     "n_reflows": 7,
+     "box+fragment": 32202311
+    },
+    {
+     "style": 14161775,
+     "box": 28886212,
+     "fragment": 9006614,
+     "restyle_and_build": 52352144,
+     "stacking_context": 911488,
+     "display_list": 1867,
+     "reflow": 53295799,
+     "n_reflows": 6,
+     "box+fragment": 37892826
+    },
+    {
+     "style": 14688815,
+     "box": 23423835,
+     "fragment": 8635645,
+     "restyle_and_build": 47070180,
+     "stacking_context": 897085,
+     "display_list": 2013,
+     "reflow": 48010016,
+     "n_reflows": 7,
+     "box+fragment": 32059480
+    },
+    {
+     "style": 14317503,
+     "box": 17509121,
+     "fragment": 9271330,
+     "restyle_and_build": 41409958,
+     "stacking_context": 952224,
+     "display_list": 1911,
+     "reflow": 42393728,
+     "n_reflows": 7,
+     "box+fragment": 26780451
     }
    ],
    "servo": [
@@ -32336,6 +37418,72 @@
      "reflow": 56578466,
      "n_reflows": 6,
      "box+fragment": 35092754
+    },
+    {
+     "style": 5121155,
+     "box": 7912735,
+     "fragment": 2912356,
+     "restyle_and_build": 16280130,
+     "stacking_context": 893978,
+     "display_list": 1824,
+     "reflow": 17205295,
+     "n_reflows": 5,
+     "box+fragment": 10825091
+    },
+    {
+     "style": 5321125,
+     "box": 8030429,
+     "fragment": 3045142,
+     "restyle_and_build": 16801765,
+     "stacking_context": 865994,
+     "display_list": 1912,
+     "reflow": 17701923,
+     "n_reflows": 6,
+     "box+fragment": 11075571
+    },
+    {
+     "style": 6183825,
+     "box": 7584922,
+     "fragment": 3693500,
+     "restyle_and_build": 17855251,
+     "stacking_context": 927838,
+     "display_list": 1965,
+     "reflow": 18815956,
+     "n_reflows": 5,
+     "box+fragment": 11278422
+    },
+    {
+     "style": 5202622,
+     "box": 7568553,
+     "fragment": 2847284,
+     "restyle_and_build": 15977985,
+     "stacking_context": 879510,
+     "display_list": 1933,
+     "reflow": 16889884,
+     "n_reflows": 6,
+     "box+fragment": 10415837
+    },
+    {
+     "style": 5455094,
+     "box": 7873250,
+     "fragment": 2955391,
+     "restyle_and_build": 16676212,
+     "stacking_context": 848848,
+     "display_list": 1889,
+     "reflow": 17568143,
+     "n_reflows": 6,
+     "box+fragment": 10828641
+    },
+    {
+     "style": 5351182,
+     "box": 7651489,
+     "fragment": 2845707,
+     "restyle_and_build": 16205587,
+     "stacking_context": 897841,
+     "display_list": 1953,
+     "reflow": 17136415,
+     "n_reflows": 6,
+     "box+fragment": 10497196
     }
    ],
    "taffy": [],
@@ -33128,6 +38276,72 @@
      "reflow": 32859619,
      "n_reflows": 6,
      "box+fragment": 28553451
+    },
+    {
+     "style": 6310553,
+     "box": 18335359,
+     "fragment": 9760111,
+     "restyle_and_build": 34609943,
+     "stacking_context": 631254,
+     "display_list": 1722,
+     "reflow": 35268732,
+     "n_reflows": 7,
+     "box+fragment": 28095470
+    },
+    {
+     "style": 3494668,
+     "box": 20277961,
+     "fragment": 8348127,
+     "restyle_and_build": 32340759,
+     "stacking_context": 594486,
+     "display_list": 1797,
+     "reflow": 32966008,
+     "n_reflows": 7,
+     "box+fragment": 28626088
+    },
+    {
+     "style": 4868228,
+     "box": 19865937,
+     "fragment": 7225400,
+     "restyle_and_build": 32207381,
+     "stacking_context": 721791,
+     "display_list": 1762,
+     "reflow": 32976700,
+     "n_reflows": 7,
+     "box+fragment": 27091337
+    },
+    {
+     "style": 6311223,
+     "box": 20458048,
+     "fragment": 6229976,
+     "restyle_and_build": 33191022,
+     "stacking_context": 607920,
+     "display_list": 1848,
+     "reflow": 33827837,
+     "n_reflows": 7,
+     "box+fragment": 26688024
+    },
+    {
+     "style": 3551834,
+     "box": 19333139,
+     "fragment": 6709902,
+     "restyle_and_build": 29811139,
+     "stacking_context": 599794,
+     "display_list": 1794,
+     "reflow": 30439266,
+     "n_reflows": 8,
+     "box+fragment": 26043041
+    },
+    {
+     "style": 3760293,
+     "box": 19237506,
+     "fragment": 8099165,
+     "restyle_and_build": 31325287,
+     "stacking_context": 686134,
+     "display_list": 1777,
+     "reflow": 32044870,
+     "n_reflows": 7,
+     "box+fragment": 27336671
     }
    ],
    "servo": [
@@ -33163,6 +38377,72 @@
      "reflow": 13208096,
      "n_reflows": 6,
      "box+fragment": 9486796
+    },
+    {
+     "style": 2243142,
+     "box": 6987554,
+     "fragment": 2174263,
+     "restyle_and_build": 11629216,
+     "stacking_context": 616077,
+     "display_list": 1756,
+     "reflow": 12275051,
+     "n_reflows": 6,
+     "box+fragment": 9161817
+    },
+    {
+     "style": 2188414,
+     "box": 7456590,
+     "fragment": 2644319,
+     "restyle_and_build": 12504639,
+     "stacking_context": 596465,
+     "display_list": 1778,
+     "reflow": 13132533,
+     "n_reflows": 6,
+     "box+fragment": 10100909
+    },
+    {
+     "style": 2142433,
+     "box": 7370921,
+     "fragment": 2148089,
+     "restyle_and_build": 11875938,
+     "stacking_context": 616084,
+     "display_list": 1777,
+     "reflow": 12522990,
+     "n_reflows": 6,
+     "box+fragment": 9519010
+    },
+    {
+     "style": 2170720,
+     "box": 7211481,
+     "fragment": 2225181,
+     "restyle_and_build": 11822849,
+     "stacking_context": 590047,
+     "display_list": 1936,
+     "reflow": 12443235,
+     "n_reflows": 5,
+     "box+fragment": 9436662
+    },
+    {
+     "style": 2133954,
+     "box": 7153419,
+     "fragment": 2164329,
+     "restyle_and_build": 11658353,
+     "stacking_context": 570868,
+     "display_list": 1816,
+     "reflow": 12259883,
+     "n_reflows": 6,
+     "box+fragment": 9317748
+    },
+    {
+     "style": 2084418,
+     "box": 6910428,
+     "fragment": 2204574,
+     "restyle_and_build": 11408009,
+     "stacking_context": 593186,
+     "display_list": 1714,
+     "reflow": 12033472,
+     "n_reflows": 6,
+     "box+fragment": 9115002
     }
    ],
    "taffy": [],
@@ -33955,6 +39235,72 @@
      "reflow": 308273715,
      "n_reflows": 6,
      "box+fragment": 209731658
+    },
+    {
+     "style": 74675895,
+     "box": 138362881,
+     "fragment": 56666741,
+     "restyle_and_build": 272744959,
+     "stacking_context": 13251151,
+     "display_list": 2622,
+     "reflow": 286079394,
+     "n_reflows": 6,
+     "box+fragment": 195029622
+    },
+    {
+     "style": 75319191,
+     "box": 138144917,
+     "fragment": 57261674,
+     "restyle_and_build": 274230639,
+     "stacking_context": 13324403,
+     "display_list": 2287,
+     "reflow": 287614800,
+     "n_reflows": 6,
+     "box+fragment": 195406591
+    },
+    {
+     "style": 76266543,
+     "box": 141605271,
+     "fragment": 56294049,
+     "restyle_and_build": 278429580,
+     "stacking_context": 13358470,
+     "display_list": 2436,
+     "reflow": 291848604,
+     "n_reflows": 7,
+     "box+fragment": 197899320
+    },
+    {
+     "style": 70965779,
+     "box": 138227040,
+     "fragment": 56156997,
+     "restyle_and_build": 267827402,
+     "stacking_context": 13014380,
+     "display_list": 2216,
+     "reflow": 280894998,
+     "n_reflows": 6,
+     "box+fragment": 194384037
+    },
+    {
+     "style": 72914894,
+     "box": 138719612,
+     "fragment": 55693472,
+     "restyle_and_build": 269876244,
+     "stacking_context": 13095321,
+     "display_list": 2421,
+     "reflow": 283026232,
+     "n_reflows": 6,
+     "box+fragment": 194413084
+    },
+    {
+     "style": 76514438,
+     "box": 150435657,
+     "fragment": 60000776,
+     "restyle_and_build": 291012110,
+     "stacking_context": 13553275,
+     "display_list": 2446,
+     "reflow": 304651370,
+     "n_reflows": 6,
+     "box+fragment": 210436433
     }
    ],
    "servo": [
@@ -33990,6 +39336,72 @@
      "reflow": 170871690,
      "n_reflows": 6,
      "box+fragment": 118114965
+    },
+    {
+     "style": 31125285,
+     "box": 63208218,
+     "fragment": 50055570,
+     "restyle_and_build": 147331806,
+     "stacking_context": 13961467,
+     "display_list": 2016,
+     "reflow": 161349365,
+     "n_reflows": 6,
+     "box+fragment": 113263788
+    },
+    {
+     "style": 30735158,
+     "box": 54598824,
+     "fragment": 46980147,
+     "restyle_and_build": 135367442,
+     "stacking_context": 13091267,
+     "display_list": 11736,
+     "reflow": 148521010,
+     "n_reflows": 6,
+     "box+fragment": 101578971
+    },
+    {
+     "style": 30414874,
+     "box": 54973644,
+     "fragment": 46896889,
+     "restyle_and_build": 135268749,
+     "stacking_context": 12547990,
+     "display_list": 2079,
+     "reflow": 147878280,
+     "n_reflows": 6,
+     "box+fragment": 101870533
+    },
+    {
+     "style": 30755710,
+     "box": 60273272,
+     "fragment": 49165189,
+     "restyle_and_build": 143278238,
+     "stacking_context": 13484064,
+     "display_list": 2325,
+     "reflow": 156816693,
+     "n_reflows": 6,
+     "box+fragment": 109438461
+    },
+    {
+     "style": 30900126,
+     "box": 55568934,
+     "fragment": 47909033,
+     "restyle_and_build": 137439755,
+     "stacking_context": 13767441,
+     "display_list": 2336,
+     "reflow": 151257159,
+     "n_reflows": 6,
+     "box+fragment": 103477967
+    },
+    {
+     "style": 30149534,
+     "box": 54687337,
+     "fragment": 47183515,
+     "restyle_and_build": 135123260,
+     "stacking_context": 13361298,
+     "display_list": 2516,
+     "reflow": 148535797,
+     "n_reflows": 6,
+     "box+fragment": 101870852
     }
    ],
    "taffy": [],
@@ -34782,6 +40194,72 @@
      "reflow": 247517982,
      "n_reflows": 7,
      "box+fragment": 204668790
+    },
+    {
+     "style": 29693291,
+     "box": 146017464,
+     "fragment": 56178390,
+     "restyle_and_build": 233548540,
+     "stacking_context": 8694339,
+     "display_list": 2016,
+     "reflow": 242288737,
+     "n_reflows": 7,
+     "box+fragment": 202195854
+    },
+    {
+     "style": 29974000,
+     "box": 144288348,
+     "fragment": 54972448,
+     "restyle_and_build": 230940935,
+     "stacking_context": 8465014,
+     "display_list": 2035,
+     "reflow": 239448376,
+     "n_reflows": 6,
+     "box+fragment": 199260796
+    },
+    {
+     "style": 29468618,
+     "box": 147316713,
+     "fragment": 55894797,
+     "restyle_and_build": 234388889,
+     "stacking_context": 8562106,
+     "display_list": 2071,
+     "reflow": 243015211,
+     "n_reflows": 7,
+     "box+fragment": 203211510
+    },
+    {
+     "style": 31883812,
+     "box": 145905311,
+     "fragment": 54605043,
+     "restyle_and_build": 234170635,
+     "stacking_context": 8652329,
+     "display_list": 2230,
+     "reflow": 242869438,
+     "n_reflows": 7,
+     "box+fragment": 200510354
+    },
+    {
+     "style": 28865727,
+     "box": 145078997,
+     "fragment": 56324272,
+     "restyle_and_build": 231978412,
+     "stacking_context": 8550254,
+     "display_list": 2420,
+     "reflow": 240579036,
+     "n_reflows": 7,
+     "box+fragment": 201403269
+    },
+    {
+     "style": 30031689,
+     "box": 145145909,
+     "fragment": 54843756,
+     "restyle_and_build": 231705097,
+     "stacking_context": 8792472,
+     "display_list": 2067,
+     "reflow": 240551982,
+     "n_reflows": 6,
+     "box+fragment": 199989665
     }
    ],
    "servo": [
@@ -34817,6 +40295,72 @@
      "reflow": 169057639,
      "n_reflows": 7,
      "box+fragment": 131816002
+    },
+    {
+     "style": 16464080,
+     "box": 65414034,
+     "fragment": 48029163,
+     "restyle_and_build": 131862608,
+     "stacking_context": 8521036,
+     "display_list": 2308,
+     "reflow": 140434806,
+     "n_reflows": 6,
+     "box+fragment": 113443197
+    },
+    {
+     "style": 16670550,
+     "box": 67725256,
+     "fragment": 50707990,
+     "restyle_and_build": 137142610,
+     "stacking_context": 9749568,
+     "display_list": 2186,
+     "reflow": 146948148,
+     "n_reflows": 5,
+     "box+fragment": 118433246
+    },
+    {
+     "style": 16062959,
+     "box": 70551310,
+     "fragment": 48204448,
+     "restyle_and_build": 137303205,
+     "stacking_context": 8455250,
+     "display_list": 8435,
+     "reflow": 145820056,
+     "n_reflows": 6,
+     "box+fragment": 118755758
+    },
+    {
+     "style": 15740706,
+     "box": 67950344,
+     "fragment": 54680397,
+     "restyle_and_build": 140370293,
+     "stacking_context": 8633345,
+     "display_list": 2250,
+     "reflow": 149075849,
+     "n_reflows": 6,
+     "box+fragment": 122630741
+    },
+    {
+     "style": 16392119,
+     "box": 73794545,
+     "fragment": 48934397,
+     "restyle_and_build": 141219714,
+     "stacking_context": 8677566,
+     "display_list": 1946,
+     "reflow": 149939589,
+     "n_reflows": 5,
+     "box+fragment": 122728942
+    },
+    {
+     "style": 15692286,
+     "box": 69387911,
+     "fragment": 48251140,
+     "restyle_and_build": 135341206,
+     "stacking_context": 8543627,
+     "display_list": 2006,
+     "reflow": 143937739,
+     "n_reflows": 6,
+     "box+fragment": 117639051
     }
    ],
    "taffy": [],
@@ -35609,6 +41153,72 @@
      "reflow": 10117782,
      "n_reflows": 11,
      "box+fragment": 8045560
+    },
+    {
+     "style": 1549474,
+     "box": 4644942,
+     "fragment": 2313244,
+     "restyle_and_build": 8622592,
+     "stacking_context": 110125,
+     "display_list": 1666,
+     "reflow": 8754912,
+     "n_reflows": 11,
+     "box+fragment": 6958186
+    },
+    {
+     "style": 1822280,
+     "box": 4792585,
+     "fragment": 3342072,
+     "restyle_and_build": 10089398,
+     "stacking_context": 138229,
+     "display_list": 1688,
+     "reflow": 10253725,
+     "n_reflows": 9,
+     "box+fragment": 8134657
+    },
+    {
+     "style": 1667761,
+     "box": 4812326,
+     "fragment": 3388734,
+     "restyle_and_build": 10003267,
+     "stacking_context": 127873,
+     "display_list": 1764,
+     "reflow": 10154827,
+     "n_reflows": 12,
+     "box+fragment": 8201060
+    },
+    {
+     "style": 1531540,
+     "box": 4617274,
+     "fragment": 3074255,
+     "restyle_and_build": 9347741,
+     "stacking_context": 117581,
+     "display_list": 1637,
+     "reflow": 9488331,
+     "n_reflows": 11,
+     "box+fragment": 7691529
+    },
+    {
+     "style": 1560751,
+     "box": 4676041,
+     "fragment": 2640800,
+     "restyle_and_build": 8989680,
+     "stacking_context": 123373,
+     "display_list": 1699,
+     "reflow": 9137560,
+     "n_reflows": 12,
+     "box+fragment": 7316841
+    },
+    {
+     "style": 1597577,
+     "box": 4579125,
+     "fragment": 2700835,
+     "restyle_and_build": 9007514,
+     "stacking_context": 114380,
+     "display_list": 1705,
+     "reflow": 9145180,
+     "n_reflows": 11,
+     "box+fragment": 7279960
     }
    ],
    "servo": [
@@ -35644,6 +41254,72 @@
      "reflow": 14304712,
      "n_reflows": 13,
      "box+fragment": 12140251
+    },
+    {
+     "style": 1675620,
+     "box": 3434430,
+     "fragment": 1188195,
+     "restyle_and_build": 6433940,
+     "stacking_context": 143116,
+     "display_list": 1702,
+     "reflow": 6604961,
+     "n_reflows": 12,
+     "box+fragment": 4622625
+    },
+    {
+     "style": 1661982,
+     "box": 3289328,
+     "fragment": 1135534,
+     "restyle_and_build": 6242927,
+     "stacking_context": 128202,
+     "display_list": 1629,
+     "reflow": 6398296,
+     "n_reflows": 12,
+     "box+fragment": 4424862
+    },
+    {
+     "style": 1729797,
+     "box": 3515708,
+     "fragment": 9223338,
+     "restyle_and_build": 14629215,
+     "stacking_context": 146494,
+     "display_list": 1686,
+     "reflow": 14818999,
+     "n_reflows": 12,
+     "box+fragment": 12739046
+    },
+    {
+     "style": 1567104,
+     "box": 9961956,
+     "fragment": 1291675,
+     "restyle_and_build": 12973400,
+     "stacking_context": 136206,
+     "display_list": 1658,
+     "reflow": 13137753,
+     "n_reflows": 11,
+     "box+fragment": 11253631
+    },
+    {
+     "style": 1742528,
+     "box": 3504762,
+     "fragment": 1688769,
+     "restyle_and_build": 7095926,
+     "stacking_context": 136074,
+     "display_list": 1727,
+     "reflow": 7260282,
+     "n_reflows": 12,
+     "box+fragment": 5193531
+    },
+    {
+     "style": 1610802,
+     "box": 3368585,
+     "fragment": 1110156,
+     "restyle_and_build": 6220675,
+     "stacking_context": 117674,
+     "display_list": 1673,
+     "reflow": 6362115,
+     "n_reflows": 12,
+     "box+fragment": 4478741
     }
    ],
    "taffy": [],
@@ -36436,6 +42112,72 @@
      "reflow": 15484058,
      "n_reflows": 12,
      "box+fragment": 8353644
+    },
+    {
+     "style": 1663759,
+     "box": 4689009,
+     "fragment": 3144950,
+     "restyle_and_build": 9638433,
+     "stacking_context": 137605,
+     "display_list": 1684,
+     "reflow": 9800162,
+     "n_reflows": 11,
+     "box+fragment": 7833959
+    },
+    {
+     "style": 1782307,
+     "box": 4803755,
+     "fragment": 3450926,
+     "restyle_and_build": 10185594,
+     "stacking_context": 129210,
+     "display_list": 1650,
+     "reflow": 10340464,
+     "n_reflows": 11,
+     "box+fragment": 8254681
+    },
+    {
+     "style": 1544057,
+     "box": 4654555,
+     "fragment": 3097009,
+     "restyle_and_build": 9408325,
+     "stacking_context": 119013,
+     "display_list": 1670,
+     "reflow": 9549986,
+     "n_reflows": 11,
+     "box+fragment": 7751564
+    },
+    {
+     "style": 1755274,
+     "box": 4927073,
+     "fragment": 3368326,
+     "restyle_and_build": 10197618,
+     "stacking_context": 127280,
+     "display_list": 1589,
+     "reflow": 10349080,
+     "n_reflows": 10,
+     "box+fragment": 8295399
+    },
+    {
+     "style": 1720921,
+     "box": 4744451,
+     "fragment": 3362994,
+     "restyle_and_build": 9971735,
+     "stacking_context": 126593,
+     "display_list": 1681,
+     "reflow": 10130331,
+     "n_reflows": 12,
+     "box+fragment": 8107445
+    },
+    {
+     "style": 1556273,
+     "box": 4703816,
+     "fragment": 2691474,
+     "restyle_and_build": 9064931,
+     "stacking_context": 114756,
+     "display_list": 1653,
+     "reflow": 9202109,
+     "n_reflows": 11,
+     "box+fragment": 7395290
     }
    ],
    "servo": [
@@ -36471,6 +42213,72 @@
      "reflow": 13572108,
      "n_reflows": 12,
      "box+fragment": 11502956
+    },
+    {
+     "style": 1542231,
+     "box": 3084554,
+     "fragment": 1066828,
+     "restyle_and_build": 5809917,
+     "stacking_context": 149563,
+     "display_list": 1728,
+     "reflow": 5986193,
+     "n_reflows": 12,
+     "box+fragment": 4151382
+    },
+    {
+     "style": 1755369,
+     "box": 3489643,
+     "fragment": 1238659,
+     "restyle_and_build": 6659574,
+     "stacking_context": 131744,
+     "display_list": 1705,
+     "reflow": 6820954,
+     "n_reflows": 11,
+     "box+fragment": 4728302
+    },
+    {
+     "style": 1526455,
+     "box": 3317340,
+     "fragment": 1062571,
+     "restyle_and_build": 6020514,
+     "stacking_context": 116397,
+     "display_list": 1611,
+     "reflow": 6161554,
+     "n_reflows": 12,
+     "box+fragment": 4379911
+    },
+    {
+     "style": 1681547,
+     "box": 3303890,
+     "fragment": 1135054,
+     "restyle_and_build": 6259566,
+     "stacking_context": 127069,
+     "display_list": 1635,
+     "reflow": 6416189,
+     "n_reflows": 11,
+     "box+fragment": 4438944
+    },
+    {
+     "style": 1582059,
+     "box": 3891057,
+     "fragment": 2602468,
+     "restyle_and_build": 8207920,
+     "stacking_context": 133362,
+     "display_list": 1644,
+     "reflow": 8369178,
+     "n_reflows": 12,
+     "box+fragment": 6493525
+    },
+    {
+     "style": 1588843,
+     "box": 3274455,
+     "fragment": 1079271,
+     "restyle_and_build": 6070172,
+     "stacking_context": 126811,
+     "display_list": 1706,
+     "reflow": 6221609,
+     "n_reflows": 11,
+     "box+fragment": 4353726
     }
    ],
    "taffy": [],
@@ -37263,6 +43071,72 @@
      "reflow": 17439751,
      "n_reflows": 10,
      "box+fragment": 11760849
+    },
+    {
+     "style": 1835167,
+     "box": 4820136,
+     "fragment": 3467008,
+     "restyle_and_build": 10230347,
+     "stacking_context": 71775,
+     "display_list": 1582,
+     "reflow": 10330306,
+     "n_reflows": 7,
+     "box+fragment": 8287144
+    },
+    {
+     "style": 1869579,
+     "box": 4989042,
+     "fragment": 3794564,
+     "restyle_and_build": 10759191,
+     "stacking_context": 75379,
+     "display_list": 1710,
+     "reflow": 10871048,
+     "n_reflows": 7,
+     "box+fragment": 8783606
+    },
+    {
+     "style": 1813286,
+     "box": 4833826,
+     "fragment": 3185046,
+     "restyle_and_build": 9941085,
+     "stacking_context": 87514,
+     "display_list": 1783,
+     "reflow": 10059587,
+     "n_reflows": 7,
+     "box+fragment": 8018872
+    },
+    {
+     "style": 1898224,
+     "box": 5157045,
+     "fragment": 3890584,
+     "restyle_and_build": 11062744,
+     "stacking_context": 81779,
+     "display_list": 1676,
+     "reflow": 11168915,
+     "n_reflows": 7,
+     "box+fragment": 9047629
+    },
+    {
+     "style": 2007022,
+     "box": 4696721,
+     "fragment": 2895006,
+     "restyle_and_build": 9718560,
+     "stacking_context": 69379,
+     "display_list": 1692,
+     "reflow": 9818561,
+     "n_reflows": 7,
+     "box+fragment": 7591727
+    },
+    {
+     "style": 1864121,
+     "box": 4789483,
+     "fragment": 3624508,
+     "restyle_and_build": 10529497,
+     "stacking_context": 76487,
+     "display_list": 1841,
+     "reflow": 10629583,
+     "n_reflows": 7,
+     "box+fragment": 8413991
     }
    ],
    "servo": [
@@ -37298,6 +43172,72 @@
      "reflow": 15039365,
      "n_reflows": 9,
      "box+fragment": 12582528
+    },
+    {
+     "style": 1968860,
+     "box": 4340125,
+     "fragment": 636584,
+     "restyle_and_build": 7070068,
+     "stacking_context": 80006,
+     "display_list": 1645,
+     "reflow": 7174567,
+     "n_reflows": 8,
+     "box+fragment": 4976709
+    },
+    {
+     "style": 2033429,
+     "box": 4285945,
+     "fragment": 584646,
+     "restyle_and_build": 7002028,
+     "stacking_context": 101783,
+     "display_list": 1725,
+     "reflow": 7134840,
+     "n_reflows": 9,
+     "box+fragment": 4870591
+    },
+    {
+     "style": 2056248,
+     "box": 4315591,
+     "fragment": 708893,
+     "restyle_and_build": 7201567,
+     "stacking_context": 79135,
+     "display_list": 1650,
+     "reflow": 7305566,
+     "n_reflows": 7,
+     "box+fragment": 5024484
+    },
+    {
+     "style": 2131291,
+     "box": 4352009,
+     "fragment": 658467,
+     "restyle_and_build": 7278236,
+     "stacking_context": 94306,
+     "display_list": 1678,
+     "reflow": 7409379,
+     "n_reflows": 10,
+     "box+fragment": 5010476
+    },
+    {
+     "style": 2026010,
+     "box": 4640088,
+     "fragment": 688504,
+     "restyle_and_build": 7486325,
+     "stacking_context": 91743,
+     "display_list": 1653,
+     "reflow": 7605274,
+     "n_reflows": 8,
+     "box+fragment": 5328592
+    },
+    {
+     "style": 2004756,
+     "box": 4408444,
+     "fragment": 603182,
+     "restyle_and_build": 7154404,
+     "stacking_context": 81707,
+     "display_list": 1630,
+     "reflow": 7261944,
+     "n_reflows": 8,
+     "box+fragment": 5011626
     }
    ],
    "taffy": [],
@@ -38090,6 +44030,72 @@
      "reflow": 10213414,
      "n_reflows": 8,
      "box+fragment": 7677705
+    },
+    {
+     "style": 1835272,
+     "box": 4847720,
+     "fragment": 2811281,
+     "restyle_and_build": 9600871,
+     "stacking_context": 70718,
+     "display_list": 1663,
+     "reflow": 9695482,
+     "n_reflows": 7,
+     "box+fragment": 7659001
+    },
+    {
+     "style": 1832975,
+     "box": 4920150,
+     "fragment": 3012194,
+     "restyle_and_build": 9875659,
+     "stacking_context": 82398,
+     "display_list": 1774,
+     "reflow": 9984209,
+     "n_reflows": 7,
+     "box+fragment": 7932344
+    },
+    {
+     "style": 1863225,
+     "box": 4781412,
+     "fragment": 3537937,
+     "restyle_and_build": 10302371,
+     "stacking_context": 73945,
+     "display_list": 1771,
+     "reflow": 10400659,
+     "n_reflows": 8,
+     "box+fragment": 8319349
+    },
+    {
+     "style": 1999032,
+     "box": 4667677,
+     "fragment": 3831530,
+     "restyle_and_build": 10606876,
+     "stacking_context": 69717,
+     "display_list": 1626,
+     "reflow": 10706673,
+     "n_reflows": 7,
+     "box+fragment": 8499207
+    },
+    {
+     "style": 1993725,
+     "box": 4700109,
+     "fragment": 3344685,
+     "restyle_and_build": 10174946,
+     "stacking_context": 74069,
+     "display_list": 1609,
+     "reflow": 10279539,
+     "n_reflows": 7,
+     "box+fragment": 8044794
+    },
+    {
+     "style": 2125938,
+     "box": 4659345,
+     "fragment": 3364051,
+     "restyle_and_build": 10260595,
+     "stacking_context": 74954,
+     "display_list": 1719,
+     "reflow": 10368160,
+     "n_reflows": 7,
+     "box+fragment": 8023396
     }
    ],
    "servo": [
@@ -38125,6 +44131,72 @@
      "reflow": 7303715,
      "n_reflows": 8,
      "box+fragment": 5087372
+    },
+    {
+     "style": 2180160,
+     "box": 4546334,
+     "fragment": 645234,
+     "restyle_and_build": 7519424,
+     "stacking_context": 95114,
+     "display_list": 1823,
+     "reflow": 7650857,
+     "n_reflows": 8,
+     "box+fragment": 5191568
+    },
+    {
+     "style": 1992192,
+     "box": 4097662,
+     "fragment": 773450,
+     "restyle_and_build": 6973335,
+     "stacking_context": 82100,
+     "display_list": 1633,
+     "reflow": 7086434,
+     "n_reflows": 7,
+     "box+fragment": 4871112
+    },
+    {
+     "style": 1957857,
+     "box": 4117937,
+     "fragment": 672549,
+     "restyle_and_build": 6850951,
+     "stacking_context": 83711,
+     "display_list": 1656,
+     "reflow": 6958882,
+     "n_reflows": 7,
+     "box+fragment": 4790486
+    },
+    {
+     "style": 1973389,
+     "box": 4569127,
+     "fragment": 560385,
+     "restyle_and_build": 7210676,
+     "stacking_context": 94463,
+     "display_list": 1628,
+     "reflow": 7332603,
+     "n_reflows": 7,
+     "box+fragment": 5129512
+    },
+    {
+     "style": 2011226,
+     "box": 4409990,
+     "fragment": 586532,
+     "restyle_and_build": 7139944,
+     "stacking_context": 80394,
+     "display_list": 1680,
+     "reflow": 7243843,
+     "n_reflows": 9,
+     "box+fragment": 4996522
+    },
+    {
+     "style": 1972816,
+     "box": 4254124,
+     "fragment": 657007,
+     "restyle_and_build": 6988993,
+     "stacking_context": 80560,
+     "display_list": 1764,
+     "reflow": 7092906,
+     "n_reflows": 7,
+     "box+fragment": 4911131
     }
    ],
    "taffy": [],
@@ -38917,6 +44989,72 @@
      "reflow": 6333039,
      "n_reflows": 6,
      "box+fragment": 4778872
+    },
+    {
+     "style": 1317769,
+     "box": 3238157,
+     "fragment": 1502306,
+     "restyle_and_build": 6157861,
+     "stacking_context": 70896,
+     "display_list": 1635,
+     "reflow": 6250354,
+     "n_reflows": 6,
+     "box+fragment": 4740463
+    },
+    {
+     "style": 1340369,
+     "box": 2676762,
+     "fragment": 2218910,
+     "restyle_and_build": 6336815,
+     "stacking_context": 73845,
+     "display_list": 1757,
+     "reflow": 6445136,
+     "n_reflows": 6,
+     "box+fragment": 4895672
+    },
+    {
+     "style": 1549052,
+     "box": 2901405,
+     "fragment": 2475921,
+     "restyle_and_build": 7044060,
+     "stacking_context": 104294,
+     "display_list": 1634,
+     "reflow": 7174493,
+     "n_reflows": 6,
+     "box+fragment": 5377326
+    },
+    {
+     "style": 1321639,
+     "box": 2663514,
+     "fragment": 2158505,
+     "restyle_and_build": 6247237,
+     "stacking_context": 73753,
+     "display_list": 1730,
+     "reflow": 6351972,
+     "n_reflows": 5,
+     "box+fragment": 4822019
+    },
+    {
+     "style": 1795446,
+     "box": 2570439,
+     "fragment": 2532958,
+     "restyle_and_build": 7034990,
+     "stacking_context": 106183,
+     "display_list": 1636,
+     "reflow": 7165947,
+     "n_reflows": 6,
+     "box+fragment": 5103397
+    },
+    {
+     "style": 1325839,
+     "box": 2724335,
+     "fragment": 2085925,
+     "restyle_and_build": 6234723,
+     "stacking_context": 75480,
+     "display_list": 1573,
+     "reflow": 6332732,
+     "n_reflows": 6,
+     "box+fragment": 4810260
     }
    ],
    "servo": [
@@ -38952,6 +45090,72 @@
      "reflow": 6158768,
      "n_reflows": 6,
      "box+fragment": 4248044
+    },
+    {
+     "style": 1491343,
+     "box": 2252193,
+     "fragment": 881657,
+     "restyle_and_build": 4747971,
+     "stacking_context": 99542,
+     "display_list": 1678,
+     "reflow": 4871790,
+     "n_reflows": 7,
+     "box+fragment": 3133850
+    },
+    {
+     "style": 1492348,
+     "box": 2257662,
+     "fragment": 941958,
+     "restyle_and_build": 4814086,
+     "stacking_context": 95491,
+     "display_list": 1971,
+     "reflow": 4942868,
+     "n_reflows": 7,
+     "box+fragment": 3199620
+    },
+    {
+     "style": 1455001,
+     "box": 2255288,
+     "fragment": 862485,
+     "restyle_and_build": 4686809,
+     "stacking_context": 88292,
+     "display_list": 1719,
+     "reflow": 4800403,
+     "n_reflows": 6,
+     "box+fragment": 3117773
+    },
+    {
+     "style": 1425393,
+     "box": 2429535,
+     "fragment": 875610,
+     "restyle_and_build": 4844888,
+     "stacking_context": 90986,
+     "display_list": 1625,
+     "reflow": 4965921,
+     "n_reflows": 7,
+     "box+fragment": 3305145
+    },
+    {
+     "style": 1515124,
+     "box": 2364568,
+     "fragment": 889366,
+     "restyle_and_build": 4896869,
+     "stacking_context": 90653,
+     "display_list": 1728,
+     "reflow": 5023674,
+     "n_reflows": 7,
+     "box+fragment": 3253934
+    },
+    {
+     "style": 1437707,
+     "box": 2658710,
+     "fragment": 861837,
+     "restyle_and_build": 5749172,
+     "stacking_context": 87097,
+     "display_list": 1581,
+     "reflow": 5860141,
+     "n_reflows": 6,
+     "box+fragment": 3520547
     }
    ],
    "taffy": [],
@@ -39744,6 +45948,72 @@
      "reflow": 7874382,
      "n_reflows": 7,
      "box+fragment": 6062606
+    },
+    {
+     "style": 1621236,
+     "box": 2945674,
+     "fragment": 2864832,
+     "restyle_and_build": 7577249,
+     "stacking_context": 116723,
+     "display_list": 1576,
+     "reflow": 7721187,
+     "n_reflows": 6,
+     "box+fragment": 5810506
+    },
+    {
+     "style": 1356317,
+     "box": 2744015,
+     "fragment": 2238331,
+     "restyle_and_build": 6443586,
+     "stacking_context": 76580,
+     "display_list": 1746,
+     "reflow": 6556126,
+     "n_reflows": 6,
+     "box+fragment": 4982346
+    },
+    {
+     "style": 1548992,
+     "box": 2844378,
+     "fragment": 3024114,
+     "restyle_and_build": 7539460,
+     "stacking_context": 102955,
+     "display_list": 1676,
+     "reflow": 7675558,
+     "n_reflows": 7,
+     "box+fragment": 5868492
+    },
+    {
+     "style": 1330452,
+     "box": 2670291,
+     "fragment": 2054880,
+     "restyle_and_build": 6156038,
+     "stacking_context": 79247,
+     "display_list": 1687,
+     "reflow": 6257956,
+     "n_reflows": 6,
+     "box+fragment": 4725171
+    },
+    {
+     "style": 1318921,
+     "box": 3080655,
+     "fragment": 1484689,
+     "restyle_and_build": 5985112,
+     "stacking_context": 83038,
+     "display_list": 1707,
+     "reflow": 6101899,
+     "n_reflows": 6,
+     "box+fragment": 4565344
+    },
+    {
+     "style": 1327151,
+     "box": 2642571,
+     "fragment": 1951575,
+     "restyle_and_build": 6021556,
+     "stacking_context": 80653,
+     "display_list": 1677,
+     "reflow": 6124680,
+     "n_reflows": 6,
+     "box+fragment": 4594146
     }
    ],
    "servo": [
@@ -39779,6 +46049,72 @@
      "reflow": 5158669,
      "n_reflows": 7,
      "box+fragment": 3409042
+    },
+    {
+     "style": 1249897,
+     "box": 2242450,
+     "fragment": 883999,
+     "restyle_and_build": 4478106,
+     "stacking_context": 91353,
+     "display_list": 1788,
+     "reflow": 4592293,
+     "n_reflows": 6,
+     "box+fragment": 3126449
+    },
+    {
+     "style": 1444284,
+     "box": 2232130,
+     "fragment": 885949,
+     "restyle_and_build": 4700447,
+     "stacking_context": 91365,
+     "display_list": 1651,
+     "reflow": 4828009,
+     "n_reflows": 7,
+     "box+fragment": 3118079
+    },
+    {
+     "style": 1475120,
+     "box": 2320144,
+     "fragment": 1172352,
+     "restyle_and_build": 5089271,
+     "stacking_context": 89339,
+     "display_list": 1729,
+     "reflow": 5212638,
+     "n_reflows": 7,
+     "box+fragment": 3492496
+    },
+    {
+     "style": 1460387,
+     "box": 2267038,
+     "fragment": 903329,
+     "restyle_and_build": 4748064,
+     "stacking_context": 88569,
+     "display_list": 1771,
+     "reflow": 4883031,
+     "n_reflows": 7,
+     "box+fragment": 3170367
+    },
+    {
+     "style": 1469764,
+     "box": 2268559,
+     "fragment": 888878,
+     "restyle_and_build": 4754789,
+     "stacking_context": 90603,
+     "display_list": 1676,
+     "reflow": 4877923,
+     "n_reflows": 7,
+     "box+fragment": 3157437
+    },
+    {
+     "style": 1486584,
+     "box": 2268426,
+     "fragment": 925974,
+     "restyle_and_build": 4804466,
+     "stacking_context": 102329,
+     "display_list": 1773,
+     "reflow": 4938690,
+     "n_reflows": 7,
+     "box+fragment": 3194400
     }
    ],
    "taffy": [],
