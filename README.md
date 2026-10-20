@@ -86,12 +86,12 @@ overflow, Ladybird: the `<body>` box in the layout-tree dump; Servo reports neit
 
 | case | nodes | px differing: Blitz / Firefox / Servo / Ladybird vs Chrome | Blitz vs Chrome boxes (`div`/`p`/`h3`) | page height Chrome / Firefox / Blitz / Ladybird |
 |---|---:|---|---|---|
-| `real/wikipedia` | 21,889 | 21.9% / 7.1% / 10.5% / 13.1% | 474/866 sizes, 754 positions | 85,068 / 85,261 / 87,076 / 800 (body) |
-| `real/wikipedia@1024` | 21,889 | 18.6% / 5.2% / 9.1% / 5.8% | 472/866, 760 | 69,635 / 69,912 / 75,984 / 800 (body) |
+| `real/wikipedia` | 21,889 | 9.0% / 7.1% / 10.5% / 13.1% | 460/866 sizes, 753 positions | 85,068 / 85,261 / 83,201 / 800 (body) |
+| `real/wikipedia@1024` | 21,889 | 7.6% / 5.2% / 9.1% / 5.8% | 454/866, 759 | 69,635 / 69,912 / 71,708 / 800 (body) |
 | `real/mdn` | 2,212 | 4.6% / 3.7% / 5.6% / 4.2% | 18/176, 163 | 19,760 / 19,786 / 19,976 / 19,760 |
 | `real/mdn@1024` | 2,212 | 4.6% / 3.6% / 6.0% / 4.1% | 12/176, 164 | 19,672 / 19,698 / 19,832 / 19,672 |
-| `real/rustdoc` | 15,947 | 2.3% / 2.2% / 4.4% / 2.3% | 129/1792, 1770 | 155,326 / 155,359 / 164,853 / 155,398 |
-| `real/css-flexbox-1` | 15,890 | 2.8% / 2.0% / 7.5% / 6.7% | 28/471, 438 | 90,168 / 90,277 / 90,369 / 90,120 |
+| `real/rustdoc` | 15,947 | 2.3% / 2.2% / 4.4% / 2.3% | 56/1792, 1770 | 155,326 / 155,359 / 155,421 / 155,398 |
+| `real/css-flexbox-1` | 15,890 | 2.8% / 2.0% / 7.5% / 6.7% | 28/471, 438 | 90,168 / 90,277 / 90,308 / 90,120 |
 | `real/servo-org` | 226 | 22.4% / 1.4% / 2.1% / 1.6% | 31/84, 79 | 5,445 / 5,449 / 5,967 / 5,450 |
 | `real/servo-org@1024` | 226 | 22.9% / 2.9% / 4.1% / 3.0% | 31/84, 79 | 5,605 / 5,611 / 6,057 / 5,612 |
 | `real/dioxuslabs-com` | 158 | 7.8% / 1.2% / 3.3% / 2.7% | 2/48, 6 | 1,232 / 1,232 / 1,232 / 1,232 |
@@ -103,11 +103,12 @@ Chrome and Firefox agree on every page to within 0.3% of the page height (the pi
 glyph rasterisation plus a few 1px line-height roundings). Known differences, each with the CSS
 feature responsible (Blitz unless stated; "positions" differ wherever an earlier height does):
 
-- `float`: Blitz lays floats out in flow. Wikipedia's infobox (`.stack-right{float:right}`) and
-  `.mw-indicators{float:right}` become full-width blocks above the lead paragraphs, so every
-  paragraph is 752px wide instead of beside the 326px infobox: the page is 2.4% taller at 1280
-  and 9.1% at 1024, and 474 of the 866 boxes differ. Servo floats the infobox but wraps the text
-  beside it narrower than Chrome/Firefox (its 10.5% pixel difference; it gives no boxes to quantify).
+- `float`: Blitz is built with its opt-in `floats` feature (without it floats are laid out in
+  flow and Wikipedia's infobox becomes a full-width block: 21.9 % of pixels, page 87,076 px). With
+  floats the page is 83,201 px (2.2 % shorter than Chrome) and 460 of the 866 boxes still differ,
+  mostly text wrapped beside the infobox and the `.hlist`/navbox tables below it; not isolated to a
+  feature yet. Servo floats the infobox but wraps the text beside it narrower than Chrome/Firefox
+  (its 10.5 % pixel difference; it gives no boxes to quantify).
 - Inline-level elements (`.mw-heading h3{display:inline}`, `.marriage-display-inline`, `.hlist`
   items, rustdoc's inline `<code>`) have no box in Blitz's `--boxes` dump (they live in the text
   layout) and are reported as 0×0; they count as size differences without being layout differences.
@@ -123,8 +124,8 @@ feature responsible (Blitz unless stated; "positions" differ wherever an earlier
   shorter (28/471 boxes, +201px over the page from a few such figures).
 - Inline-block `<code>` in prose (rustdoc's `.docblock p code{display:inline-block}` with
   `white-space:pre-wrap`): some paragraphs wrap to one more line in Blitz (24 vs 48px), and the
-  `🔬` in `.stab.unstable` falls back to no emoji font (511 vs 528px wide); over the 15,947-element
-  page this adds 6% of height (164,853 vs 155,326), 129/1792 boxes.
+  `🔬` in `.stab.unstable` falls back to no emoji font (511 vs 528px wide); 56/1792 boxes, page
+  height 155,421 vs 155,326 (the 6 % excess before the `floats` feature was the sidebar float).
 - Table rows: Blitz rounds layout to whole pixels, so each of the Bootstrap dashboard's 17 table
   rows is 1px taller (`.table-responsive` 544 vs 526px, page +18px). Wikipedia's toolbar tabs are
   35px instead of 32px for the same reason (`.vector-menu-content`, ±3px).
