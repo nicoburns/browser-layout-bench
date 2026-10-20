@@ -391,7 +391,7 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
     if engine == "firefox":
         return run_firefox(case, iters, None, screenshot=screenshot)
     if engine == "ladybird":
-        return engines_ladybird.run_ladybird(case, iters, None, REVEAL, WIDTH, HEIGHT, screenshot=screenshot)
+        return engines_ladybird.run_ladybird(case, iters, None, REVEAL, case["width"], case["height"], screenshot=screenshot)
     raise ValueError(engine)
 
 
