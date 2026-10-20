@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Driver: generates the corpus, runs each engine on every page in interleaved rounds, and
 writes results.json + a Markdown report. See README.md for the measurement model."""
-import argparse, functools, http.server, json, os, re, shutil, statistics, subprocess, sys, tempfile, threading
+import argparse, functools, http.server, json, os, re, shlex, shutil, statistics, subprocess, sys, tempfile, threading
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -12,7 +12,7 @@ GEN = ROOT / "target/release/gen"
 BLITZ = ROOT / "target/release/blitz-runner"
 SERVOSHELL = Path(os.environ.get("SERVOSHELL", Path.home() / "repos/servo/target/release/servoshell"))
 WIDTH, HEIGHT = 1280, 800
-ENGINES = ["taffy", "blitz", "blitz-par", "servo1", "servo", "chrome"]
+ENGINES = ["taffy", "blitz", "blitz-par", "servo1", "servo", "chrome", "firefox1", "firefox"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
                  "cb.offsetHeight;</script>\n")
@@ -24,6 +24,10 @@ FONT_REVEAL_SCRIPT = ("<script>var F=document.fonts;(F.load?Promise.all([...F].m
                       "var cb=document.getElementById('cb');cb.style.display='block';cb.offsetHeight;});</script>\n")
 ROOT_RECT_JS = ("(()=>{const r=document.getElementById('cb').firstElementChild.getBoundingClientRect();"
                 "return r.width.toFixed(1)+'x'+r.height.toFixed(1)})()")
+# Gecko profiler: started at launch, no stack sampling or marker stacks, main threads only; the
+# parent writes the profile (with the content processes' exit profiles) to MOZ_PROFILER_SHUTDOWN.
+FIREFOX_PROFILER_ENV = dict(MOZ_PROFILER_STARTUP="1", MOZ_PROFILER_STARTUP_FEATURES="nostacksampling,nomarkerstacks",
+                            MOZ_PROFILER_STARTUP_FILTERS="GeckoMain")
 
 
 def sh(cmd, cpus=None, **kw):
@@ -200,6 +204,114 @@ def run_chrome(case, iters, cpus, screenshot=None):
     return samples
 
 
+def firefox_installed():
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as p:
+        return Path(p.firefox.executable_path).exists()
+
+
+def parse_firefox_profile(path, url):
+    """Marker intervals of the content process that loaded `url`: Styles (style traversal and frame
+    construction), Reflow (layout), DoFlushPendingNotifications (the flush containing both) and
+    DisplayList. Times are ms floats; returned in ns like the other engines."""
+    profile = json.loads(path.read_text())
+    for proc in profile.get("processes", []):
+        window_ids = {pg["innerWindowID"] for pg in proc.get("pages", []) if pg["url"] == url}
+        if window_ids:
+            break
+    else:
+        raise RuntimeError(f"no content process for {url} in {path}")
+    thread = next(t for t in proc["threads"] if t["name"] == "GeckoMain")
+    strings = thread["stringTable"]
+    schema = thread["markers"]["schema"]
+    intervals, open_starts = {}, {}
+    for row in thread["markers"]["data"]:
+        name, start, end, phase = (row[schema[k]] for k in ("name", "startTime", "endTime", "phase"))
+        name = strings[name]
+        data = row[schema["data"]] if len(row) > schema["data"] else None
+        if name.startswith("Reflow"):
+            name = "Reflow"
+        if data and "innerWindowID" in data and data["innerWindowID"] not in window_ids:
+            continue
+        if phase == 1:
+            intervals.setdefault(name, []).append((end - start, data))
+        elif phase == 2:
+            open_starts.setdefault(name, []).append(start)
+        elif phase == 3 and open_starts.get(name):
+            intervals.setdefault(name, []).append((end - open_starts[name].pop(), data))
+
+    def longest(name):
+        return max(intervals.get(name, []), key=lambda i: i[0], default=(None, None))
+
+    reflows = [d for d, _ in intervals.get("Reflow", [])]
+    style, style_data = longest("Styles")
+    ms = lambda v: None if v is None else int(v * 1e6)
+    s = dict(layout=ms(longest("Reflow")[0]), style=ms(style), flush=ms(longest("DoFlushPendingNotifications")[0]),
+             display_list=ms(longest("DisplayList")[0]), layout_sum=ms(sum(reflows)), n_reflows=len(reflows),
+             styled=style_data["elementsTraversed"] if style_data else None)
+    s["style+layout"] = s["style"] + s["layout"]
+    return s
+
+
+def pin_content_processes(parent_pid, cpus):
+    """Pin Firefox's tab content processes (descendants of the parent whose command line ends in
+    `tab`) with taskset. Pinning the whole browser would put the parent process and compositor
+    on the same CPUs as the page's main thread, which inflated its reflow 3x on a single CPU."""
+    children = {}
+    for stat in Path("/proc").glob("[0-9]*/stat"):
+        try:
+            ppid = int(stat.read_text().rsplit(")", 1)[1].split()[1])
+            children.setdefault(ppid, []).append(int(stat.parent.name))
+        except (OSError, ValueError):
+            continue
+    pinned, stack = [], [parent_pid]
+    while stack:
+        for pid in children.get(stack.pop(), []):
+            stack.append(pid)
+            if Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ").split()[-1:] == [b"tab"]:
+                subprocess.run(["taskset", "-a", "-p", "-c", cpus, str(pid)], check=True, capture_output=True)
+                pinned.append(pid)
+    if not pinned:
+        raise RuntimeError("no Firefox content process found to pin")
+    return pinned
+
+
+def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
+    from playwright.sync_api import sync_playwright
+    url = (REVEAL / case["file"]).resolve().as_uri()
+    prefs = {} if stylo_threads is None else {"layout.css.stylo-threads": stylo_threads}
+    samples = []
+    with sync_playwright() as p, tempfile.TemporaryDirectory() as d:
+        exe = p.firefox.executable_path
+        pidfile, blank = Path(d) / "firefox.pid", Path(d) / "blank.html"
+        if cpus:
+            # exec keeps the wrapper's pid, so the pidfile names the parent Firefox process
+            wrapper = Path(d) / "firefox-with-pid"
+            wrapper.write_text(f"#!/bin/sh\necho $$ > {shlex.quote(str(pidfile))}\nexec {shlex.quote(exe)} \"$@\"\n")
+            wrapper.chmod(0o755)
+            exe = str(wrapper)
+            blank.write_text("<!doctype html>\n")
+        for i in range(iters):
+            profile = Path(d) / f"profile-{i}.json"
+            env = dict(os.environ, **FIREFOX_PROFILER_ENV, MOZ_PROFILER_SHUTDOWN=str(profile))
+            browser = p.firefox.launch(executable_path=exe, env=env, firefox_user_prefs=prefs)
+            page = browser.new_page(viewport={"width": WIDTH, "height": HEIGHT})
+            if cpus:
+                # a first file:// page puts the tab in its file content process; pin that, then load the case
+                page.goto(blank.as_uri(), wait_until="load")
+                pin_content_processes(int(pidfile.read_text()), cpus)
+            page.goto(url, wait_until="load", timeout=600_000)
+            page.evaluate("document.body.offsetHeight")
+            root = page.evaluate(ROOT_RECT_JS)
+            if screenshot and i == iters - 1:
+                page.screenshot(path=str(screenshot))
+            browser.close()
+            s = parse_firefox_profile(profile, url)
+            s["root"] = root
+            samples.append(s)
+    return samples
+
+
 def run_engine(engine, case, iters, cpus, screenshot=None):
     if engine == "taffy":
         return run_taffy(case, iters, cpus)
@@ -213,7 +325,19 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
         return run_servo(case, iters, None, 3, screenshot=screenshot)
     if engine == "chrome":
         return run_chrome(case, iters, None, screenshot=screenshot)
+    if engine == "firefox1":
+        return run_firefox(case, iters, cpus, stylo_threads=1, screenshot=screenshot)
+    if engine == "firefox":
+        return run_firefox(case, iters, None, screenshot=screenshot)
     raise ValueError(engine)
+
+
+def available_engines(engines):
+    if any(e.startswith("firefox") for e in engines) and not firefox_installed():
+        print("firefox: Playwright's Firefox is not installed (python -m playwright install firefox); skipping",
+              file=sys.stderr)
+        engines = [e for e in engines if not e.startswith("firefox")]
+    return engines
 
 
 # ---- bench / report ----
@@ -232,21 +356,26 @@ def fmt_ms(ns):
 COLUMNS = [
     ("Layout only", [("taffy", "layout", "Taffy"), ("blitz", "layout", "Blitz `layout`"),
                      ("servo1", "fragment", "Servo(1) Fragment Tree"), ("servo", "fragment", "Servo(3) Fragment Tree"),
-                     ("chrome", "layout", "Chrome Layout")]),
+                     ("chrome", "layout", "Chrome Layout"), ("firefox1", "layout", "Firefox(1) Reflow"),
+                     ("firefox", "layout", "Firefox Reflow")]),
     ("Box construction + layout", [("blitz", "construct+layout", "Blitz construct+layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
                                    ("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout")]),
     ("Style", [("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)"),
                ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
-               ("chrome", "style", "Chrome recalcStyle")]),
+               ("chrome", "style", "Chrome recalcStyle"),
+               ("firefox1", "style", "Firefox(1) Styles (incl. frame construction)"),
+               ("firefox", "style", "Firefox Styles (incl. frame construction)")]),
     ("Whole pipeline (style to paint tree / display list)", [
         ("blitz", "resolve", "Blitz resolve()"), ("servo1", "reflow", "Servo(1) handle_reflow"),
-        ("servo", "reflow", "Servo(3) handle_reflow"), ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout")]),
+        ("servo", "reflow", "Servo(3) handle_reflow"), ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout"),
+        ("firefox1", "style+layout", "Firefox(1) Styles+Reflow"), ("firefox", "style+layout", "Firefox Styles+Reflow")]),
 ]
 
 
 def report(results, how, engines):
-    lines = [f"Times in ms, {how} over all rounds and iterations. Servo(n) = `layout_threads=n`.", ""]
+    lines = [f"Times in ms, {how} over all rounds and iterations. Servo(n) = `layout_threads=n`; "
+             "Firefox(1) = `layout.css.stylo-threads=1` (no style worker threads).", ""]
     for title, cols in COLUMNS:
         cols = [c for c in cols if c[0] in engines]
         if not cols:
@@ -262,7 +391,7 @@ def report(results, how, engines):
 
 def cmd_bench(args):
     cases = [c for c in read_manifest() if args.filter in c["name"]]
-    engines = args.engines.split(",")
+    engines = available_engines(args.engines.split(","))
     results = {c["name"]: dict(nodes=c["nodes"], engines={e: [] for e in engines}) for c in cases}
     OUT.mkdir(exist_ok=True)
     if args.merge:
@@ -323,7 +452,7 @@ def bg_bands(img, x=1):
 def cmd_verify(args):
     from PIL import Image, ImageChops
     cases = [c for c in read_manifest() if args.filter in c["name"]]
-    engines = args.engines.split(",")
+    engines = available_engines(args.engines.split(","))
     shots = OUT / "shots"
     shots.mkdir(parents=True, exist_ok=True)
     lines = ["| case | nodes | " + " | ".join(f"{e} vs {engines[0]}" for e in engines[1:]) + " | notes |",
@@ -346,7 +475,9 @@ def cmd_verify(args):
                 notes.append(f"chrome fonts={s['fonts']}")
             if "total_objects" in s:
                 notes.append(f"chrome objects={s['total_objects']} layouts={s['n_layouts']}")
-            if "n_reflows" in s:
+            if "styled" in s:
+                notes.append(f"{e} styled={s['styled']} reflows={s['n_reflows']} (sum {s['layout_sum'] / s['layout']:.2f}x longest)")
+            elif "n_reflows" in s:
                 notes.append(f"{e} reflows={s['n_reflows']}")
             if "hash" in s:
                 notes.append(f"{e} hash={s['hash'][:8]}")
@@ -386,11 +517,11 @@ def main():
     b.add_argument("--rounds", type=int, default=3)
     b.add_argument("--iters", type=int, default=3)
     b.add_argument("--filter", default="")
-    b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1)")
+    b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1, firefox1)")
     b.add_argument("--agg", default="min", choices=["min", "median"])
     b.add_argument("--merge", action="store_true", help="keep other engines' samples from out/results.json")
     v = sub.add_parser("verify")
-    v.add_argument("--engines", default="chrome,blitz,servo1")
+    v.add_argument("--engines", default="chrome,blitz,servo1,firefox1")
     v.add_argument("--filter", default="")
     v.add_argument("--cpus", default=None)
     args = ap.parse_args()
