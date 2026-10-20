@@ -81,6 +81,7 @@ not installed); a Servo checkout built with `./mach build --release --features t
 cargo build --release
 ./run.py gen                                   # writes corpus/
 ./run.py bench --rounds 3 --iters 3 --cpus 2   # all engines, interleaved rounds; out/report.md, out/results.json
+./run.py report                                 # rewrite out/report.md from out/results.json
 ./run.py bench --engines taffy,blitz,servo1 --filter grid
 ./run.py verify                                # screenshots per engine + % pixels differing, out/shots/
 ```
@@ -111,6 +112,43 @@ agree to 0.003%); `pangui/percentage_and_ratio` renders empty in Servo (it gives
 comparable; `pangui/fit_nesting` (0.99px leaves) and `pangui/flex_expand_equal_weights` (0.67px
 items) differ by ~11% of pixels against Chrome because Blitz and Servo snap such boxes to the pixel
 grid differently, while the box sizes agree within 1px.
+
+## Versions and methodology
+
+Measured on 2026-10-20 on an 8-vCPU Intel Xeon AWS VM (31 GB, Ubuntu 22.04.5, kernel 6.8.0-1060-aws),
+rustc 1.99.1, Python Playwright 1.64.0. Every number in `out/` comes from this machine; children
+sessions that add engines or cases only verify equal work and run a one-round smoke test, the
+measurement is redone here with `bench --merge`.
+
+| engine | version | how it is driven and timed |
+|---|---|---|
+| Chrome | Chromium 156.0.8078.4 (Playwright `chromium_headless_shell-1248`, headless shell, `--no-sandbox`) | New page per iteration, 1280×800, `file://` reveal page, `load` + wait for the reveal; CDP `Tracing` with categories `devtools.timeline`, `disabled-by-default-devtools.timeline`, `blink`, `blink_style`; longest `X` event of each name: `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (both), `Layout` (fragment-tree layout). `totalObjects` from the `Layout` event is the equal-work count. Not pinned (multi-process). |
+| Firefox | Firefox 157.0 (Playwright `firefox-1555`) | One browser launch per iteration with the Gecko profiler on from startup (`MOZ_PROFILER_STARTUP=1`, features `nostacksampling,nomarkerstacks`, filter `GeckoMain`), profile written by `MOZ_PROFILER_SHUTDOWN`; the content process whose page is the case is read for the `Styles` interval marker (style, includes frame construction), `Reflow` start/end pairs (layout; the longest one is reported, the sum is within 1% of it) and `DisplayList`. `firefox1` sets `layout.css.stylo-threads=1` and pins only the tab content process with `taskset`; `firefox` is the default (5 style workers here), unpinned. |
+| Servo | servoshell 0.7.0-5d93f1a6f (built 2026-10-20 from servo/servo `5d93f1a6f`, `./mach build --release --features tracing-perfetto`) | One process per iteration (`-z -x`, 1280×800), page served over localhost HTTP (its fetch rejects `file://` fonts); `SERVO_TRACING=layout::layout_impl=trace,layout::flow::root=trace` (phase spans only; per-item spans would add >10×), spans read from `servo.pftrace` with the `perfetto` Python module: `Styling`, `Box Tree Construction`, `Fragment Tree Construction`, `Stacking Context Tree Construction`, `Display List Construction`, `handle_reflow`. `servo1` = `--pref layout_threads=1`, pinned; `servo` = default 3 layout threads (Stylo pool shared by style and box construction), unpinned. |
+| Blitz | DioxusLabs/blitz `28f848d` (blitz-dom with Taffy `ea07c4c`, Stylo 0.22.0, Parley 0.12.0, harfrust 0.12.0, skrifa 0.44.0) | `blitz-runner` (this repo): fresh `HtmlDocument` per iteration from the plain `corpus/*.html`, `incremental=false`, one `resolve()`; phase times from Blitz's own `log-phase-times` timer via a vendored `debug_timer` printing ns: `style`, `construct` (+ `pconstruct`, the deferred Parley layout builds = shaping), `layout` (Taffy + Parley line breaking), `paint_tree`, `resolve`. `blitz` = sequential style, pinned; `blitz-par` = `StyleThreading::Parallel`; `blitz-pcon` / `blitz-par-pcon` = second build with `--features parallel-construct` (deferred construction on the rayon pool). Equal work: hash of every element's final box, `--boxes` dump. |
+| Taffy | DioxusLabs/taffy `4e59968` (`taffy_benchmarks` for the tree shapes and PanGUI templates) | `gen bench`: the same tree built directly in a `TaffyTree`, all nodes dirtied, `compute_layout` timed with `Instant`; pinned. `--wrapped` lays it out as the page does (abspos child of a viewport-sized box, ~10% more work). Blitz's Taffy is 4 commits older than this one; measured difference on flex/wide/10000 is 1.4% of instructions. |
+
+Common protocol: `bench --rounds 3 --iters 3`, engines interleaved within a round (order reversed every
+other round), `min` over all 9 samples per engine and case (medians via `--agg median`); the first
+layout of a freshly loaded page is measured, never a relayout. Only single-threaded runners are pinned
+(`--cpus`); parallel ones use all 8 vCPUs. Caveats: VM wall-clock noise is 1–3% between rounds when the
+machine is idle and much more when it is not (check `uptime`); Servo's remaining tracing overhead is
+~1.5 ms per page; Chrome and Firefox numbers include no process start or parse time, only the named
+events; Taffy direct is not wrapped in the page's containing block unless `--wrapped` is used.
+
+## Results
+
+Both forms are committed and regenerated by `run.py`:
+
+- `out/results.json`: raw samples, nanoseconds, one list per engine and case. Each sample is a dict
+  of the phases above (`layout`, `style`, `construct`, `construct+layout`, `resolve`/`reflow`/
+  `style+layout`, Servo `box`/`fragment`/`box+fragment`/`display_list`, Chrome `update_layout_tree`/
+  `total_objects`/`n_layouts`, Firefox `layout_sum`/`n_reflows`/`display_list`, …) plus, for verify
+  runs, `root`, `hash`, `boxes`. `bench --merge` re-measures a subset of engines or cases in place.
+- `out/report.md`: the formatted tables (`./run.py report` rewrites it from `results.json`), columns
+  ordered Chrome, Firefox, Servo, Blitz, Taffy, each cell `ms (×N)` relative to the Chrome column of
+  the same table.
+- `out/verify.md`: the equal-work table (`./run.py verify`).
 
 ## Servo tracing filter
 

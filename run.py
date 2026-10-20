@@ -379,33 +379,47 @@ def fmt_ms(ns):
     return "-" if ns is None else f"{ns / 1e6:.3f}"
 
 
+# Column order within every table: Chrome, Firefox, Servo, Blitz, Taffy; the Chrome column is the
+# reference for the multipliers.
 COLUMNS = [
-    ("Layout only", [("taffy", "layout", "Taffy"), ("blitz", "layout", "Blitz `layout`"),
+    ("Layout only", [("chrome", "layout", "Chrome Layout"), ("firefox1", "layout", "Firefox(1) Reflow"),
+                     ("firefox", "layout", "Firefox Reflow"),
                      ("servo1", "fragment", "Servo(1) Fragment Tree"), ("servo", "fragment", "Servo(3) Fragment Tree"),
-                     ("chrome", "layout", "Chrome Layout"), ("firefox1", "layout", "Firefox(1) Reflow"),
-                     ("firefox", "layout", "Firefox Reflow")]),
-    ("Box construction + layout", [("blitz", "construct+layout", "Blitz construct+layout"),
-                                   ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)"),
+                     ("blitz", "layout", "Blitz `layout`"), ("taffy", "layout", "Taffy")]),
+    ("Box construction + layout", [("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
-                                   ("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout")]),
-    ("Construction", [("blitz", "construct", "Blitz construct (+pconstruct)"), ("blitz-pcon", "construct", "Blitz construct, parallel"),
+                                   ("blitz", "construct+layout", "Blitz construct+layout"),
+                                   ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)")]),
+    ("Construction", [("chrome", "construct", "Chrome rebuildLayoutTree"),
                       ("servo1", "box", "Servo(1) Box Tree"), ("servo", "box", "Servo(3) Box Tree"),
-                      ("chrome", "construct", "Chrome rebuildLayoutTree")]),
-    ("Style", [("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)"),
-               ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
-               ("chrome", "style", "Chrome recalcStyle"),
+                      ("blitz", "construct", "Blitz construct (+pconstruct)"), ("blitz-pcon", "construct", "Blitz construct, parallel")]),
+    ("Style", [("chrome", "style", "Chrome recalcStyle"),
                ("firefox1", "style", "Firefox(1) Styles (incl. frame construction)"),
-               ("firefox", "style", "Firefox Styles (incl. frame construction)")]),
+               ("firefox", "style", "Firefox Styles (incl. frame construction)"),
+               ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
+               ("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)")]),
     ("Whole pipeline (style to paint tree / display list)", [
+        ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout"),
+        ("firefox1", "style+layout", "Firefox(1) Styles+Reflow"), ("firefox", "style+layout", "Firefox Styles+Reflow"),
+        ("servo1", "reflow", "Servo(1) handle_reflow"), ("servo", "reflow", "Servo(3) handle_reflow"),
         ("blitz", "resolve", "Blitz resolve()"), ("blitz-par", "resolve", "Blitz resolve() (parallel style)"),
-        ("blitz-par-pcon", "resolve", "Blitz resolve() (parallel style+construct)"), ("servo1", "reflow", "Servo(1) handle_reflow"),
-        ("servo", "reflow", "Servo(3) handle_reflow"), ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout"),
-        ("firefox1", "style+layout", "Firefox(1) Styles+Reflow"), ("firefox", "style+layout", "Firefox Styles+Reflow")]),
+        ("blitz-par-pcon", "resolve", "Blitz resolve() (parallel style+construct)")]),
 ]
 
 
+def fmt_cell(ns, ref):
+    """`ms (xN)` relative to the Chrome value of the same row, or just `ms` when Chrome has none."""
+    if ns is None:
+        return "-"
+    cell = f"{ns / 1e6:.3f}"
+    if ref:
+        cell += f" ({ns / ref:.2f}x)"
+    return cell
+
+
 def report(results, how, engines):
-    lines = [f"Times in ms, {how} over all rounds and iterations. Servo(n) = `layout_threads=n`; "
+    lines = [f"Times in ms, {how} over all rounds and iterations; in brackets the multiple of the Chrome column "
+             "of the same table (1.00x = Chrome). Servo(n) = `layout_threads=n`; "
              "Firefox(1) = `layout.css.stylo-threads=1` (no style worker threads).", ""]
     for title, cols in COLUMNS:
         cols = [c for c in cols if c[0] in engines]
@@ -413,11 +427,21 @@ def report(results, how, engines):
             continue
         lines += [f"### {title}", "", "| case | nodes | " + " | ".join(c[2] for c in cols) + " |",
                   "|---|---:|" + "---:|" * len(cols)]
+        ref_col = next((c for c in cols if c[0] == "chrome"), None)
         for name, data in results.items():
-            cells = [fmt_ms(agg([s.get(m) for s in data["engines"].get(e, [])], how)) for e, m, _ in cols]
-            lines.append(f"| {name} | {data['nodes']} | " + " | ".join(cells) + " |")
+            values = [agg([s.get(m) for s in data["engines"].get(e, [])], how) for e, m, _ in cols]
+            ref = values[cols.index(ref_col)] if ref_col else None
+            lines.append(f"| {name} | {data['nodes']} | " + " | ".join(fmt_cell(v, ref) for v in values) + " |")
         lines.append("")
     return "\n".join(lines)
+
+
+def cmd_report(args):
+    """Rewrite out/report.md from out/results.json without re-measuring."""
+    results = json.loads((OUT / "results.json").read_text())
+    md = report(results, args.agg, sorted({e for d in results.values() for e in d["engines"]}))
+    (OUT / "report.md").write_text(md)
+    print(md)
 
 
 def cmd_bench(args):
@@ -551,12 +575,14 @@ def main():
     b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1, firefox1)")
     b.add_argument("--agg", default="min", choices=["min", "median"])
     b.add_argument("--merge", action="store_true", help="keep other engines' samples from out/results.json")
+    r = sub.add_parser("report", help="rewrite out/report.md from out/results.json")
+    r.add_argument("--agg", default="min", choices=["min", "median"])
     v = sub.add_parser("verify")
     v.add_argument("--engines", default="chrome,blitz,servo1,firefox1")
     v.add_argument("--filter", default="")
     v.add_argument("--cpus", default=None)
     args = ap.parse_args()
-    {"gen": cmd_gen, "bench": cmd_bench, "verify": cmd_verify}[args.cmd](args)
+    {"gen": cmd_gen, "bench": cmd_bench, "report": cmd_report, "verify": cmd_verify}[args.cmd](args)
 
 
 if __name__ == "__main__":
