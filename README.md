@@ -225,6 +225,11 @@ case agrees with Chrome within 1 px of box size and position, with these excepti
 - Ladybird's screenshots include its own scrollbars (every page overflows the viewport); they are
   part of the pixel percentage.
 
+Ladybird is not pinned: `taskset` on the whole process tree (UI process, WebContent, RequestServer)
+made `style` ~5 % slower on flex/wide/10000 and left `layout` unchanged, so the `--cpus` set is ignored
+for it. A build moved from another machine needs the Qt Positioning module next to Qt and
+`QT_QPA_PLATFORM=offscreen` (set by the runner).
+
 `layouts=2` on every page (the `display:none` document, then the reveal); the font pages add one
 round per web font that finishes loading before the reveal.
 
