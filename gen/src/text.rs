@@ -111,6 +111,8 @@ fn mixed_prose(rng: &mut ChaCha8Rng, min_words: usize) -> String {
     out
 }
 
+/// `text-rendering: geometricPrecision` stops Chrome rounding each glyph advance to a whole pixel
+/// (its default without subpixel positioning), which otherwise moves ~5% of the line breaks.
 fn page(name: &str, extra_css: &str, body: &str, nodes: u32) -> TextCase {
     let mut css = String::new();
     for (file, weight, style) in [
@@ -122,7 +124,7 @@ fn page(name: &str, extra_css: &str, body: &str, nodes: u32) -> TextCase {
         let _ = writeln!(css, "@font-face{{font-family:\"LB Sans\";font-weight:{weight};font-style:{style};src:url(fonts/{file})}}");
     }
     let html = format!(
-        "<!DOCTYPE html>\n<html><head><meta charset=\"utf-8\"><title>{name}</title>\n<style>\n{css}html,body{{margin:0;padding:0}}\nbody{{font-family:\"LB Sans\";font-size:16px;line-height:20px}}\np,h3{{margin:0}}\n#cb>div{{width:{}px}}\n{extra_css}</style></head><body>\n<div id=\"cb\">\n{body}</div>\n</body></html>\n",
+        "<!DOCTYPE html>\n<html><head><meta charset=\"utf-8\"><title>{name}</title>\n<style>\n{css}html,body{{margin:0;padding:0}}\nbody{{font-family:\"LB Sans\";font-size:16px;line-height:20px;text-rendering:geometricPrecision}}\np,h3{{margin:0}}\n#cb>div{{width:{}px}}\n{extra_css}</style></head><body>\n<div id=\"cb\">\n{body}</div>\n</body></html>\n",
         crate::num(WIDTH)
     );
     TextCase { name: name.to_string(), html, nodes }
