@@ -268,7 +268,11 @@ def pin_content_processes(parent_pid, cpus):
     while stack:
         for pid in children.get(stack.pop(), []):
             stack.append(pid)
-            if Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\0", b" ").split()[-1:] == [b"tab"]:
+            try:
+                cmdline = Path(f"/proc/{pid}/cmdline").read_bytes()
+            except OSError:  # exited between the /proc scan and now
+                continue
+            if cmdline.replace(b"\0", b" ").split()[-1:] == [b"tab"]:
                 subprocess.run(["taskset", "-a", "-p", "-c", cpus, str(pid)], check=True, capture_output=True)
                 pinned.append(pid)
     if not pinned:
