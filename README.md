@@ -3,6 +3,10 @@
 Comparable layout-performance numbers for Taffy, Blitz (Taffy + Stylo + Parley), Servo, and Chrome
 on identical pages.
 
+**Before interpreting the rankings, read the [benchmark caveats](CAVEATS.md):**
+phase boundaries, equal-work validation, cache state, and sampling affect which
+numbers are comparable.
+
 Servo's layout has no standalone entry point (it reflows a script-owned DOM), so the common unit is
 a page: the same HTML, the same viewport, timed from styled DOM to final boxes in each engine.
 
