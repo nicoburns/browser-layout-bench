@@ -4,6 +4,8 @@ writes results.json + a Markdown report. See README.md for the measurement model
 import argparse, functools, http.server, json, os, re, shlex, shutil, statistics, subprocess, sys, tempfile, threading
 from pathlib import Path
 
+import engines_ladybird
+
 ROOT = Path(__file__).resolve().parent
 CORPUS = ROOT / "corpus"
 REVEAL = CORPUS / "reveal"
@@ -14,7 +16,7 @@ BLITZ = ROOT / "target/release/blitz-runner"
 BLITZ_PCON = ROOT / "target-pcon/release/blitz-runner"
 SERVOSHELL = Path(os.environ.get("SERVOSHELL", Path.home() / "repos/servo/target/release/servoshell"))
 WIDTH, HEIGHT = 1280, 800
-ENGINES = ["taffy", "blitz", "blitz-par", "blitz-pcon", "blitz-par-pcon", "servo1", "servo", "chrome", "firefox1", "firefox"]
+ENGINES = ["taffy", "blitz", "blitz-par", "blitz-pcon", "blitz-par-pcon", "servo1", "servo", "chrome", "firefox1", "firefox", "ladybird"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
                  "cb.offsetHeight;</script>\n")
@@ -355,6 +357,8 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
         return run_firefox(case, iters, cpus, stylo_threads=1, screenshot=screenshot)
     if engine == "firefox":
         return run_firefox(case, iters, None, screenshot=screenshot)
+    if engine == "ladybird":
+        return engines_ladybird.run_ladybird(case, iters, cpus, REVEAL, WIDTH, HEIGHT, screenshot=screenshot)
     raise ValueError(engine)
 
 
@@ -363,6 +367,9 @@ def available_engines(engines):
         print("firefox: Playwright's Firefox is not installed (python -m playwright install firefox); skipping",
               file=sys.stderr)
         engines = [e for e in engines if not e.startswith("firefox")]
+    if "ladybird" in engines and not engines_ladybird.available():
+        print(engines_ladybird.skip_message(), file=sys.stderr)
+        engines = [e for e in engines if e != "ladybird"]
     return engines
 
 
@@ -383,24 +390,26 @@ def fmt_ms(ns):
 # reference for the multipliers.
 COLUMNS = [
     ("Layout only", [("chrome", "layout", "Chrome Layout"), ("firefox1", "layout", "Firefox(1) Reflow"),
-                     ("firefox", "layout", "Firefox Reflow"),
+                     ("firefox", "layout", "Firefox Reflow"), ("ladybird", "layout", "Ladybird layout"),
                      ("servo1", "fragment", "Servo(1) Fragment Tree"), ("servo", "fragment", "Servo(3) Fragment Tree"),
                      ("blitz", "layout", "Blitz `layout`"), ("taffy", "layout", "Taffy")]),
     ("Box construction + layout", [("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout"),
+                                   ("ladybird", "construct+layout", "Ladybird tree build+layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
                                    ("blitz", "construct+layout", "Blitz construct+layout"),
                                    ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)")]),
-    ("Construction", [("chrome", "construct", "Chrome rebuildLayoutTree"),
+    ("Construction", [("chrome", "construct", "Chrome rebuildLayoutTree"), ("ladybird", "construct", "Ladybird tree build"),
                       ("servo1", "box", "Servo(1) Box Tree"), ("servo", "box", "Servo(3) Box Tree"),
                       ("blitz", "construct", "Blitz construct (+pconstruct)"), ("blitz-pcon", "construct", "Blitz construct, parallel")]),
     ("Style", [("chrome", "style", "Chrome recalcStyle"),
                ("firefox1", "style", "Firefox(1) Styles (incl. frame construction)"),
-               ("firefox", "style", "Firefox Styles (incl. frame construction)"),
+               ("firefox", "style", "Firefox Styles (incl. frame construction)"), ("ladybird", "style", "Ladybird update_style"),
                ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
                ("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)")]),
     ("Whole pipeline (style to paint tree / display list)", [
         ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout"),
         ("firefox1", "style+layout", "Firefox(1) Styles+Reflow"), ("firefox", "style+layout", "Firefox Styles+Reflow"),
+        ("ladybird", "total", "Ladybird update_layout()"),
         ("servo1", "reflow", "Servo(1) handle_reflow"), ("servo", "reflow", "Servo(3) handle_reflow"),
         ("blitz", "resolve", "Blitz resolve()"), ("blitz-par", "resolve", "Blitz resolve() (parallel style)"),
         ("blitz-par-pcon", "resolve", "Blitz resolve() (parallel style+construct)")]),
