@@ -13,7 +13,7 @@ REAL = ROOT / "real"
 OUT = ROOT / "out"
 GEN = ROOT / "target/release/gen"
 BLITZ = ROOT / "target/release/blitz-runner"
-# `cargo build --release -p layout-bench-blitz --features parallel-construct --target-dir target-pcon`
+# `cargo build --release -p layout-bench-blitz --features floats,writing-mode,parallel-construct --target-dir target-pcon`
 BLITZ_PCON = ROOT / "target-pcon/release/blitz-runner"
 # `cargo build --release --manifest-path blitz-runner-pl/Cargo.toml --target-dir target-pl` (see blitz-runner-pl/Cargo.toml)
 BLITZ_PL = ROOT / "target-pl/release/blitz-runner"

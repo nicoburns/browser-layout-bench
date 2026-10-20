@@ -149,7 +149,7 @@ them is the heights and box counts above, which pin each remaining difference to
 |  | `gen bench --wrapped`: same tree as an absolutely positioned child of a viewport-sized box, mirroring the page's `#cb` (one layout pass from a definite containing block, as in the browsers; ~10% more work than the bare root) | `layout` |
 | `blitz` | `blitz-runner`: fresh `HtmlDocument`, `incremental=false`, one `resolve()` per iteration, phase times from Blitz's `log-phase-times` timer (vendored to print ns); `construct` includes Blitz's `pconstruct` phase (deferred tasks, where the Parley text layouts are built, i.e. text is shaped) | `style`, `construct`, `layout`, `paint_tree`, `resolve` |
 | `blitz-par` | same with `StyleThreading::Parallel` | same |
-| `blitz-pcon` / `blitz-par-pcon` | `blitz-runner` built with `--features parallel-construct` (`cargo build --release -p layout-bench-blitz --features parallel-construct --target-dir target-pcon`): the deferred construction tasks (`pconstruct`, Parley layout builds) run on the rayon pool; with sequential / parallel style | same |
+| `blitz-pcon` / `blitz-par-pcon` | `blitz-runner` built with `--features parallel-construct` (see [Running](#running) for the build commands): the deferred construction tasks (`pconstruct`, Parley layout builds) run on the rayon pool; with sequential / parallel style | same |
 | `blitz-pcon-pl1` / `blitz-pcon-pl` / `blitz-par-pcon-pl` | third build of the same `src/main.rs` against the parallel-layout prototype [blitz#1034](https://github.com/DioxusLabs/blitz/pull/1034) (`blitz-runner-pl/Cargo.toml`: Blitz `0500fd4a`, branched from `28f848d`, with Taffy `8cbdeb1` instead of `ea07c4c`; features `parallel-layout` + `parallel-construct`): Taffy hands Blitz batches of independent sibling layouts, which run on the rayon pool when their estimated weight is above a threshold. `pl1` = `BLITZ_PARALLEL_LAYOUT_THREADS=1` (a dedicated one-thread pool, i.e. the feature's batching/bookkeeping without parallelism) and pinned like `blitz`, the baseline for the feature's cost; `pl` = sequential style; `par-pcon-pl` = everything parallel | same |
 | `servo1` / `servo` | servoshell built with `--features tracing-perfetto`, `--pref layout_threads=1` / `3` (default), one process per iteration, spans read from `servo.pftrace` | `Styling`, `Box Tree Construction`, `Fragment Tree Construction`, `restyle_and_build_trees`, `Stacking Context Tree Construction`, `Display List Construction`, `handle_reflow` |
 | `chrome` | Playwright chromium-headless-shell, CDP `Tracing` with `devtools.timeline` + `blink_style` | `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (= both), `Layout` |
@@ -174,6 +174,22 @@ Phase mapping used in the report:
 Servo's `restyle_and_build_trees` and `handle_reflow` include work the children spans do not
 (stylist preparation, damage computation); the report shows them separately.
 
+### Blitz feature cost
+
+blitz-dom's `floats` and `writing-mode` are opt-in and the runner enables both (`apps/browser`
+ships with `floats`). What they cost, as callgrind instructions in `resolve_layout` for one layout
+of the page (deterministic; the layout hashes are identical across the four builds on all 48 pages):
+
+| page | neither | `floats` | `writing-mode` | both |
+|---|---:|---:|---:|---:|
+| flex/wide/10000 | 134.6M | 134.4M (0%) | 149.0M (+10.7%) | 149.6M (+11.2%) |
+| grid/wide/100x100 | 231.9M | 230.4M (−0.6%) | 264.1M (+13.9%) | 251.8M (+8.6%) |
+| text/paragraphs/1000 | 188.4M | 211.7M (+12.4%) | 189.0M (+0.3%) | 212.2M (+12.7%) |
+
+`writing-mode` is paid on every style read (the frame-transposing getters in `stylo_taffy`), `floats`
+in block layout with inline content; so the Blitz columns measured with both are ~10% above what a
+build without them would show on these pages.
+
 Firefox reports the longest `Reflow` and `Styles` marker of the page's content process. The reveal
 flush is one `Styles` + one `Reflow`; the page also records a few sub-0.1 ms reflows (the initial
 `display:none` document, a nested flush after the reveal), so `verify` prints the reflow count and
@@ -188,7 +204,9 @@ not installed); a Servo checkout built with `./mach build --release --features t
 (`SERVOSHELL=/path/to/servoshell` if not at `~/repos/servo/target/release/servoshell`).
 
 ```sh
-cargo build --release
+cargo build --release --features floats,writing-mode                                            # gen + blitz-runner
+cargo build --release -p layout-bench-blitz --features floats,writing-mode,parallel-construct --target-dir target-pcon
+cargo build --release --manifest-path blitz-runner-pl/Cargo.toml --target-dir target-pl         # blitz#1034 prototype
 ./run.py gen                                   # writes corpus/
 ./run.py bench --rounds 3 --iters 3 --cpus 2   # all engines, interleaved rounds; out/report.md, out/results.json
 ./run.py report                                 # rewrite out/report.md from out/results.json
