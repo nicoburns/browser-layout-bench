@@ -170,6 +170,7 @@ pip install aqtinstall && aqt install-qt linux desktop 6.10.3 linux_gcc_64 -O ~/
 git clone --depth 50 https://github.com/LadybirdBrowser/ladybird ~/repos/ladybird
 cd ~/repos/ladybird && git apply /path/to/layout-bench/patches/ladybird-phase-timing.patch
 export CMAKE_PREFIX_PATH=$HOME/Qt/6.10.3/gcc_64 PATH=$HOME/Qt/6.10.3/gcc_64/bin:$PATH
+unset BASH_ENV   # the build script runs `bash -c` snippets; a BASH_ENV that returns non-zero fails the vcpkg step
 ./Meta/ladybird.py build --cc clang-22 --cxx clang++-22 ladybird     # Release preset -> Build/release/bin/Ladybird
 ```
 
@@ -196,6 +197,36 @@ of the load): the font pages reveal from a `document.fonts` promise that resolve
 event, and the screenshot has to wait for the reveal to be painted. The runner passes
 `LADYBIRD_SETTLE_SECONDS` (default 2) for that delay, so every Ladybird process costs that much
 extra wall-clock on top of the load; it does not affect the phase timings.
+
+### Ladybird vs Chrome
+
+`verify --engines chrome,ladybird` (Ladybird `07fac502` + the patch): every flex, grid and pangui
+case agrees with Chrome within 1 px of box size and position, with these exceptions:
+
+- `flex/huge_nested/*`: Ladybird's root is 8,000 px (80,000 px) wide, Chrome's 100 px. The root is
+  an absolutely positioned (shrink-to-fit) flex container whose items have `width:10px;
+  flex-grow:1` and each contain ten such items. Ladybird takes the items' max-content
+  contribution from their content (10 × 10 px, recursively, so ×10 per level) instead of their
+  definite `width`, and `flex-grow` then spreads the surplus. Same boxes, so the timing is of the
+  same tree, but of a differently sized one.
+- `flex/wide/10000`, `flex/absolute/10000`: the root's intrinsic width differs by 0.003 %
+  (854,624 vs 854,597 px) because a few items' max-content contributions differ by up to 0.4 %
+  (same f32/fixed-point class as the note above; the 1,000-node variants agree within 3 px), and
+  everything to the right of them shifts by up to 3,000 px.
+- `pangui/fit_nesting` (28 % px) and `pangui/flex_expand_equal_weights` (12 % px): the 0.99 px and
+  0.67 px boxes are snapped to the pixel grid differently, as with Blitz and Servo; the box sizes
+  are equal and `equal_weights` positions drift by 1 px after ~130 items (fixed-point
+  accumulation).
+- text pages: 5–10 % of pixels differ from glyph rasterisation alone (bands equal). 7/1000
+  `paragraphs`, 2/1000 `inline_mixed` and 2/3000 `flex_cards` paragraphs are one line taller in
+  Ladybird: a line that fits Chrome's 944 px content box with 0.2 px to spare (paragraph 32 of
+  `text/paragraphs`, line 2 at 943.80 px) wraps in Ladybird, whose glyph advances accumulate in
+  1/64 px `CSSPixels`, and the rest of the paragraph re-wraps.
+- Ladybird's screenshots include its own scrollbars (every page overflows the viewport); they are
+  part of the pixel percentage.
+
+`layouts=2` on every page (the `display:none` document, then the reveal); the font pages add one
+round per web font that finishes loading before the reveal.
 
 ## Servo tracing filter
 
