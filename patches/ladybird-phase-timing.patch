@@ -1,0 +1,149 @@
+diff --git a/Libraries/LibWeb/Layout/UpdateLayout.cpp b/Libraries/LibWeb/Layout/UpdateLayout.cpp
+index 2124b7ac..d65bd132 100644
+--- a/Libraries/LibWeb/Layout/UpdateLayout.cpp
++++ b/Libraries/LibWeb/Layout/UpdateLayout.cpp
+@@ -4,6 +4,7 @@
+  * SPDX-License-Identifier: BSD-2-Clause
+  */
+ 
++#include <AK/Format.h>
+ #include <AK/ScopeGuard.h>
+ #include <LibGfx/FontCascadeList.h>
+ #include <LibWeb/CSS/StyleComputer.h>
+@@ -255,6 +256,8 @@ void Document::update_style_and_layout_once(Layout::BegunRead const& read, Updat
+         .reason_is_inspect_devtools_layout_data = reason == UpdateLayoutReason::InspectDevToolsLayoutData,
+         .is_template_contents_document = m_created_for_appropriate_template_contents,
+     };
++    // Layout benchmark harness (local patch): names the document the LADYBIRD_PHASE line that follows belongs to.
++    warnln("LADYBIRD_UPDATE url={}", url());
+     Layout::RustFFI::render_state_update_layout(arena.host(), &read, &inputs);
+ 
+     // A pass that reached a web face still waiting on its load cannot start the fetch itself: the fetch, the
+diff --git a/Libraries/LibWeb/Rust/src/layout/update_layout.rs b/Libraries/LibWeb/Rust/src/layout/update_layout.rs
+index 482b6090..58f5fee6 100644
+--- a/Libraries/LibWeb/Rust/src/layout/update_layout.rs
++++ b/Libraries/LibWeb/Rust/src/layout/update_layout.rs
+@@ -26,6 +26,20 @@ use crate::painting::recording_slot::FlightLicense;
+ use crate::render_state::{ArenaChange, BegunRead, DocumentHost};
+ use crate::stage::MainThread;
+ use std::ffi::c_void;
++use std::sync::atomic::{AtomicU64, Ordering};
++use std::time::Instant;
++
++/// Phase timing for the layout benchmark harness (local patch, not upstream): nanoseconds spent in
++/// the style update, the layout tree build and the layout passes of the current layout update,
++/// reported to stderr as `LADYBIRD_PHASE ...` when the update ends.
++static PHASE_STYLE_NS: AtomicU64 = AtomicU64::new(0);
++static PHASE_CONSTRUCT_NS: AtomicU64 = AtomicU64::new(0);
++static PHASE_LAYOUT_NS: AtomicU64 = AtomicU64::new(0);
++static PHASE_FULL_LAYOUTS: AtomicU64 = AtomicU64::new(0);
++
++fn phase_add(counter: &AtomicU64, start: Instant) {
++    counter.fetch_add(start.elapsed().as_nanos() as u64, Ordering::Relaxed);
++}
+ 
+ mod main_thread_entries;
+ 
+@@ -674,7 +688,9 @@ impl LayoutRoundJob {
+             )
+         {
+             if let Some(build) = self.build.take() {
++                let build_start = Instant::now();
+                 let end = Self::build(state, build, work, &mut answer, facts.has_stale_list_item_counters);
++                phase_add(&PHASE_CONSTRUCT_NS, build_start);
+                 if end != BuildEnd::LayOut {
+                     answer.end = LayoutRoundEnd::Built {
+                         needs_another_build_pass: end == BuildEnd::AnotherPass,
+@@ -694,10 +710,12 @@ impl LayoutRoundJob {
+                 for boundary in &planned {
+                     debug_assert!(node_facts::kind_is_box(arena.data(boundary.root()).kind.get()));
+                 }
++                let layout_start = Instant::now();
+                 sync_enrolled_content_for_layout(state.arena_mut());
+                 for boundary in planned {
+                     answer.commits.push(lay_out_boundary(state, boundary, stage));
+                 }
++                phase_add(&PHASE_LAYOUT_NS, layout_start);
+                 state.arena().note_partial_layout();
+                 answer.end = LayoutRoundEnd::PartialLayout;
+                 return answer;
+@@ -705,7 +723,9 @@ impl LayoutRoundJob {
+         }
+ 
+         if let Some(build) = self.build.take() {
++            let build_start = Instant::now();
+             let end = Self::build(state, build, work, &mut answer, facts.has_stale_list_item_counters);
++            phase_add(&PHASE_CONSTRUCT_NS, build_start);
+             if end == BuildEnd::AnotherPass {
+                 answer.end = LayoutRoundEnd::Built {
+                     needs_another_build_pass: true,
+@@ -727,6 +747,7 @@ impl LayoutRoundJob {
+ 
+         let layout_root = state.arena().layout_root();
+         assert!(!layout_root.is_invalid(), "a full layout pass needs a layout root");
++        let layout_start = Instant::now();
+         let commit = lay_out_root(
+             state,
+             work,
+@@ -734,6 +755,8 @@ impl LayoutRoundJob {
+             stage,
+             facts.should_collect_devtools_layout_data,
+         );
++        phase_add(&PHASE_LAYOUT_NS, layout_start);
++        PHASE_FULL_LAYOUTS.fetch_add(1, Ordering::Relaxed);
+         answer.commits.push(commit);
+         state.arena().note_full_layout();
+         answer
+@@ -989,6 +1012,27 @@ unsafe fn update_layout(
+     document_host: &DocumentHost,
+     read: &BegunRead,
+     inputs: &FfiLayoutUpdateInputs,
++) {
++    let total_start = Instant::now();
++    for counter in [&PHASE_STYLE_NS, &PHASE_CONSTRUCT_NS, &PHASE_LAYOUT_NS, &PHASE_FULL_LAYOUTS] {
++        counter.store(0, Ordering::Relaxed);
++    }
++    unsafe { update_layout_timed(main_thread, document_host, read, inputs) };
++    eprintln!(
++        "LADYBIRD_PHASE style={} construct={} layout={} total={} full_layouts={}",
++        PHASE_STYLE_NS.load(Ordering::Relaxed),
++        PHASE_CONSTRUCT_NS.load(Ordering::Relaxed),
++        PHASE_LAYOUT_NS.load(Ordering::Relaxed),
++        total_start.elapsed().as_nanos(),
++        PHASE_FULL_LAYOUTS.load(Ordering::Relaxed),
++    );
++}
++
++unsafe fn update_layout_timed(
++    main_thread: &MainThread,
++    document_host: &DocumentHost,
++    read: &BegunRead,
++    inputs: &FfiLayoutUpdateInputs,
+ ) {
+     let host = layout_update_host(document_host);
+     let layout_host = FfiLayoutHostCallbacks::of(main_thread);
+@@ -1016,7 +1060,9 @@ unsafe fn update_layout(
+     {
+         layout_pass += 1;
+ 
++        let style_start = Instant::now();
+         host.update_style(main_thread, read);
++        phase_add(&PHASE_STYLE_NS, style_start);
+         // A round that flew in the frame the update took in is the update's first, which the host pays before
+         // anything else of the update reads the layout.
+         document_host.take_frame_in_with(read);
+diff --git a/Libraries/LibWebView/Application.cpp b/Libraries/LibWebView/Application.cpp
+index 716e7002..5caccaac 100644
+--- a/Libraries/LibWebView/Application.cpp
++++ b/Libraries/LibWebView/Application.cpp
+@@ -2013,7 +2013,9 @@ static NonnullRefPtr<Core::Timer> load_page_for_screenshot_and_exit(Core::EventL
+     auto timer = Core::Timer::create_single_shot(
+         AK::Duration::from_seconds(screenshot_timeout),
+         [&]() {
+-            view.take_screenshot(ViewImplementation::ScreenshotType::Full)
++            // Layout benchmark harness (local patch): the viewport as painted, not the whole document (the pages
++            // are 1,000,000px square), like the other engines' screenshots.
++            view.take_screenshot(ViewImplementation::ScreenshotType::Visible)
+                 ->when_resolved([&event_loop](auto const& path) {
+                     outln("Saved screenshot to: {}", path);
+                     event_loop.quit(0);
