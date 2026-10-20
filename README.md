@@ -45,15 +45,19 @@ an opaque origin); `blitz-runner` serves `file://` URLs itself, synchronously, b
 | `blitz-par` | same with `StyleThreading::Parallel` | same |
 | `servo1` / `servo` | servoshell built with `--features tracing-perfetto`, `--pref layout_threads=1` / `3` (default), one process per iteration, spans read from `servo.pftrace` | `Styling`, `Box Tree Construction`, `Fragment Tree Construction`, `restyle_and_build_trees`, `Stacking Context Tree Construction`, `Display List Construction`, `handle_reflow` |
 | `chrome` | Playwright chromium-headless-shell, CDP `Tracing` with `devtools.timeline` + `blink_style` | `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (= both), `Layout` |
+| `ladybird` | `Ladybird --headless=layout-tree`, one process per iteration, built with `patches/ladybird-phase-timing.patch` which prints `LADYBIRD_PHASE style=<ns> construct=<ns> layout=<ns> total=<ns> full_layouts=<n>` to stderr for every `Document::update_layout()` round (see [Ladybird](#ladybird)) | `style` (`Document::update_style()`), `construct` (layout tree build, `LayoutRoundJob::build`), `layout` (`lay_out_root` / `lay_out_boundary`, the layout pass including the `LayoutState` commit), `total` (the whole round) |
 
 Phase mapping used in the report:
 
-- Layout only: Taffy `compute_layout` ≈ Blitz `layout` ≈ Servo Fragment Tree Construction ≈ Chrome `Layout`.
+- Layout only: Taffy `compute_layout` ≈ Blitz `layout` ≈ Servo Fragment Tree Construction ≈ Chrome `Layout`
+  ≈ Ladybird `layout`.
 - Box construction + layout: Blitz `construct + layout` ≈ Servo Box Tree + Fragment Tree ≈ Chrome
-  `rebuildLayoutTree + Layout` (Chrome builds `LayoutObject`s inside `UpdateLayoutTree`, not `Layout`).
-- Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `recalcStyle`.
+  `rebuildLayoutTree + Layout` (Chrome builds `LayoutObject`s inside `UpdateLayoutTree`, not `Layout`)
+  ≈ Ladybird `construct + layout`.
+- Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `recalcStyle` ≈ Ladybird `style`.
 - Whole pipeline: Blitz `resolve()` (style to paint tree) ≈ Servo `handle_reflow` (style to display
-  list) ≈ Chrome `UpdateLayoutTree + Layout`.
+  list) ≈ Chrome `UpdateLayoutTree + Layout` ≈ Ladybird `update_layout()` (style to committed layout
+  tree; no display list).
 
 Servo's `restyle_and_build_trees` and `handle_reflow` include work the children spans do not
 (stylist preparation, damage computation); the report shows them separately.
@@ -94,6 +98,46 @@ agree to 0.003%); `pangui/percentage_and_ratio` renders empty in Servo (it gives
 comparable; `pangui/fit_nesting` (0.99px leaves) and `pangui/flex_expand_equal_weights` (0.67px
 items) differ by ~11% of pixels against Chrome because Blitz and Servo snap such boxes to the pixel
 grid differently, while the box sizes agree within 1px.
+
+## Ladybird
+
+Ladybird is optional: `run.py` looks for the binary at `LADYBIRD_BIN` or
+`~/repos/ladybird/Build/release/bin/Ladybird` and skips the engine with a message if it is missing.
+
+Build (Ubuntu 22.04, 8 cores; Ladybird commit `07fac502`, 2026-10-20). Ladybird needs Clang ≥ 19 or
+GCC ≥ 14, CMake ≥ 3.30, Ninja, nasm and Qt ≥ 6.10, all newer than the distro packages, so:
+
+```sh
+# toolchain: LLVM apt (clang-22), Kitware apt (cmake 4.4), ninja, nasm, build deps from BuildInstructionsLadybird.md
+sudo apt install clang-22 lld-22 cmake ninja-build nasm autoconf autoconf-archive automake libtool pkg-config \
+     libgl1-mesa-dev libpulse-dev libssl-dev libegl1-mesa-dev zip unzip tar curl
+pip install aqtinstall && aqt install-qt linux desktop 6.10.3 linux_gcc_64 -O ~/Qt   # Qt 6.10 (apt has 6.2)
+
+git clone --depth 50 https://github.com/LadybirdBrowser/ladybird ~/repos/ladybird
+cd ~/repos/ladybird && git apply /path/to/layout-bench/patches/ladybird-phase-timing.patch
+export CMAKE_PREFIX_PATH=$HOME/Qt/6.10.3/gcc_64 PATH=$HOME/Qt/6.10.3/gcc_64/bin:$PATH
+./Meta/ladybird.py build --cc clang-22 --cxx clang++-22 ladybird     # Release preset -> Build/release/bin/Ladybird
+```
+
+The build took 36 min wall-clock on 8 cores (≈11 min of vcpkg dependencies — ICU, ffmpeg, Skia
+and friends are compiled from source when the binary cache has no entry for the toolchain — and
+≈25 min for Ladybird itself). Applying the patch to an existing build and rebuilding takes
+~15 s: it only touches the Rust layout crate, one LibWeb file and LibWebView.
+
+The patch instruments `Libraries/LibWeb/Rust/src/layout/update_layout.rs`, where LibWeb's layout
+update now lives (`Document::update_layout()` in `Libraries/LibWeb/Layout/UpdateLayout.cpp` calls
+`render_state_update_layout` once per round; a round re-runs only when a layout reached a web font
+or image that was already available). Per round it prints the time spent in the style callback
+(`Document::update_style()`), in the layout tree build (`construct`), in the layout pass(es)
+(`layout`, which commits the `LayoutState` as it goes) and in the round as a whole (`total`), plus
+how many full (root) layout passes ran. The runner takes the round with the longest `layout` of
+the process, i.e. the reveal layout (the `display:none` document's round builds and lays out a
+handful of boxes), and reports the number of rounds with a full layout as `layouts=N`. `verify`
+uses `--headless=layout-tree` for the box positions (the dump's `at [x,y]` is the content box; the
+runner adds padding and border to get the border boxes it compares with Chrome's
+`getBoundingClientRect()`) and a second `--headless=screenshot` process for the 1280×800 image
+(`LADYBIRD_SCREENSHOT_DELAY`, default 3 s, is how long after the load starts the screenshot is
+requested; the request queues behind the synchronous reveal layout).
 
 ## Servo tracing filter
 
