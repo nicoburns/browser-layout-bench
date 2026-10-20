@@ -63,7 +63,7 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None):
     if parallel:
         cmd.append("--parallel")
     if screenshot:
-        cmd += ["--screenshot", str(screenshot)]
+        cmd += ["--screenshot", str(screenshot), "--boxes"]
     out = sh(cmd, cpus)
     samples, phases = [], None
     for line in out.splitlines():
@@ -79,6 +79,8 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None):
             samples[-1]["hash"] = line.split()[1]
         elif line.startswith("ROOT"):
             samples[-1]["root"] = line.split()[1]
+        elif line.startswith("BOX"):
+            samples[-1].setdefault("boxes", []).append(tuple(float(v) for v in line.split()[1:]))
     return samples
 
 
@@ -161,6 +163,9 @@ def run_chrome(case, iters, cpus, screenshot=None):
             s["style+layout"] = s["style"] + s["layout"]
             if screenshot and i == iters - 1:
                 page.screenshot(path=str(screenshot))
+                s["boxes"] = [tuple(b) for b in page.evaluate(
+                    "[...document.querySelectorAll('#cb div, #cb p, #cb h3')].map(e=>{const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height]})")]
+                s["fonts"] = page.evaluate("[...document.fonts].map(f=>f.status).join(',')")
             samples.append(s)
             page.close()
         browser.close()
@@ -252,15 +257,29 @@ def cmd_bench(args):
     print(md)
 
 
+def compare_boxes(a, b, tol=1.0):
+    """Border boxes (x, y, w, h) of the same elements from two engines: how many have a size or a
+    position differing by more than `tol` px, and the largest size difference. Blitz rounds layout to
+    whole pixels, hence the tolerance; a size difference shifts the position of everything below it."""
+    if len(a) != len(b):
+        return f"{len(a)} vs {len(b)} boxes"
+    size = [max(abs(ba[2] - bb[2]), abs(ba[3] - bb[3])) for ba, bb in zip(a, b)]
+    pos = [max(abs(ba[0] - bb[0]), abs(ba[1] - bb[1])) for ba, bb in zip(a, b)]
+    return (f"{sum(d > tol for d in size)}/{len(a)} box sizes differ >{tol:g}px (max {max(size, default=0):.1f}px), "
+            f"{sum(d > tol for d in pos)} positions")
+
+
 def cmd_verify(args):
     from PIL import Image, ImageChops
     cases = [c for c in read_manifest() if args.filter in c["name"]]
     engines = args.engines.split(",")
     shots = OUT / "shots"
     shots.mkdir(parents=True, exist_ok=True)
-    print("| case | nodes | " + " | ".join(f"{e} vs {engines[0]}" for e in engines[1:]) + " | notes |")
+    lines = ["| case | nodes | " + " | ".join(f"{e} vs {engines[0]}" for e in engines[1:]) + " | notes |",
+             "|---|---:|" + "---|" * (len(engines) - 1) + "---|"]
+    print(lines[0])
     for c in cases:
-        imgs, notes = {}, []
+        imgs, boxes, notes = {}, {}, []
         for e in engines:
             path = shots / f"{c['file'][:-5]}.{e}.png"
             try:
@@ -270,6 +289,10 @@ def cmd_verify(args):
                 continue
             imgs[e] = Image.open(path).convert("RGB")
             s = samples[-1]
+            if "boxes" in s:
+                boxes[e] = s["boxes"]
+            if "fonts" in s and s["fonts"]:
+                notes.append(f"chrome fonts={s['fonts']}")
             if "total_objects" in s:
                 notes.append(f"chrome objects={s['total_objects']} layouts={s['n_layouts']}")
             if "n_reflows" in s:
@@ -283,10 +306,16 @@ def cmd_verify(args):
             if e in imgs and engines[0] in imgs:
                 diff = ImageChops.difference(imgs[e], imgs[engines[0]]).convert("L").point(lambda v: 255 if v > 24 else 0)
                 frac = diff.histogram()[255] / (diff.width * diff.height)
-                cells.append(f"{frac * 100:.2f}% px")
+                cell = f"{frac * 100:.2f}% px"
+                if e in boxes and engines[0] in boxes:
+                    cell += ", " + compare_boxes(boxes[e], boxes[engines[0]])
+                cells.append(cell)
             else:
                 cells.append("-")
-        print(f"| {c['name']} | {c['nodes']} | " + " | ".join(cells) + " | " + "; ".join(notes) + " |", flush=True)
+        lines.append(f"| {c['name']} | {c['nodes']} | " + " | ".join(cells) + " | " + "; ".join(notes) + " |")
+        print(lines[-1], flush=True)
+    OUT.mkdir(exist_ok=True)
+    (OUT / "verify.md").write_text("\n".join(lines) + "\n")
 
 
 def main():
