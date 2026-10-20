@@ -418,6 +418,12 @@ def fmt_cell(ns, ref, best=False):
     return f"**{cell}**" if best else cell
 
 
+def header(label):
+    """Column header that can wrap: engine name on its own line, spaces around `+`."""
+    engine, _, phase = label.partition(" ")
+    return f"{engine}<br>{phase.replace('+', ' + ')}" if phase else engine
+
+
 def report(results, how, engines):
     lines = [f"Times in ms, {how} over all rounds and iterations; second line of each cell is the multiple of the Chrome column "
              "of the same table (1.00x = Chrome); bold = fastest engine of the row, Taffy excluded. Servo(n) = `layout_threads=n`; "
@@ -426,7 +432,7 @@ def report(results, how, engines):
         cols = [c for c in cols if c[0] in engines]
         if not cols:
             continue
-        lines += [f"### {title}", "", "| case | nodes | " + " | ".join(c[2] for c in cols) + " |",
+        lines += [f"### {title}", "", "| case | nodes | " + " | ".join(header(c[2]) for c in cols) + " |",
                   "|---|---:|" + "---:|" * len(cols)]
         ref_col = next((c for c in cols if c[0] == "chrome"), None)
         for name, data in results.items():

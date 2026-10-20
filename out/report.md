@@ -2,7 +2,7 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Layout only
 
-| case | nodes | Chrome Layout | Firefox(1) Reflow | Firefox Reflow | Servo(1) Fragment Tree | Servo(3) Fragment Tree | Blitz `layout` | Taffy |
+| case | nodes | Chrome<br>Layout | Firefox(1)<br>Reflow | Firefox<br>Reflow | Servo(1)<br>Fragment Tree | Servo(3)<br>Fragment Tree | Blitz<br>`layout` | Taffy |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | flex/huge_nested/1000 | 911 | 1.363<br>1.00x | 1.910<br>1.40x | 1.820<br>1.34x | 1.522<br>1.12x | **0.955<br>0.70x** | 1.265<br>0.93x | 0.394<br>0.29x |
 | flex/wide/1000 | 1000 | **1.798<br>1.00x** | 3.007<br>1.67x | 2.950<br>1.64x | 2.014<br>1.12x | 1.954<br>1.09x | 1.884<br>1.05x | 0.657<br>0.37x |
@@ -43,7 +43,7 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Box construction + layout
 
-| case | nodes | Chrome rebuildLayoutTree+Layout | Servo(1) Box+Fragment | Servo(3) Box+Fragment | Blitz construct+layout | Blitz construct+layout (parallel construct) |
+| case | nodes | Chrome<br>rebuildLayoutTree + Layout | Servo(1)<br>Box + Fragment | Servo(3)<br>Box + Fragment | Blitz<br>construct + layout | Blitz<br>construct + layout (parallel construct) |
 |---|---:|---:|---:|---:|---:|---:|
 | flex/huge_nested/1000 | 911 | 1.847<br>1.00x | 2.486<br>1.35x | 1.441<br>0.78x | **1.343<br>0.73x** | 1.351<br>0.73x |
 | flex/wide/1000 | 1000 | 2.326<br>1.00x | 3.227<br>1.39x | 2.733<br>1.17x | 1.981<br>0.85x | **1.981<br>0.85x** |
@@ -84,7 +84,7 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Construction
 
-| case | nodes | Chrome rebuildLayoutTree | Servo(1) Box Tree | Servo(3) Box Tree | Blitz construct (+pconstruct) | Blitz construct, parallel |
+| case | nodes | Chrome<br>rebuildLayoutTree | Servo(1)<br>Box Tree | Servo(3)<br>Box Tree | Blitz<br>construct ( + pconstruct) | Blitz<br>construct, parallel |
 |---|---:|---:|---:|---:|---:|---:|
 | flex/huge_nested/1000 | 911 | 0.481<br>1.00x | 0.963<br>2.00x | 0.485<br>1.01x | **0.077<br>0.16x** | 0.079<br>0.16x |
 | flex/wide/1000 | 1000 | 0.528<br>1.00x | 1.212<br>2.30x | 0.754<br>1.43x | **0.097<br>0.18x** | 0.099<br>0.19x |
@@ -125,7 +125,7 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Style
 
-| case | nodes | Chrome recalcStyle | Firefox(1) Styles (incl. frame construction) | Firefox Styles (incl. frame construction) | Servo(1) Styling | Servo(3) Styling | Blitz style | Blitz style (parallel) |
+| case | nodes | Chrome<br>recalcStyle | Firefox(1)<br>Styles (incl. frame construction) | Firefox<br>Styles (incl. frame construction) | Servo(1)<br>Styling | Servo(3)<br>Styling | Blitz<br>style | Blitz<br>style (parallel) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | flex/huge_nested/1000 | 911 | **2.038<br>1.00x** | 5.426<br>2.66x | 2.038<br>1.00x | 11.343<br>5.57x | 5.756<br>2.82x | 4.333<br>2.13x | 4.366<br>2.14x |
 | flex/wide/1000 | 1000 | **1.919<br>1.00x** | 5.243<br>2.73x | 2.280<br>1.19x | 9.600<br>5.00x | 3.502<br>1.83x | 3.136<br>1.63x | 2.790<br>1.45x |
@@ -166,7 +166,7 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Whole pipeline (style to paint tree / display list)
 
-| case | nodes | Chrome UpdateLayoutTree+Layout | Firefox(1) Styles+Reflow | Firefox Styles+Reflow | Servo(1) handle_reflow | Servo(3) handle_reflow | Blitz resolve() | Blitz resolve() (parallel style) | Blitz resolve() (parallel style+construct) |
+| case | nodes | Chrome<br>UpdateLayoutTree + Layout | Firefox(1)<br>Styles + Reflow | Firefox<br>Styles + Reflow | Servo(1)<br>handle_reflow | Servo(3)<br>handle_reflow | Blitz<br>resolve() | Blitz<br>resolve() (parallel style) | Blitz<br>resolve() (parallel style + construct) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | flex/huge_nested/1000 | 911 | 3.964<br>1.00x | 7.375<br>1.86x | **3.899<br>0.98x** | 18.628<br>4.70x | 9.163<br>2.31x | 5.841<br>1.47x | 6.002<br>1.51x | 6.606<br>1.67x |
 | flex/wide/1000 | 1000 | **4.317<br>1.00x** | 8.250<br>1.91x | 5.277<br>1.22x | 17.629<br>4.08x | 8.294<br>1.92x | 5.342<br>1.24x | 5.178<br>1.20x | 5.233<br>1.21x |
