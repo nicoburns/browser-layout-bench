@@ -78,7 +78,8 @@ inflated `Styles`/`Reflow` 3x.
 
 `verify` is the equal-work check: before trusting a timing, confirm the engines agree on the layout
 (pixel diff of the 1280×800 viewport, Chrome's `totalObjects` layout-object count, Servo's reflow
-count, Firefox's styled-element and reflow counts, Blitz's box hash).
+count, Firefox's styled-element and reflow counts, Blitz's box hash). The table is printed and
+written to `out/verify.md`.
 
 ## Servo tracing filter
 

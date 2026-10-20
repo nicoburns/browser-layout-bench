@@ -396,7 +396,9 @@ def cmd_verify(args):
     engines = available_engines(args.engines.split(","))
     shots = OUT / "shots"
     shots.mkdir(parents=True, exist_ok=True)
-    print("| case | nodes | " + " | ".join(f"{e} vs {engines[0]}" for e in engines[1:]) + " | notes |")
+    lines = ["| case | nodes | " + " | ".join(f"{e} vs {engines[0]}" for e in engines[1:]) + " | notes |",
+             "|---|---:|" + "---:|" * (len(engines) - 1) + "---|"]
+    print("\n".join(lines))
     for c in cases:
         imgs, notes = {}, []
         for e in engines:
@@ -426,7 +428,9 @@ def cmd_verify(args):
                 cells.append(f"{frac * 100:.2f}% px")
             else:
                 cells.append("-")
-        print(f"| {c['name']} | {c['nodes']} | " + " | ".join(cells) + " | " + "; ".join(notes) + " |", flush=True)
+        lines.append(f"| {c['name']} | {c['nodes']} | " + " | ".join(cells) + " | " + "; ".join(notes) + " |")
+        print(lines[-1], flush=True)
+        (OUT / "verify.md").write_text("\n".join(lines) + "\n")
 
 
 def main():
