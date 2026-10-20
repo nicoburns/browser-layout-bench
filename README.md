@@ -87,6 +87,12 @@ background bands down column x=1 of the screenshots (inside the paragraphs' padd
 leaf boxes' vertical extents and therefore their line counts, and works for Servo, which gives no
 box output. The table is also written to `out/verify.md`.
 
+Cases that cannot be made equal: `pangui/percentage_and_ratio` renders empty in Servo (it gives
+`aspect-ratio` items zero height, in flex and block layout alike), so its Servo timings are not
+comparable; `pangui/fit_nesting` (0.99px leaves) and `pangui/flex_expand_equal_weights` (0.67px
+items) differ by ~11% of pixels against Chrome because Blitz and Servo snap such boxes to the pixel
+grid differently, while the box sizes agree within 1px.
+
 ## Servo tracing filter
 
 Servo is run with `SERVO_TRACING="layout::layout_impl=trace,layout::flow::root=trace"`, which
