@@ -12,12 +12,28 @@ a page: the same HTML, the same viewport, timed from styled DOM to final boxes i
 positioning, wide / deep grids) and serialises them to HTML with inline styles, one `<div>` per
 Taffy node. Every leaf gets a distinct background colour so renders can be pixel-compared. There is
 no text, so text shaping and line breaking are excluded; these pages measure the layout algorithms
-and the surrounding style/box machinery only.
+and the surrounding style/box machinery only. The `pangui/<template>` cases are the PanGUI flexbox
+templates from Taffy's benchmark crate (`gen/pangui/*.txt`, `taffy_benchmarks::pangui_template`),
+translated to Taffy styles the same way as Taffy's `pangui` bench and serialised like the rest.
+
+The `text/` cases (`paragraphs`, `flex_cards`, `inline_mixed`, each at 100 and 1000 items) are
+hand-built HTML with deterministic prose (a fixed word list sampled with the seed), set in DejaVu
+Sans shipped in `fonts/` (`@font-face`, four faces, loaded via a relative `url()`; licence in
+`fonts/LICENSE-DejaVu.txt`), with `line-height: 20px` and `text-rendering: geometricPrecision`
+(without it Chrome rounds each glyph advance to a whole pixel and breaks ~5% of lines differently).
+They have no Taffy tree, so Taffy direct is not measured for them; they compare Blitz (Parley)
+`construct`+`layout` against Servo Box+Fragment Tree and Chrome Layout, i.e. shaping plus line
+breaking (see the phase table below for why shaping lands in the construction phases).
 
 The root is absolutely positioned inside a `#cb` containing block sized to the Taffy available
 space (`max-content` becomes a 1,000,000px box). `run.py gen` also writes `corpus/reveal/*.html`
 for Servo and Chrome: the tree starts `display:none` and a trailing script reveals it and forces
 layout, so the whole tree is styled and laid out in a single reflow after parsing has finished.
+Pages with `@font-face` reveal the tree only after `document.fonts` has loaded every face, so that
+reflow shapes with the web font rather than a fallback. Servo loads the reveal pages over a
+localhost HTTP server started by `run.py` because its fetch rejects `file://` fonts (CORS mode from
+an opaque origin); `blitz-runner` serves `file://` URLs itself, synchronously, before the timed
+`resolve()`.
 
 ## Engines and phases
 
@@ -62,7 +78,14 @@ runners (`taffy`, `blitz`, `servo1`) with `taskset`; `blitz-par` and `servo` run
 
 `verify` is the equal-work check: before trusting a timing, confirm the engines agree on the layout
 (pixel diff of the 1280×800 viewport, Chrome's `totalObjects` layout-object count, Servo's reflow
-count, Blitz's box hash).
+count, Blitz's box hash, Chrome's `document.fonts` status). Blitz and Chrome also dump the border
+boxes of every `div`/`p`/`h3` under `#cb` (`blitz-runner --boxes`, `getBoundingClientRect()`), and
+`verify` reports how many sizes and positions differ by more than 1px (Blitz rounds layout to whole
+pixels). Glyph anti-aliasing differs between engines, so the pixel diff is a few percent on the
+text pages even when the layout is identical; for them `verify` additionally compares the
+background bands down column x=1 of the screenshots (inside the paragraphs' padding), which are the
+leaf boxes' vertical extents and therefore their line counts, and works for Servo, which gives no
+box output. The table is also written to `out/verify.md`.
 
 ## Servo tracing filter
 
