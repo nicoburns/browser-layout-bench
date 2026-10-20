@@ -35,6 +35,106 @@ localhost HTTP server started by `run.py` because its fetch rejects `file://` fo
 an opaque origin); `blitz-runner` serves `file://` URLs itself, synchronously, before the timed
 `resolve()`.
 
+### `real/`: saved web pages
+
+The `real/<page>` cases are seven real pages saved on 2026-10-20 and frozen by `real/freeze.py`
+(sources and licences in `real/LICENSES.md`; the saved originals live in `real/raw/`, ignored):
+
+| case | page | elements under `<body>` | viewports |
+|---|---|---:|---|
+| `real/wikipedia` | en.wikipedia.org/wiki/Barack_Obama (Vector 2022 skin) | 21,889 | 1280, 1024 |
+| `real/mdn` | developer.mozilla.org/en-US/docs/Web/CSS/display | 2,212 | 1280, 1024 |
+| `real/rustdoc` | doc.rust-lang.org/std/vec/struct.Vec.html | 15,947 | 1280 |
+| `real/css-flexbox-1` | www.w3.org/TR/css-flexbox-1/ | 15,890 | 1280 |
+| `real/servo-org` | servo.org | 226 | 1280, 1024 |
+| `real/dioxuslabs-com` | dioxuslabs.com | 158 | 1280, 1024 |
+| `real/bootstrap-dashboard` | getbootstrap.com/docs/5.3/examples/dashboard/ | 199 | 1280, 1024 |
+
+`real/freeze.py fetch <page>` saves a page with `wget -p -k -E -H` into `real/raw/<page>/`;
+`real/freeze.py freeze <page>` rewrites it into `real/<page>/index.html` plus the placeholder
+images, and `real/manifest.tsv` (name, directory, element count, viewports). `run.py gen` copies
+`real/<page>/` into `corpus/real/<page>/` and `corpus/reveal/real/<page>/` and appends one manifest
+line per viewport (`real/<page>` is 1280×800, `real/<page>@1024` is 1024×800; the viewport is an
+optional 7th manifest column, the other pages keep the global 1280×800). Node count is the number
+of elements under `<body>`; there is no Taffy tree. The `<body>` itself is the `#cb` element (a
+wrapper `<div>` would change the containing block of fixed/absolute children and `body`'s own
+margin and flex behaviour), so the reveal script restores its stylesheet `display` instead of
+forcing `block`, and the runners wait for `display != none`.
+
+Freezing rules (all in `real/freeze.py`, never by hand-editing the saved HTML): scripts, inline
+handlers, `<noscript>`, `<template>`, `<link>`s (screen stylesheets are inlined first, print and
+dark-scheme sheets dropped), `<meta http-equiv>` and comments go; `<img>`, `<picture>`, `<video>`,
+`<iframe>`, `<canvas>`, `<object>`, `<embed>` and inline `<svg>` become `<img>` placeholders of the
+same natural size (flat grey PNGs under `real/<page>/ph/`, `width`/`height` attributes kept or taken
+from the saved file, id/class/style kept so CSS sizing resolves the same way); form controls become
+`span.lb-input` (UA control sizes differ); closed `<details>` keep only their `<summary>`. In CSS,
+`@import`, `@font-face` and every `url()` go (no background images), `font-family`/`font` are
+rewritten to `"LB Sans"` or `"LB Mono"` (the DejaVu faces in `fonts/`, via `../../fonts/`), and
+`text-rendering`, `scrollbar-gutter` (Chrome reserved a 15px gutter on MDN, Firefox and Blitz none),
+`transform`/`translate`/`rotate`/`scale` (dioxuslabs.com's hidden search modal is `scale: 1.1`; it
+does not affect layout but skews `getBoundingClientRect()` and the screenshot) and `animation`
+declarations are stripped. The page gets `html{text-rendering:geometricPrecision;font-family:"LB
+Sans"}` and `pre,code,kbd,samp,tt{font-family:"LB Mono"}` at the lowest specificity so that elements
+left in the UA default font do not fall back to system fonts (Blitz is built without any and
+rendered the flexbox spec's unstyled paragraphs 0px tall). No page issues a non-`file://` request
+(checked with Playwright request logging); file names with `?` are renamed by wget's `-E`/`-k`
+handling and nothing is referenced with `%3F`.
+
+Equal-work check (`./run.py verify --engines chrome,blitz,firefox1,servo1 --filter real/`, 2026-10-20;
+page height = `document.documentElement.scrollHeight`, Blitz: the `<html>` box's scrollable
+overflow; Servo reports neither boxes nor a root):
+
+| case | nodes | px differing: Blitz / Firefox / Servo vs Chrome | Blitz vs Chrome boxes (`div`/`p`/`h3`) | page height Chrome / Firefox / Blitz |
+|---|---:|---|---|---|
+| `real/wikipedia` | 21,889 | 21.9% / 7.1% / 10.5% | 474/866 sizes, 754 positions | 85,068 / 85,261 / 87,076 |
+| `real/wikipedia@1024` | 21,889 | 18.6% / 5.2% / 9.1% | 472/866, 760 | 69,635 / 69,912 / 75,984 |
+| `real/mdn` | 2,212 | 4.6% / 3.7% / 5.6% | 18/176, 163 | 19,760 / 19,786 / 19,976 |
+| `real/mdn@1024` | 2,212 | 4.6% / 3.6% / 6.0% | 12/176, 164 | 19,672 / 19,698 / 19,832 |
+| `real/rustdoc` | 15,947 | 2.3% / 2.2% / 4.4% | 129/1792, 1770 | 155,326 / 155,359 / 164,853 |
+| `real/css-flexbox-1` | 15,890 | 2.8% / 2.0% / 7.5% | 28/471, 438 | 90,168 / 90,277 / 90,369 |
+| `real/servo-org` | 226 | 22.4% / 1.4% / 2.1% | 31/84, 79 | 5,445 / 5,449 / 5,967 |
+| `real/servo-org@1024` | 226 | 22.9% / 2.9% / 4.1% | 31/84, 79 | 5,605 / 5,611 / 6,057 |
+| `real/dioxuslabs-com` | 158 | 7.8% / 1.2% / 3.3% | 2/48, 6 | 1,232 / 1,232 / 1,232 |
+| `real/dioxuslabs-com@1024` | 158 | 9.0% / 1.4% / 3.8% | 2/48, 6 | 1,232 / 1,232 / 1,232 |
+| `real/bootstrap-dashboard` | 199 | 2.9% / 1.3% / 1.9% | 4/12, 1 | 1,136 / 1,136 / 1,154 |
+| `real/bootstrap-dashboard@1024` | 199 | 4.0% / 2.2% / 3.2% | 4/12, 1 | 1,132 / 1,132 / 1,150 |
+
+Chrome and Firefox agree on every page to within 0.3% of the page height (the pixel difference is
+glyph rasterisation plus a few 1px line-height roundings). Known differences, each with the CSS
+feature responsible (Blitz unless stated; "positions" differ wherever an earlier height does):
+
+- `float`: Blitz lays floats out in flow. Wikipedia's infobox (`.stack-right{float:right}`) and
+  `.mw-indicators{float:right}` become full-width blocks above the lead paragraphs, so every
+  paragraph is 752px wide instead of beside the 326px infobox: the page is 2.4% taller at 1280
+  and 9.1% at 1024, and 474 of the 866 boxes differ. Servo floats the infobox but wraps the text
+  beside it narrower than Chrome/Firefox (its 10.5% pixel difference; it gives no boxes to quantify).
+- Inline-level elements (`.mw-heading h3{display:inline}`, `.marriage-display-inline`, `.hlist`
+  items, rustdoc's inline `<code>`) have no box in Blitz's `--boxes` dump (they live in the text
+  layout) and are reported as 0×0; they count as size differences without being layout differences.
+- Replaced elements with a cyclic percentage `max-width` and a `max-height` (servo.org:
+  `img{max-width:100%;display:block}` with `.section-feature img{max-height:6rem}` and
+  `.navbar-brand img{max-height:4rem}`): Blitz uses the intrinsic width (401–1024px) as the image's
+  min-content contribution, so the `flex: 0 1 25%` feature tiles cannot shrink to Chrome's 301px and
+  the navbar brand is 1024px instead of 560px (31/84 boxes, page 5,967 vs 5,445). MDN's logo
+  wrapper (`.navigation__logo`, around the 83×24 placeholder of an inline SVG) is 99px wide in
+  Blitz and 16px in Chrome; this one is not isolated to a feature yet.
+- `display: table` / `table-column` / `table-row` / `table-cell` on `<div>`s (the flexbox spec's
+  `#overview-example` figure): the column and row boxes are 0×0 in Blitz and the figure is 30px
+  shorter (28/471 boxes, +201px over the page from a few such figures).
+- Inline-block `<code>` in prose (rustdoc's `.docblock p code{display:inline-block}` with
+  `white-space:pre-wrap`): some paragraphs wrap to one more line in Blitz (24 vs 48px), and the
+  `🔬` in `.stab.unstable` falls back to no emoji font (511 vs 528px wide); over the 15,947-element
+  page this adds 6% of height (164,853 vs 155,326), 129/1792 boxes.
+- Table rows: Blitz rounds layout to whole pixels, so each of the Bootstrap dashboard's 17 table
+  rows is 1px taller (`.table-responsive` 544 vs 526px, page +18px). Wikipedia's toolbar tabs are
+  35px instead of 32px for the same reason (`.vector-menu-content`, ±3px).
+- The dioxuslabs.com and Bootstrap pixel differences beyond the boxes above are the placeholder
+  images, which Blitz paints without the pages' `border-radius`/`object-fit` clipping, and
+  anti-aliasing.
+
+The real pages are not pixel-equal and are not meant to be; the check that matters before timing
+them is the heights and box counts above, which pin each remaining difference to a feature.
+
 ## Engines and phases
 
 | engine | how it is run | phases reported |
@@ -87,6 +187,8 @@ cargo build --release
 ./run.py report                                 # rewrite out/report.md from out/results.json
 ./run.py bench --engines taffy,blitz,servo1 --filter grid
 ./run.py verify                                # screenshots per engine + % pixels differing, out/shots/
+./run.py verify --filter real/ --engines chrome,blitz,firefox1,servo1   # the saved real pages
+real/freeze.py fetch wikipedia && real/freeze.py freeze wikipedia       # re-save and re-freeze a real page
 ```
 
 `bench` runs every engine on every case in each round, alternating engine order between rounds,
