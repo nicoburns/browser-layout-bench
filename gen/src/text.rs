@@ -96,7 +96,9 @@ fn mixed_prose(rng: &mut ChaCha8Rng, min_words: usize) -> String {
             let (open, close) = match rng.random_range(0..4) {
                 0 => ("<b>", "</b>"),
                 1 => ("<i>", "</i>"),
-                2 => ("<span style=\"font-size:20px\">", "</span>"),
+                // line-height:16px keeps the larger span inside the 20px line box, so a line's height
+                // does not depend on how an engine rounds the font's ascent and descent
+                2 => ("<span style=\"font-size:20px;line-height:16px\">", "</span>"),
                 _ => ("<b><i>", "</i></b>"),
             };
             out.push_str(open);
@@ -157,7 +159,8 @@ fn flex_cards(n: usize) -> TextCase {
     body.push_str("</div>\n");
     page(
         &format!("text/flex_cards/{n}"),
-        ".card{flex:1 1 280px;padding:12px}\nh3{font-size:20px;line-height:24px;margin-bottom:8px}\n",
+        // border-box: Servo mis-sizes padded content-box flex items that grow
+        ".card{flex:1 1 280px;padding:12px;box-sizing:border-box}\nh3{font-size:20px;line-height:24px;margin-bottom:8px}\n",
         &body,
         3 * n as u32 + 1,
     )
