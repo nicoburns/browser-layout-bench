@@ -108,7 +108,9 @@ def run_ladybird(case, iters, cpus, reveal_dir, width, height, screenshot=None):
         s = dict(style=main["style"], construct=main["construct"], layout=main["layout"], total=main["total"],
                  n_layouts=sum(1 for p in phases if p.get("full_layouts", 0) > 0))
         s["construct+layout"] = s["construct"] + s["layout"]
-        s["boxes"], s["n_boxes"], s["root"] = parse_layout_tree(proc.stdout)
+        boxes, s["n_boxes"], s["root"] = parse_layout_tree(proc.stdout)
+        if screenshot:  # verify only: the boxes would make results.json huge
+            s["boxes"] = boxes
         if screenshot and i == iters - 1:
             run_process(url, width, height, cpus, "screenshot",
                         [f"--screenshot-path={screenshot}", f"--screenshot-delay={SETTLE_SECONDS}"])
