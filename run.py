@@ -16,6 +16,8 @@ ENGINES = ["taffy", "blitz", "blitz-par", "servo1", "servo", "chrome"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
                  "cb.offsetHeight;</script>\n")
+ROOT_RECT_JS = ("(()=>{const r=document.getElementById('cb').firstElementChild.getBoundingClientRect();"
+                "return r.width.toFixed(1)+'x'+r.height.toFixed(1)})()")
 
 
 def sh(cmd, cpus=None, **kw):
@@ -148,7 +150,7 @@ def run_chrome(case, iters, cpus, screenshot=None):
             cdp.send("Tracing.start", {"traceConfig": {"includedCategories": ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "blink_style"]}})
             page.goto(url, wait_until="load", timeout=600_000)
             page.evaluate("document.body.offsetHeight")
-            root = page.evaluate("(()=>{const r=document.getElementById('cb').firstElementChild.getBoundingClientRect();return r.width.toFixed(1)+'x'+r.height.toFixed(1)})()")
+            root = page.evaluate(ROOT_RECT_JS)
             cdp.send("Tracing.end")
             while not done:
                 page.wait_for_timeout(50)
