@@ -12,8 +12,9 @@ use taffy::style::*;
 use taffy_benchmarks::{BuildTree, BuildTreeExt, FixedStyleGenerator, GenStyle, TaffyTreeBuilder};
 
 mod pangui;
+mod text;
 
-const SEED: u64 = 12345;
+pub const SEED: u64 = 12345;
 const HUGE: f32 = 1_000_000.0;
 
 struct Case {
@@ -175,7 +176,7 @@ fn all_cases() -> Vec<Case> {
 
 // ---- CSS serialisation ----
 
-fn num(v: f32) -> String {
+pub fn num(v: f32) -> String {
     if v == v.trunc() { format!("{}", v as i64) } else { format!("{v}") }
 }
 
@@ -370,7 +371,7 @@ fn css(s: &Style) -> String {
     out
 }
 
-fn leaf_colour(i: u32) -> String {
+pub fn leaf_colour(i: u32) -> String {
     let c = i.wrapping_add(1).wrapping_mul(2654435761) >> 8;
     format!("#{:06x}", c & 0xffffff)
 }
@@ -430,6 +431,9 @@ fn main() {
             for c in all_cases() {
                 println!("{}\t{} nodes", c.name, all_nodes(&c.tree, c.root).len());
             }
+            for c in text::cases() {
+                println!("{}\t{} nodes", c.name, c.nodes);
+            }
         }
         "html" => {
             let dir = Path::new(args.get(1).expect("gen html <out_dir> [filter]"));
@@ -440,7 +444,19 @@ fn main() {
                 let (html, nodes) = page(&c);
                 let file = format!("{}.html", c.name.replace('/', "_"));
                 fs::write(dir.join(&file), html).unwrap();
-                let _ = writeln!(manifest, "{}\t{}\t{}\t{}\t{}", c.name, file, num(avail_px(c.avail.width)), num(avail_px(c.avail.height)), nodes);
+                let _ = writeln!(manifest, "{}\t{}\t{}\t{}\t{}\ttaffy", c.name, file, num(avail_px(c.avail.width)), num(avail_px(c.avail.height)), nodes);
+            }
+            // The text pages reference the fonts as `fonts/<file>` relative to the page
+            let fonts_dir = dir.join("fonts");
+            fs::create_dir_all(&fonts_dir).unwrap();
+            for font in text::FONT_FILES {
+                fs::copy(Path::new(env!("CARGO_MANIFEST_DIR")).join("../fonts").join(font), fonts_dir.join(font)).unwrap();
+            }
+            for c in text::cases() {
+                if !filter(&c.name, args.get(2)) { continue; }
+                let file = format!("{}.html", c.name.replace('/', "_"));
+                fs::write(dir.join(&file), &c.html).unwrap();
+                let _ = writeln!(manifest, "{}\t{}\t{}\t0\t{}\t-", c.name, file, num(text::WIDTH), c.nodes);
             }
             fs::write(dir.join("manifest.tsv"), manifest).unwrap();
         }
