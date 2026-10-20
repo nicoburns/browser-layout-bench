@@ -28,14 +28,14 @@ layout, so the whole tree is styled and laid out in a single reflow after parsin
 | `blitz` | `blitz-runner`: fresh `HtmlDocument`, `incremental=false`, one `resolve()` per iteration, phase times from Blitz's `log-phase-times` timer (vendored to print ns) | `style`, `construct`, `layout`, `paint_tree`, `resolve` |
 | `blitz-par` | same with `StyleThreading::Parallel` | same |
 | `servo1` / `servo` | servoshell built with `--features tracing-perfetto`, `--pref layout_threads=1` / `3` (default), one process per iteration, spans read from `servo.pftrace` | `Styling`, `Box Tree Construction`, `Fragment Tree Construction`, `restyle_and_build_trees`, `Stacking Context Tree Construction`, `Display List Construction`, `handle_reflow` |
-| `chrome` | Playwright chromium-headless-shell, CDP `Tracing` with `devtools.timeline` | `UpdateLayoutTree` (style), `Layout` |
+| `chrome` | Playwright chromium-headless-shell, CDP `Tracing` with `devtools.timeline` + `blink_style` | `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (= both), `Layout` |
 
 Phase mapping used in the report:
 
 - Layout only: Taffy `compute_layout` ≈ Blitz `layout` ≈ Servo Fragment Tree Construction ≈ Chrome `Layout`.
-- Box construction + layout: Blitz `construct + layout` ≈ Servo Box Tree + Fragment Tree ≈ Chrome `Layout`
-  (Chrome builds `LayoutObject`s during style recalc, so its `Layout` is the nearest single event).
-- Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `UpdateLayoutTree`.
+- Box construction + layout: Blitz `construct + layout` ≈ Servo Box Tree + Fragment Tree ≈ Chrome
+  `rebuildLayoutTree + Layout` (Chrome builds `LayoutObject`s inside `UpdateLayoutTree`, not `Layout`).
+- Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `recalcStyle`.
 - Whole pipeline: Blitz `resolve()` (style to paint tree) ≈ Servo `handle_reflow` (style to display
   list) ≈ Chrome `UpdateLayoutTree + Layout`.
 

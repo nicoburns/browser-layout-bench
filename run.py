@@ -145,19 +145,24 @@ def run_chrome(case, iters, cpus, screenshot=None):
             events, done = [], []
             cdp.on("Tracing.dataCollected", lambda e: events.extend(e["value"]))
             cdp.on("Tracing.tracingComplete", lambda e: done.append(True))
-            cdp.send("Tracing.start", {"traceConfig": {"includedCategories": ["devtools.timeline", "disabled-by-default-devtools.timeline"]}})
+            cdp.send("Tracing.start", {"traceConfig": {"includedCategories": ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "blink_style"]}})
             page.goto(url, wait_until="load", timeout=600_000)
             page.evaluate("document.body.offsetHeight")
             root = page.evaluate("(()=>{const r=document.getElementById('cb').firstElementChild.getBoundingClientRect();return r.width.toFixed(1)+'x'+r.height.toFixed(1)})()")
             cdp.send("Tracing.end")
             while not done:
                 page.wait_for_timeout(50)
+            def longest(name):
+                return max(e["dur"] for e in events if e.get("name") == name and e.get("ph") == "X") * 1000
             layouts = [e for e in events if e.get("name") == "Layout" and e.get("ph") == "X"]
-            styles = [e for e in events if e.get("name") == "UpdateLayoutTree" and e.get("ph") == "X"]
             main = max(layouts, key=lambda e: e["dur"])
-            s = dict(layout=main["dur"] * 1000, style=max(e["dur"] for e in styles) * 1000,
+            # `UpdateLayoutTree` = `Document::recalcStyle` (style) + `Document::rebuildLayoutTree`
+            # (LayoutObject construction); `Layout` is fragment-tree work only.
+            s = dict(layout=main["dur"] * 1000, style=longest("Document::recalcStyle"),
+                     construct=longest("Document::rebuildLayoutTree"), update_layout_tree=longest("UpdateLayoutTree"),
                      n_layouts=len(layouts), root=root, total_objects=main.get("args", {}).get("beginData", {}).get("totalObjects"))
-            s["style+layout"] = s["style"] + s["layout"]
+            s["construct+layout"] = s["construct"] + s["layout"]
+            s["style+layout"] = s["update_layout_tree"] + s["layout"]
             if screenshot and i == iters - 1:
                 page.screenshot(path=str(screenshot))
             samples.append(s)
@@ -201,13 +206,13 @@ COLUMNS = [
                      ("chrome", "layout", "Chrome Layout")]),
     ("Box construction + layout", [("blitz", "construct+layout", "Blitz construct+layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
-                                   ("chrome", "layout", "Chrome Layout")]),
+                                   ("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout")]),
     ("Style", [("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)"),
                ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
-               ("chrome", "style", "Chrome UpdateLayoutTree")]),
+               ("chrome", "style", "Chrome recalcStyle")]),
     ("Whole pipeline (style to paint tree / display list)", [
         ("blitz", "resolve", "Blitz resolve()"), ("servo1", "reflow", "Servo(1) handle_reflow"),
-        ("servo", "reflow", "Servo(3) handle_reflow"), ("chrome", "style+layout", "Chrome Style+Layout")]),
+        ("servo", "reflow", "Servo(3) handle_reflow"), ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout")]),
 ]
 
 
@@ -231,6 +236,11 @@ def cmd_bench(args):
     engines = args.engines.split(",")
     results = {c["name"]: dict(nodes=c["nodes"], engines={e: [] for e in engines}) for c in cases}
     OUT.mkdir(exist_ok=True)
+    if args.merge:
+        # Re-measure only `--engines`, keeping the other engines' samples from the previous run.
+        for name, data in json.loads((OUT / "results.json").read_text()).items():
+            kept = {e: v for e, v in data["engines"].items() if e not in engines}
+            results.setdefault(name, dict(nodes=data["nodes"], engines={}))["engines"].update(kept)
     for r in range(args.rounds):
         order = engines if r % 2 == 0 else engines[::-1]
         for c in cases:
@@ -244,7 +254,7 @@ def cmd_bench(args):
                 best = agg([list(s.values())[0] for s in samples], "min")
                 print(f"round {r} {c['name']:24s} {e:10s} {len(samples)} samples, min first metric {fmt_ms(best)} ms", flush=True)
         (OUT / "results.json").write_text(json.dumps(results, indent=1))
-    md = report(results, args.agg, engines)
+    md = report(results, args.agg, sorted({e for d in results.values() for e in d["engines"]}))
     (OUT / "report.md").write_text(md)
     print(md)
 
@@ -297,6 +307,7 @@ def main():
     b.add_argument("--filter", default="")
     b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1)")
     b.add_argument("--agg", default="min", choices=["min", "median"])
+    b.add_argument("--merge", action="store_true", help="keep other engines' samples from out/results.json")
     v = sub.add_parser("verify")
     v.add_argument("--engines", default="chrome,blitz,servo1")
     v.add_argument("--filter", default="")
