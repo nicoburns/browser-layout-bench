@@ -407,19 +407,20 @@ COLUMNS = [
 ]
 
 
-def fmt_cell(ns, ref):
-    """`ms` and, on a second line, the multiple of the Chrome value of the same row (omitted when Chrome has none)."""
+def fmt_cell(ns, ref, best=False):
+    """`ms` and, on a second line, the multiple of the Chrome value of the same row (omitted when Chrome has
+    none); the fastest engine of the row (Taffy excluded, it is not a browser) is bold."""
     if ns is None:
         return "-"
     cell = f"{ns / 1e6:.3f}"
     if ref:
         cell += f"<br>{ns / ref:.2f}x"
-    return cell
+    return f"**{cell}**" if best else cell
 
 
 def report(results, how, engines):
     lines = [f"Times in ms, {how} over all rounds and iterations; second line of each cell is the multiple of the Chrome column "
-             "of the same table (1.00x = Chrome). Servo(n) = `layout_threads=n`; "
+             "of the same table (1.00x = Chrome); bold = fastest engine of the row, Taffy excluded. Servo(n) = `layout_threads=n`; "
              "Firefox(1) = `layout.css.stylo-threads=1` (no style worker threads).", ""]
     for title, cols in COLUMNS:
         cols = [c for c in cols if c[0] in engines]
@@ -431,7 +432,10 @@ def report(results, how, engines):
         for name, data in results.items():
             values = [agg([s.get(m) for s in data["engines"].get(e, [])], how) for e, m, _ in cols]
             ref = values[cols.index(ref_col)] if ref_col else None
-            lines.append(f"| {name} | {data['nodes']} | " + " | ".join(fmt_cell(v, ref) for v in values) + " |")
+            contenders = [v for (e, _, _), v in zip(cols, values) if v is not None and e != "taffy"]
+            best = min(contenders) if contenders else None
+            lines.append(f"| {name} | {data['nodes']} | "
+                         + " | ".join(fmt_cell(v, ref, v == best and e != "taffy") for (e, _, _), v in zip(cols, values)) + " |")
         lines.append("")
     return "\n".join(lines)
 
