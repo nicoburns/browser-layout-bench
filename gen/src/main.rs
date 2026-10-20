@@ -11,6 +11,8 @@ use taffy::prelude::*;
 use taffy::style::*;
 use taffy_benchmarks::{BuildTree, BuildTreeExt, FixedStyleGenerator, GenStyle, TaffyTreeBuilder};
 
+mod pangui;
+
 const SEED: u64 = 12345;
 const HUGE: f32 = 1_000_000.0;
 
@@ -167,6 +169,7 @@ fn all_cases() -> Vec<Case> {
     cases.push(case("grid/deep/2x2x5", build_deep_grid(2, 5), Size { width: length(12000.0), height: length(12000.0) }));
     cases.push(case("grid/deep/3x3x4", build_deep_grid(3, 4), Size { width: length(12000.0), height: length(12000.0) }));
     cases.push(case("grid/superdeep/100", build_deep_grid(1, 100), max));
+    cases.extend(pangui::cases());
     cases
 }
 
