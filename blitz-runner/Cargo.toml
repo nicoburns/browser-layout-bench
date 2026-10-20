@@ -8,6 +8,10 @@ publish = false
 name = "blitz-runner"
 path = "src/main.rs"
 
+[features]
+# Second build of the runner with Blitz's parallel deferred construction (Parley layout builds).
+parallel-construct = ["blitz-dom/parallel-construct"]
+
 [dependencies]
 blitz-dom = { workspace = true, features = ["log-phase-times"] }
 blitz-html = { workspace = true }

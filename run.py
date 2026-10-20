@@ -10,9 +10,11 @@ REVEAL = CORPUS / "reveal"
 OUT = ROOT / "out"
 GEN = ROOT / "target/release/gen"
 BLITZ = ROOT / "target/release/blitz-runner"
+# `cargo build --release -p layout-bench-blitz --features parallel-construct --target-dir target-pcon`
+BLITZ_PCON = ROOT / "target-pcon/release/blitz-runner"
 SERVOSHELL = Path(os.environ.get("SERVOSHELL", Path.home() / "repos/servo/target/release/servoshell"))
 WIDTH, HEIGHT = 1280, 800
-ENGINES = ["taffy", "blitz", "blitz-par", "servo1", "servo", "chrome", "firefox1", "firefox"]
+ENGINES = ["taffy", "blitz", "blitz-par", "blitz-pcon", "blitz-par-pcon", "servo1", "servo", "chrome", "firefox1", "firefox"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
                  "cb.offsetHeight;</script>\n")
@@ -70,8 +72,10 @@ def run_taffy(case, iters, cpus):
     return samples
 
 
-def run_blitz(case, iters, cpus, parallel=False, screenshot=None):
-    cmd = [str(BLITZ), str(CORPUS / case["file"]), "--width", str(WIDTH), "--height", str(HEIGHT), "--iters", str(iters), "--hash"]
+def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ):
+    if not binary.exists():
+        raise FileNotFoundError(f"{binary.relative_to(ROOT)} not built, see README")
+    cmd = [str(binary), str(CORPUS / case["file"]), "--width", str(WIDTH), "--height", str(HEIGHT), "--iters", str(iters), "--hash"]
     if parallel:
         cmd.append("--parallel")
     if screenshot:
@@ -337,6 +341,10 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
         return run_blitz(case, iters, cpus, screenshot=screenshot)
     if engine == "blitz-par":
         return run_blitz(case, iters, None, parallel=True, screenshot=screenshot)
+    if engine == "blitz-pcon":
+        return run_blitz(case, iters, None, screenshot=screenshot, binary=BLITZ_PCON)
+    if engine == "blitz-par-pcon":
+        return run_blitz(case, iters, None, parallel=True, screenshot=screenshot, binary=BLITZ_PCON)
     if engine == "servo1":
         return run_servo(case, iters, cpus, 1, screenshot=screenshot)
     if engine == "servo":
@@ -377,15 +385,20 @@ COLUMNS = [
                      ("chrome", "layout", "Chrome Layout"), ("firefox1", "layout", "Firefox(1) Reflow"),
                      ("firefox", "layout", "Firefox Reflow")]),
     ("Box construction + layout", [("blitz", "construct+layout", "Blitz construct+layout"),
+                                   ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
                                    ("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout")]),
+    ("Construction", [("blitz", "construct", "Blitz construct (+pconstruct)"), ("blitz-pcon", "construct", "Blitz construct, parallel"),
+                      ("servo1", "box", "Servo(1) Box Tree"), ("servo", "box", "Servo(3) Box Tree"),
+                      ("chrome", "construct", "Chrome rebuildLayoutTree")]),
     ("Style", [("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)"),
                ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
                ("chrome", "style", "Chrome recalcStyle"),
                ("firefox1", "style", "Firefox(1) Styles (incl. frame construction)"),
                ("firefox", "style", "Firefox Styles (incl. frame construction)")]),
     ("Whole pipeline (style to paint tree / display list)", [
-        ("blitz", "resolve", "Blitz resolve()"), ("servo1", "reflow", "Servo(1) handle_reflow"),
+        ("blitz", "resolve", "Blitz resolve()"), ("blitz-par", "resolve", "Blitz resolve() (parallel style)"),
+        ("blitz-par-pcon", "resolve", "Blitz resolve() (parallel style+construct)"), ("servo1", "reflow", "Servo(1) handle_reflow"),
         ("servo", "reflow", "Servo(3) handle_reflow"), ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout"),
         ("firefox1", "style+layout", "Firefox(1) Styles+Reflow"), ("firefox", "style+layout", "Firefox Styles+Reflow")]),
 ]
