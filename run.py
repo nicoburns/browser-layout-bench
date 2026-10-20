@@ -266,7 +266,7 @@ def cmd_bench(args):
     if args.merge:
         # Re-measure only `--engines`, keeping the other engines' samples from the previous run.
         for name, data in json.loads((OUT / "results.json").read_text()).items():
-            kept = {e: v for e, v in data["engines"].items() if e not in engines}
+            kept = {e: v for e, v in data["engines"].items() if e not in engines or name not in results}
             results.setdefault(name, dict(nodes=data["nodes"], engines={}))["engines"].update(kept)
     for r in range(args.rounds):
         order = engines if r % 2 == 0 else engines[::-1]
