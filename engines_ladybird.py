@@ -78,7 +78,9 @@ def run_process(url, width, height, cpus, mode, extra=(), timeout=1200):
     env.setdefault("QT_QPA_PLATFORM", "offscreen")
     with tempfile.TemporaryDirectory() as home:
         # A private config/profile per process, so no session state leaks between iterations.
-        env.update(XDG_CONFIG_HOME=f"{home}/config", XDG_DATA_HOME=f"{home}/data", XDG_CACHE_HOME=f"{home}/cache")
+        env.update(XDG_CONFIG_HOME=f"{home}/config", XDG_DATA_HOME=f"{home}/data", XDG_CACHE_HOME=f"{home}/cache",
+                   XDG_RUNTIME_DIR=f"{home}/run")  # Ladybird's IPC sockets; /run/user/<uid> may not exist
+        os.mkdir(f"{home}/run", 0o700)
         return subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=timeout, env=env, cwd=home)
 
 
