@@ -9,6 +9,7 @@ import engines_ladybird
 ROOT = Path(__file__).resolve().parent
 CORPUS = ROOT / "corpus"
 REVEAL = CORPUS / "reveal"
+REAL = ROOT / "real"
 OUT = ROOT / "out"
 GEN = ROOT / "target/release/gen"
 BLITZ = ROOT / "target/release/blitz-runner"
@@ -26,8 +27,11 @@ REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display=
 # FontFaceSet.load(), so there `document.fonts.ready` is awaited instead.
 FONT_REVEAL_SCRIPT = ("<script>var F=document.fonts;(F.load?Promise.all([...F].map(f=>f.load())):F.ready).then(()=>{"
                       "var cb=document.getElementById('cb');cb.style.display='block';cb.offsetHeight;});</script>\n")
-ROOT_RECT_JS = ("(()=>{const r=document.getElementById('cb').firstElementChild.getBoundingClientRect();"
-                "return r.width.toFixed(1)+'x'+r.height.toFixed(1)})()")
+# Size of the tree's root: the first child of `#cb`, or the document's scrollable size when `#cb` is
+# the `<body>` (real pages; their body is often `height: 100%`)
+ROOT_RECT_JS = ("(()=>{const cb=document.getElementById('cb');const d=document.documentElement;"
+                "if(cb===document.body)return d.getBoundingClientRect().width.toFixed(1)+'x'+d.scrollHeight.toFixed(1);"
+                "const r=cb.firstElementChild.getBoundingClientRect();return r.width.toFixed(1)+'x'+r.height.toFixed(1)})()")
 # Gecko profiler: started at launch, no stack sampling or marker stacks, main threads only; the
 # parent writes the profile (with the content processes' exit profiles) to MOZ_PROFILER_SHUTDOWN.
 FIREFOX_PROFILER_ENV = dict(MOZ_PROFILER_STARTUP="1", MOZ_PROFILER_STARTUP_FEATURES="nostacksampling,nomarkerstacks",
@@ -43,8 +47,11 @@ def sh(cmd, cpus=None, **kw):
 def read_manifest():
     cases = []
     for line in (CORPUS / "manifest.tsv").read_text().splitlines():
-        name, file, w, h, nodes, engine = line.split("\t")
-        cases.append(dict(name=name, file=file, cb_w=float(w), cb_h=float(h), nodes=int(nodes), taffy=engine == "taffy"))
+        name, file, w, h, nodes, engine, *rest = line.split("\t")
+        # optional 7th column: viewport `WxH` (the real pages have 1024px variants)
+        vw, vh = (int(v) for v in rest[0].split("x")) if rest else (WIDTH, HEIGHT)
+        cases.append(dict(name=name, file=file, cb_w=float(w), cb_h=float(h), nodes=int(nodes), taffy=engine == "taffy",
+                          width=vw, height=vh))
     return cases
 
 
@@ -52,14 +59,40 @@ def cmd_gen(args):
     if CORPUS.exists():
         shutil.rmtree(CORPUS)
     sh([str(GEN), "html", str(CORPUS)])
-    REVEAL.mkdir()
+    gen_real()
+    REVEAL.mkdir(exist_ok=True)
     for c in read_manifest():
         html = (CORPUS / c["file"]).read_text()
         html = html.replace('<div id="cb">', '<div id="cb" style="display:none">')
-        html = html.replace("</body>", (FONT_REVEAL_SCRIPT if "@font-face" in html else REVEAL_SCRIPT) + "</body>")
+        body_tag = re.search(r"<body[^>]*>", html).group()
+        if 'id="cb"' in body_tag:
+            html = html.replace(body_tag, body_tag[:-1] + ' style="display:none">')
+        script = FONT_REVEAL_SCRIPT if "@font-face" in html else REVEAL_SCRIPT
+        if 'id="cb"' in body_tag:
+            # the real pages hide the `<body>` itself; revealing must restore its stylesheet display
+            script = script.replace("cb.style.display='block'", "cb.style.display=''")
+        html = html.replace("</body>", script + "</body>")
         html = html.replace("url(fonts/", "url(../fonts/")
+        html = html.replace("url(../../fonts/", "url(../../../fonts/")  # real pages, one level deeper
         (REVEAL / c["file"]).write_text(html)
     print(f"wrote {len(read_manifest())} pages to {CORPUS}")
+
+
+def gen_real():
+    """Copies the frozen pages from real/ (see real/freeze.py) into corpus/real/ and corpus/reveal/real/
+    (the reveal copy needs the page's placeholder images next to it) and appends one manifest line
+    per page and viewport: `real/<page>` at 1280x800 and `real/<page>@1024` at 1024x800."""
+    for font in (ROOT / "fonts").glob("DejaVuSansMono*.ttf"):
+        shutil.copy(font, CORPUS / "fonts" / font.name)
+    with (CORPUS / "manifest.tsv").open("a") as manifest:
+        for line in (REAL / "manifest.tsv").read_text().splitlines():
+            name, d, nodes, viewports = line.split("\t")
+            for target in (CORPUS / "real" / d, REVEAL / "real" / d):
+                shutil.copytree(REAL / d, target)
+            for vp in viewports.split(","):
+                w, h = (int(v) for v in vp.split("x"))
+                suffix = "" if (w, h) == (WIDTH, HEIGHT) else f"@{w}"
+                manifest.write(f"real/{name}{suffix}\treal/{d}/index.html\t{w}\t0\t{nodes}\t-\t{vp}\n")
 
 
 # ---- engines: each returns a list of per-iteration dicts of metric -> ns ----
@@ -77,7 +110,7 @@ def run_taffy(case, iters, cpus):
 def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ):
     if not binary.exists():
         raise FileNotFoundError(f"{binary.relative_to(ROOT)} not built, see README")
-    cmd = [str(binary), str(CORPUS / case["file"]), "--width", str(WIDTH), "--height", str(HEIGHT), "--iters", str(iters), "--hash"]
+    cmd = [str(binary), str(CORPUS / case["file"]), "--width", str(case["width"]), "--height", str(case["height"]), "--iters", str(iters), "--hash"]
     if parallel:
         cmd.append("--parallel")
     if screenshot:
@@ -158,7 +191,7 @@ def run_servo(case, iters, cpus, threads, screenshot=None):
     env = dict(os.environ, SERVO_TRACING="layout::layout_impl=trace,layout::flow::root=trace")
     for i in range(iters):
         with tempfile.TemporaryDirectory() as d:
-            cmd = [str(SERVOSHELL), "-z", "-x", f"--window-size={WIDTH}x{HEIGHT}", "--pref", f"layout_threads={threads}"]
+            cmd = [str(SERVOSHELL), "-z", "-x", f"--window-size={case['width']}x{case['height']}", "--pref", f"layout_threads={threads}"]
             if screenshot and i == iters - 1:
                 cmd += ["-o", str(screenshot)]
             cmd.append(url)
@@ -175,14 +208,14 @@ def run_chrome(case, iters, cpus, screenshot=None):
     with sync_playwright() as p:
         browser = p.chromium.launch(args=["--no-sandbox"])
         for i in range(iters):
-            page = browser.new_page(viewport={"width": WIDTH, "height": HEIGHT})
+            page = browser.new_page(viewport={"width": case["width"], "height": case["height"]})
             cdp = page.context.new_cdp_session(page)
             events, done = [], []
             cdp.on("Tracing.dataCollected", lambda e: events.extend(e["value"]))
             cdp.on("Tracing.tracingComplete", lambda e: done.append(True))
             cdp.send("Tracing.start", {"traceConfig": {"includedCategories": ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "blink_style"]}})
             page.goto(url, wait_until="load", timeout=600_000)
-            page.wait_for_function("document.getElementById('cb').style.display === 'block'", timeout=600_000)
+            page.wait_for_function("document.getElementById('cb').style.display !== 'none'", timeout=600_000)
             page.evaluate("document.body.offsetHeight")
             root = page.evaluate(ROOT_RECT_JS)
             cdp.send("Tracing.end")
@@ -318,13 +351,13 @@ def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
             profile = Path(d) / f"profile-{i}.json"
             env = dict(os.environ, **FIREFOX_PROFILER_ENV, MOZ_PROFILER_SHUTDOWN=str(profile))
             browser = launch_firefox(p, exe, env, prefs)
-            page = browser.new_page(viewport={"width": WIDTH, "height": HEIGHT})
+            page = browser.new_page(viewport={"width": case["width"], "height": case["height"]})
             if cpus:
                 # a first file:// page puts the tab in its file content process; pin that, then load the case
                 page.goto(blank.as_uri(), wait_until="load")
                 pin_content_processes(int(pidfile.read_text()), cpus)
             page.goto(url, wait_until="load", timeout=600_000)
-            page.wait_for_function("document.getElementById('cb').style.display === 'block'", timeout=600_000)
+            page.wait_for_function("document.getElementById('cb').style.display !== 'none'", timeout=600_000)
             page.evaluate("document.body.offsetHeight")
             root = page.evaluate(ROOT_RECT_JS)
             if screenshot and i == iters - 1:
@@ -537,7 +570,7 @@ def cmd_verify(args):
     for c in cases:
         imgs, boxes, notes = {}, {}, []
         for e in engines:
-            path = shots / f"{c['file'][:-5]}.{e}.png"
+            path = shots / f"{c['name'].replace('/', '_')}.{e}.png"
             try:
                 samples = run_engine(e, c, 1, args.cpus, screenshot=path)
             except Exception as ex:
