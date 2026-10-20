@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><style>@font-face{font-family:"LB Sans";font-weight:normal;font-style:normal;src:url(../../fonts/DejaVuSans.ttf)}
+@font-face{font-family:"LB Sans";font-weight:bold;font-style:normal;src:url(../../fonts/DejaVuSans-Bold.ttf)}
+@font-face{font-family:"LB Sans";font-weight:normal;font-style:italic;src:url(../../fonts/DejaVuSans-Oblique.ttf)}
+@font-face{font-family:"LB Sans";font-weight:bold;font-style:italic;src:url(../../fonts/DejaVuSans-BoldOblique.ttf)}
+@font-face{font-family:"LB Mono";font-weight:normal;font-style:normal;src:url(../../fonts/DejaVuSansMono.ttf)}
+@font-face{font-family:"LB Mono";font-weight:bold;font-style:normal;src:url(../../fonts/DejaVuSansMono-Bold.ttf)}
+html{text-rendering:geometricPrecision;font-family:"LB Sans"}
+pre,code,kbd,samp,tt{font-family:"LB Mono"}
+.lb-input{display:inline-block;box-sizing:border-box;width:170px;height:21px;border:1px solid #767676;vertical-align:middle}
+</style>
+  
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  
+  <title>Servo aims to empower developers with a lightweight, high-performance alternative for embedding web technologies in applications.</title>
+  <meta content="Servo aims to empower developers with a lightweight, high-performance alternative for embedding web technologies in applications." property="og:title"/>
+  
+
+  
+  <meta content="Servo is a web rendering engine written in Rust, with WebGL and WebGPU support, and adaptable to desktop, mobile, and embedded applications." name="description"/>
+  <meta content="Servo is a web rendering engine written in Rust, with WebGL and WebGPU support, and adaptable to desktop, mobile, and embedded applications." property="og:description"/>
+  
+  <meta content="servo, servo engine, servo rendering engine, web engine, web rendering engine, web browser, web browser engine, rust" name="keywords"/>
+  <meta content="The Servo Project Developers" name="author"/>
+
+  <meta content="Servo" property="og:site_name"/>
+  <meta content="website" property="og:type"/>
+  <meta content="/svg/servo-color-positive.svg" property="og:image"/>
+  <meta content="Servo logo" property="og:image:alt"/>
+  <meta content="/svg/servo-symbol-color-no-container.svg" property="og:logo"/>
+  <meta content="/" property="og:url"/>
+
+  <style>:root {
+  --turquoise: #209e9b;
+  --midturquoise: #1B8381;
+  --darkturquoise: #004746;
+  --pink: #f03278;
+  --orange: #f68243;
+  --yellow: #faae30;
+  --green: #4fc066;
+  --purple: #6840CE;
+  --white: #fff;
+  --dark-grey: #4b4b4b;
+  --light-grey: #696969;
+  --8px: .5rem;
+  --12px: .75rem;
+  --16px: 1rem;
+  --20px: 1.25rem;
+  --24px: 1.5rem;
+  --48px: 3rem;
+  --96px: 6rem;
+  --step--1: clamp(.8rem,0.6706rem + 0.1471vw, 1rem);
+  --step-0: clamp(1rem, 0.9706rem + 0.1471vw, 1.125rem); 
+  --step-1: clamp(1.2rem, 1.1515rem + 0.2426vw, 1.4063rem);
+  --step-2: clamp(1.44rem, 1.3652rem + 0.3739vw, 1.7578rem);
+  --step-3: clamp(1.728rem, 1.6176rem + 0.5521vw, 2.1973rem);
+  --step-4: clamp(2.0736rem, 1.9153rem + 0.7917vw, 2.7466rem);
+  --step-5: clamp(2.4883rem, 2.266rem + 1.1117vw, 3.4332rem);
+}
+
+
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+
+body, h1, h2, h3, h4, p,
+figure, blockquote, dl, dd {
+  margin-block-end: 0;
+}
+
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+
+h1, h2, h3, h4,
+button, input, label {
+  line-height: 1.1;
+}
+
+
+h1, h2,
+h3, h4 {
+  text-wrap: balance;
+}
+
+
+img,
+picture,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+
+input, button,
+textarea, select {
+  font-family:"LB Sans";
+  font-size: inherit;
+}
+
+
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+
+:target {
+  scroll-margin-block: 5ex;
+}
+
+
+
+body {
+  background-color: var(--white);
+  color: var(--dark-grey);
+  margin: 0;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family:"LB Sans";
+}
+
+.is-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.is-page .is-main {
+  flex: 1;
+}
+
+h1, 
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family:"LB Sans";
+}
+
+h1 {
+  font-size: var(--step-5);
+}
+
+h1 + p {
+  padding-top: 1.25rem;
+}
+
+h2 {
+  font-size: var(--step-4);
+  padding-bottom: var(--20px);
+}
+
+h3 {
+  font-size: var(--step-3);
+  padding-bottom: var(--16px);
+}
+
+h4 {
+  font-size: var(--step-2);
+  padding-bottom: var(--12px);
+}
+
+p, ul, ol {
+  max-width: 48rem;
+  line-height: 1.4;
+  font-size: var(--step-0);
+}
+
+ul, ol {
+  padding-left: 2.25rem;
+  padding-bottom: 2.25rem;
+}
+
+p + iframe {
+  margin: 2.25rem 0;
+}
+
+a {
+  color: var(--midturquoise);
+}
+
+a:hover {
+  color: var(--darkturquoise)
+}
+
+
+
+
+.title {
+  font-weight: 100;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: var(--step-2);
+  margin-top: 0;
+  margin-bottom: var(--12px);
+}
+
+.center-text {
+  text-align: center;
+}
+
+.cta-text {
+  color: var(--turquoise);
+  margin: 0 auto;
+  padding: var(--48px) 0;
+}
+
+.header-anchor {
+  color: cadetblue;
+  width: 2.25rem;
+}
+
+code {
+  font-family:"LB Mono";
+  color: var(--midturquoise);
+  font-size: 0.875em;
+  font-weight: normal;
+  padding: 0.25em 0.5em 0.25em;
+}
+
+
+
+.pink {
+  color: var(--pink);
+}
+
+.orange {
+  color: var(--orange);
+}
+
+.mid-turquoise {
+  color: var(--midturquoise);
+}
+
+.green {
+  color: var(--green);
+}
+
+.yellow {
+  color: var(--yellow);
+}
+
+.purple {
+  color: var(--purple);
+}
+
+.gradient-back {
+  background-image: none;
+  background-size: 100% 100%;
+}
+
+.gradient-back img {
+  margin: 0 auto;
+  max-width: 1680px;
+  width: 100%;
+}
+
+
+
+
+nav .inner-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 4rem;
+}
+
+.navbar-brand {
+  flex: 1 0 4rem;
+}
+
+  .navbar-brand img {
+    max-height: 4rem;
+  }
+
+.navbar-menu {
+  display: none;
+
+}
+
+  .navbar-item {
+    display: block;
+    position: relative;
+    color: var(--dark-grey);
+  }
+
+  .navbar-link {
+    color: var(--dark-grey);
+    position: relative;
+}
+
+  .navbar-dropdown .navbar-item {
+    display: block;
+    padding: .5rem 1rem;
+    white-space: nowrap;
+  }
+
+  .navbar-link:hover,
+  .navbar-dropwdown a.navbar-item:hover {
+    background-color: hsl(0, 0%, 95%)
+  }
+
+
+  a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, 
+  .navbar-link:focus, .navbar-link:focus-within, .navbar-link:hover, 
+  .navbar-item.has-dropdown:hover .navbar-link
+   {
+    background-color: hsl(0, 0%, 95%);
+    color: var(--midturquoise);
+  }
+
+  .navbar-item:visited {
+    color: var(--dark-grey);
+  }
+
+.has-dropdown .navbar-link {
+  padding-right: 2rem;
+  height: 4rem;
+}
+
+
+.has-dropdown .navbar-link::after {
+    border: 2px solid transparent;
+    border-radius: 2px;
+    border-right: 0;
+    border-top: 0;
+    content: " ";
+    display: block;
+    height: 0.625em;
+    margin-top: -0.4375em;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    
+    transform-origin: center;
+    width: 0.625em;
+}
+
+.has-dropdown .navbar-link::after {
+  border-color: var(--dark-grey);
+  margin-top: -0.375em;
+  right: .5em;;
+}
+
+.navbar-item .has-dropdown:hover {
+  background-color: var(--white);
+}
+    
+.navbar-end {
+  display: flex;
+}
+
+  .social-link {
+    font-size: 1.25rem;
+    padding-left: .5rem;
+    color: var(--midturquoise);
+  }
+
+  .social-link:hover {
+    color: var(--darkturquoise);
+  }
+
+  .navbar-burger {
+    color: hsl(0, 0%, 71%);
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: block;
+    height: 3.25rem;
+    position: relative;
+    width: 3.25rem;
+    margin-left: auto;
+  }
+  .navbar-burger span {
+    background-color: currentColor;
+    display: block;
+    height: 1px;
+    left: calc(50% - 8px);
+    position: absolute;
+    transform-origin: center;
+    transition-duration: 86ms;
+    transition-property: background-color, opacity, transform;
+    transition-timing-function: ease-out;
+    width: 16px;
+  }
+  .navbar-burger span:nth-child(1) {
+    top: calc(50% - 6px);
+  }
+  .navbar-burger span:nth-child(2) {
+    top: calc(50% - 1px);
+  }
+  .navbar-burger span:nth-child(3) {
+    top: calc(50% + 4px);
+  }
+  .navbar-burger:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  .navbar-burger.is-active span:nth-child(1) {
+    
+  }
+  .navbar-burger.is-active span:nth-child(2) {
+    opacity: 0;
+  }
+  .navbar-burger.is-active span:nth-child(3) {
+    
+  }
+
+
+
+.container {
+  width: calc(100% - 4.75rem);
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+.inner-container {
+  padding: 0 2.5rem;
+}
+
+.column {
+  flex: 1 1 0;
+}
+
+.two-column {
+  display: flex;
+}
+
+.section {
+  padding: var(--48px) 0;
+}
+
+  .section:last-child {
+    padding-bottom: var(--96px);
+  }
+
+.section-pad {
+  margin: 0 2.4rem;
+}
+
+.cta-container {
+  display: flex;
+  justify-content: center;
+  padding: var(--24px) 0;
+  gap: var(--16px);
+}
+
+.features {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.features:not(:last-child) {
+  padding-bottom: var(--24px);
+}
+
+  .section-feature {
+    padding: 1.25rem 0;
+    flex: 0 1 25%;
+  }
+
+  .section-feature img {
+    margin: 0 auto;
+    padding: .75rem;
+    max-height: 6rem;
+  }
+
+
+
+.hero-img {
+  max-width: 24rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--24px) 0;
+}
+
+
+
+.blog {
+  background: #15DDDA;
+  background: radial-gradient(at left top, #15DDDA, #42BE65);
+  padding: 2.25rem 0;
+  border-radius: 2.25rem;
+  color: var(--darkturquoise);
+}
+
+  .blog .card {
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--darkturquoise);
+    max-width: 64.25rem; 
+    display: flow-root;
+  }
+
+    .blog .tag {
+      display: inline-block;
+      padding-bottom: .25rem;
+    }
+
+    .blog .card .post-title {
+      font-size: var(--step-1);
+      font-weight: bold;
+      padding-bottom: .5rem;
+      max-width: 64.25rem;
+    }
+      
+    .blog .card-content .post-summary {
+      font-size: var(--step-0);
+      max-width: 64.25rem;
+      padding: 0;
+    }
+
+    .blog .card-content a {
+      color: var(--darkturquoise);
+    }
+
+    .blog .card-image, .blog .card-video {
+      float: left;
+      margin-right: 2.25rem;
+      max-width: 50%;
+      min-width: 290px;
+    }
+
+    .blog .card-video {
+      max-width: 30%;
+    }
+
+    .blog .card-video > iframe {
+      max-width: 100%;
+    }
+
+    .blog a.archive-nav {
+      display: block;
+      padding-top: 2.25rem;
+      color: var(--darkturquoise);
+      font-size: var(--step-0);
+      font-weight: bold;
+    }
+
+    .blog a:hover {
+      color: var(--white);
+    }
+
+ 
+.sponsorship h2 {
+  color: var(--darkturquoise);
+}    
+
+
+
+
+.contact {
+  background-color: var(--midturquoise);
+  color: var(--white);
+  padding: var(--48px) 0;
+  border-top-left-radius: 2.25rem;
+  border-top-right-radius: 2.25rem;
+  font-size: var(--16px);
+}
+
+  .contact h2 {
+    flex: 1 0 16rem;
+  }
+
+
+
+footer {
+  background-color: var(--midturquoise);
+  font-weight: 100;
+  font-size: var(--step--1);
+}
+
+footer .logo {
+  padding-bottom: 2.25rem;
+}
+
+.footer {
+  background-color: var(--dark-grey);
+  color: var(--white);
+  padding: var(--48px) 0;
+  border-top-left-radius: 2.25rem;
+  border-top-right-radius: 2.25rem;
+}
+
+footer p {
+  padding-bottom: .25rem;
+  font-size: var(--step--1);
+}
+
+.code-of-conduct {
+  display: flex;
+  justify-content: end;
+}
+
+a.footer-link {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+
+figcaption {
+  font-style: italic;
+  font-size: .875rem;
+  padding-top: .6rem;
+}
+
+
+
+#Blog .card {
+  padding: 1.25rem 0;
+}
+
+#Blog .title {
+  color: var(--turquoise);
+  font-size: var(--step-2);
+  font-weight: bold;
+  padding-bottom: var(--8px);
+}
+
+#Blog .summary {
+  color: var(--dark-grey);
+  font-size: var(--step-0);
+}
+
+#Blog:last-child {
+  padding-bottom: 4.25rem;
+}
+
+.blog-head {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.blog-hero {
+  background: #15DDDA;
+  background: radial-gradient(at left top, #15DDDA, #42BE65);
+  padding: 6.25rem 0;
+  color: var(--darkturquoise);
+}
+
+  .blog-hero .title {
+    color: var(--darkturquoise);
+    max-width: 48rem;
+    text-wrap: balance;
+    font-weight: bold;
+  }
+
+.blog-content{
+  font-size: var(--step-0);
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 4.25rem 2.25rem;
+}
+
+  .blog-content h2,
+  .blog-content h3 {
+    color: var(--dark-grey);
+  }
+
+  .blog-content p {
+    padding-bottom: 1.25rem;
+  }
+
+  .blog-content p + h2,
+  .blog-content p + h3,
+  .blog-content figure + h2 {
+    padding-top: 2.25rem;
+  }
+
+  .blog-content a {
+    color: var(--midturquoise);
+  }
+
+  .blog-content:last-child {
+    padding-bottom: var(--48px);
+  }
+
+.header-anchor .fa-link {
+  font-size: 1.25rem;
+}
+
+
+.subpage-content {
+  max-width: 64rem;
+}
+
+.subpage-content.fullwidth {
+  max-width: none;
+}
+
+  .subpage-content h1,
+  .subpage-content h2,
+  .subpage-content h3 {
+    color: var(--dark-grey);
+  }
+
+  .subpage-content * + h2,
+  .subpage-content p + h3,
+  .subpage-content div + div
+   {
+    padding-top: 2.25rem;
+  }
+
+  figure + p,
+  .subpage-content h1 + div {
+    padding-top: 1.25rem;
+  }
+
+  .subpage-content a:hover {
+    color: var(--darkturquoise);
+  }
+
+  .subpage-content a.button {
+    color: var(--white);
+  }
+
+  .subpage-content p {
+    padding-bottom: 1.25rem;
+  }
+
+.subpage-content:last-child {
+  padding-bottom: 4.25rem;
+}
+
+
+
+.content table {
+  margin-block: 1em;
+}
+
+.content table td,
+.content table th {
+  border: 1px solid hsl(0, 0%, 86%);
+  border-width: 0 0 1px;
+  padding: 0.5em 0.75em;
+  vertical-align: top;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+
+
+
+.button {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1rem;
+  height: 2.5em;
+  line-height: 1.5;
+  position: relative;
+  vertical-align: top;
+  padding: 1.25rem .75rem;
+
+  background-color: var(--midturquoise);
+  color: hsl(0, 0%, 100%);
+  cursor: pointer;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.button--hero {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  align-items: center;
+  color: hsl(0, 0%, 100%);
+  border-radius: 44px;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1.25rem;
+  height: 2.5em;
+  line-height: 1.5;
+  position: relative;
+  vertical-align: top;
+  padding: 1.25rem 1.5rem;
+
+  background-color: var(--midturquoise);
+  cursor: pointer;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.button--hero:hover {
+  color: var(--white);
+  background-color: var(--darkturquoise);
+}
+
+a.button--hero::after {
+    content: '';
+    position: absolute;
+    text-decoration: none;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid hsl(0 0% 100% / 0.4);
+}
+
+
+:is(a,button):focus-visible,
+a.button--hero:focus-visible {
+  outline-offset: 3px;
+  outline: 3px solid var(--darkturquoise);
+}
+
+.button:focus, .is-focused.button, .button:active, .is-active.button {
+  outline: none;
+}
+
+[disabled].button, fieldset[disabled] .button {
+  cursor: not-allowed;
+}
+
+.button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.content:not(:last-child), .box:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+.button.is-loading::after {
+  
+  border: 2px solid hsl(0, 0%, 86%);
+  border-radius: 9999px;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  content: "";
+  display: block;
+  height: 1em;
+  position: relative;
+  width: 1em;
+}
+
+
+a.button {
+  text-decoration: none;
+}
+
+.hero-video {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.navbar-burger {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  color: currentColor;
+  font-family:"LB Sans";
+  font-size: 1em;
+  margin: 0;
+  padding: 0;
+}
+
+@media screen and (max-width: 899px) {
+
+  .container {
+    width: calc(100% - 2.4rem);
+  }
+
+  .section {
+    padding: var(--24px) 0;
+  }
+
+  .section:last-child {
+    padding-bottom: var(--48px);
+  }
+
+  .inner-container {
+    padding: 0;
+  }
+
+  .features {
+    flex-flow: column;
+  }
+
+  .blog-content {
+    padding: 1.2rem;
+  }
+
+}
+
+
+@media screen and (min-width:900px) {
+
+  .navbar-dropdown {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    z-index: 20;
+    background-color: var(--white);
+    min-width: max-content;
+    box-shadow: 0px 6px 4px rgba(0, 0, 0, .07), 
+    0px 6px 30px rgba(0, 0, 0, .06), 
+    0px 8px 10px rgba(0, 0, 0, .1);
+    border-radius: 4px;
+  }
+
+  .navbar-item,
+  .navbar-link {
+    
+    
+    display: flex;
+    align-items: center;
+    line-height: 1.5;
+    position: relative;
+    width: max-content;
+    padding: 0 .5rem;
+  }
+
+  .navbar-menu .navbar-item {
+    height: 4rem;
+  }
+
+  
+  .navbar-item.has-dropdown {
+    padding: 0;
+  }
+
+  div.navbar-dropdown > .navbar-item {
+    height: auto;
+    width: 100%;
+    padding: .5rem;
+  }
+
+  .navbar-dropdown a.navbar-item {
+    padding-right: 3rem;
+    padding-left: 1rem;
+  }
+
+}
+
+
+@media screen and (min-width: 900px) {
+  .navbar, .navbar-menu, .navbar-start {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+  }
+
+  .navbar-burger {
+    display: none;
+}
+
+.navbar-item.is-active .navbar-dropdown, .navbar-item.is-hoverable:focus .navbar-dropdown, 
+.navbar-item.is-hoverable:focus-within .navbar-dropdown, .navbar-item.is-hoverable:hover .navbar-dropdown {
+    display: block;
+}
+
+}
+
+
+@media screen and (max-width: 899px) {
+
+  .navbar > .container,
+  .navbar .inner-container {
+    display: block;
+  }
+
+  .navbar .inner-container {
+    height: auto;
+  }
+
+  .navbar-menu.is-active {
+    display: block;
+  } 
+
+  .navbar-menu {
+      background-color: var(--white);
+      min-height: 3.25rem;
+      position: relative;
+      z-index: 30;
+  }
+
+    .navbar-brand {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-end {
+      padding: 1rem 0;
+    }
+
+    .navbar-link {
+      display: block;
+    }
+
+    .navbar-dropdown {
+      display: block;
+    }
+
+      .navbar-dropdown > .navbar-item {
+        padding: .5rem 2rem;
+      }
+
+      
+    a.navbar-item,
+    .navbar-item.has-dropdown .navbar-link {
+      padding: .5rem 2rem .5rem .5rem;
+    }
+
+    .has-dropdown .navbar-link {
+      height: auto;
+    }
+
+    .has-dropdown .navbar-link::after {
+      right: 1.25rem;
+    }
+  
+  .blog > .inner-container {
+    padding: 0 var(--24px);
+  }
+
+  .section-feature {
+    margin: 0 auto;
+  }
+
+  .section-feature p:last-child {
+    max-width: 36rem;
+  }
+
+  #homeHero .title {
+    font-size: var(--step-2);
+  }
+
+}</style>
+  
+  <style>code[class*="language-"],
+pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family:"LB Mono";
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #272822;
+}
+
+
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: slategray;
+}
+
+.token.punctuation {
+	color: #f8f8f2;
+}
+
+.token.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #f92672;
+}
+
+.token.boolean,
+.token.number {
+	color: #ae81ff;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #a6e22e;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+	color: #f8f8f2;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+	color: #e6db74;
+}
+
+.token.keyword {
+	color: #66d9ef;
+}
+
+.token.regex,
+.token.important {
+	color: #fd971f;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}</style>
+  
+</head>
+
+  <body class="is-page" id="cb">
+    <nav aria-label="main navigation" class="navbar" role="navigation">
+  <div class="container">
+    <div class="inner-container">
+      <div class="navbar-brand">
+        <a href="index.html">
+          <img alt="" height="1024" src="ph/1024x1024.png" width="1024"/>
+        </a>
+
+        <button aria-expanded="false" aria-label="menu" class="navbar-burger" data-target="navbar-menu" id="hamburgerMenu" type="button">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div class="navbar-menu" id="navbar-menu">
+        
+          
+          
+            
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link" href="index.html#">
+                Get Involved
+              </a>
+              <div class="navbar-dropdown">
+                
+                  <a class="navbar-item" href="https://servo.org/contributing/">
+                    Contributing
+                  </a>
+                
+                  <a class="navbar-item" href="https://book.servo.org" target="_blank">
+                    Servo Book<span style="font-size: 0.8em;display:inline-block;margin-left: 4px"><i class="fa-solid fa-up-right-from-square"></i></span>
+                  </a>
+                
+                  <a class="navbar-item" href="https://servo.org/wpt/">
+                    WPT pass rates
+                  </a>
+                
+                  <a class="navbar-item" href="https://servo.org/coc/">
+                    Code of Conduct
+                  </a>
+                
+              </div>
+            </div>
+          
+        
+          
+          
+            <a class="navbar-item" href="https://servo.org/download/">
+              Download
+            </a>
+          
+        
+          
+          
+            <a class="navbar-item" href="https://servo.org/blog/">
+              Blog
+            </a>
+          
+        
+          
+          
+            <a class="navbar-item" href="https://demo.servo.org/" target="_blank">
+              Demos<span style="font-size: 0.8em;display:inline-block;margin-left: 4px"><i class="fa-solid fa-up-right-from-square"></i></span>
+            </a>
+          
+        
+          
+          
+            
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link" href="index.html#">
+                About
+              </a>
+              <div class="navbar-dropdown">
+                
+                  <a class="navbar-item" href="https://servo.org/about/">
+                    About Servo
+                  </a>
+                
+                  <a class="navbar-item" href="https://servo.org/made-with/">
+                    Made with Servo
+                  </a>
+                
+                  <a class="navbar-item" href="https://github.com/servo/project/blob/main/governance/README.md" target="_blank">
+                    Governance<span style="font-size: 0.8em;display:inline-block;margin-left: 4px"><i class="fa-solid fa-up-right-from-square"></i></span>
+                  </a>
+                
+                  <a class="navbar-item" href="https://servo.org/sponsorship/">
+                    Sponsorship
+                  </a>
+                
+              </div>
+            </div>
+          
+        
+        <div class="navbar-end">
+    
+      <a class="social-link is-github-color" href="https://github.com/servo/servo" title="GitHub">
+        <span class="icon"><i class="fab fa-github"></i></span>
+      </a>
+    
+      <a class="social-link is-mastodon-color" href="https://floss.social/@servo" rel="me" title="Mastodon">
+        <span class="icon"><i class="fab fa-mastodon"></i></span>
+      </a>
+    
+      <a class="social-link is-bluesky-color" href="https://bsky.app/profile/servo.org" title="Bluesky">
+        <span class="icon"><i class="fab fa-bluesky"></i></span>
+      </a>
+    
+      <a class="social-link is-linkedin-color" href="https://www.linkedin.com/company/servo-project/" title="LinkedIn">
+        <span class="icon"><i class="fab fa-linkedin"></i></span>
+      </a>
+    
+</div>
+
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+    <main>
+      <section aria-label="What is Servo" class="section" id="homeHero">
+  <div class="hero-body">
+    <div class="container">
+      <img alt="" class="hero-img" height="63" src="ph/284x63.png" width="284"/>
+      <h1 class="title center-text">
+        Servo aims to empower developers with a lightweight, high-performance alternative for embedding web technologies in applications.
+      </h1>
+      <div class="center-text cta-container">
+        <a class="button--hero" href="https://servo.org/contributing/">Get Involved</a>
+        <a class="button--hero" href="https://opencollective.com/servo" target="_blank">Donate</a>
+      </div>
+    </div>
+    <div class="gradient-back">
+      <img alt="" height="1508" src="ph/2496x1508.png" width="2496"/>
+    </div>
+  </div>
+  <div class="container">
+    <p class="subtitle center-text cta-text">
+      Servo is a web browser rendering engine written in Rust, with WebGL and WebGPU support, and adaptable to desktop, mobile, and embedded applications.
+    </p>
+    <div class="features">
+      <div class="section-feature center-text">
+        <img alt="" height="475" src="ph/401x475.png" width="401"/>
+        <p class="subtitle green">Embeddable</p>
+        <p>Servo provides a <strong>WebView API</strong> so other applications can use it to embed web content.</p>
+      </div>
+      <div class="section-feature center-text">
+        <img alt="" height="475" src="ph/475x475.png" width="475"/>
+        <p class="subtitle pink">Memory-safe</p>
+        <p>Servo takes advantage of the memory safety features of the <strong>Rust programming language</strong>, resulting in fewer vulnerabilities related to memory and concurrency.</p>
+      </div>
+      <div class="section-feature center-text">
+        <img alt="" height="475" src="ph/475x475.png" width="475"/>
+        <p class="subtitle orange">Modular</p>
+        <p>Built with a modular architecture and powered by widely-used Rust crates, Servo makes it <strong>easier to customize and adapt</strong> a high-performance browser engine to your needs.</p>
+      </div>
+    </div>
+    <div class="features">
+      <div class="section-feature center-text">
+        <img alt="" height="475" src="ph/403x475.png" width="403"/>
+        <p class="subtitle yellow">Parallel</p>
+        <p>Servo uses concurrency and parallelism for <strong>faster and more energy-efficient rendering of web content</strong> on multi-core devices.</p>
+      </div>
+      <div class="section-feature center-text">
+        <img alt="" height="475" src="ph/475x475.png" width="475"/>
+        <p class="subtitle purple">Cross platform</p>
+        <p>Servo has <strong>multi-platform support</strong>, including Windows, macOS, Linux, Android, and OpenHarmony. In addition, Servo can be ported and adapted to <strong>embedded devices</strong>.</p>
+      </div>
+      <div class="section-feature center-text">
+        <img alt="" height="475" src="ph/452x475.png" width="452"/>
+        <p class="subtitle mid-turquoise">Independent</p>
+        <p>Servo is a project managed with <strong>open governance under Linux Foundation Europe</strong> through our Technical Steering Committee.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section aria-label="Latest posts from the Servo blog" class="section container">
+  <div class="blog">
+    <div class="inner-container">
+    <h2>Latest on the blog</h2>
+    <div class="blog-grid">
+            <div class="card">
+              <div class="card-content">
+                <span class="tag">2026-10-09</span>
+                <p class="post-title"><a href="https://servo.org/blog/2026/10/09/august-in-servo/">August in Servo: CSS Grid, text selection, and more!</a></p>
+                <p class="post-summary">Plus accessibility and navigation improvements.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-content">
+                <span class="tag">2026-09-15</span>
+                <p class="post-title"><a href="https://servo.org/blog/2026/09/15/one-year-of-sponsorship/">Your Donations at Work: One Year of Sponsored Servo Development</a></p>
+                <p class="post-summary">Looking back on Servo's first donation-funded role.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-content">
+                <span class="tag">2026-08-31</span>
+                <p class="post-title"><a href="https://servo.org/blog/2026/08/31/july-in-servo/">July in Servo: more platforms, faster canvas, web fonts in SVG, and more!</a></p>
+                <p class="post-summary">Plus real world compat improvements on the DuckDuckGo and Gumroad websites.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-content">
+                <span class="tag">2026-07-31</span>
+                <p class="post-title"><a href="https://servo.org/blog/2026/07/31/june-in-servo/">June in Servo: real world compat, media queries, SharedWorker, and more!</a></p>
+                <p class="post-summary">We now have a new way for you to help us write the monthly updates :)</p>
+              </div>
+            </div>
+        <a class="archive-nav" href="https://servo.org/blog/">View older posts</a>
+      </div>
+    </div>
+  </div>
+</section>
+<section aria-label="Partners and sponsors" class="section container" id="acknowledgements">
+  <div class="inner-container acknowledgements">
+    <h2>Acknowledgements</h2>
+    <div class="acknowledgements__container">
+      <p>The Servo project is dependent on outside funding. We would like to thank our <a href="index.html#partners">partnering organizations</a> that have recently invested in Servo and our <a href="index.html#sponsors">sponsors</a> who have made donations to Servo through one of the <a href="https://servo.org/sponsorship/">sponsorship tiers</a>.</p>
+      <p>We are very grateful to all our patrons who contribute monetarily to support the project via <a href="https://opencollective.com/servo">Open Collective</a>, <a href="https://github.com/sponsors/servo">GitHub</a>, <a href="https://thanks.dev/">thanks.dev</a>, and <a href="https://benevity.com/">Benevity</a>.
+      </p>
+    </div>
+  </div>  
+  <div class="sponsorship">
+  <div class="inner-container">
+    <div class="inner-container__logos">
+      <h3 class="center-text">Partners</h3>
+
+      
+
+      <ul class="logos-home" id="partners">
+      
+        <li>
+          <a href="https://www.futurewei.com/open-source">
+            
+            <img alt="" class="partner-img" height="155" src="ph/500x155.png" width="500"/>
+            
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://www.igalia.com">
+            
+            <img alt="" class="partner-img" height="181" src="ph/500x181.png" width="500"/>
+            
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://nlnet.nl/project/Servo/">
+            
+            <img alt="" class="partner-img" height="191" src="ph/500x191.png" width="500"/>
+            
+          </a>
+        </li>
+      
+        <li>
+          <a href="https://www.sovereign.tech/tech/servo">
+            
+            <img alt="" class="partner-img" height="154" src="ph/500x154.png" width="500"/>
+            
+          </a>
+        </li>
+      
+      </ul>
+
+    </div>
+
+    
+    
+    
+    
+
+    <div id="sponsors">
+
+    
+
+
+
+    
+
+
+
+    
+
+
+    
+    <div class="inner-container__logos">
+      <h3 class="center-text">Bronze Sponsors</h3>
+
+      <ul class="logos-home">
+      
+        <li class="sponsor-bronze">
+          <a href="https://mastodon.derg.nz/@Anthropy">
+            
+            <img alt="" class="sponsor-img" height="125" src="ph/500x125.png" width="500"/>
+            
+          </a>
+        </li>
+      
+        <li class="sponsor-bronze">
+          <a href="https://byteful.com/?utm_source=servo&amp;utm_medium=github-sponsor&amp;utm_campaign=servo_sponsorship">
+            
+            <img alt="" class="sponsor-img" height="200" src="ph/740x200.png" width="740"/>
+            
+          </a>
+        </li>
+      
+        <li class="sponsor-bronze">
+          <a href="https://certs-r-us.com/servo">
+            
+            <img alt="" class="sponsor-img" height="300" src="ph/300x300.png" width="300"/>
+            
+          </a>
+        </li>
+      
+        <li class="sponsor-bronze">
+          
+            
+            Josh Aas
+            
+          
+        </li>
+      
+        <li class="sponsor-bronze">
+          
+            
+            Julius Tens
+            
+          
+        </li>
+      
+        <li class="sponsor-bronze">
+          
+            
+            Niclas Overby
+            
+          
+        </li>
+      
+        <li class="sponsor-bronze">
+          <a href="https://rxdb.info/?utm_source=spons&amp;utm_medium=spons_servo&amp;utm_campaign=servo">
+            
+            <img alt="" class="sponsor-img" height="140" src="ph/282x140.png" width="282"/>
+            
+          </a>
+        </li>
+      
+        <li class="sponsor-bronze">
+          <a href="https://sandwich.net/servo">
+            
+            <img alt="" class="sponsor-img" height="114" src="ph/500x114.png" width="500"/>
+            
+          </a>
+        </li>
+      
+        <li class="sponsor-bronze">
+          <a href="https://str4d.xyz/">
+            
+            str4d
+            
+          </a>
+        </li>
+      
+        <li class="sponsor-bronze">
+          <a href="https://www.testmuai.com/?utm_medium=sponsor&amp;utm_source=servo">
+            
+            <img alt="" class="sponsor-img" height="77" src="ph/500x77.png" width="500"/>
+            
+          </a>
+        </li>
+      
+      </ul>
+    </div>
+    
+    </div>
+
+<div class="acknowledgements">
+    <div class="acknowledgements__container">
+        <p>We would like to thank <a href="https://github.com/">GitHub</a>, <a href="https://zulip.com/">Zulip</a>, and <a href="https://aws.amazon.com/opensource/">AWS Open Source</a> for providing <a href="https://servo.org/sponsorship/#infrastructure-sponsors">their services</a> free of charge for use in the Servo project.</p>
+        <p>For information about how to sponsor the project, visit <a href="https://servo.org/sponsorship/">the sponsorship page</a>.</p>
+      </div>
+</div>
+
+
+  </div>
+</div>
+
+<style>.logos-home {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem 1rem;
+  max-width: 64rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.partner-img, .sponsor-img {
+  max-height: 15rem;
+  margin-inline: auto;
+  padding: 3.25rem 2rem;
+}
+.sponsor-gold .sponsor-img {
+  max-height: 11rem;
+  padding: 2.25rem 1.5rem;
+}
+.sponsor-silver .sponsor-img {
+  max-height: 7rem;
+  padding: 1.75rem 1rem;
+}
+.sponsor-bronze .sponsor-img {
+  max-height: 5rem;
+  padding: 1.25rem 0.5rem;
+}
+
+.logos-home > li {
+  flex: 0 0 50%;
+  text-align: center;
+  font-size: var(--step-3);
+  font-weight: bold;
+}
+.logos-home > li.sponsor-gold {
+  flex: 0 0 33%;
+  font-size: var(--step-2);
+}
+.logos-home > li.sponsor-silver {
+  flex: 0 0 25%;
+  font-size: var(--step-1);
+}
+.logos-home > li.sponsor-bronze {
+  flex: 0 0 25%;
+  font-size: var(--step-0);
+}
+
+@media (max-width: 720px) {
+  .partner-img, .sponsor-img {
+    max-height: 9rem;
+    padding: 2rem 1rem;
+  }
+  .sponsor-gold .sponsor-img {
+    max-height: 7rem;
+    padding: 1.5rem 0.75rem;
+  }
+  .sponsor-silver .sponsor-img {
+    max-height: 5rem;
+    padding: 1rem 0.5rem;
+  }
+  .sponsor-bronze .sponsor-img {
+    max-height: 3rem;
+    padding: 0.5rem 0.25rem;
+  }
+
+  .logos-home > li {
+    flex: 0 0 90%;
+  }
+  .logos-home > li.sponsor-gold {
+    flex: 0 0 50%;
+  }
+
+  .logos-home > li:first-child {
+    padding-top: 1.25rem;
+  }
+}
+
+.inner-container__logos {
+  border: 1px solid var(--midturquoise);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.25rem;
+  border-radius: 32px;
+}
+
+.inner-container__logos h3 {
+  border-bottom: 1px solid var(--midturquoise);
+  padding-top: var(--12px);
+  padding-bottom: var(--12px);
+  font-size: var(--step-1);
+}</style>
+
+</section>
+
+<style>.acknowledgements {
+  text-align: center;
+}
+
+.acknowledgements__container {
+  width: 100%;
+}
+
+.acknowledgements__container p {
+  margin: 0 auto;
+  padding-bottom: 1.25rem;
+}</style>
+    </main>
+    <div aria-label="Contact information" class="contact">
+    <div class="container">
+        <div class="inner-container two-column">
+            <div class="column">
+                <h2>Contact</h2>
+            </div>
+            <div class="column">
+                <ul>
+                    <li><a class="footer-link" href="https://servo.zulipchat.com/">Zulip chat</a></li>
+                    <li><a class="footer-link" href="https://github.com/servo/servo/discussions">GitHub discussions</a></li>
+                    <li><a class="footer-link" href="https://servo.org/cdn-cgi/l/email-protection#3f565159507f4c5a4d495011504d58">Email: <span class="__cf_email__" data-cfemail="cfa6a1a9a08fbcaabdb9a0e1a0bda8">[email&nbsp;protected]</span></a></li>
+                    <li><a class="footer-link" href="https://floss.social/@servo">Mastodon</a></li>
+                    <li><a class="footer-link" href="https://bsky.app/profile/servo.org">Bluesky</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+    <footer>
+     <div class="footer">
+  <div class="container">
+    <div class="two-column inner-container">
+      <div class="column">
+        <div class="logo"><a href="https://linuxfoundation.eu"><img alt="" height="50" src="ph/250x50.png" width="250"/></a></div>
+        <p>© 2026 The Servo Project Developers</p>
+        <p>Copyright © Servo is a project of <a class="footer-link" href="https://linuxfoundation.eu/">Linux Foundation Europe</a>.</p>
+        <p>For website terms of use, trademark policy and other project policies please see <a class="footer-link" href="https://lfprojects.org">https://lfprojects.org</a>.</p>
+        <p>The source code for this website can be found at <a class="footer-link" href="https://github.com/servo/servo.org">https://github.com/servo/servo.org</a>.</p>
+      </div>
+      <div class="column code-of-conduct">
+        <a class="footer-link" href="https://servo.org/coc/">Code of Conduct</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    </footer>
+  
+
+
+</body></html>
