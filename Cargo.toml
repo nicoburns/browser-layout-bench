@@ -1,0 +1,17 @@
+[workspace]
+resolver = "2"
+members = ["gen", "blitz-runner"]
+
+[workspace.dependencies]
+taffy = { git = "https://github.com/DioxusLabs/taffy", default-features = false, features = ["std", "taffy_tree", "flexbox", "grid", "block_layout", "content_size"] }
+taffy_benchmarks = { git = "https://github.com/DioxusLabs/taffy", package = "taffy_benchmarks" }
+blitz-dom = { git = "https://github.com/DioxusLabs/blitz", default-features = false }
+blitz-html = { git = "https://github.com/DioxusLabs/blitz", default-features = false }
+blitz-paint = { git = "https://github.com/DioxusLabs/blitz", default-features = false }
+blitz-traits = { git = "https://github.com/DioxusLabs/blitz" }
+
+[patch."https://github.com/DioxusLabs/blitz"]
+debug_timer = { path = "./vendor/debug_timer" }
+
+[profile.release]
+debug = 1

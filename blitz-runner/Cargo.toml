@@ -1,0 +1,18 @@
+[package]
+name = "layout-bench-blitz"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "blitz-runner"
+path = "src/main.rs"
+
+[dependencies]
+blitz-dom = { workspace = true, features = ["log-phase-times"] }
+blitz-html = { workspace = true }
+blitz-paint = { workspace = true }
+blitz-traits = { workspace = true }
+anyrender = "0.14"
+anyrender_vello_cpu = "0.18"
+png = "0.18"

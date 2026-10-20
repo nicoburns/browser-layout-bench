@@ -1,0 +1,15 @@
+[package]
+name = "layout-bench-gen"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "gen"
+path = "src/main.rs"
+
+[dependencies]
+taffy = { workspace = true }
+taffy_benchmarks = { workspace = true }
+rand = "0.9"
+rand_chacha = "0.9"
