@@ -29,23 +29,35 @@ layout, so the whole tree is styled and laid out in a single reflow after parsin
 | `blitz-par` | same with `StyleThreading::Parallel` | same |
 | `servo1` / `servo` | servoshell built with `--features tracing-perfetto`, `--pref layout_threads=1` / `3` (default), one process per iteration, spans read from `servo.pftrace` | `Styling`, `Box Tree Construction`, `Fragment Tree Construction`, `restyle_and_build_trees`, `Stacking Context Tree Construction`, `Display List Construction`, `handle_reflow` |
 | `chrome` | Playwright chromium-headless-shell, CDP `Tracing` with `devtools.timeline` + `blink_style` | `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (= both), `Layout` |
+| `firefox1` / `firefox` | Playwright Firefox, one process per iteration, Gecko profiler started at launch (`MOZ_PROFILER_STARTUP`, markers only) and written at shutdown (`MOZ_PROFILER_SHUTDOWN`); `layout.css.stylo-threads=1` (no style worker threads) / default (6 on this VM) | `Styles` (style traversal + frame construction), `Reflow`, `DoFlushPendingNotifications` (the flush containing both), `DisplayList` |
 
 Phase mapping used in the report:
 
-- Layout only: Taffy `compute_layout` ≈ Blitz `layout` ≈ Servo Fragment Tree Construction ≈ Chrome `Layout`.
+- Layout only: Taffy `compute_layout` ≈ Blitz `layout` ≈ Servo Fragment Tree Construction ≈ Chrome `Layout`
+  ≈ Firefox `Reflow`.
 - Box construction + layout: Blitz `construct + layout` ≈ Servo Box Tree + Fragment Tree ≈ Chrome
   `rebuildLayoutTree + Layout` (Chrome builds `LayoutObject`s inside `UpdateLayoutTree`, not `Layout`).
-- Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `recalcStyle`.
+  Firefox is left out: Gecko constructs frames inside the `Styles` flush and has no separate
+  marker for it, so `Reflow` is layout only.
+- Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `recalcStyle`; Firefox `Styles` is listed
+  here too but, like Chrome's `UpdateLayoutTree`, it includes frame construction.
 - Whole pipeline: Blitz `resolve()` (style to paint tree) ≈ Servo `handle_reflow` (style to display
-  list) ≈ Chrome `UpdateLayoutTree + Layout`.
+  list) ≈ Chrome `UpdateLayoutTree + Layout` ≈ Firefox `Styles + Reflow`.
 
 Servo's `restyle_and_build_trees` and `handle_reflow` include work the children spans do not
 (stylist preparation, damage computation); the report shows them separately.
 
+Firefox reports the longest `Reflow` and `Styles` marker of the page's content process. The reveal
+flush is one `Styles` + one `Reflow`; the page also records a few sub-0.1 ms reflows (the initial
+`display:none` document, a nested flush after the reveal), so `verify` prints the reflow count and
+the sum of all reflows relative to the longest. The `Styles` marker's `elementsTraversed` is the
+styled-element count (`styled=` in `verify`, nodes + `html`/`body`/`#cb`).
+
 ## Running
 
 Prerequisites: Rust toolchain; `pip install playwright perfetto pillow && python -m playwright
-install chromium`; a Servo checkout built with `./mach build --release --features tracing-perfetto`
+install chromium firefox` (Firefox is optional: `run.py` skips `firefox*` with a message if it is
+not installed); a Servo checkout built with `./mach build --release --features tracing-perfetto`
 (`SERVOSHELL=/path/to/servoshell` if not at `~/repos/servo/target/release/servoshell`).
 
 ```sh
@@ -58,11 +70,15 @@ cargo build --release
 
 `bench` runs every engine on every case in each round, alternating engine order between rounds,
 and reports the minimum (or `--agg median`) over all samples. `--cpus` pins the single-threaded
-runners (`taffy`, `blitz`, `servo1`) with `taskset`; `blitz-par` and `servo` run unpinned.
+runners (`taffy`, `blitz`, `servo1`, `firefox1`) with `taskset`; `blitz-par`, `servo`, `chrome` and
+`firefox` run unpinned. For `firefox1` only the tab content processes are pinned (found under the
+parent via `/proc` after a first blank `file://` page has put the tab in its content process):
+pinning the whole browser to one CPU puts the parent process and compositor on the page's CPU and
+inflated `Styles`/`Reflow` 3x.
 
 `verify` is the equal-work check: before trusting a timing, confirm the engines agree on the layout
 (pixel diff of the 1280×800 viewport, Chrome's `totalObjects` layout-object count, Servo's reflow
-count, Blitz's box hash).
+count, Firefox's styled-element and reflow counts, Blitz's box hash).
 
 ## Servo tracing filter
 
