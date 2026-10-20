@@ -8,9 +8,10 @@ import os, re, subprocess, tempfile
 from pathlib import Path
 
 LADYBIRD_BIN = Path(os.environ.get("LADYBIRD_BIN", Path.home() / "repos/ladybird/Build/release/bin/Ladybird"))
-# Seconds between starting the load and asking WebContent for the screenshot; the request queues
-# behind the synchronous reveal layout, so this only has to cover parsing the page.
-SCREENSHOT_DELAY = int(os.environ.get("LADYBIRD_SCREENSHOT_DELAY", "3"))
+# Seconds the patched headless modes wait after the load event before dumping the layout tree or
+# taking the screenshot: the font pages reveal from a `document.fonts` promise that resolves after
+# the load event, and the screenshot needs the reveal to have been painted.
+SETTLE_SECONDS = int(os.environ.get("LADYBIRD_SETTLE_SECONDS", "2"))
 # `LADYBIRD_UPDATE url=<document url>` precedes each round's `LADYBIRD_PHASE k=v ...` line.
 RECORD_RE = re.compile(r"^LADYBIRD_(UPDATE|PHASE) (.*)$", re.M)
 # `Box <div#cb.cls> at [x,y] positioned flex-item [ml+bl+pl w pr+br+mr] [mt+bt+pt h pb+bb+mb] ...`
@@ -97,7 +98,7 @@ def run_ladybird(case, iters, cpus, reveal_dir, width, height, screenshot=None):
     url = (reveal_dir / case["file"]).resolve().as_uri()
     samples = []
     for i in range(iters):
-        proc = run_process(url, width, height, cpus, "layout-tree")
+        proc = run_process(url, width, height, cpus, "layout-tree", [f"--screenshot-delay={SETTLE_SECONDS}"])
         phases = parse_phases(proc.stderr, url)
         if not phases:
             raise RuntimeError(f"no LADYBIRD_PHASE lines for {url} on stderr (patch applied?): {proc.stderr[-500:]}")
@@ -108,7 +109,7 @@ def run_ladybird(case, iters, cpus, reveal_dir, width, height, screenshot=None):
         s["boxes"], s["n_boxes"], s["root"] = parse_layout_tree(proc.stdout)
         if screenshot and i == iters - 1:
             run_process(url, width, height, cpus, "screenshot",
-                        [f"--screenshot-path={screenshot}", f"--screenshot-delay={SCREENSHOT_DELAY}"])
+                        [f"--screenshot-path={screenshot}", f"--screenshot-delay={SETTLE_SECONDS}"])
             crop_to_viewport(screenshot, width, height)
         samples.append(s)
     return samples
