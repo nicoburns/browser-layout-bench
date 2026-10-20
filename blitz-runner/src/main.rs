@@ -134,10 +134,16 @@ fn main() {
             if args.hash {
                 println!("HASH {:016x}", layout_hash(doc.as_ref()));
                 let tree = doc.as_ref().tree();
-                let root = tree.iter().find(|(_, n)| n.attr(blitz_dom::local_name!("id")) == Some("cb"))
-                    .and_then(|(_, cb)| cb.children.iter().find(|c| tree[**c].is_element()).map(|c| tree[*c].final_layout()));
-                if let Some(l) = root {
-                    println!("ROOT {}x{}", l.size.width, l.size.height);
+                // the tree's root: the first child of `#cb`, or the document's scrollable size when
+                // `#cb` is the `<body>` (real pages)
+                let cb = tree.iter().find(|(_, n)| n.attr(blitz_dom::local_name!("id")) == Some("cb")).map(|(_, n)| n);
+                if let Some(cb) = cb {
+                    if cb.element_data().is_some_and(|e| e.name.local == blitz_dom::local_name!("body")) {
+                        let html = tree[cb.parent.unwrap()].final_layout();
+                        println!("ROOT {}x{}", html.size.width, html.scrollable_overflow_rect.bottom.max(html.size.height));
+                    } else if let Some(l) = cb.children.iter().find(|c| tree[**c].is_element()).map(|c| tree[*c].final_layout()) {
+                        println!("ROOT {}x{}", l.size.width, l.size.height);
+                    }
                 }
             }
             if args.boxes {
