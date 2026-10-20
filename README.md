@@ -80,24 +80,24 @@ rendered the flexbox spec's unstyled paragraphs 0px tall). No page issues a non-
 (checked with Playwright request logging); file names with `?` are renamed by wget's `-E`/`-k`
 handling and nothing is referenced with `%3F`.
 
-Equal-work check (`./run.py verify --engines chrome,blitz,firefox1,servo1 --filter real/`, 2026-10-20;
-page height = `document.documentElement.scrollHeight`, Blitz: the `<html>` box's scrollable
-overflow; Servo reports neither boxes nor a root):
+Equal-work check (`./run.py verify --engines chrome,blitz,firefox1,servo1,ladybird --filter real/`,
+2026-10-20; page height = `document.documentElement.scrollHeight`, Blitz: the `<html>` box's scrollable
+overflow, Ladybird: the `<body>` box in the layout-tree dump; Servo reports neither boxes nor a root):
 
-| case | nodes | px differing: Blitz / Firefox / Servo vs Chrome | Blitz vs Chrome boxes (`div`/`p`/`h3`) | page height Chrome / Firefox / Blitz |
+| case | nodes | px differing: Blitz / Firefox / Servo / Ladybird vs Chrome | Blitz vs Chrome boxes (`div`/`p`/`h3`) | page height Chrome / Firefox / Blitz / Ladybird |
 |---|---:|---|---|---|
-| `real/wikipedia` | 21,889 | 21.9% / 7.1% / 10.5% | 474/866 sizes, 754 positions | 85,068 / 85,261 / 87,076 |
-| `real/wikipedia@1024` | 21,889 | 18.6% / 5.2% / 9.1% | 472/866, 760 | 69,635 / 69,912 / 75,984 |
-| `real/mdn` | 2,212 | 4.6% / 3.7% / 5.6% | 18/176, 163 | 19,760 / 19,786 / 19,976 |
-| `real/mdn@1024` | 2,212 | 4.6% / 3.6% / 6.0% | 12/176, 164 | 19,672 / 19,698 / 19,832 |
-| `real/rustdoc` | 15,947 | 2.3% / 2.2% / 4.4% | 129/1792, 1770 | 155,326 / 155,359 / 164,853 |
-| `real/css-flexbox-1` | 15,890 | 2.8% / 2.0% / 7.5% | 28/471, 438 | 90,168 / 90,277 / 90,369 |
-| `real/servo-org` | 226 | 22.4% / 1.4% / 2.1% | 31/84, 79 | 5,445 / 5,449 / 5,967 |
-| `real/servo-org@1024` | 226 | 22.9% / 2.9% / 4.1% | 31/84, 79 | 5,605 / 5,611 / 6,057 |
-| `real/dioxuslabs-com` | 158 | 7.8% / 1.2% / 3.3% | 2/48, 6 | 1,232 / 1,232 / 1,232 |
-| `real/dioxuslabs-com@1024` | 158 | 9.0% / 1.4% / 3.8% | 2/48, 6 | 1,232 / 1,232 / 1,232 |
-| `real/bootstrap-dashboard` | 199 | 2.9% / 1.3% / 1.9% | 4/12, 1 | 1,136 / 1,136 / 1,154 |
-| `real/bootstrap-dashboard@1024` | 199 | 4.0% / 2.2% / 3.2% | 4/12, 1 | 1,132 / 1,132 / 1,150 |
+| `real/wikipedia` | 21,889 | 21.9% / 7.1% / 10.5% / 13.1% | 474/866 sizes, 754 positions | 85,068 / 85,261 / 87,076 / 800 (body) |
+| `real/wikipedia@1024` | 21,889 | 18.6% / 5.2% / 9.1% / 5.8% | 472/866, 760 | 69,635 / 69,912 / 75,984 / 800 (body) |
+| `real/mdn` | 2,212 | 4.6% / 3.7% / 5.6% / 4.2% | 18/176, 163 | 19,760 / 19,786 / 19,976 / 19,760 |
+| `real/mdn@1024` | 2,212 | 4.6% / 3.6% / 6.0% / 4.1% | 12/176, 164 | 19,672 / 19,698 / 19,832 / 19,672 |
+| `real/rustdoc` | 15,947 | 2.3% / 2.2% / 4.4% / 2.3% | 129/1792, 1770 | 155,326 / 155,359 / 164,853 / 155,398 |
+| `real/css-flexbox-1` | 15,890 | 2.8% / 2.0% / 7.5% / 6.7% | 28/471, 438 | 90,168 / 90,277 / 90,369 / 90,120 |
+| `real/servo-org` | 226 | 22.4% / 1.4% / 2.1% / 1.6% | 31/84, 79 | 5,445 / 5,449 / 5,967 / 5,450 |
+| `real/servo-org@1024` | 226 | 22.9% / 2.9% / 4.1% / 3.0% | 31/84, 79 | 5,605 / 5,611 / 6,057 / 5,612 |
+| `real/dioxuslabs-com` | 158 | 7.8% / 1.2% / 3.3% / 2.7% | 2/48, 6 | 1,232 / 1,232 / 1,232 / 1,232 |
+| `real/dioxuslabs-com@1024` | 158 | 9.0% / 1.4% / 3.8% / 3.4% | 2/48, 6 | 1,232 / 1,232 / 1,232 / 1,232 |
+| `real/bootstrap-dashboard` | 199 | 2.9% / 1.3% / 1.9% / 1.8% | 4/12, 1 | 1,136 / 1,136 / 1,154 / 1,136 |
+| `real/bootstrap-dashboard@1024` | 199 | 4.0% / 2.2% / 3.2% / 2.4% | 4/12, 1 | 1,132 / 1,132 / 1,150 / 1,132 |
 
 Chrome and Firefox agree on every page to within 0.3% of the page height (the pixel difference is
 glyph rasterisation plus a few 1px line-height roundings). Known differences, each with the CSS
@@ -128,6 +128,12 @@ feature responsible (Blitz unless stated; "positions" differ wherever an earlier
 - Table rows: Blitz rounds layout to whole pixels, so each of the Bootstrap dashboard's 17 table
   rows is 1px taller (`.table-responsive` 544 vs 526px, page +18px). Wikipedia's toolbar tabs are
   35px instead of 32px for the same reason (`.vector-menu-content`, ±3px).
+- Ladybird (`07fac502`): 1.6–6.7 % of pixels differ on every page but Wikipedia (13.1 % at 1280,
+  5.8 % at 1024) and its body heights match Chrome's page heights within 0.1 % (the flexbox spec
+  and servo.org body is 16 px narrower: Ladybird reserves a scrollbar gutter). Wikipedia's
+  `html,body{height:100%}` gives an 800 px body whose content overflows, so the dump reports no page
+  height there; the `div`/`p`/`h3` box counts are lower than Chrome's (812 vs 866) because inline
+  `div`s/`h3`s have no block box in the dump, as with Blitz, and are compared as missing.
 - The dioxuslabs.com and Bootstrap pixel differences beyond the boxes above are the placeholder
   images, which Blitz paints without the pages' `border-radius`/`object-fit` clipping, and
   anti-aliasing.
