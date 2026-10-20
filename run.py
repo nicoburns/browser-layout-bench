@@ -269,6 +269,21 @@ def compare_boxes(a, b, tol=1.0):
             f"{sum(d > tol for d in pos)} positions")
 
 
+def text_rows(img):
+    """Top rows of the horizontal bands that contain text pixels (anything darker than the leaf
+    backgrounds), i.e. the lines of text in the screenshot; lets line breaks be compared with engines
+    that give no box output (Servo)."""
+    dark = img.convert("L").point(lambda v: 255 if v < 72 else 0)
+    data = dark.load()
+    rows, prev = [], False
+    for y in range(dark.height):
+        has = any(data[x, y] for x in range(0, dark.width, 2))
+        if has and not prev:
+            rows.append(y)
+        prev = has
+    return rows
+
+
 def cmd_verify(args):
     from PIL import Image, ImageChops
     cases = [c for c in read_manifest() if args.filter in c["name"]]
@@ -309,6 +324,12 @@ def cmd_verify(args):
                 cell = f"{frac * 100:.2f}% px"
                 if e in boxes and engines[0] in boxes:
                     cell += ", " + compare_boxes(boxes[e], boxes[engines[0]])
+                ref_rows = text_rows(imgs[engines[0]])
+                if ref_rows:
+                    rows = text_rows(imgs[e])
+                    cell += f", text lines {len(rows)} vs {len(ref_rows)}"
+                    if rows != ref_rows:
+                        cell += f" (rows differ from line {next((i + 1 for i, (a, b) in enumerate(zip(rows, ref_rows)) if a != b), min(len(rows), len(ref_rows)) + 1)})"
                 cells.append(cell)
             else:
                 cells.append("-")
