@@ -473,6 +473,8 @@ def cmd_bench(args):
         for name, data in json.loads((OUT / "results.json").read_text()).items():
             kept = {e: v for e, v in data["engines"].items() if e not in engines or name not in results}
             results.setdefault(name, dict(nodes=data["nodes"], engines={}))["engines"].update(kept)
+        order = [c["name"] for c in read_manifest()]
+        results = dict(sorted(results.items(), key=lambda kv: order.index(kv[0]) if kv[0] in order else len(order)))
     for r in range(args.rounds):
         order = engines if r % 2 == 0 else engines[::-1]
         for c in cases:
