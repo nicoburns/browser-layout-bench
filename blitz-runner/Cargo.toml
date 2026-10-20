@@ -11,10 +11,13 @@ path = "src/main.rs"
 [features]
 # Second build of the runner with Blitz's parallel deferred construction (Parley layout builds).
 parallel-construct = ["blitz-dom/parallel-construct"]
+# blitz-dom's opt-in layout features (neither is in its defaults; `apps/browser` enables `floats`).
+# The measured builds enable both; the real pages use floats.
+floats = ["blitz-dom/floats"]
+writing-mode = ["blitz-dom/writing-mode"]
 
 [dependencies]
-# `floats` and `writing-mode` are opt-in in blitz-dom (apps/browser enables `floats`); the real pages use floats.
-blitz-dom = { workspace = true, features = ["log-phase-times", "floats", "writing-mode"] }
+blitz-dom = { workspace = true, features = ["log-phase-times"] }
 blitz-html = { workspace = true }
 blitz-paint = { workspace = true }
 blitz-traits = { workspace = true }
