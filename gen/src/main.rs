@@ -444,8 +444,22 @@ fn main() {
         "bench" => {
             let iters: usize = args.iter().position(|a| a == "--iters").and_then(|i| args.get(i + 1)).map(|v| v.parse().unwrap()).unwrap_or(10);
             let pat = args.get(1).filter(|a| !a.starts_with("--"));
+            // Mirror the generated page: the tree root is an absolutely positioned child of a
+            // viewport-sized `#cb`, so it is laid out in one pass like in the browsers.
+            let wrapped = args.iter().any(|a| a == "--wrapped");
             for mut c in all_cases() {
                 if !filter(&c.name, pat) { continue; }
+                if wrapped {
+                    let (w, h) = (avail_px(c.avail.width), avail_px(c.avail.height));
+                    let mut root_style = c.tree.style(c.root).unwrap().clone();
+                    root_style.position = Position::Absolute;
+                    root_style.inset.left = length(0.0);
+                    root_style.inset.top = length(0.0);
+                    c.tree.set_style(c.root, root_style).unwrap();
+                    let cb_style = Style { position: Position::Relative, size: Size { width: length(w), height: length(h) }, ..Default::default() };
+                    c.root = c.tree.new_with_children(cb_style, &[c.root]).unwrap();
+                    c.avail = Size { width: AvailableSpace::Definite(w), height: AvailableSpace::Definite(h) };
+                }
                 let nodes = all_nodes(&c.tree, c.root);
                 for i in 0..iters + 2 {
                     for &n in &nodes { c.tree.mark_dirty(n).unwrap(); }
