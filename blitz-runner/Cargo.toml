@@ -13,7 +13,8 @@ path = "src/main.rs"
 parallel-construct = ["blitz-dom/parallel-construct"]
 
 [dependencies]
-blitz-dom = { workspace = true, features = ["log-phase-times"] }
+# `floats` and `writing-mode` are opt-in in blitz-dom (apps/browser enables `floats`); the real pages use floats.
+blitz-dom = { workspace = true, features = ["log-phase-times", "floats", "writing-mode"] }
 blitz-html = { workspace = true }
 blitz-paint = { workspace = true }
 blitz-traits = { workspace = true }

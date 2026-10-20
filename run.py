@@ -15,9 +15,12 @@ GEN = ROOT / "target/release/gen"
 BLITZ = ROOT / "target/release/blitz-runner"
 # `cargo build --release -p layout-bench-blitz --features parallel-construct --target-dir target-pcon`
 BLITZ_PCON = ROOT / "target-pcon/release/blitz-runner"
+# `cargo build --release --manifest-path blitz-runner-pl/Cargo.toml --target-dir target-pl` (see blitz-runner-pl/Cargo.toml)
+BLITZ_PL = ROOT / "target-pl/release/blitz-runner"
 SERVOSHELL = Path(os.environ.get("SERVOSHELL", Path.home() / "repos/servo/target/release/servoshell"))
 WIDTH, HEIGHT = 1280, 800
-ENGINES = ["taffy", "blitz", "blitz-par", "blitz-pcon", "blitz-par-pcon", "servo1", "servo", "chrome", "firefox1", "firefox", "ladybird"]
+ENGINES = ["taffy", "blitz", "blitz-par", "blitz-pcon", "blitz-par-pcon", "blitz-pcon-pl1", "blitz-pcon-pl", "blitz-par-pcon-pl",
+           "servo1", "servo", "chrome", "firefox1", "firefox", "ladybird"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
                  "cb.offsetHeight;</script>\n")
@@ -107,7 +110,7 @@ def run_taffy(case, iters, cpus):
     return samples
 
 
-def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ):
+def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, env=None):
     if not binary.exists():
         raise FileNotFoundError(f"{binary.relative_to(ROOT)} not built, see README")
     cmd = [str(binary), str(CORPUS / case["file"]), "--width", str(case["width"]), "--height", str(case["height"]), "--iters", str(iters), "--hash"]
@@ -115,7 +118,7 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ):
         cmd.append("--parallel")
     if screenshot:
         cmd += ["--screenshot", str(screenshot), "--boxes"]
-    out = sh(cmd, cpus)
+    out = sh(cmd, cpus, env=dict(os.environ, **env) if env else None)
     samples, phases = [], None
     for line in out.splitlines():
         if line.startswith("PHASES"):
@@ -383,6 +386,14 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
         return run_blitz(case, iters, None, screenshot=screenshot, binary=BLITZ_PCON)
     if engine == "blitz-par-pcon":
         return run_blitz(case, iters, None, parallel=True, screenshot=screenshot, binary=BLITZ_PCON)
+    # the parallel-layout prototype build (blitz#1034): `pl1` runs its layout batches on a dedicated
+    # 1-thread pool, i.e. the feature's bookkeeping without the parallelism, pinned like `blitz`
+    if engine == "blitz-pcon-pl1":
+        return run_blitz(case, iters, cpus, screenshot=screenshot, binary=BLITZ_PL, env={"BLITZ_PARALLEL_LAYOUT_THREADS": "1"})
+    if engine == "blitz-pcon-pl":
+        return run_blitz(case, iters, None, screenshot=screenshot, binary=BLITZ_PL)
+    if engine == "blitz-par-pcon-pl":
+        return run_blitz(case, iters, None, parallel=True, screenshot=screenshot, binary=BLITZ_PL)
     if engine == "servo1":
         return run_servo(case, iters, cpus, 1, screenshot=screenshot)
     if engine == "servo":
@@ -428,12 +439,14 @@ COLUMNS = [
     ("Layout only", [("chrome", "layout", "Chrome Layout"), ("firefox1", "layout", "Firefox(1) Reflow"),
                      ("firefox", "layout", "Firefox Reflow"), ("ladybird", "layout", "Ladybird layout"),
                      ("servo1", "fragment", "Servo(1) Fragment Tree"), ("servo", "fragment", "Servo(3) Fragment Tree"),
-                     ("blitz", "layout", "Blitz `layout`"), ("taffy", "layout", "Taffy")]),
+                     ("blitz", "layout", "Blitz `layout`"), ("blitz-pcon-pl1", "layout", "Blitz `layout` (#1034 build, 1 thread)"),
+                     ("blitz-pcon-pl", "layout", "Blitz `layout` (parallel layout)"), ("taffy", "layout", "Taffy")]),
     ("Box construction + layout", [("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout"),
                                    ("ladybird", "construct+layout", "Ladybird tree build+layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
                                    ("blitz", "construct+layout", "Blitz construct+layout"),
-                                   ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)")]),
+                                   ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)"),
+                                   ("blitz-pcon-pl", "construct+layout", "Blitz construct+layout (parallel construct+layout)")]),
     ("Construction", [("chrome", "construct", "Chrome rebuildLayoutTree"), ("ladybird", "construct", "Ladybird tree build"),
                       ("servo1", "box", "Servo(1) Box Tree"), ("servo", "box", "Servo(3) Box Tree"),
                       ("blitz", "construct", "Blitz construct (+pconstruct)"), ("blitz-pcon", "construct", "Blitz construct, parallel")]),
@@ -448,7 +461,8 @@ COLUMNS = [
         ("ladybird", "total", "Ladybird update_layout()"),
         ("servo1", "reflow", "Servo(1) handle_reflow"), ("servo", "reflow", "Servo(3) handle_reflow"),
         ("blitz", "resolve", "Blitz resolve()"), ("blitz-par", "resolve", "Blitz resolve() (parallel style)"),
-        ("blitz-par-pcon", "resolve", "Blitz resolve() (parallel style+construct)")]),
+        ("blitz-par-pcon", "resolve", "Blitz resolve() (parallel style+construct)"),
+        ("blitz-par-pcon-pl", "resolve", "Blitz resolve() (parallel style+construct+layout)")]),
 ]
 
 
