@@ -1,5 +1,8 @@
-/target
+/target*
 /corpus
-/out
+/out/*
+!/out/results.json
+!/out/report.md
+!/out/verify.md
 /tmp
 __pycache__
