@@ -4,6 +4,8 @@ writes results.json + a Markdown report. See README.md for the measurement model
 import argparse, functools, http.server, json, os, re, shutil, statistics, subprocess, sys, tempfile, threading
 from pathlib import Path
 
+import engines_ladybird
+
 ROOT = Path(__file__).resolve().parent
 CORPUS = ROOT / "corpus"
 REVEAL = CORPUS / "reveal"
@@ -12,7 +14,7 @@ GEN = ROOT / "target/release/gen"
 BLITZ = ROOT / "target/release/blitz-runner"
 SERVOSHELL = Path(os.environ.get("SERVOSHELL", Path.home() / "repos/servo/target/release/servoshell"))
 WIDTH, HEIGHT = 1280, 800
-ENGINES = ["taffy", "blitz", "blitz-par", "servo1", "servo", "chrome"]
+ENGINES = ["taffy", "blitz", "blitz-par", "servo1", "servo", "chrome", "ladybird"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
                  "cb.offsetHeight;</script>\n")
@@ -211,7 +213,17 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
         return run_servo(case, iters, None, 3, screenshot=screenshot)
     if engine == "chrome":
         return run_chrome(case, iters, None, screenshot=screenshot)
+    if engine == "ladybird":
+        return engines_ladybird.run_ladybird(case, iters, cpus, REVEAL, WIDTH, HEIGHT, screenshot=screenshot)
     raise ValueError(engine)
+
+
+def available_engines(engines):
+    """Drops the optional engines whose binary is not installed, with a message."""
+    if "ladybird" in engines and not engines_ladybird.available():
+        print(engines_ladybird.skip_message(), file=sys.stderr)
+        engines = [e for e in engines if e != "ladybird"]
+    return engines
 
 
 # ---- bench / report ----
@@ -230,16 +242,18 @@ def fmt_ms(ns):
 COLUMNS = [
     ("Layout only", [("taffy", "layout", "Taffy"), ("blitz", "layout", "Blitz `layout`"),
                      ("servo1", "fragment", "Servo(1) Fragment Tree"), ("servo", "fragment", "Servo(3) Fragment Tree"),
-                     ("chrome", "layout", "Chrome Layout")]),
+                     ("chrome", "layout", "Chrome Layout"), ("ladybird", "layout", "Ladybird layout")]),
     ("Box construction + layout", [("blitz", "construct+layout", "Blitz construct+layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
-                                   ("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout")]),
+                                   ("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout"),
+                                   ("ladybird", "construct+layout", "Ladybird tree build+layout")]),
     ("Style", [("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)"),
                ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
-               ("chrome", "style", "Chrome recalcStyle")]),
+               ("chrome", "style", "Chrome recalcStyle"), ("ladybird", "style", "Ladybird style")]),
     ("Whole pipeline (style to paint tree / display list)", [
         ("blitz", "resolve", "Blitz resolve()"), ("servo1", "reflow", "Servo(1) handle_reflow"),
-        ("servo", "reflow", "Servo(3) handle_reflow"), ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout")]),
+        ("servo", "reflow", "Servo(3) handle_reflow"), ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout"),
+        ("ladybird", "total", "Ladybird update_layout()")]),
 ]
 
 
@@ -260,7 +274,7 @@ def report(results, how, engines):
 
 def cmd_bench(args):
     cases = [c for c in read_manifest() if args.filter in c["name"]]
-    engines = args.engines.split(",")
+    engines = available_engines(args.engines.split(","))
     results = {c["name"]: dict(nodes=c["nodes"], engines={e: [] for e in engines}) for c in cases}
     OUT.mkdir(exist_ok=True)
     if args.merge:
@@ -321,7 +335,7 @@ def bg_bands(img, x=1):
 def cmd_verify(args):
     from PIL import Image, ImageChops
     cases = [c for c in read_manifest() if args.filter in c["name"]]
-    engines = args.engines.split(",")
+    engines = available_engines(args.engines.split(","))
     shots = OUT / "shots"
     shots.mkdir(parents=True, exist_ok=True)
     lines = ["| case | nodes | " + " | ".join(f"{e} vs {engines[0]}" for e in engines[1:]) + " | notes |",
@@ -346,6 +360,8 @@ def cmd_verify(args):
                 notes.append(f"chrome objects={s['total_objects']} layouts={s['n_layouts']}")
             if "n_reflows" in s:
                 notes.append(f"{e} reflows={s['n_reflows']}")
+            if "n_boxes" in s:
+                notes.append(f"{e} boxes={s['n_boxes']} layouts={s['n_layouts']}")
             if "hash" in s:
                 notes.append(f"{e} hash={s['hash'][:8]}")
             if "root" in s:
