@@ -10,7 +10,19 @@ use anyrender_vello_cpu::VelloCpuImageRenderer;
 use blitz_dom::{BaseDocument, DocumentConfig, StyleThreading};
 use blitz_html::{HtmlDocument, HtmlProvider};
 use blitz_paint::paint_scene;
+use blitz_traits::net::{Bytes, NetHandler, NetProvider, Request};
 use blitz_traits::shell::{ColorScheme, Viewport};
+
+/// Serves `file://` URLs (the corpus's `@font-face` fonts) synchronously, so every resource a
+/// page requests while parsing has been delivered before the timed `resolve()`.
+struct FileNetProvider;
+impl NetProvider for FileNetProvider {
+    fn fetch(&self, _doc_id: usize, request: Request, handler: Box<dyn NetHandler>) {
+        assert_eq!(request.url.scheme(), "file", "unsupported URL {}", request.url);
+        let bytes = fs::read(request.url.to_file_path().unwrap()).unwrap();
+        handler.bytes(request.url.to_string(), Bytes::from(bytes));
+    }
+}
 
 struct Args {
     file: String,
@@ -76,12 +88,14 @@ fn main() {
             viewport: Some(Viewport::new(args.width, args.height, 1.0, ColorScheme::Light)),
             base_url: Some(base_url.clone()),
             html_parser_provider: Some(Arc::new(HtmlProvider)),
+            net_provider: Some(Arc::new(FileNetProvider)),
             style_threading,
             incremental: Some(false),
             ..Default::default()
         };
         let t = Instant::now();
         let mut doc = HtmlDocument::from_html(&html, config);
+        doc.as_mut().handle_messages();
         let parse = t.elapsed().as_nanos();
         let t = Instant::now();
         doc.as_mut().resolve(0.0);
