@@ -32,10 +32,11 @@ struct Args {
     parallel: bool,
     screenshot: Option<String>,
     hash: bool,
+    boxes: bool,
 }
 
 fn parse_args() -> Args {
-    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false };
+    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -45,10 +46,11 @@ fn parse_args() -> Args {
             "--parallel" => args.parallel = true,
             "--screenshot" => args.screenshot = it.next(),
             "--hash" => args.hash = true,
+            "--boxes" => args.boxes = true,
             _ => args.file = a,
         }
     }
-    assert!(!args.file.is_empty(), "usage: blitz-runner <file.html> [--width W] [--height H] [--iters N] [--parallel] [--hash] [--screenshot out.png]");
+    assert!(!args.file.is_empty(), "usage: blitz-runner <file.html> [--width W] [--height H] [--iters N] [--parallel] [--hash] [--boxes] [--screenshot out.png]");
     args
 }
 
@@ -67,6 +69,32 @@ fn layout_hash(doc: &BaseDocument) -> u64 {
     }
     h.write_u64(count);
     h.finish()
+}
+
+/// Prints the border boxes of the elements matching `BOX_SELECTOR` (document order, page
+/// coordinates), the same thing `verify` reads from Chrome with `getBoundingClientRect()`.
+const BOX_SELECTOR: &str = "#cb div, #cb p, #cb h3";
+fn print_boxes(doc: &BaseDocument) {
+    let tree = doc.tree();
+    let mut origin = std::collections::HashMap::new();
+    origin.insert(doc.root_node().id, (0.0f32, 0.0f32));
+    let mut stack = vec![doc.root_node().id];
+    while let Some(id) = stack.pop() {
+        let (ox, oy) = origin[&id];
+        for &child in &tree[id].children {
+            if !tree[child].is_element() {
+                continue;
+            }
+            let l = tree[child].final_layout();
+            origin.insert(child, (ox + l.location.x, oy + l.location.y));
+            stack.push(child);
+        }
+    }
+    for id in doc.query_selector_all(BOX_SELECTOR).unwrap() {
+        let l = tree[id].final_layout();
+        let (x, y) = origin[&id];
+        println!("BOX {x} {y} {} {}", l.size.width, l.size.height);
+    }
 }
 
 fn write_png(path: &str, width: u32, height: u32, rgba: &[u8]) {
@@ -111,6 +139,9 @@ fn main() {
                 if let Some(l) = root {
                     println!("ROOT {}x{}", l.size.width, l.size.height);
                 }
+            }
+            if args.boxes {
+                print_boxes(doc.as_ref());
             }
             if let Some(path) = &args.screenshot {
                 let (w, h) = (args.width, args.height);
