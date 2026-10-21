@@ -3,8 +3,8 @@ resolver = "2"
 members = ["gen", "blitz-runner"]
 
 [workspace.dependencies]
-taffy = { git = "https://github.com/DioxusLabs/taffy", default-features = false, features = ["std", "taffy_tree", "flexbox", "grid", "block_layout", "content_size"] }
-taffy_benchmarks = { git = "https://github.com/DioxusLabs/taffy", package = "taffy_benchmarks" }
+taffy = { git = "https://github.com/DioxusLabs/taffy", rev = "4e59968eda29ceeb0bbaeb3993c8cd38baa3d0a6", default-features = false, features = ["std", "taffy_tree", "flexbox", "grid", "block_layout", "content_size"] }
+taffy_benchmarks = { git = "https://github.com/DioxusLabs/taffy", rev = "4e59968eda29ceeb0bbaeb3993c8cd38baa3d0a6", package = "taffy_benchmarks" }
 blitz-dom = { git = "https://github.com/DioxusLabs/blitz", rev = "32c4eb0ff32fbe236cda05674211749fbb125d71", default-features = false }
 blitz-html = { git = "https://github.com/DioxusLabs/blitz", rev = "32c4eb0ff32fbe236cda05674211749fbb125d71", default-features = false }
 blitz-paint = { git = "https://github.com/DioxusLabs/blitz", rev = "32c4eb0ff32fbe236cda05674211749fbb125d71", default-features = false }

@@ -212,10 +212,20 @@ styled-element count (`styled=` in `verify`, nodes + `html`/`body`/`#cb`).
 
 ## Running
 
-Prerequisites: Rust toolchain; `pip install playwright perfetto pillow && python -m playwright
-install chromium firefox` (Firefox is optional: `run.py` skips `firefox*` with a message if it is
-not installed); a Servo checkout built with `./mach build --release --features tracing-perfetto`
-(`SERVOSHELL=/path/to/servoshell` if not at `~/repos/servo/target/release/servoshell`).
+Prerequisites (Linux only: the runners pin with `taskset` and Servo/Ladybird run headless with
+Linux-specific flags):
+
+- Rust toolchain (measured with rustc 1.99.1; Blitz and Taffy are pinned by `rev` in `Cargo.toml`
+  and `blitz-runner-pl/Cargo.toml`, Stylo by `Cargo.lock`).
+- Python ≥ 3.8 with `pip install playwright==1.64.0 perfetto pillow && python -m playwright install
+  chromium firefox` (the Playwright version fixes the Chrome and Firefox builds, see the table below;
+  Firefox is optional: `run.py` skips `firefox*` with a message if it is not installed).
+- A Servo checkout at `5d93f1a6f` built with `./mach build --release --features tracing-perfetto`
+  (`SERVOSHELL=/path/to/servoshell` if not at `~/repos/servo/target/release/servoshell`; skipped
+  with a message if missing).
+- Optionally Ladybird `07fac502` with `patches/ladybird-phase-timing.patch`, built as described in
+  [Ladybird](#ladybird) (`LADYBIRD_BIN`; skipped if missing).
+- Only for re-saving real pages (`real/freeze.py`): `wget` and `pip install beautifulsoup4`.
 
 ```sh
 cargo build --release --features floats,writing-mode                                            # gen + blitz-runner

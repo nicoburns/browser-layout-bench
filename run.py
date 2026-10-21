@@ -445,6 +445,10 @@ def available_engines(engines):
         print("firefox: Playwright's Firefox is not installed (python -m playwright install firefox); skipping",
               file=sys.stderr)
         engines = [e for e in engines if not e.startswith("firefox")]
+    if any(re.fullmatch(r"servo\d*", e) for e in engines) and not SERVOSHELL.exists():
+        print(f"servo: {SERVOSHELL} not found (set SERVOSHELL to a servoshell built with --features tracing-perfetto); skipping",
+              file=sys.stderr)
+        engines = [e for e in engines if not re.fullmatch(r"servo\d*", e)]
     if "ladybird" in engines and not engines_ladybird.available():
         print(engines_ladybird.skip_message(), file=sys.stderr)
         engines = [e for e in engines if e != "ladybird"]
