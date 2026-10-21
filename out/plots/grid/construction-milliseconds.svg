@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="516" viewBox="0 0 1200 516" font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="1200" height="516" fill="#0b1120"/>
+<text x="16" y="24" fill="#f9fafb" font-size="16" font-weight="600">Construction: grid/ cases</text>
+<text x="16" y="42" fill="#9ca3af" font-size="11">Time (ms, log scale), faster to the left. Dots are the minimum of the samples; whiskers run to the median.</text>
+<line x1="270.0" x2="270.0" y1="70" y2="360" stroke="#374151" stroke-dasharray="2 4"/><text x="270.0" y="62" fill="#9ca3af" font-size="11" text-anchor="middle">0.01 ms</text><text x="270.0" y="376" fill="#9ca3af" font-size="11" text-anchor="middle">0.01 ms</text>
+<line x1="485.0" x2="485.0" y1="70" y2="360" stroke="#374151" stroke-dasharray="2 4"/><text x="485.0" y="62" fill="#9ca3af" font-size="11" text-anchor="middle">0.1 ms</text><text x="485.0" y="376" fill="#9ca3af" font-size="11" text-anchor="middle">0.1 ms</text>
+<line x1="700.0" x2="700.0" y1="70" y2="360" stroke="#374151" stroke-dasharray="2 4"/><text x="700.0" y="62" fill="#9ca3af" font-size="11" text-anchor="middle">1 ms</text><text x="700.0" y="376" fill="#9ca3af" font-size="11" text-anchor="middle">1 ms</text>
+<line x1="915.0" x2="915.0" y1="70" y2="360" stroke="#374151" stroke-dasharray="2 4"/><text x="915.0" y="62" fill="#9ca3af" font-size="11" text-anchor="middle">10 ms</text><text x="915.0" y="376" fill="#9ca3af" font-size="11" text-anchor="middle">10 ms</text>
+<line x1="1130.0" x2="1130.0" y1="70" y2="360" stroke="#374151" stroke-dasharray="2 4"/><text x="1130.0" y="62" fill="#9ca3af" font-size="11" text-anchor="middle">100 ms</text><text x="1130.0" y="376" fill="#9ca3af" font-size="11" text-anchor="middle">100 ms</text>
+<rect x="0" y="70" width="1200" height="58" fill="#0f172a"/><line x1="0" x2="1200" y1="70" y2="70" stroke="#6b7280" stroke-width="1"/>
+<text x="258" y="86" fill="#f9fafb" font-size="12" font-weight="600" text-anchor="end">wide/31x31</text>
+<line x1="445.8" x2="482.0" y1="82" y2="82" stroke="#34d399" stroke-width="2" opacity="0.7"/><circle cx="445.8" cy="82" r="4.5" fill="#34d399"/><text x="491.0" y="86" fill="#34d399" font-size="11" text-anchor="start">Blitz</text>
+<line x1="454.9" x2="476.2" y1="96" y2="96" stroke="#2dd4bf" stroke-width="2" opacity="0.7"/><circle cx="454.9" cy="96" r="4.5" fill="#2dd4bf"/><text x="485.2" y="100" fill="#2dd4bf" font-size="11" text-anchor="start">Blitz par construct</text>
+<line x1="634.0" x2="634.7" y1="82" y2="82" stroke="#60a5fa" stroke-width="2" opacity="0.7"/><circle cx="634.0" cy="82" r="4.5" fill="#60a5fa"/><text x="643.7" y="86" fill="#60a5fa" font-size="11" text-anchor="start">Chrome</text>
+<line x1="690.6" x2="697.8" y1="96" y2="96" stroke="#facc15" stroke-width="2" opacity="0.7"/><circle cx="690.6" cy="96" r="4.5" fill="#facc15"/><text x="706.8" y="100" fill="#facc15" font-size="11" text-anchor="start">Ladybird</text>
+<line x1="716.7" x2="719.2" y1="82" y2="82" stroke="#e9d5ff" stroke-width="2" opacity="0.7"/><circle cx="716.7" cy="82" r="4.5" fill="#e9d5ff"/><text x="728.2" y="86" fill="#e9d5ff" font-size="11" text-anchor="start">Servo(3)</text>
+<line x1="717.2" x2="719.6" y1="110" y2="110" stroke="#c084fc" stroke-width="2" opacity="0.7"/><circle cx="717.2" cy="110" r="4.5" fill="#c084fc"/><text x="728.6" y="114" fill="#c084fc" font-size="11" text-anchor="start">Servo(1)</text>
+<rect x="0" y="128" width="1200" height="58" fill="#1f2937"/><line x1="0" x2="1200" y1="128" y2="128" stroke="#6b7280" stroke-width="1"/>
+<text x="258" y="144" fill="#f9fafb" font-size="12" font-weight="600" text-anchor="end">wide/100x100</text>
+<line x1="727.1" x2="757.2" y1="140" y2="140" stroke="#34d399" stroke-width="2" opacity="0.7"/><circle cx="727.1" cy="140" r="4.5" fill="#34d399"/><text x="766.2" y="144" fill="#34d399" font-size="11" text-anchor="start">Blitz</text>
+<line x1="727.4" x2="765.3" y1="154" y2="154" stroke="#2dd4bf" stroke-width="2" opacity="0.7"/><circle cx="727.4" cy="154" r="4.5" fill="#2dd4bf"/><text x="774.3" y="158" fill="#2dd4bf" font-size="11" text-anchor="start">Blitz par construct</text>
+<line x1="845.3" x2="845.8" y1="140" y2="140" stroke="#60a5fa" stroke-width="2" opacity="0.7"/><circle cx="845.3" cy="140" r="4.5" fill="#60a5fa"/><text x="854.8" y="144" fill="#60a5fa" font-size="11" text-anchor="start">Chrome</text>
+<line x1="922.1" x2="931.4" y1="140" y2="140" stroke="#facc15" stroke-width="2" opacity="0.7"/><circle cx="922.1" cy="140" r="4.5" fill="#facc15"/><text x="940.4" y="144" fill="#facc15" font-size="11" text-anchor="start">Ladybird</text>
+<line x1="936.7" x2="947.5" y1="154" y2="154" stroke="#e9d5ff" stroke-width="2" opacity="0.7"/><circle cx="936.7" cy="154" r="4.5" fill="#e9d5ff"/><text x="956.5" y="158" fill="#e9d5ff" font-size="11" text-anchor="start">Servo(3)</text>
+<line x1="943.7" x2="949.2" y1="168" y2="168" stroke="#c084fc" stroke-width="2" opacity="0.7"/><circle cx="943.7" cy="168" r="4.5" fill="#c084fc"/><text x="958.2" y="172" fill="#c084fc" font-size="11" text-anchor="start">Servo(1)</text>
+<rect x="0" y="186" width="1200" height="58" fill="#0f172a"/><line x1="0" x2="1200" y1="186" y2="186" stroke="#6b7280" stroke-width="1"/>
+<text x="258" y="202" fill="#f9fafb" font-size="12" font-weight="600" text-anchor="end">deep/2x2x5</text>
+<line x1="511.5" x2="514.8" y1="198" y2="198" stroke="#2dd4bf" stroke-width="2" opacity="0.7"/><circle cx="511.5" cy="198" r="4.5" fill="#2dd4bf"/><text x="523.8" y="202" fill="#2dd4bf" font-size="11" text-anchor="start">Blitz par construct</text>
+<line x1="511.7" x2="521.7" y1="212" y2="212" stroke="#34d399" stroke-width="2" opacity="0.7"/><circle cx="511.7" cy="212" r="4.5" fill="#34d399"/><text x="530.7" y="216" fill="#34d399" font-size="11" text-anchor="start">Blitz</text>
+<line x1="678.5" x2="679.7" y1="198" y2="198" stroke="#60a5fa" stroke-width="2" opacity="0.7"/><circle cx="678.5" cy="198" r="4.5" fill="#60a5fa"/><text x="688.7" y="202" fill="#60a5fa" font-size="11" text-anchor="start">Chrome</text>
+<line x1="681.7" x2="685.0" y1="212" y2="212" stroke="#e9d5ff" stroke-width="2" opacity="0.7"/><circle cx="681.7" cy="212" r="4.5" fill="#e9d5ff"/><text x="694.0" y="216" fill="#e9d5ff" font-size="11" text-anchor="start">Servo(3)</text>
+<line x1="729.4" x2="735.3" y1="226" y2="226" stroke="#facc15" stroke-width="2" opacity="0.7"/><circle cx="729.4" cy="226" r="4.5" fill="#facc15"/><text x="744.3" y="230" fill="#facc15" font-size="11" text-anchor="start">Ladybird</text>
+<line x1="752.5" x2="754.9" y1="198" y2="198" stroke="#c084fc" stroke-width="2" opacity="0.7"/><circle cx="752.5" cy="198" r="4.5" fill="#c084fc"/><text x="763.9" y="202" fill="#c084fc" font-size="11" text-anchor="start">Servo(1)</text>
+<rect x="0" y="244" width="1200" height="58" fill="#1f2937"/><line x1="0" x2="1200" y1="244" y2="244" stroke="#6b7280" stroke-width="1"/>
+<text x="258" y="260" fill="#f9fafb" font-size="12" font-weight="600" text-anchor="end">deep/3x3x4</text>
+<line x1="678.5" x2="720.0" y1="256" y2="256" stroke="#34d399" stroke-width="2" opacity="0.7"/><circle cx="678.5" cy="256" r="4.5" fill="#34d399"/><text x="729.0" y="260" fill="#34d399" font-size="11" text-anchor="start">Blitz</text>
+<line x1="680.9" x2="713.3" y1="270" y2="270" stroke="#2dd4bf" stroke-width="2" opacity="0.7"/><circle cx="680.9" cy="270" r="4.5" fill="#2dd4bf"/><text x="722.3" y="274" fill="#2dd4bf" font-size="11" text-anchor="start">Blitz par construct</text>
+<line x1="821.5" x2="823.5" y1="256" y2="256" stroke="#e9d5ff" stroke-width="2" opacity="0.7"/><circle cx="821.5" cy="256" r="4.5" fill="#e9d5ff"/><text x="832.5" y="260" fill="#e9d5ff" font-size="11" text-anchor="start">Servo(3)</text>
+<line x1="825.7" x2="826.7" y1="284" y2="284" stroke="#60a5fa" stroke-width="2" opacity="0.7"/><circle cx="825.7" cy="284" r="4.5" fill="#60a5fa"/><text x="835.7" y="288" fill="#60a5fa" font-size="11" text-anchor="start">Chrome</text>
+<line x1="889.1" x2="909.8" y1="270" y2="270" stroke="#facc15" stroke-width="2" opacity="0.7"/><circle cx="889.1" cy="270" r="4.5" fill="#facc15"/><text x="918.8" y="274" fill="#facc15" font-size="11" text-anchor="start">Ladybird</text>
+<line x1="921.3" x2="927.0" y1="256" y2="256" stroke="#c084fc" stroke-width="2" opacity="0.7"/><circle cx="921.3" cy="256" r="4.5" fill="#c084fc"/><text x="936.0" y="260" fill="#c084fc" font-size="11" text-anchor="start">Servo(1)</text>
+<rect x="0" y="302" width="1200" height="58" fill="#0f172a"/><line x1="0" x2="1200" y1="302" y2="302" stroke="#6b7280" stroke-width="1"/>
+<text x="258" y="318" fill="#f9fafb" font-size="12" font-weight="600" text-anchor="end">superdeep/100</text>
+<line x1="323.6" x2="326.9" y1="314" y2="314" stroke="#34d399" stroke-width="2" opacity="0.7"/><circle cx="323.6" cy="314" r="4.5" fill="#34d399"/><text x="335.9" y="318" fill="#34d399" font-size="11" text-anchor="start">Blitz</text>
+<line x1="329.6" x2="334.4" y1="328" y2="328" stroke="#2dd4bf" stroke-width="2" opacity="0.7"/><circle cx="329.6" cy="328" r="4.5" fill="#2dd4bf"/><text x="343.4" y="332" fill="#2dd4bf" font-size="11" text-anchor="start">Blitz par construct</text>
+<line x1="497.2" x2="498.9" y1="314" y2="314" stroke="#60a5fa" stroke-width="2" opacity="0.7"/><circle cx="497.2" cy="314" r="4.5" fill="#60a5fa"/><text x="507.9" y="318" fill="#60a5fa" font-size="11" text-anchor="start">Chrome</text>
+<line x1="586.2" x2="590.3" y1="314" y2="314" stroke="#facc15" stroke-width="2" opacity="0.7"/><circle cx="586.2" cy="314" r="4.5" fill="#facc15"/><text x="599.3" y="318" fill="#facc15" font-size="11" text-anchor="start">Ladybird</text>
+<line x1="655.8" x2="658.2" y1="328" y2="328" stroke="#c084fc" stroke-width="2" opacity="0.7"/><circle cx="655.8" cy="328" r="4.5" fill="#c084fc"/><text x="667.2" y="332" fill="#c084fc" font-size="11" text-anchor="start">Servo(1)</text>
+<line x1="659.6" x2="662.4" y1="342" y2="342" stroke="#e9d5ff" stroke-width="2" opacity="0.7"/><circle cx="659.6" cy="342" r="4.5" fill="#e9d5ff"/><text x="671.4" y="346" fill="#e9d5ff" font-size="11" text-anchor="start">Servo(3)</text>
+<line x1="0" x2="1200" y1="360" y2="360" stroke="#6b7280" stroke-width="1"/>
+<text x="16" y="404" font-size="11" fill="#60a5fa">● Chrome: <tspan fill="#9ca3af">Chrome rebuildLayoutTree</tspan></text>
+<text x="16" y="420" font-size="11" fill="#facc15">● Ladybird: <tspan fill="#9ca3af">Ladybird tree build</tspan></text>
+<text x="16" y="436" font-size="11" fill="#c084fc">● Servo(1): <tspan fill="#9ca3af">Servo(1) Box Tree</tspan></text>
+<text x="16" y="452" font-size="11" fill="#e9d5ff">● Servo(3): <tspan fill="#9ca3af">Servo(3) Box Tree</tspan></text>
+<text x="16" y="468" font-size="11" fill="#34d399">● Blitz: <tspan fill="#9ca3af">Blitz construct (+pconstruct)</tspan></text>
+<text x="16" y="484" font-size="11" fill="#2dd4bf">● Blitz par construct: <tspan fill="#9ca3af">Blitz construct, parallel</tspan></text>
+</svg>

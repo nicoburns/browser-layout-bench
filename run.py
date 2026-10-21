@@ -492,7 +492,7 @@ def report(results, how, engines):
         cols = [c for c in cols if c[0] in engines]
         if not cols:
             continue
-        plots = ", ".join(f"[{m}](plots/{plot.slug(title)}-{m}.svg)" for m in plot.MODES)
+        plots = "; ".join(f"`{s}/` " + plot.links(title, s).replace("](", "](plots/") for s in plot.suites(results))
         lines += [f"### {title}", "", f"Plots: {plots}.", "", "| case | nodes | " + " | ".join(header(c[2]) for c in cols) + " |",
                   "|---|---:|" + "---:|" * len(cols)]
         ref_col = next((c for c in cols if c[0] == "chrome"), None)

@@ -8,4 +8,4 @@
 __pycache__
 /real/raw
 !out/plots/
-!out/plots/*.svg
+!out/plots/**

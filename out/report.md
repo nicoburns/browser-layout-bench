@@ -2,7 +2,7 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Layout only
 
-Plots: [per-node](plots/layout-only-per-node.svg), [relative](plots/layout-only-relative.svg), [milliseconds](plots/layout-only-milliseconds.svg).
+Plots: `flex/` [per-node](plots/flex/layout-only-per-node.svg) · [relative](plots/flex/layout-only-relative.svg) · [milliseconds](plots/flex/layout-only-milliseconds.svg); `grid/` [per-node](plots/grid/layout-only-per-node.svg) · [relative](plots/grid/layout-only-relative.svg) · [milliseconds](plots/grid/layout-only-milliseconds.svg); `pangui/` [per-node](plots/pangui/layout-only-per-node.svg) · [relative](plots/pangui/layout-only-relative.svg) · [milliseconds](plots/pangui/layout-only-milliseconds.svg); `text/` [per-node](plots/text/layout-only-per-node.svg) · [relative](plots/text/layout-only-relative.svg) · [milliseconds](plots/text/layout-only-milliseconds.svg); `real/` [per-node](plots/real/layout-only-per-node.svg) · [relative](plots/real/layout-only-relative.svg) · [milliseconds](plots/real/layout-only-milliseconds.svg).
 
 | case | nodes | Chrome<br>Layout | Firefox(1)<br>Reflow | Firefox<br>Reflow | Ladybird<br>layout | Servo(1)<br>Fragment Tree | Servo(3)<br>Fragment Tree | Blitz<br>`layout` | Blitz<br>`layout` (#1034 build, 1 thread) | Blitz<br>`layout` (parallel layout) | Taffy |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -57,7 +57,7 @@ Plots: [per-node](plots/layout-only-per-node.svg), [relative](plots/layout-only-
 
 ### Box construction + layout
 
-Plots: [per-node](plots/box-construction---layout-per-node.svg), [relative](plots/box-construction---layout-relative.svg), [milliseconds](plots/box-construction---layout-milliseconds.svg).
+Plots: `flex/` [per-node](plots/flex/box-construction---layout-per-node.svg) · [relative](plots/flex/box-construction---layout-relative.svg) · [milliseconds](plots/flex/box-construction---layout-milliseconds.svg); `grid/` [per-node](plots/grid/box-construction---layout-per-node.svg) · [relative](plots/grid/box-construction---layout-relative.svg) · [milliseconds](plots/grid/box-construction---layout-milliseconds.svg); `pangui/` [per-node](plots/pangui/box-construction---layout-per-node.svg) · [relative](plots/pangui/box-construction---layout-relative.svg) · [milliseconds](plots/pangui/box-construction---layout-milliseconds.svg); `text/` [per-node](plots/text/box-construction---layout-per-node.svg) · [relative](plots/text/box-construction---layout-relative.svg) · [milliseconds](plots/text/box-construction---layout-milliseconds.svg); `real/` [per-node](plots/real/box-construction---layout-per-node.svg) · [relative](plots/real/box-construction---layout-relative.svg) · [milliseconds](plots/real/box-construction---layout-milliseconds.svg).
 
 | case | nodes | Chrome<br>rebuildLayoutTree + Layout | Ladybird<br>tree build + layout | Servo(1)<br>Box + Fragment | Servo(3)<br>Box + Fragment | Blitz<br>construct + layout | Blitz<br>construct + layout (parallel construct) | Blitz<br>construct + layout (parallel construct + layout) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -112,7 +112,7 @@ Plots: [per-node](plots/box-construction---layout-per-node.svg), [relative](plot
 
 ### Construction
 
-Plots: [per-node](plots/construction-per-node.svg), [relative](plots/construction-relative.svg), [milliseconds](plots/construction-milliseconds.svg).
+Plots: `flex/` [per-node](plots/flex/construction-per-node.svg) · [relative](plots/flex/construction-relative.svg) · [milliseconds](plots/flex/construction-milliseconds.svg); `grid/` [per-node](plots/grid/construction-per-node.svg) · [relative](plots/grid/construction-relative.svg) · [milliseconds](plots/grid/construction-milliseconds.svg); `pangui/` [per-node](plots/pangui/construction-per-node.svg) · [relative](plots/pangui/construction-relative.svg) · [milliseconds](plots/pangui/construction-milliseconds.svg); `text/` [per-node](plots/text/construction-per-node.svg) · [relative](plots/text/construction-relative.svg) · [milliseconds](plots/text/construction-milliseconds.svg); `real/` [per-node](plots/real/construction-per-node.svg) · [relative](plots/real/construction-relative.svg) · [milliseconds](plots/real/construction-milliseconds.svg).
 
 | case | nodes | Chrome<br>rebuildLayoutTree | Ladybird<br>tree build | Servo(1)<br>Box Tree | Servo(3)<br>Box Tree | Blitz<br>construct ( + pconstruct) | Blitz<br>construct, parallel |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -167,7 +167,7 @@ Plots: [per-node](plots/construction-per-node.svg), [relative](plots/constructio
 
 ### Style
 
-Plots: [per-node](plots/style-per-node.svg), [relative](plots/style-relative.svg), [milliseconds](plots/style-milliseconds.svg).
+Plots: `flex/` [per-node](plots/flex/style-per-node.svg) · [relative](plots/flex/style-relative.svg) · [milliseconds](plots/flex/style-milliseconds.svg); `grid/` [per-node](plots/grid/style-per-node.svg) · [relative](plots/grid/style-relative.svg) · [milliseconds](plots/grid/style-milliseconds.svg); `pangui/` [per-node](plots/pangui/style-per-node.svg) · [relative](plots/pangui/style-relative.svg) · [milliseconds](plots/pangui/style-milliseconds.svg); `text/` [per-node](plots/text/style-per-node.svg) · [relative](plots/text/style-relative.svg) · [milliseconds](plots/text/style-milliseconds.svg); `real/` [per-node](plots/real/style-per-node.svg) · [relative](plots/real/style-relative.svg) · [milliseconds](plots/real/style-milliseconds.svg).
 
 | case | nodes | Chrome<br>recalcStyle | Firefox(1)<br>Styles (incl. frame construction) | Firefox<br>Styles (incl. frame construction) | Ladybird<br>update_style | Servo(1)<br>Styling | Servo(3)<br>Styling | Blitz<br>style | Blitz<br>style (parallel) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -222,7 +222,7 @@ Plots: [per-node](plots/style-per-node.svg), [relative](plots/style-relative.svg
 
 ### Whole pipeline (style to paint tree / display list)
 
-Plots: [per-node](plots/whole-pipeline--style-to-paint-tree---display-list-per-node.svg), [relative](plots/whole-pipeline--style-to-paint-tree---display-list-relative.svg), [milliseconds](plots/whole-pipeline--style-to-paint-tree---display-list-milliseconds.svg).
+Plots: `flex/` [per-node](plots/flex/whole-pipeline--style-to-paint-tree---display-list-per-node.svg) · [relative](plots/flex/whole-pipeline--style-to-paint-tree---display-list-relative.svg) · [milliseconds](plots/flex/whole-pipeline--style-to-paint-tree---display-list-milliseconds.svg); `grid/` [per-node](plots/grid/whole-pipeline--style-to-paint-tree---display-list-per-node.svg) · [relative](plots/grid/whole-pipeline--style-to-paint-tree---display-list-relative.svg) · [milliseconds](plots/grid/whole-pipeline--style-to-paint-tree---display-list-milliseconds.svg); `pangui/` [per-node](plots/pangui/whole-pipeline--style-to-paint-tree---display-list-per-node.svg) · [relative](plots/pangui/whole-pipeline--style-to-paint-tree---display-list-relative.svg) · [milliseconds](plots/pangui/whole-pipeline--style-to-paint-tree---display-list-milliseconds.svg); `text/` [per-node](plots/text/whole-pipeline--style-to-paint-tree---display-list-per-node.svg) · [relative](plots/text/whole-pipeline--style-to-paint-tree---display-list-relative.svg) · [milliseconds](plots/text/whole-pipeline--style-to-paint-tree---display-list-milliseconds.svg); `real/` [per-node](plots/real/whole-pipeline--style-to-paint-tree---display-list-per-node.svg) · [relative](plots/real/whole-pipeline--style-to-paint-tree---display-list-relative.svg) · [milliseconds](plots/real/whole-pipeline--style-to-paint-tree---display-list-milliseconds.svg).
 
 | case | nodes | Chrome<br>UpdateLayoutTree + Layout | Firefox(1)<br>Styles + Reflow | Firefox<br>Styles + Reflow | Ladybird<br>update_layout() | Servo(1)<br>handle_reflow | Servo(3)<br>handle_reflow | Blitz<br>resolve() | Blitz<br>resolve() (parallel style) | Blitz<br>resolve() (parallel style + construct) | Blitz<br>resolve() (parallel style + construct + layout) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
