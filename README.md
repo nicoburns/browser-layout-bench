@@ -173,7 +173,7 @@ Phase mapping used in the report:
   time (small: it is a tree walk with no shaping) and `Styles` over-counts the Style table by the same amount.
 - Text shaping sits in different phases: Blitz shapes when it builds the Parley inline layout in `construct`
   (`build_inline_layout_into`, run as the deferred `pconstruct` tasks), Servo in Box Tree Construction
-  (`InlineFormattingContext` builder → `segment_and_shape`), whereas Chrome (`NGInlineNode::PrepareLayout`
+  (`inline/shaping_queue.rs::shape_batch` → `font.shape_text` while building each inline formatting context), whereas Chrome (`NGInlineNode::PrepareLayout`
   → HarfBuzz inside `Layout`), Firefox (`nsTextFrame::Reflow` → `EnsureTextRun` → `gfxFont::ShapeText`)
   and Ladybird (`inline_level_iterator.rs::shape_glyph_data` → `shape_text` during inline layout) shape
   lazily while laying out. Shaping dominates construction on text-heavy pages (Blitz Wikipedia: construct
@@ -184,6 +184,9 @@ Phase mapping used in the report:
 - Whole pipeline: Blitz `resolve()` (style to paint tree) ≈ Servo `handle_reflow` (style to display
   list) ≈ Chrome `UpdateLayoutTree + Layout` ≈ Firefox `Styles + Reflow`
   ≈ Ladybird `update_layout()` (style to committed layout tree; no display list).
+
+`out/servo-threads.md` is a `layout_threads` = 1/3/4/6/8 sweep of Servo on seven cases (`servoN` is accepted as an
+engine id by `bench` for any N; only `servo1`/`servo` are in the main run).
 
 Servo's `restyle_and_build_trees` and `handle_reflow` include work the children spans do not
 (stylist preparation, damage computation); the report shows them separately.

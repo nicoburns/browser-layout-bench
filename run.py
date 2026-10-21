@@ -427,6 +427,8 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
         return run_servo(case, iters, cpus, 1, screenshot=screenshot)
     if engine == "servo":
         return run_servo(case, iters, None, 3, screenshot=screenshot)
+    if m := re.fullmatch(r"servo(\d+)", engine):  # ad-hoc `layout_threads=N` sweeps, not in ENGINES
+        return run_servo(case, iters, None, int(m.group(1)), screenshot=screenshot)
     if engine == "chrome":
         return run_chrome(case, iters, None, screenshot=screenshot)
     if engine == "firefox1":
