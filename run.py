@@ -280,19 +280,31 @@ def parse_firefox_profile(path, url):
         if data and "innerWindowID" in data and data["innerWindowID"] not in window_ids:
             continue
         if phase == 1:
-            intervals.setdefault(name, []).append((end - start, data))
+            intervals.setdefault(name, []).append((end - start, data, start))
         elif phase == 2:
             open_starts.setdefault(name, []).append(start)
         elif phase == 3 and open_starts.get(name):
-            intervals.setdefault(name, []).append((end - open_starts[name].pop(), data))
+            start = open_starts[name].pop()
+            intervals.setdefault(name, []).append((end - start, data, start))
 
-    def longest(name):
-        return max(intervals.get(name, []), key=lambda i: i[0], default=(None, None))
+    def longest(name, within=None):
+        """Longest interval of `name`, restricted to those inside `within` = (dur, data, start) if given."""
+        cands = intervals.get(name, [])
+        if within:
+            cands = [i for i in cands if i[2] >= within[2] and i[2] + i[0] <= within[2] + within[0]]
+        return max(cands, key=lambda i: i[0], default=(None, None, None))
 
-    reflows = [d for d, _ in intervals.get("Reflow", [])]
-    style, style_data = longest("Styles")
+    # The measured reflow is the longest; style and flush are taken from the flush that contains it
+    # (the one the reveal triggers), not the longest anywhere: Firefox restyles the page again after
+    # load (`:visited`, image state) and on a warm process that restyle can outlast the main traversal.
+    reflow = longest("Reflow")
+    flush = min((i for i in intervals.get("DoFlushPendingNotifications", [])
+                 if reflow[2] is not None and i[2] <= reflow[2] and i[2] + i[0] >= reflow[2] + reflow[0]),
+                key=lambda i: i[0], default=None)
+    style, style_data, _ = longest("Styles", flush) if flush else longest("Styles")
+    reflows = [d for d, _, _ in intervals.get("Reflow", [])]
     ms = lambda v: None if v is None else int(v * 1e6)
-    s = dict(layout=ms(longest("Reflow")[0]), style=ms(style), flush=ms(longest("DoFlushPendingNotifications")[0]),
+    s = dict(layout=ms(reflow[0]), style=ms(style), flush=ms(flush[0] if flush else longest("DoFlushPendingNotifications")[0]),
              display_list=ms(longest("DisplayList")[0]), layout_sum=ms(sum(reflows)), n_reflows=len(reflows),
              styled=style_data["elementsTraversed"] if style_data else None)
     s["style+layout"] = s["style"] + s["layout"]
@@ -340,6 +352,11 @@ def launch_firefox(p, exe, env, prefs, attempts=3):
 
 
 def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
+    """One Firefox process per call (= per round, like Chrome), a fresh tab per iteration. The process's
+    first page load gets an extra full reflow ~200 ms after the reveal (no elements restyled; 105 ms on
+    Wikipedia, 64 ms on rustdoc) and cold font/text caches, so tab 0 loads the page as a discarded
+    warm-up (`?warmup`); the measured tabs load `?i=N`, which is how their windows are told apart in the
+    profile. Tabs 1–4 of a process measured within 1% of each other on flex/wide/10000 and Wikipedia."""
     from playwright.sync_api import sync_playwright
     url = (REVEAL / case["file"]).resolve().as_uri()
     prefs = {} if stylo_threads is None else {"layout.css.stylo-threads": stylo_threads}
@@ -348,33 +365,44 @@ def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
         exe = p.firefox.executable_path
         pidfile, blank = Path(d) / "firefox.pid", Path(d) / "blank.html"
         if cpus:
-            # exec keeps the wrapper's pid, so the pidfile names the parent Firefox process
             wrapper = Path(d) / "firefox-with-pid"
             wrapper.write_text(f"#!/bin/sh\necho $$ > {shlex.quote(str(pidfile))}\nexec {shlex.quote(exe)} \"$@\"\n")
             wrapper.chmod(0o755)
             exe = str(wrapper)
             blank.write_text("<!doctype html>\n")
-        for i in range(iters):
-            profile = Path(d) / f"profile-{i}.json"
-            env = dict(os.environ, **FIREFOX_PROFILER_ENV, MOZ_PROFILER_SHUTDOWN=str(profile))
-            browser = launch_firefox(p, exe, env, prefs)
+        profile = Path(d) / "profile.json"
+        env = dict(os.environ, **FIREFOX_PROFILER_ENV, MOZ_PROFILER_SHUTDOWN=str(profile))
+        browser = launch_firefox(p, exe, env, prefs)
+
+        def load(page_url):
             page = browser.new_page(viewport={"width": case["width"], "height": case["height"]})
-            if cpus:
-                # a first file:// page puts the tab in its file content process; pin that, then load the case
-                page.goto(blank.as_uri(), wait_until="load")
-                pin_content_processes(int(pidfile.read_text()), cpus)
-            page.goto(url, wait_until="load", timeout=600_000)
+            page.goto(page_url, wait_until="load", timeout=600_000)
             page.wait_for_function("document.getElementById('cb').style.display !== 'none'", timeout=600_000)
+            return page
+
+        if cpus:
+            # a first file:// page puts the tabs in the file content process; it stays open so that
+            # process outlives the tabs, and the pin is repeated after the warm-up for any new process
+            keep = browser.new_page()
+            keep.goto(blank.as_uri(), wait_until="load")
+            pin_content_processes(int(pidfile.read_text()), cpus)
+        load(url + "?warmup").close()
+        if cpus:
+            pin_content_processes(int(pidfile.read_text()), cpus)
+        roots = []
+        for i in range(iters):
+            page = load(f"{url}?i={i}")
             page.evaluate("document.body.offsetHeight")
-            root = page.evaluate(ROOT_RECT_JS)
+            roots.append(page.evaluate(ROOT_RECT_JS))
             if screenshot and i == iters - 1:
                 page.screenshot(path=str(screenshot))
-            browser.close()
-            s = parse_firefox_profile(profile, url)
+            page.close()
+        browser.close()
+        for i, root in enumerate(roots):
+            s = parse_firefox_profile(profile, f"{url}?i={i}")
             s["root"] = root
             samples.append(s)
     return samples
-
 
 def run_engine(engine, case, iters, cpus, screenshot=None):
     if engine == "taffy":
@@ -504,7 +532,35 @@ def report(results, how, engines):
             lines.append(f"| {name} | {data['nodes']} | "
                          + " | ".join(fmt_cell(v, ref, v == best and e != "taffy") for (e, _, _), v in zip(cols, values)) + " |")
         lines.append("")
+    lines += spread_section(results, engines)
     return "\n".join(lines)
+
+
+def spread_section(results, engines):
+    """One table of median / min over the samples of each cell, so the spread behind the `min` figures is
+    visible: 1.00 = all samples equal. Each engine is shown on its first metric in COLUMNS (its layout
+    metric where it has one). Last two rows: median over the cases and the p90 case."""
+    cols = []
+    for e in engines:
+        m = next((m for _, cs in COLUMNS for ce, m, _ in cs if ce == e), None)
+        if m:
+            cols.append((e, m))
+    lines = ["### Sample spread", "", "Median ÷ min of the samples behind each cell above (1.00 = all samples equal), per engine on "
+             + ", ".join(f"{e} `{m}`" for e, m in cols) + ".", "",
+             "| case | " + " | ".join(e for e, _ in cols) + " |", "|---|" + "---:|" * len(cols)]
+    per_engine = {e: [] for e, _ in cols}
+    for name, data in results.items():
+        cells = []
+        for e, m in cols:
+            v = [x.get(m) for x in data["engines"].get(e, []) if x.get(m) is not None]
+            r = statistics.median(v) / min(v) if len(v) >= 2 else None
+            if r is not None:
+                per_engine[e].append(r)
+            cells.append("-" if r is None else f"{r:.2f}")
+        lines.append(f"| {name} | " + " | ".join(cells) + " |")
+    for label, pick in (("**median case**", statistics.median), ("**p90 case**", lambda v: statistics.quantiles(v, n=10)[8] if len(v) >= 10 else max(v))):
+        lines.append(f"| {label} | " + " | ".join(f"{pick(per_engine[e]):.2f}" if per_engine[e] else "-" for e, _ in cols) + " |")
+    return lines + [""]
 
 
 def cmd_report(args):
