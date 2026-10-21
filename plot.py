@@ -11,9 +11,9 @@ WIDTH, LEFT, RIGHT, BAR, GAP = 1000, 340, 230, 16, 6
 # composite the stages do not cover is drawn as "other". Metrics not listed are a plain bar.
 STAGES = {
     "construct+layout": [("construct", "construct"), ("layout", "layout")],
-    "box+fragment": [("box", "box tree"), ("fragment", "fragment tree")],
+    "box+fragment": [("box", "construct"), ("fragment", "layout")],
     "style+layout": [("style", "style"), ("construct", "construct"), ("layout", "layout")],
-    "restyle_and_build": [("style", "style"), ("box", "box tree"), ("fragment", "fragment tree")],
+    "restyle_and_build": [("style", "style"), ("box", "construct"), ("fragment", "layout")],
     "resolve": [("style", "style"), ("construct", "construct"), ("layout", "layout")],
     "total": [("style", "style"), ("construct", "construct"), ("layout", "layout")],
 }
