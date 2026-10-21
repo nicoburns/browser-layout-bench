@@ -1,6 +1,6 @@
 """Horizontal bar charts of out/results.json: one SVG per case (out/plots/<suite>/<case>.svg) with a
-section per report table except the two that the stacked bars already show (SKIPPED_TABLES) and a bar per engine column — bar = minimum of the samples in ms, a lighter
-extension to the median, composite metrics stacked by stage (STAGES); label = ms, multiple of the fastest browser of the section, time per node —
+section per report table except the two that the stacked bars already show (SKIPPED_TABLES) and a bar per engine column — bar = minimum of the samples in ms with a
+whisker over all samples (p25–p75 thick, median tick), composite metrics stacked by stage (STAGES); label = ms, multiple of the fastest browser of the section, time per node —
 plus one Markdown page per suite embedding its cases (out/plots/<suite>.md). `./run.py plot` writes them."""
 import html
 import math
@@ -74,7 +74,7 @@ SKIPPED_TABLES = ("Layout only", "Construction")
 
 
 def sections(data, columns_by_table):
-    """[(table title, [(engine, label, min ms, median ms, stages of the min sample)])] for the columns the case has samples for."""
+    """[(table title, [(engine, label, min ms, sorted sample ms, stages of the min sample)])] for the columns the case has samples for."""
     out = []
     for title, columns in columns_by_table:
         if title in SKIPPED_TABLES:
@@ -84,7 +84,7 @@ def sections(data, columns_by_table):
             samples = sorted((s for s in data["engines"].get(e, []) if s.get(key) is not None), key=lambda s: s[key])
             if samples:
                 vals = [s[key] for s in samples]
-                bars.append((e, label.replace("`", ""), vals[0] / 1e6, statistics.median(vals) / 1e6, stages(samples[0], key)))
+                bars.append((e, label.replace("`", ""), vals[0] / 1e6, [v / 1e6 for v in vals], stages(samples[0], key)))
         if bars:
             out.append((title, bars))
     return out
@@ -95,7 +95,7 @@ def plot_case(name, data, columns_by_table, path):
     nodes = data["nodes"] or 1
     body, y = [], 70
     for title, bars in secs:
-        top, ticks = axis(max(med for _, _, _, med, _ in bars))
+        top, ticks = axis(max(vals[-1] for _, _, _, vals, _ in bars))
         x = lambda v: LEFT + v / top * (WIDTH - LEFT - RIGHT)
         browsers = [lo for e, _, lo, _, _ in bars if e != "taffy"]
         fastest = min(browsers) if browsers else min(lo for _, _, lo, _, _ in bars)
@@ -103,7 +103,7 @@ def plot_case(name, data, columns_by_table, path):
         if any(parts for *_, parts in bars):
             y += 16
             body.append(f'<text x="16" y="{y + 14}" fill="#9ca3af" font-size="11">Bars are stacked by stage where the engine '
-                        'records them, left to right in pipeline order (solid → faint); grey = rest of the span; the faintest tail is min → median; hover a segment for its value.</text>')
+                        'records them, left to right in pipeline order (solid → faint); grey = rest of the span; hover a segment for its value.</text>')
         y0 = y + 24
         height = len(bars) * (BAR + GAP) + GAP
         for t in ticks:
@@ -111,7 +111,7 @@ def plot_case(name, data, columns_by_table, path):
             body.append(f'<line x1="{tx:.1f}" x2="{tx:.1f}" y1="{y0}" y2="{y0 + height}" stroke="#374151" stroke-dasharray="2 4"/>'
                         f'<text x="{tx:.1f}" y="{y0 + height + 14}" fill="#9ca3af" font-size="10" text-anchor="middle">{t:g}</text>')
         body.append(f'<text x="{WIDTH - RIGHT + 14}" y="{y0 + height + 14}" fill="#9ca3af" font-size="10">ms</text>')
-        for k, (e, label, lo, med, parts) in enumerate(bars):
+        for k, (e, label, lo, vals, parts) in enumerate(bars):
             c, by = COLOURS.get(e, "#9ca3af"), y0 + GAP + k * (BAR + GAP)
             best = lo == fastest and e != "taffy"
             body.append(f'<text x="{LEFT - 10}" y="{by + BAR - 4}" fill="{c}" font-size="11" text-anchor="end"'
@@ -130,9 +130,15 @@ def plot_case(name, data, columns_by_table, path):
                     at += v
             else:
                 body.append(f'<rect x="{LEFT}" y="{by}" width="{max(x(lo) - LEFT, 1):.1f}" height="{BAR}" fill="{c}"/>')
-            body.append(f'<rect x="{x(lo):.1f}" y="{by}" width="{x(med) - x(lo):.1f}" height="{BAR}" fill="{c}" opacity="0.35">'
-                        f'<title>min {fmt(lo)} ms → median {fmt(med)} ms (of 9 samples)</title></rect>'
-                        f'<text x="{x(med) + 6:.1f}" y="{by + BAR - 4}" fill="#e5e7eb" font-size="11">'
+            q1, med, q3 = statistics.quantiles(vals, n=4, method="inclusive") if len(vals) > 1 else (lo, lo, lo)
+            hi, my = vals[-1], by + BAR / 2
+            body.append(f'<g stroke="#e5e7eb" fill="none"><title>{len(vals)} samples: min {fmt(lo)} · p25 {fmt(q1)} · median {fmt(med)} '
+                        f'· p75 {fmt(q3)} · max {fmt(hi)} ms</title>'
+                        f'<line x1="{x(lo):.1f}" y1="{my}" x2="{x(hi):.1f}" y2="{my}" stroke-width="1"/>'
+                        f'<line x1="{x(q1):.1f}" y1="{my}" x2="{x(q3):.1f}" y2="{my}" stroke-width="5" opacity="0.6"/>'
+                        f'<line x1="{x(med):.1f}" y1="{by + 1}" x2="{x(med):.1f}" y2="{by + BAR - 1}" stroke-width="2"/>'
+                        f'<line x1="{x(hi):.1f}" y1="{by + 4}" x2="{x(hi):.1f}" y2="{by + BAR - 4}" stroke-width="1"/></g>'
+                        f'<text x="{x(hi) + 6:.1f}" y="{by + BAR - 4}" fill="#e5e7eb" font-size="11">'
                         f'{fmt(lo)} ms <tspan fill="#9ca3af">· {lo / fastest:.2f}x · {fmt_per_node(lo * 1e6 / nodes)}</tspan></text>')
         y = y0 + height + 36
     total = y + 24
@@ -142,7 +148,7 @@ def plot_case(name, data, columns_by_table, path):
            f'<text x="16" y="24" fill="#f9fafb" font-size="16" font-weight="600">{html.escape(name)}'
            f' <tspan fill="#9ca3af" font-size="12" font-weight="400">{data["nodes"]} nodes</tspan></text>',
            '<text x="16" y="42" fill="#9ca3af" font-size="11">Bar = minimum of the samples (ms, linear axis per section), '
-           'lighter extension to the median.</text>',
+           'whisker = all samples (thick: p25–p75, tick: median).</text>',
            '<text x="16" y="56" fill="#9ca3af" font-size="11">Label: ms · multiple of the fastest browser of the section '
            '(bold) · time per node.</text>',
            *body, '</svg>']
@@ -161,8 +167,7 @@ def plot_all(results, columns_by_table, out_dir):
     for suite, cases in by_suite.items():
         page = [f"# `{suite}/` cases", "", "One chart per case (`./run.py plot`), a section per table of "
                 "[the report](../report.md) except Layout only and Construction (their numbers are the segments of the "
-                "construction+layout stack; Taffy is in the report only) and a bar per engine: bar = minimum of the samples in ms, lighter extension "
-                "to the median, construction+layout and whole-pipeline bars stacked by stage where the engine records them; label = ms, "
+                "construction+layout stack; Taffy is in the report only) and a bar per engine: bar = minimum of the samples in ms, whisker = all samples (thick p25–p75, median tick), construction+layout and whole-pipeline bars stacked by stage where the engine records them; label = ms, "
                 "multiple of the fastest browser of the section, time per node.", ""]
         for name, data in cases:
             page += [f"## {name}", "", f"{data['nodes']} nodes.", "", f"![{name}]({case_path(name)})", ""]
@@ -170,7 +175,7 @@ def plot_all(results, columns_by_table, out_dir):
         p.write_text("\n".join(page))
         written.append(p)
     index = ["# Plots", "", "One SVG per case, grouped per suite (`./run.py plot`): horizontal bars, a section per report "
-             "table except Layout only and Construction (covered by the stacked construction+layout bars; Taffy is in the report only), a bar per engine (minimum of the samples in ms, lighter extension to the median).", ""]
+             "table except Layout only and Construction (covered by the stacked construction+layout bars; Taffy is in the report only), a bar per engine (minimum of the samples in ms, whisker = all samples (thick p25–p75, median tick)).", ""]
     index += [f"- [`{s}/`]({s}.md) ({len(cases)} cases)" for s, cases in by_suite.items()]
     (out_dir / "README.md").write_text("\n".join(index) + "\n")
     written.append(out_dir / "README.md")
