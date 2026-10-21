@@ -24,6 +24,8 @@ anyrender = "0.14"
 anyrender_vello_cpu = "0.18"
 png = "0.18"
 image = { version = "0.25", default-features = false, features = ["png"] }
+# Global allocator (see `main.rs`): glibc malloc was ~37% of the `layout` phase on the 100k-node cases
+mimalloc = "0.1"
 
 [patch."https://github.com/DioxusLabs/blitz"]
 debug_timer = { path = "../vendor/debug_timer" }

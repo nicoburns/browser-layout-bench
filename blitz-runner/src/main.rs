@@ -13,6 +13,14 @@ use blitz_paint::paint_scene;
 use blitz_traits::net::{Bytes, NetHandler, NetProvider, Request};
 use blitz_traits::shell::{ColorScheme, Viewport};
 
+/// glibc malloc dominated the `layout` phase on the 100k-node cases (each node's `LayoutData` box
+/// plus Taffy's per-container item vectors; the heap top is trimmed after every iteration because
+/// each one builds a fresh document): `pangui/wide_no_wrap_simple_many` layout 233 ms → 147 ms with
+/// mimalloc, construct 40 ms → 22 ms, style unchanged. Chrome's numbers come from a warmed renderer
+/// with PartitionAlloc, so a retaining allocator is the comparable configuration.
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 /// Serves `file://` URLs (the corpus's `@font-face` fonts) synchronously, so every resource a
 /// page requests while parsing has been delivered before the timed `resolve()`.
 struct FileNetProvider;

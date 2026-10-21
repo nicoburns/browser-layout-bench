@@ -110,7 +110,9 @@ and [documented protocol](README.md#versions-and-methodology).
 ## 4. Cache state and CPU allocation are not matched
 
 - **Taffy:** reuses its tree, explicitly warms up twice, then dirties nodes.
-- **Blitz:** fresh document, but several iterations within one process.
+- **Blitz:** fresh document, but several iterations within one process; mimalloc as the
+  global allocator (with glibc, allocator work and page faults were ~37% of the `layout`
+  phase on the 100k-node cases).
 - **Chrome:** fresh pages within one browser launch.
 - **Servo/Firefox/Ladybird:** fresh process per iteration.
 
