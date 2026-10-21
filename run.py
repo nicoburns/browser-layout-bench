@@ -515,13 +515,13 @@ def header(label):
 def report(results, how, engines):
     lines = [f"Times in ms, {how} over all rounds and iterations; second line of each cell is the multiple of the Chrome column "
              "of the same table (1.00x = Chrome); bold = fastest engine of the row, Taffy excluded. Servo(n) = `layout_threads=n`; "
-             "Firefox(1) = `layout.css.stylo-threads=1` (no style worker threads).", ""]
+             "Firefox(1) = `layout.css.stylo-threads=1` (no style worker threads). Case names link to the case's bar chart; "
+             "one page of charts per suite: " + " · ".join(f"[{s}/](plots/{s}.md)" for s in plot.suites(results)) + ".", ""]
     for title, cols in COLUMNS:
         cols = [c for c in cols if c[0] in engines]
         if not cols:
             continue
-        plots = "; ".join(f"`{s}/` " + plot.links(title, s).replace("](", "](plots/") for s in plot.suites(results))
-        lines += [f"### {title}", "", f"Plots: {plots}.", "", "| case | nodes | " + " | ".join(header(c[2]) for c in cols) + " |",
+        lines += [f"### {title}", "", "| case | nodes | " + " | ".join(header(c[2]) for c in cols) + " |",
                   "|---|---:|" + "---:|" * len(cols)]
         ref_col = next((c for c in cols if c[0] == "chrome"), None)
         for name, data in results.items():
@@ -529,7 +529,7 @@ def report(results, how, engines):
             ref = values[cols.index(ref_col)] if ref_col else None
             contenders = [v for (e, _, _), v in zip(cols, values) if v is not None and e != "taffy"]
             best = min(contenders) if contenders else None
-            lines.append(f"| {name} | {data['nodes']} | "
+            lines.append(f"| [{name}](plots/{plot.case_path(name)}) | {data['nodes']} | "
                          + " | ".join(fmt_cell(v, ref, v == best and e != "taffy") for (e, _, _), v in zip(cols, values)) + " |")
         lines.append("")
     lines += spread_section(results, engines)
@@ -652,7 +652,7 @@ def bg_bands(img, x=1):
 
 
 def cmd_plot(args):
-    """Dot plots of out/results.json (one SVG per report table and view mode) into out/plots/."""
+    """Bar charts of out/results.json (one SVG per case, one Markdown page per suite) into out/plots/."""
     results = json.loads((OUT / "results.json").read_text())
     for p in plot.plot_all(results, COLUMNS, OUT / "plots"):
         print(p.relative_to(ROOT))
