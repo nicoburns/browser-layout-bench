@@ -1,6 +1,6 @@
 # `grid/` cases
 
-One chart per case (`./run.py plot`), a section per table of [the report](../report.md) and a bar per engine: bar = minimum of the samples in ms, lighter extension to the median; label = ms, multiple of the fastest browser of the section, time per node.
+One chart per case (`./run.py plot`), a section per table of [the report](../report.md) and a bar per engine: bar = minimum of the samples in ms, lighter extension to the median, construction+layout and whole-pipeline bars stacked by stage where the engine records them; label = ms, multiple of the fastest browser of the section, time per node.
 
 ## grid/wide/31x31
 
