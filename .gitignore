@@ -9,3 +9,5 @@ __pycache__
 /real/raw
 !out/plots/
 !out/plots/**
+!/out/servo-threads.md
+!/out/servo-threads/
