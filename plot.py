@@ -135,7 +135,7 @@ def plot_case(name, data, columns_by_table, path):
             body.append(f'<g stroke="#e5e7eb" fill="none"><title>{len(vals)} samples: min {fmt(lo)} · p25 {fmt(q1)} · median {fmt(med)} '
                         f'· p75 {fmt(q3)} · max {fmt(hi)} ms</title>'
                         f'<line x1="{x(lo):.1f}" y1="{my}" x2="{x(hi):.1f}" y2="{my}" stroke-width="1"/>'
-                        f'<line x1="{x(q1):.1f}" y1="{my}" x2="{x(q3):.1f}" y2="{my}" stroke-width="5" opacity="0.6"/>'
+                        f'<line x1="{x(q1):.1f}" y1="{my}" x2="{x(q3):.1f}" y2="{my}" stroke="#9ca3af" stroke-width="5" opacity="0.35"/>'
                         f'<line x1="{x(med):.1f}" y1="{by + 1}" x2="{x(med):.1f}" y2="{by + BAR - 1}" stroke-width="2"/>'
                         f'<line x1="{x(hi):.1f}" y1="{by + 4}" x2="{x(hi):.1f}" y2="{by + BAR - 4}" stroke-width="1"/></g>'
                         f'<text x="{x(hi) + 6:.1f}" y="{by + BAR - 4}" fill="#e5e7eb" font-size="11">'
