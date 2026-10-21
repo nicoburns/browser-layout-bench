@@ -7,3 +7,5 @@
 /tmp
 __pycache__
 /real/raw
+!out/plots/
+!out/plots/*.svg

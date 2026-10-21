@@ -2,6 +2,8 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Layout only
 
+Plots: [per-node](plots/layout-only-per-node.svg), [relative](plots/layout-only-relative.svg), [milliseconds](plots/layout-only-milliseconds.svg).
+
 | case | nodes | Chrome<br>Layout | Firefox(1)<br>Reflow | Firefox<br>Reflow | Ladybird<br>layout | Servo(1)<br>Fragment Tree | Servo(3)<br>Fragment Tree | Blitz<br>`layout` | Blitz<br>`layout` (#1034 build, 1 thread) | Blitz<br>`layout` (parallel layout) | Taffy |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | flex/huge_nested/1000 | 911 | 1.363<br>1.00x | 1.910<br>1.40x | 1.820<br>1.34x | 6.798<br>4.99x | 1.612<br>1.18x | 0.995<br>0.73x | 1.388<br>1.02x | 1.390<br>1.02x | **0.573<br>0.42x** | 0.394<br>0.29x |
@@ -54,6 +56,8 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 | real/bootstrap-dashboard@1024 | 199 | 2.323<br>1.00x | 3.207<br>1.38x | 3.068<br>1.32x | 3.935<br>1.69x | 1.485<br>0.64x | 0.884<br>0.38x | 0.835<br>0.36x | 1.083<br>0.47x | **0.612<br>0.26x** | - |
 
 ### Box construction + layout
+
+Plots: [per-node](plots/box-construction---layout-per-node.svg), [relative](plots/box-construction---layout-relative.svg), [milliseconds](plots/box-construction---layout-milliseconds.svg).
 
 | case | nodes | Chrome<br>rebuildLayoutTree + Layout | Ladybird<br>tree build + layout | Servo(1)<br>Box + Fragment | Servo(3)<br>Box + Fragment | Blitz<br>construct + layout | Blitz<br>construct + layout (parallel construct) | Blitz<br>construct + layout (parallel construct + layout) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -108,6 +112,8 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Construction
 
+Plots: [per-node](plots/construction-per-node.svg), [relative](plots/construction-relative.svg), [milliseconds](plots/construction-milliseconds.svg).
+
 | case | nodes | Chrome<br>rebuildLayoutTree | Ladybird<br>tree build | Servo(1)<br>Box Tree | Servo(3)<br>Box Tree | Blitz<br>construct ( + pconstruct) | Blitz<br>construct, parallel |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | flex/huge_nested/1000 | 911 | 0.481<br>1.00x | 0.906<br>1.88x | 1.094<br>2.27x | 0.559<br>1.16x | **0.079<br>0.16x** | 0.080<br>0.17x |
@@ -161,6 +167,8 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Style
 
+Plots: [per-node](plots/style-per-node.svg), [relative](plots/style-relative.svg), [milliseconds](plots/style-milliseconds.svg).
+
 | case | nodes | Chrome<br>recalcStyle | Firefox(1)<br>Styles (incl. frame construction) | Firefox<br>Styles (incl. frame construction) | Ladybird<br>update_style | Servo(1)<br>Styling | Servo(3)<br>Styling | Blitz<br>style | Blitz<br>style (parallel) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | flex/huge_nested/1000 | 911 | **2.038<br>1.00x** | 5.426<br>2.66x | 2.038<br>1.00x | 37.647<br>18.47x | 10.026<br>4.92x | 5.935<br>2.91x | 4.325<br>2.12x | 4.597<br>2.26x |
@@ -213,6 +221,8 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 | real/bootstrap-dashboard@1024 | 199 | **1.128<br>1.00x** | 1.917<br>1.70x | 1.813<br>1.61x | 14.712<br>13.04x | 1.319<br>1.17x | 1.224<br>1.08x | 1.720<br>1.53x | 1.710<br>1.52x |
 
 ### Whole pipeline (style to paint tree / display list)
+
+Plots: [per-node](plots/whole-pipeline--style-to-paint-tree---display-list-per-node.svg), [relative](plots/whole-pipeline--style-to-paint-tree---display-list-relative.svg), [milliseconds](plots/whole-pipeline--style-to-paint-tree---display-list-milliseconds.svg).
 
 | case | nodes | Chrome<br>UpdateLayoutTree + Layout | Firefox(1)<br>Styles + Reflow | Firefox<br>Styles + Reflow | Ladybird<br>update_layout() | Servo(1)<br>handle_reflow | Servo(3)<br>handle_reflow | Blitz<br>resolve() | Blitz<br>resolve() (parallel style) | Blitz<br>resolve() (parallel style + construct) | Blitz<br>resolve() (parallel style + construct + layout) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|

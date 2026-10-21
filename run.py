@@ -5,6 +5,7 @@ import argparse, functools, http.server, json, os, re, shlex, shutil, statistics
 from pathlib import Path
 
 import engines_ladybird
+import plot
 
 ROOT = Path(__file__).resolve().parent
 CORPUS = ROOT / "corpus"
@@ -491,7 +492,8 @@ def report(results, how, engines):
         cols = [c for c in cols if c[0] in engines]
         if not cols:
             continue
-        lines += [f"### {title}", "", "| case | nodes | " + " | ".join(header(c[2]) for c in cols) + " |",
+        plots = ", ".join(f"[{m}](plots/{plot.slug(title)}-{m}.svg)" for m in plot.MODES)
+        lines += [f"### {title}", "", f"Plots: {plots}.", "", "| case | nodes | " + " | ".join(header(c[2]) for c in cols) + " |",
                   "|---|---:|" + "---:|" * len(cols)]
         ref_col = next((c for c in cols if c[0] == "chrome"), None)
         for name, data in results.items():
@@ -575,6 +577,13 @@ def bg_bands(img, x=1):
     return bands
 
 
+def cmd_plot(args):
+    """Dot plots of out/results.json (one SVG per report table and view mode) into out/plots/."""
+    results = json.loads((OUT / "results.json").read_text())
+    for p in plot.plot_all(results, COLUMNS, OUT / "plots"):
+        print(p.relative_to(ROOT))
+
+
 def cmd_verify(args):
     from PIL import Image, ImageChops
     cases = [c for c in read_manifest() if args.filter in c["name"]]
@@ -648,12 +657,13 @@ def main():
     b.add_argument("--merge", action="store_true", help="keep other engines' samples from out/results.json")
     r = sub.add_parser("report", help="rewrite out/report.md from out/results.json")
     r.add_argument("--agg", default="min", choices=["min", "median"])
+    sub.add_parser("plot")
     v = sub.add_parser("verify")
     v.add_argument("--engines", default="chrome,blitz,servo1,firefox1")
     v.add_argument("--filter", default="")
     v.add_argument("--cpus", default=None)
     args = ap.parse_args()
-    {"gen": cmd_gen, "bench": cmd_bench, "report": cmd_report, "verify": cmd_verify}[args.cmd](args)
+    {"gen": cmd_gen, "bench": cmd_bench, "report": cmd_report, "verify": cmd_verify, "plot": cmd_plot}[args.cmd](args)
 
 
 if __name__ == "__main__":
