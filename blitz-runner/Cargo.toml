@@ -27,3 +27,5 @@ png = "0.18"
 # blitz-dom decodes images with `image` built without default features; enable the PNG decoder so
 # the real pages' placeholder images load (their intrinsic size feeds `max-height`/`height:auto` sizing)
 image = { version = "0.25", default-features = false, features = ["png"] }
+# Global allocator (see `main.rs`): glibc malloc was ~37% of the `layout` phase on the 100k-node cases
+mimalloc = "0.1"
