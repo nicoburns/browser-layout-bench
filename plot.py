@@ -13,7 +13,7 @@ STAGES = {
     "construct+layout": [("construct", "construct"), ("layout", "layout")],
     "box+fragment": [("box", "box tree"), ("fragment", "fragment tree")],
     "style+layout": [("style", "style"), ("construct", "construct"), ("layout", "layout")],
-    "reflow": [("style", "style"), ("box", "box tree"), ("fragment", "fragment tree")],
+    "restyle_and_build": [("style", "style"), ("box", "box tree"), ("fragment", "fragment tree")],
     "resolve": [("style", "style"), ("construct", "construct"), ("layout", "layout")],
     "total": [("style", "style"), ("construct", "construct"), ("layout", "layout")],
 }

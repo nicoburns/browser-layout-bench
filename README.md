@@ -181,9 +181,13 @@ Phase mapping used in the report:
   "Layout only" is like-for-like only among Taffy, Blitz and Servo (the `text/` cases have no Taffy tree).
 - Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `recalcStyle`; Firefox `Styles` is listed
   here too but, like Chrome's `UpdateLayoutTree`, it includes frame construction; Ladybird `style` is `update_style()`.
-- Whole pipeline: Blitz `resolve()` (style to paint tree) ≈ Servo `handle_reflow` (style to display
-  list) ≈ Chrome `UpdateLayoutTree + Layout` ≈ Firefox `Styles + Reflow`
-  ≈ Ladybird `update_layout()` (style to committed layout tree; no display list).
+- Whole pipeline (style to laid-out tree): Blitz `resolve()` ≈ Servo `restyle_and_build_trees` (Styling + Box
+  Tree + Fragment Tree, plus stylist preparation and damage computation) ≈ Chrome `UpdateLayoutTree + Layout`
+  ≈ Firefox `Styles + Reflow` ≈ Ladybird `update_layout()`. None of these includes display-list or paint work:
+  Blitz's `resolve()` ends with `build_paint_tree` (the stacking-context / paint-order lists, ~0.3 ms on
+  Wikipedia; scene generation in `blitz_paint::paint_scene` is outside the timed interval), Servo's
+  stacking-context and display-list construction are in `handle_reflow`, which is recorded as `reflow` but
+  not shown in the table.
 
 `out/servo-threads.md` is a `layout_threads` = 1/3/4/6/8 sweep of Servo on seven cases (`servoN` is accepted as an
 engine id by `bench` for any N; only `servo1`/`servo` are in the main run).

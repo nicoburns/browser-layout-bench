@@ -486,11 +486,11 @@ COLUMNS = [
                ("firefox", "style", "Firefox Styles (incl. frame construction)"), ("ladybird", "style", "Ladybird update_style"),
                ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
                ("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)")]),
-    ("Whole pipeline (style to paint tree / display list)", [
+    ("Whole pipeline (style to laid-out tree)", [
         ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout"),
         ("firefox1", "style+layout", "Firefox(1) Styles+Reflow"), ("firefox", "style+layout", "Firefox Styles+Reflow"),
         ("ladybird", "total", "Ladybird update_layout()"),
-        ("servo1", "reflow", "Servo(1) handle_reflow"), ("servo", "reflow", "Servo(3) handle_reflow"),
+        ("servo1", "restyle_and_build", "Servo(1) restyle_and_build_trees"), ("servo", "restyle_and_build", "Servo(3) restyle_and_build_trees"),
         ("blitz", "resolve", "Blitz resolve()"), ("blitz-par", "resolve", "Blitz resolve() (parallel style)"),
         ("blitz-par-pcon", "resolve", "Blitz resolve() (parallel style+construct)"),
         ("blitz-par-pcon-pl", "resolve", "Blitz resolve() (parallel style+construct+layout)")]),

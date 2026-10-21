@@ -142,7 +142,7 @@
 <text x="330" y="986" fill="#6ee7b7" font-size="11" text-anchor="end" font-weight="700">Blitz style (parallel)</text>
 <rect x="340" y="974" width="6.1" height="16" fill="#6ee7b7"/>
 <rect x="346.1" y="974" width="1.8" height="16" fill="#6ee7b7" opacity="0.35"/><text x="353.9" y="986" fill="#e5e7eb" font-size="11">7.06 ms <tspan fill="#9ca3af">· 1.00x · 957 ns/node</tspan></text>
-<text x="16" y="1046" fill="#f9fafb" font-size="13" font-weight="600">Whole pipeline (style to paint tree / display list)</text>
+<text x="16" y="1046" fill="#f9fafb" font-size="13" font-weight="600">Whole pipeline (style to laid-out tree)</text>
 <text x="16" y="1062" fill="#9ca3af" font-size="11">Bars are stacked by stage where the engine records them, left to right in pipeline order (solid → faint); grey = rest of the span; hover a segment for its value.</text>
 <line x1="340.0" x2="340.0" y1="1072" y2="1298" stroke="#374151" stroke-dasharray="2 4"/><text x="340.0" y="1312" fill="#9ca3af" font-size="10" text-anchor="middle">0</text>
 <line x1="426.0" x2="426.0" y1="1072" y2="1298" stroke="#374151" stroke-dasharray="2 4"/><text x="426.0" y="1312" fill="#9ca3af" font-size="10" text-anchor="middle">100</text>
@@ -175,21 +175,21 @@
 <text x="725.3" y="1156" fill="#0b1120" font-size="10" text-anchor="middle">71</text>
 <rect x="755.9" y="1144" width="2.6" height="16" fill="#6b7280" opacity="1.0"><title>other: 3.02 ms</title></rect>
 <rect x="758.5" y="1144" width="11.0" height="16" fill="#facc15" opacity="0.35"/><text x="775.5" y="1156" fill="#e5e7eb" font-size="11">487 ms <tspan fill="#9ca3af">· 31.63x · 65.9 us/node</tspan></text>
-<text x="330" y="1178" fill="#c084fc" font-size="11" text-anchor="end">Servo(1) handle_reflow</text>
+<text x="330" y="1178" fill="#c084fc" font-size="11" text-anchor="end">Servo(1) restyle_and_build_trees</text>
 <rect x="340.0" y="1166" width="32.5" height="16" fill="#c084fc" opacity="1.0"><title>style: 37.8 ms</title></rect>
 <text x="356.2" y="1178" fill="#0b1120" font-size="10" text-anchor="middle">37.8</text>
 <rect x="372.5" y="1166" width="7.1" height="16" fill="#c084fc" opacity="0.65"><title>box tree: 8.24 ms</title></rect>
 <rect x="379.6" y="1166" width="54.3" height="16" fill="#c084fc" opacity="0.4"><title>fragment tree: 63.2 ms</title></rect>
 <text x="406.7" y="1178" fill="#0b1120" font-size="10" text-anchor="middle">63.2</text>
-<rect x="433.9" y="1166" width="3.5" height="16" fill="#6b7280" opacity="1.0"><title>other: 4.02 ms</title></rect>
-<rect x="437.3" y="1166" width="1.8" height="16" fill="#c084fc" opacity="0.35"/><text x="445.2" y="1178" fill="#e5e7eb" font-size="11">113 ms <tspan fill="#9ca3af">· 7.36x · 15.3 us/node</tspan></text>
-<text x="330" y="1200" fill="#e9d5ff" font-size="11" text-anchor="end">Servo(3) handle_reflow</text>
+<rect x="433.9" y="1166" width="1.9" height="16" fill="#6b7280" opacity="1.0"><title>other: 2.2 ms</title></rect>
+<rect x="435.8" y="1166" width="1.8" height="16" fill="#c084fc" opacity="0.35"/><text x="443.5" y="1178" fill="#e5e7eb" font-size="11">111 ms <tspan fill="#9ca3af">· 7.24x · 15.1 us/node</tspan></text>
+<text x="330" y="1200" fill="#e9d5ff" font-size="11" text-anchor="end">Servo(3) restyle_and_build_trees</text>
 <rect x="340.0" y="1188" width="17.7" height="16" fill="#e9d5ff" opacity="1.0"><title>style: 20.6 ms</title></rect>
 <rect x="357.7" y="1188" width="2.7" height="16" fill="#e9d5ff" opacity="0.65"><title>box tree: 3.17 ms</title></rect>
 <rect x="360.5" y="1188" width="54.7" height="16" fill="#e9d5ff" opacity="0.4"><title>fragment tree: 63.6 ms</title></rect>
 <text x="387.8" y="1200" fill="#0b1120" font-size="10" text-anchor="middle">63.6</text>
-<rect x="415.1" y="1188" width="4.1" height="16" fill="#6b7280" opacity="1.0"><title>other: 4.72 ms</title></rect>
-<rect x="419.2" y="1188" width="1.6" height="16" fill="#e9d5ff" opacity="0.35"/><text x="426.7" y="1200" fill="#e5e7eb" font-size="11">92.1 ms <tspan fill="#9ca3af">· 5.99x · 12.5 us/node</tspan></text>
+<rect x="415.1" y="1188" width="2.2" height="16" fill="#6b7280" opacity="1.0"><title>other: 2.61 ms</title></rect>
+<rect x="417.4" y="1188" width="1.4" height="16" fill="#e9d5ff" opacity="0.35"/><text x="424.8" y="1200" fill="#e5e7eb" font-size="11">90 ms <tspan fill="#9ca3af">· 5.85x · 12.2 us/node</tspan></text>
 <text x="330" y="1222" fill="#34d399" font-size="11" text-anchor="end">Blitz resolve()</text>
 <rect x="340.0" y="1210" width="12.6" height="16" fill="#34d399" opacity="1.0"><title>style: 14.7 ms</title></rect>
 <rect x="352.6" y="1210" width="0.4" height="16" fill="#34d399" opacity="0.65"><title>construct: 0.518 ms</title></rect>

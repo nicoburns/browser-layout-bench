@@ -16,23 +16,19 @@ The harness does several things well: deterministic inputs, explicit font loadin
 phase timing rather than process startup, raw samples, geometry checks, and the
 correction of Servo's excessive tracing overhead.
 
-## 1. "Whole pipeline" has different endpoints
+## 1. "Whole pipeline" endpoints are close but not identical
 
-The report compares:
-
-- **Blitz:** `resolve()`, including transforms, paint-tree building, damage cleanup,
-  and other bookkeeping.
-- **Servo:** `handle_reflow`, including stacking-context/display-list work when
-  performed.
-- **Chrome/Firefox:** style/tree construction + layout, excluding the corresponding
-  later rendering work.
-- **Ladybird:** committed layout, not display-list construction.
-
-That systematically gives Blitz/Servo more work inside the reported interval. It
-is not a fair "style to paint tree/display list" comparison.
-
-**Choose a common endpoint**, preferably layout completion for this benchmark.
-Merely subtracting Blitz's paint-tree duration would not remove all the extra work.
+Every whole-pipeline column ends at the laid-out tree and excludes display-list and paint
+work: Chrome `UpdateLayoutTree + Layout` (before PrePaint/Paint), Firefox `Styles + Reflow`
+(before its display list), Ladybird `update_layout()` (committed layout tree), Servo
+`restyle_and_build_trees` (Styling + Box Tree + Fragment Tree; its stacking-context and
+display-list construction live in the enclosing `handle_reflow`, recorded as `reflow` and
+not tabulated), Blitz `resolve()`. What each still carries beyond style + construction +
+layout is the grey "rest" segment of the stacked bars: Blitz's `build_paint_tree`
+(stacking-context / paint-order lists, ~0.3 ms on Wikipedia) plus transforms and damage
+cleanup; Servo's stylist preparation and damage computation; Chrome's non-style,
+non-construction part of `UpdateLayoutTree`. Blitz's scene generation (`paint_scene`) is
+not inside the timed interval, so no engine's figure includes drawing-command generation.
 
 Sources: [reported intervals](run.py),
 [Blitz's resolve implementation](https://github.com/DioxusLabs/blitz/blob/28f848d/packages/blitz-dom/src/resolve.rs),
