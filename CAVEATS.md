@@ -21,14 +21,16 @@ correction of Servo's excessive tracing overhead.
 Every whole-pipeline column ends at the laid-out tree and excludes display-list and paint
 work: Chrome `UpdateLayoutTree + Layout` (before PrePaint/Paint), Firefox `Styles + Reflow`
 (before its display list), Ladybird `update_layout()` (committed layout tree), Servo
-`restyle_and_build_trees` (Styling + Box Tree + Fragment Tree; its stacking-context and
-display-list construction live in the enclosing `handle_reflow`, recorded as `reflow` and
-not tabulated), Blitz `resolve()`. What each still carries beyond style + construction +
+`restyle_and_build_trees` (stylist flush, damage walk, Styling + Box Tree + Fragment Tree;
+the enclosing `handle_reflow`, recorded as `reflow` and not tabulated, adds the stacking-context
+tree, ~9 ms on Wikipedia — the measured layout-query reflows never build a display list), Blitz `resolve()`. What each still carries beyond style + construction +
 layout is the grey "rest" segment of the stacked bars: Blitz's `build_paint_tree`
 (stacking-context / paint-order lists, ~0.3 ms on Wikipedia) plus transforms and damage
 cleanup; Servo's stylist preparation and damage computation; Chrome's non-style,
-non-construction part of `UpdateLayoutTree`. Blitz's scene generation (`paint_scene`) is
-not inside the timed interval, so no engine's figure includes drawing-command generation.
+non-construction part of `UpdateLayoutTree`. Blitz's scene generation (`paint_scene`) is not inside the timed interval and Servo's display
+list is not built by the measured reflows, so no engine's figure includes drawing-command
+generation; the one asymmetry left is that Blitz's paint-order tree is inside its figure and
+Servo's stacking-context tree is outside its.
 
 Sources: [reported intervals](run.py),
 [Blitz's resolve implementation](https://github.com/DioxusLabs/blitz/blob/28f848d/packages/blitz-dom/src/resolve.rs),

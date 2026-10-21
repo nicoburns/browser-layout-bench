@@ -179,9 +179,8 @@ Phase mapping used in the report:
   Tree + Fragment Tree, plus stylist preparation and damage computation) ≈ Chrome `UpdateLayoutTree + Layout`
   ≈ Firefox `Styles + Reflow` ≈ Ladybird `update_layout()`. None of these includes display-list or paint work:
   Blitz's `resolve()` ends with `build_paint_tree` (the stacking-context / paint-order lists, ~0.3 ms on
-  Wikipedia; scene generation in `blitz_paint::paint_scene` is outside the timed interval), Servo's
-  stacking-context and display-list construction are in `handle_reflow`, which is recorded as `reflow` but
-  not shown in the table.
+  Wikipedia; scene generation in `blitz_paint::paint_scene` is outside the timed interval), Servo's stacking-context tree is built by the enclosing `handle_reflow` (recorded as `reflow`, not
+  shown in the table; ~9 ms on Wikipedia), and the measured reflows build no display list.
 
 `out/servo-threads.md` is a `layout_threads` = 1/3/4/6/8 sweep of Servo on seven cases (`servoN` is accepted as an
 engine id by `bench` for any N; only `servo1`/`servo` are in the main run).
