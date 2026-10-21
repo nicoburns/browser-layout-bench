@@ -19,9 +19,10 @@ STAGES = {
 }
 STAGE_OPACITY = [1.0, 0.65, 0.4, 0.25]
 COLOURS = {
-    "chrome": "#60a5fa", "firefox1": "#fb923c", "firefox": "#fdba74", "ladybird": "#facc15", "servo1": "#c084fc",
-    "servo": "#e9d5ff", "blitz": "#34d399", "blitz-par": "#6ee7b7", "blitz-pcon": "#2dd4bf", "blitz-par-pcon": "#99f6e4",
-    "blitz-pcon-pl1": "#a3e635", "blitz-pcon-pl": "#bef264", "blitz-par-pcon-pl": "#d9f99d", "taffy": "#fb7185",
+    "chrome": "#FBBC04", "firefox1": "#FF7139", "firefox": "#ffa37e", "ladybird": "#7B6CF0",
+    "servo1": "#42BE65", "servo": "#84d59b", "blitz": "#3E9593", "blitz-par": "#5ba5a3",
+    "blitz-pcon": "#78b5b3", "blitz-par-pcon": "#95c5c4", "blitz-pcon-pl1": "#a8cfce",
+    "blitz-pcon-pl": "#bbdad9", "blitz-par-pcon-pl": "#cfe4e4", "taffy": "#fb7185"
 }
 
 

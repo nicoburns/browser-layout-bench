@@ -6,4 +6,4 @@ One SVG per case, grouped per suite (`./run.py plot`): horizontal bars, a sectio
 - [`grid/`](grid.md) (5 cases)
 - [`pangui/`](pangui.md) (13 cases)
 - [`text/`](text.md) (6 cases)
-- [`real/`](real.md) (12 cases)
+- [`real/`](real.md) (7 cases)

@@ -52,7 +52,7 @@ def read_manifest():
     cases = []
     for line in (CORPUS / "manifest.tsv").read_text().splitlines():
         name, file, w, h, nodes, engine, *rest = line.split("\t")
-        # optional 7th column: viewport `WxH` (the real pages have 1024px variants)
+        # optional 7th column: viewport `WxH` (defaults to the global 1280x800)
         vw, vh = (int(v) for v in rest[0].split("x")) if rest else (WIDTH, HEIGHT)
         cases.append(dict(name=name, file=file, cb_w=float(w), cb_h=float(h), nodes=int(nodes), taffy=engine == "taffy",
                           width=vw, height=vh))
@@ -85,7 +85,7 @@ def cmd_gen(args):
 def gen_real():
     """Copies the frozen pages from real/ (see real/freeze.py) into corpus/real/ and corpus/reveal/real/
     (the reveal copy needs the page's placeholder images next to it) and appends one manifest line
-    per page and viewport: `real/<page>` at 1280x800 and `real/<page>@1024` at 1024x800."""
+    per page and viewport listed in `real/manifest.tsv`: `real/<page>` at 1280x800, `real/<page>@<w>` for any other width."""
     for font in (ROOT / "fonts").glob("DejaVuSansMono*.ttf"):
         shutil.copy(font, CORPUS / "fonts" / font.name)
     with (CORPUS / "manifest.tsv").open("a") as manifest:

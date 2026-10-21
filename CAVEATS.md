@@ -68,8 +68,8 @@ unexplained mismatches before treating them as equivalent.
 
 The [real-pages work reviewed at `0f0d306`](https://github.com/nicoburns/browser-layout-bench/blob/0f0d306/README.md)
 adds useful coverage, but is not equal-work evidence: it documents unsupported
-floats and other layout differences. For example, the frozen Wikipedia page at
-1024 px is 69,635 px tall in Chrome versus 75,984 px in Blitz. Knowing the cause
+floats and other layout differences. For example, on the frozen Wikipedia page 460 of
+866 sampled Blitz boxes differ in size from Chrome's by more than 1px. Knowing the cause
 explains the mismatch; it does not make the workloads equivalent.
 
 These pages are simplified snapshots: scripts are removed, fonts are replaced,

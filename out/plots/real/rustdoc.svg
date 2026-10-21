@@ -14,27 +14,27 @@
 <line x1="716.2" x2="716.2" y1="94" y2="254" stroke="#374151" stroke-dasharray="2 4"/><text x="716.2" y="268" fill="#9ca3af" font-size="10" text-anchor="middle">350</text>
 <line x1="770.0" x2="770.0" y1="94" y2="254" stroke="#374151" stroke-dasharray="2 4"/><text x="770.0" y="268" fill="#9ca3af" font-size="10" text-anchor="middle">400</text>
 <text x="784" y="268" fill="#9ca3af" font-size="10">ms</text>
-<text x="330" y="112" fill="#60a5fa" font-size="11" text-anchor="end">Chrome Layout (incl. shaping)</text>
-<rect x="340" y="100" width="94.9" height="16" fill="#60a5fa"/>
-<rect x="434.9" y="100" width="6.2" height="16" fill="#60a5fa" opacity="0.35"/><text x="447.1" y="112" fill="#e5e7eb" font-size="11">88.3 ms <tspan fill="#9ca3af">· 3.98x · 5.54 us/node</tspan></text>
-<text x="330" y="134" fill="#facc15" font-size="11" text-anchor="end">Ladybird layout (incl. shaping)</text>
-<rect x="340" y="122" width="387.0" height="16" fill="#facc15"/>
-<rect x="727.0" y="122" width="11.0" height="16" fill="#facc15" opacity="0.35"/><text x="744.0" y="134" fill="#e5e7eb" font-size="11">360 ms <tspan fill="#9ca3af">· 16.24x · 22.6 us/node</tspan></text>
-<text x="330" y="156" fill="#c084fc" font-size="11" text-anchor="end">Servo(1) Fragment Tree</text>
-<rect x="340" y="144" width="49.0" height="16" fill="#c084fc"/>
-<rect x="389.0" y="144" width="2.6" height="16" fill="#c084fc" opacity="0.35"/><text x="397.5" y="156" fill="#e5e7eb" font-size="11">45.6 ms <tspan fill="#9ca3af">· 2.06x · 2.86 us/node</tspan></text>
-<text x="330" y="178" fill="#e9d5ff" font-size="11" text-anchor="end">Servo(3) Fragment Tree</text>
-<rect x="340" y="166" width="44.6" height="16" fill="#e9d5ff"/>
-<rect x="384.6" y="166" width="1.1" height="16" fill="#e9d5ff" opacity="0.35"/><text x="391.6" y="178" fill="#e5e7eb" font-size="11">41.4 ms <tspan fill="#9ca3af">· 1.87x · 2.6 us/node</tspan></text>
-<text x="330" y="200" fill="#34d399" font-size="11" text-anchor="end">Blitz layout</text>
-<rect x="340" y="188" width="26.2" height="16" fill="#34d399"/>
-<rect x="366.2" y="188" width="1.6" height="16" fill="#34d399" opacity="0.35"/><text x="373.8" y="200" fill="#e5e7eb" font-size="11">24.3 ms <tspan fill="#9ca3af">· 1.10x · 1.53 us/node</tspan></text>
-<text x="330" y="222" fill="#a3e635" font-size="11" text-anchor="end">Blitz layout (#1034 build, 1 thread)</text>
-<rect x="340" y="210" width="27.3" height="16" fill="#a3e635"/>
-<rect x="367.3" y="210" width="2.6" height="16" fill="#a3e635" opacity="0.35"/><text x="375.9" y="222" fill="#e5e7eb" font-size="11">25.4 ms <tspan fill="#9ca3af">· 1.15x · 1.59 us/node</tspan></text>
-<text x="330" y="244" fill="#bef264" font-size="11" text-anchor="end" font-weight="700">Blitz layout (parallel layout)</text>
-<rect x="340" y="232" width="23.8" height="16" fill="#bef264"/>
-<rect x="363.8" y="232" width="0.3" height="16" fill="#bef264" opacity="0.35"/><text x="370.1" y="244" fill="#e5e7eb" font-size="11">22.2 ms <tspan fill="#9ca3af">· 1.00x · 1.39 us/node</tspan></text>
+<text x="330" y="112" fill="#FBBC04" font-size="11" text-anchor="end">Chrome Layout (incl. shaping)</text>
+<rect x="340" y="100" width="94.9" height="16" fill="#FBBC04"/>
+<rect x="434.9" y="100" width="6.2" height="16" fill="#FBBC04" opacity="0.35"/><text x="447.1" y="112" fill="#e5e7eb" font-size="11">88.3 ms <tspan fill="#9ca3af">· 3.98x · 5.54 us/node</tspan></text>
+<text x="330" y="134" fill="#7B6CF0" font-size="11" text-anchor="end">Ladybird layout (incl. shaping)</text>
+<rect x="340" y="122" width="387.0" height="16" fill="#7B6CF0"/>
+<rect x="727.0" y="122" width="11.0" height="16" fill="#7B6CF0" opacity="0.35"/><text x="744.0" y="134" fill="#e5e7eb" font-size="11">360 ms <tspan fill="#9ca3af">· 16.24x · 22.6 us/node</tspan></text>
+<text x="330" y="156" fill="#42BE65" font-size="11" text-anchor="end">Servo(1) Fragment Tree</text>
+<rect x="340" y="144" width="49.0" height="16" fill="#42BE65"/>
+<rect x="389.0" y="144" width="2.6" height="16" fill="#42BE65" opacity="0.35"/><text x="397.5" y="156" fill="#e5e7eb" font-size="11">45.6 ms <tspan fill="#9ca3af">· 2.06x · 2.86 us/node</tspan></text>
+<text x="330" y="178" fill="#84d59b" font-size="11" text-anchor="end">Servo(3) Fragment Tree</text>
+<rect x="340" y="166" width="44.6" height="16" fill="#84d59b"/>
+<rect x="384.6" y="166" width="1.1" height="16" fill="#84d59b" opacity="0.35"/><text x="391.6" y="178" fill="#e5e7eb" font-size="11">41.4 ms <tspan fill="#9ca3af">· 1.87x · 2.6 us/node</tspan></text>
+<text x="330" y="200" fill="#3E9593" font-size="11" text-anchor="end">Blitz layout</text>
+<rect x="340" y="188" width="26.2" height="16" fill="#3E9593"/>
+<rect x="366.2" y="188" width="1.6" height="16" fill="#3E9593" opacity="0.35"/><text x="373.8" y="200" fill="#e5e7eb" font-size="11">24.3 ms <tspan fill="#9ca3af">· 1.10x · 1.53 us/node</tspan></text>
+<text x="330" y="222" fill="#a8cfce" font-size="11" text-anchor="end">Blitz layout (#1034 build, 1 thread)</text>
+<rect x="340" y="210" width="27.3" height="16" fill="#a8cfce"/>
+<rect x="367.3" y="210" width="2.6" height="16" fill="#a8cfce" opacity="0.35"/><text x="375.9" y="222" fill="#e5e7eb" font-size="11">25.4 ms <tspan fill="#9ca3af">· 1.15x · 1.59 us/node</tspan></text>
+<text x="330" y="244" fill="#bbdad9" font-size="11" text-anchor="end" font-weight="700">Blitz layout (parallel layout)</text>
+<rect x="340" y="232" width="23.8" height="16" fill="#bbdad9"/>
+<rect x="363.8" y="232" width="0.3" height="16" fill="#bbdad9" opacity="0.35"/><text x="370.1" y="244" fill="#e5e7eb" font-size="11">22.2 ms <tspan fill="#9ca3af">· 1.00x · 1.39 us/node</tspan></text>
 <text x="16" y="304" fill="#f9fafb" font-size="13" font-weight="600">Construction</text>
 <line x1="340.0" x2="340.0" y1="314" y2="452" stroke="#374151" stroke-dasharray="2 4"/><text x="340.0" y="466" fill="#9ca3af" font-size="10" text-anchor="middle">0</text>
 <line x1="411.7" x2="411.7" y1="314" y2="452" stroke="#374151" stroke-dasharray="2 4"/><text x="411.7" y="466" fill="#9ca3af" font-size="10" text-anchor="middle">20</text>
@@ -44,24 +44,24 @@
 <line x1="698.3" x2="698.3" y1="314" y2="452" stroke="#374151" stroke-dasharray="2 4"/><text x="698.3" y="466" fill="#9ca3af" font-size="10" text-anchor="middle">100</text>
 <line x1="770.0" x2="770.0" y1="314" y2="452" stroke="#374151" stroke-dasharray="2 4"/><text x="770.0" y="466" fill="#9ca3af" font-size="10" text-anchor="middle">120</text>
 <text x="784" y="466" fill="#9ca3af" font-size="10">ms</text>
-<text x="330" y="332" fill="#60a5fa" font-size="11" text-anchor="end">Chrome rebuildLayoutTree</text>
-<rect x="340" y="320" width="45.4" height="16" fill="#60a5fa"/>
-<rect x="385.4" y="320" width="0.7" height="16" fill="#60a5fa" opacity="0.35"/><text x="392.1" y="332" fill="#e5e7eb" font-size="11">12.7 ms <tspan fill="#9ca3af">· 1.08x · 795 ns/node</tspan></text>
-<text x="330" y="354" fill="#facc15" font-size="11" text-anchor="end">Ladybird tree build</text>
-<rect x="340" y="342" width="121.0" height="16" fill="#facc15"/>
-<rect x="461.0" y="342" width="4.1" height="16" fill="#facc15" opacity="0.35"/><text x="471.1" y="354" fill="#e5e7eb" font-size="11">33.8 ms <tspan fill="#9ca3af">· 2.89x · 2.12 us/node</tspan></text>
-<text x="330" y="376" fill="#c084fc" font-size="11" text-anchor="end">Servo(1) Box Tree</text>
-<rect x="340" y="364" width="404.3" height="16" fill="#c084fc"/>
-<rect x="744.3" y="364" width="7.4" height="16" fill="#c084fc" opacity="0.35"/><text x="757.7" y="376" fill="#e5e7eb" font-size="11">113 ms <tspan fill="#9ca3af">· 9.65x · 7.08 us/node</tspan></text>
-<text x="330" y="398" fill="#e9d5ff" font-size="11" text-anchor="end">Servo(3) Box Tree</text>
-<rect x="340" y="386" width="170.3" height="16" fill="#e9d5ff"/>
-<rect x="510.3" y="386" width="9.2" height="16" fill="#e9d5ff" opacity="0.35"/><text x="525.6" y="398" fill="#e5e7eb" font-size="11">47.5 ms <tspan fill="#9ca3af">· 4.06x · 2.98 us/node</tspan></text>
-<text x="330" y="420" fill="#34d399" font-size="11" text-anchor="end">Blitz construct (+pconstruct)</text>
-<rect x="340" y="408" width="177.5" height="16" fill="#34d399"/>
-<rect x="517.5" y="408" width="3.5" height="16" fill="#34d399" opacity="0.35"/><text x="527.0" y="420" fill="#e5e7eb" font-size="11">49.5 ms <tspan fill="#9ca3af">· 4.24x · 3.11 us/node</tspan></text>
-<text x="330" y="442" fill="#2dd4bf" font-size="11" text-anchor="end" font-weight="700">Blitz construct, parallel</text>
-<rect x="340" y="430" width="41.9" height="16" fill="#2dd4bf"/>
-<rect x="381.9" y="430" width="4.4" height="16" fill="#2dd4bf" opacity="0.35"/><text x="392.3" y="442" fill="#e5e7eb" font-size="11">11.7 ms <tspan fill="#9ca3af">· 1.00x · 733 ns/node</tspan></text>
+<text x="330" y="332" fill="#FBBC04" font-size="11" text-anchor="end">Chrome rebuildLayoutTree</text>
+<rect x="340" y="320" width="45.4" height="16" fill="#FBBC04"/>
+<rect x="385.4" y="320" width="0.7" height="16" fill="#FBBC04" opacity="0.35"/><text x="392.1" y="332" fill="#e5e7eb" font-size="11">12.7 ms <tspan fill="#9ca3af">· 1.08x · 795 ns/node</tspan></text>
+<text x="330" y="354" fill="#7B6CF0" font-size="11" text-anchor="end">Ladybird tree build</text>
+<rect x="340" y="342" width="121.0" height="16" fill="#7B6CF0"/>
+<rect x="461.0" y="342" width="4.1" height="16" fill="#7B6CF0" opacity="0.35"/><text x="471.1" y="354" fill="#e5e7eb" font-size="11">33.8 ms <tspan fill="#9ca3af">· 2.89x · 2.12 us/node</tspan></text>
+<text x="330" y="376" fill="#42BE65" font-size="11" text-anchor="end">Servo(1) Box Tree</text>
+<rect x="340" y="364" width="404.3" height="16" fill="#42BE65"/>
+<rect x="744.3" y="364" width="7.4" height="16" fill="#42BE65" opacity="0.35"/><text x="757.7" y="376" fill="#e5e7eb" font-size="11">113 ms <tspan fill="#9ca3af">· 9.65x · 7.08 us/node</tspan></text>
+<text x="330" y="398" fill="#84d59b" font-size="11" text-anchor="end">Servo(3) Box Tree</text>
+<rect x="340" y="386" width="170.3" height="16" fill="#84d59b"/>
+<rect x="510.3" y="386" width="9.2" height="16" fill="#84d59b" opacity="0.35"/><text x="525.6" y="398" fill="#e5e7eb" font-size="11">47.5 ms <tspan fill="#9ca3af">· 4.06x · 2.98 us/node</tspan></text>
+<text x="330" y="420" fill="#3E9593" font-size="11" text-anchor="end">Blitz construct (+pconstruct)</text>
+<rect x="340" y="408" width="177.5" height="16" fill="#3E9593"/>
+<rect x="517.5" y="408" width="3.5" height="16" fill="#3E9593" opacity="0.35"/><text x="527.0" y="420" fill="#e5e7eb" font-size="11">49.5 ms <tspan fill="#9ca3af">· 4.24x · 3.11 us/node</tspan></text>
+<text x="330" y="442" fill="#78b5b3" font-size="11" text-anchor="end" font-weight="700">Blitz construct, parallel</text>
+<rect x="340" y="430" width="41.9" height="16" fill="#78b5b3"/>
+<rect x="381.9" y="430" width="4.4" height="16" fill="#78b5b3" opacity="0.35"/><text x="392.3" y="442" fill="#e5e7eb" font-size="11">11.7 ms <tspan fill="#9ca3af">· 1.00x · 733 ns/node</tspan></text>
 <text x="16" y="502" fill="#f9fafb" font-size="13" font-weight="600">Box construction + layout</text>
 <text x="16" y="518" fill="#9ca3af" font-size="11">Bars are stacked by stage where the engine records them, left to right in pipeline order (solid → faint); grey = rest of the span; hover a segment for its value.</text>
 <line x1="340.0" x2="340.0" y1="528" y2="732" stroke="#374151" stroke-dasharray="2 4"/><text x="340.0" y="746" fill="#9ca3af" font-size="10" text-anchor="middle">0</text>
@@ -71,48 +71,48 @@
 <line x1="684.0" x2="684.0" y1="528" y2="732" stroke="#374151" stroke-dasharray="2 4"/><text x="684.0" y="746" fill="#9ca3af" font-size="10" text-anchor="middle">400</text>
 <line x1="770.0" x2="770.0" y1="528" y2="732" stroke="#374151" stroke-dasharray="2 4"/><text x="770.0" y="746" fill="#9ca3af" font-size="10" text-anchor="middle">500</text>
 <text x="784" y="746" fill="#9ca3af" font-size="10">ms</text>
-<text x="330" y="546" fill="#60a5fa" font-size="11" text-anchor="end">Chrome rebuildLayoutTree+Layout</text>
-<rect x="340.0" y="534" width="11.0" height="16" fill="#60a5fa" opacity="1.0"><title>construct: 12.8 ms</title></rect>
-<rect x="351.0" y="534" width="76.0" height="16" fill="#60a5fa" opacity="0.65"><title>layout: 88.3 ms</title></rect>
+<text x="330" y="546" fill="#FBBC04" font-size="11" text-anchor="end">Chrome rebuildLayoutTree+Layout</text>
+<rect x="340.0" y="534" width="11.0" height="16" fill="#FBBC04" opacity="1.0"><title>construct: 12.8 ms</title></rect>
+<rect x="351.0" y="534" width="76.0" height="16" fill="#FBBC04" opacity="0.65"><title>layout: 88.3 ms</title></rect>
 <text x="389.0" y="546" fill="#0b1120" font-size="10" text-anchor="middle">88.3</text>
-<rect x="426.9" y="534" width="4.8" height="16" fill="#60a5fa" opacity="0.35"/><text x="437.8" y="546" fill="#e5e7eb" font-size="11">101 ms <tspan fill="#9ca3af">· 2.98x · 6.34 us/node</tspan></text>
-<text x="330" y="568" fill="#fb923c" font-size="11" text-anchor="end">Firefox(1) Reflow</text>
-<rect x="340" y="556" width="72.4" height="16" fill="#fb923c"/>
-<rect x="412.4" y="556" width="4.7" height="16" fill="#fb923c" opacity="0.35"/><text x="423.1" y="568" fill="#e5e7eb" font-size="11">84.2 ms <tspan fill="#9ca3af">· 2.48x · 5.28 us/node</tspan></text>
-<text x="330" y="590" fill="#fdba74" font-size="11" text-anchor="end">Firefox Reflow</text>
-<rect x="340" y="578" width="71.1" height="16" fill="#fdba74"/>
-<rect x="411.1" y="578" width="4.0" height="16" fill="#fdba74" opacity="0.35"/><text x="421.2" y="590" fill="#e5e7eb" font-size="11">82.7 ms <tspan fill="#9ca3af">· 2.44x · 5.19 us/node</tspan></text>
-<text x="330" y="612" fill="#facc15" font-size="11" text-anchor="end">Ladybird tree build+layout</text>
-<rect x="340.0" y="600" width="30.1" height="16" fill="#facc15" opacity="1.0"><title>construct: 35 ms</title></rect>
+<rect x="426.9" y="534" width="4.8" height="16" fill="#FBBC04" opacity="0.35"/><text x="437.8" y="546" fill="#e5e7eb" font-size="11">101 ms <tspan fill="#9ca3af">· 2.98x · 6.34 us/node</tspan></text>
+<text x="330" y="568" fill="#FF7139" font-size="11" text-anchor="end">Firefox(1) Reflow</text>
+<rect x="340" y="556" width="72.4" height="16" fill="#FF7139"/>
+<rect x="412.4" y="556" width="4.7" height="16" fill="#FF7139" opacity="0.35"/><text x="423.1" y="568" fill="#e5e7eb" font-size="11">84.2 ms <tspan fill="#9ca3af">· 2.48x · 5.28 us/node</tspan></text>
+<text x="330" y="590" fill="#ffa37e" font-size="11" text-anchor="end">Firefox Reflow</text>
+<rect x="340" y="578" width="71.1" height="16" fill="#ffa37e"/>
+<rect x="411.1" y="578" width="4.0" height="16" fill="#ffa37e" opacity="0.35"/><text x="421.2" y="590" fill="#e5e7eb" font-size="11">82.7 ms <tspan fill="#9ca3af">· 2.44x · 5.19 us/node</tspan></text>
+<text x="330" y="612" fill="#7B6CF0" font-size="11" text-anchor="end">Ladybird tree build+layout</text>
+<rect x="340.0" y="600" width="30.1" height="16" fill="#7B6CF0" opacity="1.0"><title>construct: 35 ms</title></rect>
 <text x="355.1" y="612" fill="#0b1120" font-size="10" text-anchor="middle">35</text>
-<rect x="370.1" y="600" width="309.6" height="16" fill="#facc15" opacity="0.65"><title>layout: 360 ms</title></rect>
+<rect x="370.1" y="600" width="309.6" height="16" fill="#7B6CF0" opacity="0.65"><title>layout: 360 ms</title></rect>
 <text x="524.9" y="612" fill="#0b1120" font-size="10" text-anchor="middle">layout 360</text>
-<rect x="679.7" y="600" width="8.7" height="16" fill="#facc15" opacity="0.35"/><text x="694.4" y="612" fill="#e5e7eb" font-size="11">395 ms <tspan fill="#9ca3af">· 11.65x · 24.8 us/node</tspan></text>
-<text x="330" y="634" fill="#c084fc" font-size="11" text-anchor="end">Servo(1) Box+Fragment</text>
-<rect x="340.0" y="622" width="97.1" height="16" fill="#c084fc" opacity="1.0"><title>box tree: 113 ms</title></rect>
+<rect x="679.7" y="600" width="8.7" height="16" fill="#7B6CF0" opacity="0.35"/><text x="694.4" y="612" fill="#e5e7eb" font-size="11">395 ms <tspan fill="#9ca3af">· 11.65x · 24.8 us/node</tspan></text>
+<text x="330" y="634" fill="#42BE65" font-size="11" text-anchor="end">Servo(1) Box+Fragment</text>
+<rect x="340.0" y="622" width="97.1" height="16" fill="#42BE65" opacity="1.0"><title>box tree: 113 ms</title></rect>
 <text x="388.6" y="634" fill="#0b1120" font-size="10" text-anchor="middle">box tree 113</text>
-<rect x="437.1" y="622" width="39.2" height="16" fill="#c084fc" opacity="0.65"><title>fragment tree: 45.6 ms</title></rect>
+<rect x="437.1" y="622" width="39.2" height="16" fill="#42BE65" opacity="0.65"><title>fragment tree: 45.6 ms</title></rect>
 <text x="456.7" y="634" fill="#0b1120" font-size="10" text-anchor="middle">45.6</text>
-<rect x="476.3" y="622" width="3.9" height="16" fill="#c084fc" opacity="0.35"/><text x="486.2" y="634" fill="#e5e7eb" font-size="11">158 ms <tspan fill="#9ca3af">· 4.68x · 9.94 us/node</tspan></text>
-<text x="330" y="656" fill="#e9d5ff" font-size="11" text-anchor="end">Servo(3) Box+Fragment</text>
-<rect x="340.0" y="644" width="40.9" height="16" fill="#e9d5ff" opacity="1.0"><title>box tree: 47.5 ms</title></rect>
+<rect x="476.3" y="622" width="3.9" height="16" fill="#42BE65" opacity="0.35"/><text x="486.2" y="634" fill="#e5e7eb" font-size="11">158 ms <tspan fill="#9ca3af">· 4.68x · 9.94 us/node</tspan></text>
+<text x="330" y="656" fill="#84d59b" font-size="11" text-anchor="end">Servo(3) Box+Fragment</text>
+<rect x="340.0" y="644" width="40.9" height="16" fill="#84d59b" opacity="1.0"><title>box tree: 47.5 ms</title></rect>
 <text x="360.4" y="656" fill="#0b1120" font-size="10" text-anchor="middle">47.5</text>
-<rect x="380.9" y="644" width="35.8" height="16" fill="#e9d5ff" opacity="0.65"><title>fragment tree: 41.6 ms</title></rect>
+<rect x="380.9" y="644" width="35.8" height="16" fill="#84d59b" opacity="0.65"><title>fragment tree: 41.6 ms</title></rect>
 <text x="398.8" y="656" fill="#0b1120" font-size="10" text-anchor="middle">41.6</text>
-<rect x="416.7" y="644" width="2.9" height="16" fill="#e9d5ff" opacity="0.35"/><text x="425.6" y="656" fill="#e5e7eb" font-size="11">89.1 ms <tspan fill="#9ca3af">· 2.63x · 5.59 us/node</tspan></text>
-<text x="330" y="678" fill="#34d399" font-size="11" text-anchor="end">Blitz construct+layout</text>
-<rect x="340.0" y="666" width="43.2" height="16" fill="#34d399" opacity="1.0"><title>construct: 50.3 ms</title></rect>
+<rect x="416.7" y="644" width="2.9" height="16" fill="#84d59b" opacity="0.35"/><text x="425.6" y="656" fill="#e5e7eb" font-size="11">89.1 ms <tspan fill="#9ca3af">· 2.63x · 5.59 us/node</tspan></text>
+<text x="330" y="678" fill="#3E9593" font-size="11" text-anchor="end">Blitz construct+layout</text>
+<rect x="340.0" y="666" width="43.2" height="16" fill="#3E9593" opacity="1.0"><title>construct: 50.3 ms</title></rect>
 <text x="361.6" y="678" fill="#0b1120" font-size="10" text-anchor="middle">50.3</text>
-<rect x="383.2" y="666" width="21.1" height="16" fill="#34d399" opacity="0.65"><title>layout: 24.5 ms</title></rect>
-<rect x="404.3" y="666" width="1.5" height="16" fill="#34d399" opacity="0.35"/><text x="411.8" y="678" fill="#e5e7eb" font-size="11">74.7 ms <tspan fill="#9ca3af">· 2.20x · 4.69 us/node</tspan></text>
-<text x="330" y="700" fill="#2dd4bf" font-size="11" text-anchor="end">Blitz construct+layout (parallel construct)</text>
-<rect x="340.0" y="688" width="10.1" height="16" fill="#2dd4bf" opacity="1.0"><title>construct: 11.7 ms</title></rect>
-<rect x="350.1" y="688" width="21.6" height="16" fill="#2dd4bf" opacity="0.65"><title>layout: 25.1 ms</title></rect>
-<rect x="371.6" y="688" width="3.1" height="16" fill="#2dd4bf" opacity="0.35"/><text x="380.7" y="700" fill="#e5e7eb" font-size="11">36.8 ms <tspan fill="#9ca3af">· 1.08x · 2.31 us/node</tspan></text>
-<text x="330" y="722" fill="#bef264" font-size="11" text-anchor="end" font-weight="700">Blitz construct+layout (parallel construct+layout)</text>
-<rect x="340.0" y="710" width="10.0" height="16" fill="#bef264" opacity="1.0"><title>construct: 11.6 ms</title></rect>
-<rect x="350.0" y="710" width="19.2" height="16" fill="#bef264" opacity="0.65"><title>layout: 22.3 ms</title></rect>
-<rect x="369.2" y="710" width="1.5" height="16" fill="#bef264" opacity="0.35"/><text x="376.6" y="722" fill="#e5e7eb" font-size="11">33.9 ms <tspan fill="#9ca3af">· 1.00x · 2.13 us/node</tspan></text>
+<rect x="383.2" y="666" width="21.1" height="16" fill="#3E9593" opacity="0.65"><title>layout: 24.5 ms</title></rect>
+<rect x="404.3" y="666" width="1.5" height="16" fill="#3E9593" opacity="0.35"/><text x="411.8" y="678" fill="#e5e7eb" font-size="11">74.7 ms <tspan fill="#9ca3af">· 2.20x · 4.69 us/node</tspan></text>
+<text x="330" y="700" fill="#78b5b3" font-size="11" text-anchor="end">Blitz construct+layout (parallel construct)</text>
+<rect x="340.0" y="688" width="10.1" height="16" fill="#78b5b3" opacity="1.0"><title>construct: 11.7 ms</title></rect>
+<rect x="350.1" y="688" width="21.6" height="16" fill="#78b5b3" opacity="0.65"><title>layout: 25.1 ms</title></rect>
+<rect x="371.6" y="688" width="3.1" height="16" fill="#78b5b3" opacity="0.35"/><text x="380.7" y="700" fill="#e5e7eb" font-size="11">36.8 ms <tspan fill="#9ca3af">· 1.08x · 2.31 us/node</tspan></text>
+<text x="330" y="722" fill="#bbdad9" font-size="11" text-anchor="end" font-weight="700">Blitz construct+layout (parallel construct+layout)</text>
+<rect x="340.0" y="710" width="10.0" height="16" fill="#bbdad9" opacity="1.0"><title>construct: 11.6 ms</title></rect>
+<rect x="350.0" y="710" width="19.2" height="16" fill="#bbdad9" opacity="0.65"><title>layout: 22.3 ms</title></rect>
+<rect x="369.2" y="710" width="1.5" height="16" fill="#bbdad9" opacity="0.35"/><text x="376.6" y="722" fill="#e5e7eb" font-size="11">33.9 ms <tspan fill="#9ca3af">· 1.00x · 2.13 us/node</tspan></text>
 <text x="16" y="782" fill="#f9fafb" font-size="13" font-weight="600">Style</text>
 <line x1="340.0" x2="340.0" y1="792" y2="974" stroke="#374151" stroke-dasharray="2 4"/><text x="340.0" y="988" fill="#9ca3af" font-size="10" text-anchor="middle">0</text>
 <line x1="401.4" x2="401.4" y1="792" y2="974" stroke="#374151" stroke-dasharray="2 4"/><text x="401.4" y="988" fill="#9ca3af" font-size="10" text-anchor="middle">50</text>
@@ -123,30 +123,30 @@
 <line x1="708.6" x2="708.6" y1="792" y2="974" stroke="#374151" stroke-dasharray="2 4"/><text x="708.6" y="988" fill="#9ca3af" font-size="10" text-anchor="middle">300</text>
 <line x1="770.0" x2="770.0" y1="792" y2="974" stroke="#374151" stroke-dasharray="2 4"/><text x="770.0" y="988" fill="#9ca3af" font-size="10" text-anchor="middle">350</text>
 <text x="784" y="988" fill="#9ca3af" font-size="10">ms</text>
-<text x="330" y="810" fill="#60a5fa" font-size="11" text-anchor="end">Chrome recalcStyle</text>
-<rect x="340" y="798" width="24.3" height="16" fill="#60a5fa"/>
-<rect x="364.3" y="798" width="0.5" height="16" fill="#60a5fa" opacity="0.35"/><text x="370.8" y="810" fill="#e5e7eb" font-size="11">19.8 ms <tspan fill="#9ca3af">· 3.05x · 1.24 us/node</tspan></text>
-<text x="330" y="832" fill="#fb923c" font-size="11" text-anchor="end">Firefox(1) Styles (incl. frame construction)</text>
-<rect x="340" y="820" width="84.7" height="16" fill="#fb923c"/>
-<rect x="424.7" y="820" width="7.1" height="16" fill="#fb923c" opacity="0.35"/><text x="437.7" y="832" fill="#e5e7eb" font-size="11">68.9 ms <tspan fill="#9ca3af">· 10.61x · 4.32 us/node</tspan></text>
-<text x="330" y="854" fill="#fdba74" font-size="11" text-anchor="end">Firefox Styles (incl. frame construction)</text>
-<rect x="340" y="842" width="43.0" height="16" fill="#fdba74"/>
-<rect x="383.0" y="842" width="2.8" height="16" fill="#fdba74" opacity="0.35"/><text x="391.8" y="854" fill="#e5e7eb" font-size="11">35 ms <tspan fill="#9ca3af">· 5.39x · 2.2 us/node</tspan></text>
-<text x="330" y="876" fill="#facc15" font-size="11" text-anchor="end">Ladybird update_style</text>
-<rect x="340" y="864" width="388.5" height="16" fill="#facc15"/>
-<rect x="728.5" y="864" width="5.6" height="16" fill="#facc15" opacity="0.35"/><text x="740.1" y="876" fill="#e5e7eb" font-size="11">316 ms <tspan fill="#9ca3af">· 48.69x · 19.8 us/node</tspan></text>
-<text x="330" y="898" fill="#c084fc" font-size="11" text-anchor="end">Servo(1) Styling</text>
-<rect x="340" y="886" width="67.6" height="16" fill="#c084fc"/>
-<rect x="407.6" y="886" width="2.4" height="16" fill="#c084fc" opacity="0.35"/><text x="415.9" y="898" fill="#e5e7eb" font-size="11">55 ms <tspan fill="#9ca3af">· 8.47x · 3.45 us/node</tspan></text>
-<text x="330" y="920" fill="#e9d5ff" font-size="11" text-anchor="end">Servo(3) Styling</text>
-<rect x="340" y="908" width="33.6" height="16" fill="#e9d5ff"/>
-<rect x="373.6" y="908" width="1.2" height="16" fill="#e9d5ff" opacity="0.35"/><text x="380.8" y="920" fill="#e5e7eb" font-size="11">27.4 ms <tspan fill="#9ca3af">· 4.21x · 1.72 us/node</tspan></text>
-<text x="330" y="942" fill="#34d399" font-size="11" text-anchor="end">Blitz style</text>
-<rect x="340" y="930" width="21.4" height="16" fill="#34d399"/>
-<rect x="361.4" y="930" width="0.3" height="16" fill="#34d399" opacity="0.35"/><text x="367.7" y="942" fill="#e5e7eb" font-size="11">17.4 ms <tspan fill="#9ca3af">· 2.68x · 1.09 us/node</tspan></text>
-<text x="330" y="964" fill="#6ee7b7" font-size="11" text-anchor="end" font-weight="700">Blitz style (parallel)</text>
-<rect x="340" y="952" width="8.0" height="16" fill="#6ee7b7"/>
-<rect x="348.0" y="952" width="0.7" height="16" fill="#6ee7b7" opacity="0.35"/><text x="354.7" y="964" fill="#e5e7eb" font-size="11">6.49 ms <tspan fill="#9ca3af">· 1.00x · 407 ns/node</tspan></text>
+<text x="330" y="810" fill="#FBBC04" font-size="11" text-anchor="end">Chrome recalcStyle</text>
+<rect x="340" y="798" width="24.3" height="16" fill="#FBBC04"/>
+<rect x="364.3" y="798" width="0.5" height="16" fill="#FBBC04" opacity="0.35"/><text x="370.8" y="810" fill="#e5e7eb" font-size="11">19.8 ms <tspan fill="#9ca3af">· 3.05x · 1.24 us/node</tspan></text>
+<text x="330" y="832" fill="#FF7139" font-size="11" text-anchor="end">Firefox(1) Styles (incl. frame construction)</text>
+<rect x="340" y="820" width="84.7" height="16" fill="#FF7139"/>
+<rect x="424.7" y="820" width="7.1" height="16" fill="#FF7139" opacity="0.35"/><text x="437.7" y="832" fill="#e5e7eb" font-size="11">68.9 ms <tspan fill="#9ca3af">· 10.61x · 4.32 us/node</tspan></text>
+<text x="330" y="854" fill="#ffa37e" font-size="11" text-anchor="end">Firefox Styles (incl. frame construction)</text>
+<rect x="340" y="842" width="43.0" height="16" fill="#ffa37e"/>
+<rect x="383.0" y="842" width="2.8" height="16" fill="#ffa37e" opacity="0.35"/><text x="391.8" y="854" fill="#e5e7eb" font-size="11">35 ms <tspan fill="#9ca3af">· 5.39x · 2.2 us/node</tspan></text>
+<text x="330" y="876" fill="#7B6CF0" font-size="11" text-anchor="end">Ladybird update_style</text>
+<rect x="340" y="864" width="388.5" height="16" fill="#7B6CF0"/>
+<rect x="728.5" y="864" width="5.6" height="16" fill="#7B6CF0" opacity="0.35"/><text x="740.1" y="876" fill="#e5e7eb" font-size="11">316 ms <tspan fill="#9ca3af">· 48.69x · 19.8 us/node</tspan></text>
+<text x="330" y="898" fill="#42BE65" font-size="11" text-anchor="end">Servo(1) Styling</text>
+<rect x="340" y="886" width="67.6" height="16" fill="#42BE65"/>
+<rect x="407.6" y="886" width="2.4" height="16" fill="#42BE65" opacity="0.35"/><text x="415.9" y="898" fill="#e5e7eb" font-size="11">55 ms <tspan fill="#9ca3af">· 8.47x · 3.45 us/node</tspan></text>
+<text x="330" y="920" fill="#84d59b" font-size="11" text-anchor="end">Servo(3) Styling</text>
+<rect x="340" y="908" width="33.6" height="16" fill="#84d59b"/>
+<rect x="373.6" y="908" width="1.2" height="16" fill="#84d59b" opacity="0.35"/><text x="380.8" y="920" fill="#e5e7eb" font-size="11">27.4 ms <tspan fill="#9ca3af">· 4.21x · 1.72 us/node</tspan></text>
+<text x="330" y="942" fill="#3E9593" font-size="11" text-anchor="end">Blitz style</text>
+<rect x="340" y="930" width="21.4" height="16" fill="#3E9593"/>
+<rect x="361.4" y="930" width="0.3" height="16" fill="#3E9593" opacity="0.35"/><text x="367.7" y="942" fill="#e5e7eb" font-size="11">17.4 ms <tspan fill="#9ca3af">· 2.68x · 1.09 us/node</tspan></text>
+<text x="330" y="964" fill="#5ba5a3" font-size="11" text-anchor="end" font-weight="700">Blitz style (parallel)</text>
+<rect x="340" y="952" width="8.0" height="16" fill="#5ba5a3"/>
+<rect x="348.0" y="952" width="0.7" height="16" fill="#5ba5a3" opacity="0.35"/><text x="354.7" y="964" fill="#e5e7eb" font-size="11">6.49 ms <tspan fill="#9ca3af">· 1.00x · 407 ns/node</tspan></text>
 <text x="16" y="1024" fill="#f9fafb" font-size="13" font-weight="600">Whole pipeline (style to laid-out tree)</text>
 <text x="16" y="1040" fill="#9ca3af" font-size="11">Bars are stacked by stage where the engine records them, left to right in pipeline order (solid → faint); grey = rest of the span; hover a segment for its value.</text>
 <line x1="340.0" x2="340.0" y1="1050" y2="1276" stroke="#374151" stroke-dasharray="2 4"/><text x="340.0" y="1290" fill="#9ca3af" font-size="10" text-anchor="middle">0</text>
@@ -159,70 +159,70 @@
 <line x1="716.2" x2="716.2" y1="1050" y2="1276" stroke="#374151" stroke-dasharray="2 4"/><text x="716.2" y="1290" fill="#9ca3af" font-size="10" text-anchor="middle">700</text>
 <line x1="770.0" x2="770.0" y1="1050" y2="1276" stroke="#374151" stroke-dasharray="2 4"/><text x="770.0" y="1290" fill="#9ca3af" font-size="10" text-anchor="middle">800</text>
 <text x="784" y="1290" fill="#9ca3af" font-size="10">ms</text>
-<text x="330" y="1068" fill="#60a5fa" font-size="11" text-anchor="end">Chrome UpdateLayoutTree+Layout</text>
-<rect x="340.0" y="1056" width="10.7" height="16" fill="#60a5fa" opacity="1.0"><title>style: 19.9 ms</title></rect>
-<rect x="350.7" y="1056" width="6.9" height="16" fill="#60a5fa" opacity="0.65"><title>construct: 12.8 ms</title></rect>
-<rect x="357.6" y="1056" width="47.5" height="16" fill="#60a5fa" opacity="0.4"><title>layout: 88.3 ms</title></rect>
+<text x="330" y="1068" fill="#FBBC04" font-size="11" text-anchor="end">Chrome UpdateLayoutTree+Layout</text>
+<rect x="340.0" y="1056" width="10.7" height="16" fill="#FBBC04" opacity="1.0"><title>style: 19.9 ms</title></rect>
+<rect x="350.7" y="1056" width="6.9" height="16" fill="#FBBC04" opacity="0.65"><title>construct: 12.8 ms</title></rect>
+<rect x="357.6" y="1056" width="47.5" height="16" fill="#FBBC04" opacity="0.4"><title>layout: 88.3 ms</title></rect>
 <text x="381.3" y="1068" fill="#0b1120" font-size="10" text-anchor="middle">88.3</text>
 <rect x="405.0" y="1056" width="0.5" height="16" fill="#6b7280" opacity="1.0"><title>other: 0.961 ms</title></rect>
-<rect x="405.6" y="1056" width="3.0" height="16" fill="#60a5fa" opacity="0.35"/><text x="414.5" y="1068" fill="#e5e7eb" font-size="11">122 ms <tspan fill="#9ca3af">· 2.71x · 7.65 us/node</tspan></text>
-<text x="330" y="1090" fill="#fb923c" font-size="11" text-anchor="end">Firefox(1) Styles+Reflow</text>
-<rect x="340.0" y="1078" width="37.0" height="16" fill="#fb923c" opacity="1.0"><title>style: 68.9 ms</title></rect>
+<rect x="405.6" y="1056" width="3.0" height="16" fill="#FBBC04" opacity="0.35"/><text x="414.5" y="1068" fill="#e5e7eb" font-size="11">122 ms <tspan fill="#9ca3af">· 2.71x · 7.65 us/node</tspan></text>
+<text x="330" y="1090" fill="#FF7139" font-size="11" text-anchor="end">Firefox(1) Styles+Reflow</text>
+<rect x="340.0" y="1078" width="37.0" height="16" fill="#FF7139" opacity="1.0"><title>style: 68.9 ms</title></rect>
 <text x="358.5" y="1090" fill="#0b1120" font-size="10" text-anchor="middle">68.9</text>
-<rect x="377.0" y="1078" width="45.2" height="16" fill="#fb923c" opacity="0.65"><title>layout: 84.2 ms</title></rect>
+<rect x="377.0" y="1078" width="45.2" height="16" fill="#FF7139" opacity="0.65"><title>layout: 84.2 ms</title></rect>
 <text x="399.7" y="1090" fill="#0b1120" font-size="10" text-anchor="middle">84.2</text>
-<rect x="422.3" y="1078" width="6.0" height="16" fill="#fb923c" opacity="0.35"/><text x="434.3" y="1090" fill="#e5e7eb" font-size="11">153 ms <tspan fill="#9ca3af">· 3.41x · 9.6 us/node</tspan></text>
-<text x="330" y="1112" fill="#fdba74" font-size="11" text-anchor="end">Firefox Styles+Reflow</text>
-<rect x="340.0" y="1100" width="18.8" height="16" fill="#fdba74" opacity="1.0"><title>style: 35 ms</title></rect>
-<rect x="358.8" y="1100" width="44.5" height="16" fill="#fdba74" opacity="0.65"><title>layout: 82.7 ms</title></rect>
+<rect x="422.3" y="1078" width="6.0" height="16" fill="#FF7139" opacity="0.35"/><text x="434.3" y="1090" fill="#e5e7eb" font-size="11">153 ms <tspan fill="#9ca3af">· 3.41x · 9.6 us/node</tspan></text>
+<text x="330" y="1112" fill="#ffa37e" font-size="11" text-anchor="end">Firefox Styles+Reflow</text>
+<rect x="340.0" y="1100" width="18.8" height="16" fill="#ffa37e" opacity="1.0"><title>style: 35 ms</title></rect>
+<rect x="358.8" y="1100" width="44.5" height="16" fill="#ffa37e" opacity="0.65"><title>layout: 82.7 ms</title></rect>
 <text x="381.1" y="1112" fill="#0b1120" font-size="10" text-anchor="middle">82.7</text>
-<rect x="403.3" y="1100" width="3.4" height="16" fill="#fdba74" opacity="0.35"/><text x="412.7" y="1112" fill="#e5e7eb" font-size="11">118 ms <tspan fill="#9ca3af">· 2.62x · 7.38 us/node</tspan></text>
-<text x="330" y="1134" fill="#facc15" font-size="11" text-anchor="end">Ladybird update_layout()</text>
-<rect x="340.0" y="1122" width="170.7" height="16" fill="#facc15" opacity="1.0"><title>style: 318 ms</title></rect>
+<rect x="403.3" y="1100" width="3.4" height="16" fill="#ffa37e" opacity="0.35"/><text x="412.7" y="1112" fill="#e5e7eb" font-size="11">118 ms <tspan fill="#9ca3af">· 2.62x · 7.38 us/node</tspan></text>
+<text x="330" y="1134" fill="#7B6CF0" font-size="11" text-anchor="end">Ladybird update_layout()</text>
+<rect x="340.0" y="1122" width="170.7" height="16" fill="#7B6CF0" opacity="1.0"><title>style: 318 ms</title></rect>
 <text x="425.4" y="1134" fill="#0b1120" font-size="10" text-anchor="middle">style 318</text>
-<rect x="510.7" y="1122" width="18.8" height="16" fill="#facc15" opacity="0.65"><title>construct: 35 ms</title></rect>
-<rect x="529.5" y="1122" width="193.5" height="16" fill="#facc15" opacity="0.4"><title>layout: 360 ms</title></rect>
+<rect x="510.7" y="1122" width="18.8" height="16" fill="#7B6CF0" opacity="0.65"><title>construct: 35 ms</title></rect>
+<rect x="529.5" y="1122" width="193.5" height="16" fill="#7B6CF0" opacity="0.4"><title>layout: 360 ms</title></rect>
 <text x="626.3" y="1134" fill="#0b1120" font-size="10" text-anchor="middle">layout 360</text>
 <rect x="723.0" y="1122" width="6.3" height="16" fill="#6b7280" opacity="1.0"><title>other: 11.7 ms</title></rect>
-<rect x="729.3" y="1122" width="7.2" height="16" fill="#facc15" opacity="0.35"/><text x="742.5" y="1134" fill="#e5e7eb" font-size="11">724 ms <tspan fill="#9ca3af">· 16.11x · 45.4 us/node</tspan></text>
-<text x="330" y="1156" fill="#c084fc" font-size="11" text-anchor="end">Servo(1) restyle_and_build_trees</text>
-<rect x="340.0" y="1144" width="29.6" height="16" fill="#c084fc" opacity="1.0"><title>style: 55 ms</title></rect>
+<rect x="729.3" y="1122" width="7.2" height="16" fill="#7B6CF0" opacity="0.35"/><text x="742.5" y="1134" fill="#e5e7eb" font-size="11">724 ms <tspan fill="#9ca3af">· 16.11x · 45.4 us/node</tspan></text>
+<text x="330" y="1156" fill="#42BE65" font-size="11" text-anchor="end">Servo(1) restyle_and_build_trees</text>
+<rect x="340.0" y="1144" width="29.6" height="16" fill="#42BE65" opacity="1.0"><title>style: 55 ms</title></rect>
 <text x="354.8" y="1156" fill="#0b1120" font-size="10" text-anchor="middle">55</text>
-<rect x="369.6" y="1144" width="60.7" height="16" fill="#c084fc" opacity="0.65"><title>box tree: 113 ms</title></rect>
+<rect x="369.6" y="1144" width="60.7" height="16" fill="#42BE65" opacity="0.65"><title>box tree: 113 ms</title></rect>
 <text x="399.9" y="1156" fill="#0b1120" font-size="10" text-anchor="middle">113</text>
-<rect x="430.3" y="1144" width="24.5" height="16" fill="#c084fc" opacity="0.4"><title>fragment tree: 45.6 ms</title></rect>
+<rect x="430.3" y="1144" width="24.5" height="16" fill="#42BE65" opacity="0.4"><title>fragment tree: 45.6 ms</title></rect>
 <rect x="454.8" y="1144" width="1.0" height="16" fill="#6b7280" opacity="1.0"><title>other: 1.92 ms</title></rect>
-<rect x="455.8" y="1144" width="3.2" height="16" fill="#c084fc" opacity="0.35"/><text x="465.0" y="1156" fill="#e5e7eb" font-size="11">215 ms <tspan fill="#9ca3af">· 4.79x · 13.5 us/node</tspan></text>
-<text x="330" y="1178" fill="#e9d5ff" font-size="11" text-anchor="end">Servo(3) restyle_and_build_trees</text>
-<rect x="340.0" y="1166" width="15.2" height="16" fill="#e9d5ff" opacity="1.0"><title>style: 28.3 ms</title></rect>
-<rect x="355.2" y="1166" width="25.6" height="16" fill="#e9d5ff" opacity="0.65"><title>box tree: 47.5 ms</title></rect>
-<rect x="380.8" y="1166" width="22.4" height="16" fill="#e9d5ff" opacity="0.4"><title>fragment tree: 41.6 ms</title></rect>
+<rect x="455.8" y="1144" width="3.2" height="16" fill="#42BE65" opacity="0.35"/><text x="465.0" y="1156" fill="#e5e7eb" font-size="11">215 ms <tspan fill="#9ca3af">· 4.79x · 13.5 us/node</tspan></text>
+<text x="330" y="1178" fill="#84d59b" font-size="11" text-anchor="end">Servo(3) restyle_and_build_trees</text>
+<rect x="340.0" y="1166" width="15.2" height="16" fill="#84d59b" opacity="1.0"><title>style: 28.3 ms</title></rect>
+<rect x="355.2" y="1166" width="25.6" height="16" fill="#84d59b" opacity="0.65"><title>box tree: 47.5 ms</title></rect>
+<rect x="380.8" y="1166" width="22.4" height="16" fill="#84d59b" opacity="0.4"><title>fragment tree: 41.6 ms</title></rect>
 <rect x="403.1" y="1166" width="1.3" height="16" fill="#6b7280" opacity="1.0"><title>other: 2.45 ms</title></rect>
-<rect x="404.4" y="1166" width="1.3" height="16" fill="#e9d5ff" opacity="0.35"/><text x="411.7" y="1178" fill="#e5e7eb" font-size="11">120 ms <tspan fill="#9ca3af">· 2.67x · 7.52 us/node</tspan></text>
-<text x="330" y="1200" fill="#34d399" font-size="11" text-anchor="end">Blitz resolve()</text>
-<rect x="340.0" y="1188" width="9.4" height="16" fill="#34d399" opacity="1.0"><title>style: 17.4 ms</title></rect>
-<rect x="349.4" y="1188" width="26.6" height="16" fill="#34d399" opacity="0.65"><title>construct: 49.5 ms</title></rect>
+<rect x="404.4" y="1166" width="1.3" height="16" fill="#84d59b" opacity="0.35"/><text x="411.7" y="1178" fill="#e5e7eb" font-size="11">120 ms <tspan fill="#9ca3af">· 2.67x · 7.52 us/node</tspan></text>
+<text x="330" y="1200" fill="#3E9593" font-size="11" text-anchor="end">Blitz resolve()</text>
+<rect x="340.0" y="1188" width="9.4" height="16" fill="#3E9593" opacity="1.0"><title>style: 17.4 ms</title></rect>
+<rect x="349.4" y="1188" width="26.6" height="16" fill="#3E9593" opacity="0.65"><title>construct: 49.5 ms</title></rect>
 <text x="362.7" y="1200" fill="#0b1120" font-size="10" text-anchor="middle">49.5</text>
-<rect x="376.0" y="1188" width="13.7" height="16" fill="#34d399" opacity="0.4"><title>layout: 25.4 ms</title></rect>
+<rect x="376.0" y="1188" width="13.7" height="16" fill="#3E9593" opacity="0.4"><title>layout: 25.4 ms</title></rect>
 <rect x="389.7" y="1188" width="1.3" height="16" fill="#6b7280" opacity="1.0"><title>other: 2.34 ms</title></rect>
-<rect x="390.9" y="1188" width="1.1" height="16" fill="#34d399" opacity="0.35"/><text x="398.1" y="1200" fill="#e5e7eb" font-size="11">94.7 ms <tspan fill="#9ca3af">· 2.11x · 5.94 us/node</tspan></text>
-<text x="330" y="1222" fill="#6ee7b7" font-size="11" text-anchor="end">Blitz resolve() (parallel style)</text>
-<rect x="340.0" y="1210" width="3.7" height="16" fill="#6ee7b7" opacity="1.0"><title>style: 6.9 ms</title></rect>
-<rect x="343.7" y="1210" width="26.5" height="16" fill="#6ee7b7" opacity="0.65"><title>construct: 49.4 ms</title></rect>
+<rect x="390.9" y="1188" width="1.1" height="16" fill="#3E9593" opacity="0.35"/><text x="398.1" y="1200" fill="#e5e7eb" font-size="11">94.7 ms <tspan fill="#9ca3af">· 2.11x · 5.94 us/node</tspan></text>
+<text x="330" y="1222" fill="#5ba5a3" font-size="11" text-anchor="end">Blitz resolve() (parallel style)</text>
+<rect x="340.0" y="1210" width="3.7" height="16" fill="#5ba5a3" opacity="1.0"><title>style: 6.9 ms</title></rect>
+<rect x="343.7" y="1210" width="26.5" height="16" fill="#5ba5a3" opacity="0.65"><title>construct: 49.4 ms</title></rect>
 <text x="357.0" y="1222" fill="#0b1120" font-size="10" text-anchor="middle">49.4</text>
-<rect x="370.2" y="1210" width="13.1" height="16" fill="#6ee7b7" opacity="0.4"><title>layout: 24.3 ms</title></rect>
+<rect x="370.2" y="1210" width="13.1" height="16" fill="#5ba5a3" opacity="0.4"><title>layout: 24.3 ms</title></rect>
 <rect x="383.3" y="1210" width="1.4" height="16" fill="#6b7280" opacity="1.0"><title>other: 2.59 ms</title></rect>
-<rect x="384.7" y="1210" width="2.4" height="16" fill="#6ee7b7" opacity="0.35"/><text x="393.2" y="1222" fill="#e5e7eb" font-size="11">83.2 ms <tspan fill="#9ca3af">· 1.85x · 5.22 us/node</tspan></text>
-<text x="330" y="1244" fill="#99f6e4" font-size="11" text-anchor="end">Blitz resolve() (parallel style+construct)</text>
-<rect x="340.0" y="1232" width="3.5" height="16" fill="#99f6e4" opacity="1.0"><title>style: 6.56 ms</title></rect>
-<rect x="343.5" y="1232" width="6.4" height="16" fill="#99f6e4" opacity="0.65"><title>construct: 11.9 ms</title></rect>
-<rect x="349.9" y="1232" width="13.0" height="16" fill="#99f6e4" opacity="0.4"><title>layout: 24.2 ms</title></rect>
+<rect x="384.7" y="1210" width="2.4" height="16" fill="#5ba5a3" opacity="0.35"/><text x="393.2" y="1222" fill="#e5e7eb" font-size="11">83.2 ms <tspan fill="#9ca3af">· 1.85x · 5.22 us/node</tspan></text>
+<text x="330" y="1244" fill="#95c5c4" font-size="11" text-anchor="end">Blitz resolve() (parallel style+construct)</text>
+<rect x="340.0" y="1232" width="3.5" height="16" fill="#95c5c4" opacity="1.0"><title>style: 6.56 ms</title></rect>
+<rect x="343.5" y="1232" width="6.4" height="16" fill="#95c5c4" opacity="0.65"><title>construct: 11.9 ms</title></rect>
+<rect x="349.9" y="1232" width="13.0" height="16" fill="#95c5c4" opacity="0.4"><title>layout: 24.2 ms</title></rect>
 <rect x="362.9" y="1232" width="1.4" height="16" fill="#6b7280" opacity="1.0"><title>other: 2.59 ms</title></rect>
-<rect x="364.3" y="1232" width="2.7" height="16" fill="#99f6e4" opacity="0.35"/><text x="373.0" y="1244" fill="#e5e7eb" font-size="11">45.3 ms <tspan fill="#9ca3af">· 1.01x · 2.84 us/node</tspan></text>
-<text x="330" y="1266" fill="#d9f99d" font-size="11" text-anchor="end" font-weight="700">Blitz resolve() (parallel style+construct+layout)</text>
-<rect x="340.0" y="1254" width="3.6" height="16" fill="#d9f99d" opacity="1.0"><title>style: 6.61 ms</title></rect>
-<rect x="343.6" y="1254" width="6.7" height="16" fill="#d9f99d" opacity="0.65"><title>construct: 12.6 ms</title></rect>
-<rect x="350.3" y="1254" width="12.4" height="16" fill="#d9f99d" opacity="0.4"><title>layout: 23 ms</title></rect>
+<rect x="364.3" y="1232" width="2.7" height="16" fill="#95c5c4" opacity="0.35"/><text x="373.0" y="1244" fill="#e5e7eb" font-size="11">45.3 ms <tspan fill="#9ca3af">· 1.01x · 2.84 us/node</tspan></text>
+<text x="330" y="1266" fill="#cfe4e4" font-size="11" text-anchor="end" font-weight="700">Blitz resolve() (parallel style+construct+layout)</text>
+<rect x="340.0" y="1254" width="3.6" height="16" fill="#cfe4e4" opacity="1.0"><title>style: 6.61 ms</title></rect>
+<rect x="343.6" y="1254" width="6.7" height="16" fill="#cfe4e4" opacity="0.65"><title>construct: 12.6 ms</title></rect>
+<rect x="350.3" y="1254" width="12.4" height="16" fill="#cfe4e4" opacity="0.4"><title>layout: 23 ms</title></rect>
 <rect x="362.7" y="1254" width="1.5" height="16" fill="#6b7280" opacity="1.0"><title>other: 2.78 ms</title></rect>
-<rect x="364.2" y="1254" width="1.2" height="16" fill="#d9f99d" opacity="0.35"/><text x="371.3" y="1266" fill="#e5e7eb" font-size="11">44.9 ms <tspan fill="#9ca3af">· 1.00x · 2.82 us/node</tspan></text>
+<rect x="364.2" y="1254" width="1.2" height="16" fill="#cfe4e4" opacity="0.35"/><text x="371.3" y="1266" fill="#e5e7eb" font-size="11">44.9 ms <tspan fill="#9ca3af">· 1.00x · 2.82 us/node</tspan></text>
 </svg>
