@@ -1,5 +1,5 @@
 """Horizontal bar charts of out/results.json: one SVG per case (out/plots/<suite>/<case>.svg) with a
-section per report table and a bar per engine column — bar = minimum of the samples in ms, a lighter
+section per report table except the two that the stacked bars already show (SKIPPED_TABLES) and a bar per engine column — bar = minimum of the samples in ms, a lighter
 extension to the median, composite metrics stacked by stage (STAGES); label = ms, multiple of the fastest browser of the section, time per node —
 plus one Markdown page per suite embedding its cases (out/plots/<suite>.md). `./run.py plot` writes them."""
 import html
@@ -63,10 +63,17 @@ def stages(sample, key):
     return parts
 
 
+# Their bars are the construct / layout segments of the "Box construction + layout" stack (Taffy, which only has a
+# layout number, is therefore in the report tables only).
+SKIPPED_TABLES = ("Layout only", "Construction")
+
+
 def sections(data, columns_by_table):
     """[(table title, [(engine, label, min ms, median ms, stages of the min sample)])] for the columns the case has samples for."""
     out = []
     for title, columns in columns_by_table:
+        if title in SKIPPED_TABLES:
+            continue
         bars = []
         for e, key, label in columns:
             samples = sorted((s for s in data["engines"].get(e, []) if s.get(key) is not None), key=lambda s: s[key])
@@ -131,7 +138,7 @@ def plot_case(name, data, columns_by_table, path):
            '<text x="16" y="42" fill="#9ca3af" font-size="11">Bar = minimum of the samples (ms, linear axis per section), '
            'lighter extension to the median.</text>',
            '<text x="16" y="56" fill="#9ca3af" font-size="11">Label: ms · multiple of the fastest browser of the section '
-           '(bold; Taffy excluded) · time per node.</text>',
+           '(bold) · time per node.</text>',
            *body, '</svg>']
     path.write_text("\n".join(svg))
 
@@ -147,7 +154,8 @@ def plot_all(results, columns_by_table, out_dir):
         by_suite.setdefault(name.split("/")[0], []).append((name, data))
     for suite, cases in by_suite.items():
         page = [f"# `{suite}/` cases", "", "One chart per case (`./run.py plot`), a section per table of "
-                "[the report](../report.md) and a bar per engine: bar = minimum of the samples in ms, lighter extension "
+                "[the report](../report.md) except Layout only and Construction (their numbers are the segments of the "
+                "construction+layout stack; Taffy is in the report only) and a bar per engine: bar = minimum of the samples in ms, lighter extension "
                 "to the median, construction+layout and whole-pipeline bars stacked by stage where the engine records them; label = ms, "
                 "multiple of the fastest browser of the section, time per node.", ""]
         for name, data in cases:
@@ -156,7 +164,7 @@ def plot_all(results, columns_by_table, out_dir):
         p.write_text("\n".join(page))
         written.append(p)
     index = ["# Plots", "", "One SVG per case, grouped per suite (`./run.py plot`): horizontal bars, a section per report "
-             "table, a bar per engine (minimum of the samples in ms, lighter extension to the median).", ""]
+             "table except Layout only and Construction (covered by the stacked construction+layout bars; Taffy is in the report only), a bar per engine (minimum of the samples in ms, lighter extension to the median).", ""]
     index += [f"- [`{s}/`]({s}.md) ({len(cases)} cases)" for s, cases in by_suite.items()]
     (out_dir / "README.md").write_text("\n".join(index) + "\n")
     written.append(out_dir / "README.md")
