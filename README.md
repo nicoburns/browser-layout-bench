@@ -163,13 +163,22 @@ them is the heights and box counts above, which pin each remaining difference to
 
 Phase mapping used in the report:
 
-- Layout only: Taffy `compute_layout` ≈ Blitz `layout` ≈ Servo Fragment Tree Construction ≈ Chrome `Layout`
-  ≈ Firefox `Reflow` ≈ Ladybird `layout`.
+- Layout only: Taffy `compute_layout` ≈ Blitz `layout` ≈ Servo Fragment Tree Construction; Chrome `Layout`
+  and Ladybird `layout` are listed too but include text shaping (see below), so on text-bearing cases they
+  are only comparable with each other.
 - Box construction + layout: Blitz `construct + layout` ≈ Servo Box Tree + Fragment Tree ≈ Chrome
   `rebuildLayoutTree + Layout` (Chrome builds `LayoutObject`s inside `UpdateLayoutTree`, not `Layout`)
-  ≈ Ladybird `construct + layout`.
-  Firefox is left out: Gecko constructs frames inside the `Styles` flush and has no separate
-  marker for it, so `Reflow` is layout only.
+  ≈ Ladybird `construct + layout` ≈ Firefox `Reflow`. Firefox's frame construction happens inside the
+  `Styles` flush with no marker of its own, so `Reflow` under-counts this table by the frame-construction
+  time (small: it is a tree walk with no shaping) and `Styles` over-counts the Style table by the same amount.
+- Text shaping sits in different phases: Blitz shapes when it builds the Parley inline layout in `construct`
+  (`build_inline_layout_into`, run as the deferred `pconstruct` tasks), Servo in Box Tree Construction
+  (`InlineFormattingContext` builder → `segment_and_shape`), whereas Chrome (`NGInlineNode::PrepareLayout`
+  → HarfBuzz inside `Layout`), Firefox (`nsTextFrame::Reflow` → `EnsureTextRun` → `gfxFont::ShapeText`)
+  and Ladybird (`inline_level_iterator.rs::shape_glyph_data` → `shape_text` during inline layout) shape
+  lazily while laying out. Shaping dominates construction on text-heavy pages (Blitz Wikipedia: construct
+  60 ms vs layout 20 ms), so "Box construction + layout" is the like-for-like table for any case with text;
+  "Layout only" is like-for-like only among Taffy, Blitz and Servo (the `text/` cases have no Taffy tree).
 - Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `recalcStyle`; Firefox `Styles` is listed
   here too but, like Chrome's `UpdateLayoutTree`, it includes frame construction; Ladybird `style` is `update_style()`.
 - Whole pipeline: Blitz `resolve()` (style to paint tree) ≈ Servo `handle_reflow` (style to display

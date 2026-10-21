@@ -465,12 +465,12 @@ def fmt_ms(ns):
 # Column order within every table: Chrome, Firefox, Servo, Blitz, Taffy; the Chrome column is the
 # reference for the multipliers.
 COLUMNS = [
-    ("Layout only", [("chrome", "layout", "Chrome Layout"), ("firefox1", "layout", "Firefox(1) Reflow"),
-                     ("firefox", "layout", "Firefox Reflow"), ("ladybird", "layout", "Ladybird layout"),
+    ("Layout only", [("chrome", "layout", "Chrome Layout (incl. shaping)"), ("ladybird", "layout", "Ladybird layout (incl. shaping)"),
                      ("servo1", "fragment", "Servo(1) Fragment Tree"), ("servo", "fragment", "Servo(3) Fragment Tree"),
                      ("blitz", "layout", "Blitz `layout`"), ("blitz-pcon-pl1", "layout", "Blitz `layout` (#1034 build, 1 thread)"),
                      ("blitz-pcon-pl", "layout", "Blitz `layout` (parallel layout)"), ("taffy", "layout", "Taffy")]),
     ("Box construction + layout", [("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout"),
+                                   ("firefox1", "layout", "Firefox(1) Reflow"), ("firefox", "layout", "Firefox Reflow"),
                                    ("ladybird", "construct+layout", "Ladybird tree build+layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
                                    ("blitz", "construct+layout", "Blitz construct+layout"),
@@ -515,7 +515,10 @@ def header(label):
 def report(results, how, engines):
     lines = [f"Times in ms, {how} over all rounds and iterations; second line of each cell is the multiple of the Chrome column "
              "of the same table (1.00x = Chrome); bold = fastest engine of the row, Taffy excluded. Servo(n) = `layout_threads=n`; "
-             "Firefox(1) = `layout.css.stylo-threads=1` (no style worker threads). Case names link to the case's bar chart; "
+             "Firefox(1) = `layout.css.stylo-threads=1` (no style worker threads). Text shaping is in the layout phase of Chrome, "
+             "Firefox and Ladybird but in the construction phase of Blitz and Servo, so \"Layout only\" is like-for-like only among "
+             "Servo/Blitz/Taffy and \"Box construction + layout\" is the comparable table for text-bearing cases; Firefox's Reflow "
+             "(shaping + layout; its frame construction is inside Styles) is listed there. Case names link to the case's bar chart; "
              "one page of charts per suite: " + " · ".join(f"[{s}/](plots/{s}.md)" for s in plot.suites(results)) + ".", ""]
     for title, cols in COLUMNS:
         cols = [c for c in cols if c[0] in engines]
