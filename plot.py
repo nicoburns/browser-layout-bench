@@ -103,7 +103,7 @@ def plot_case(name, data, columns_by_table, path):
         if any(parts for *_, parts in bars):
             y += 16
             body.append(f'<text x="16" y="{y + 14}" fill="#9ca3af" font-size="11">Bars are stacked by stage where the engine '
-                        'records them, left to right in pipeline order (solid → faint); grey = rest of the span; hover a segment for its value.</text>')
+                        'records them, left to right in pipeline order (solid → faint); grey = rest of the span; the faintest tail is min → median; hover a segment for its value.</text>')
         y0 = y + 24
         height = len(bars) * (BAR + GAP) + GAP
         for t in ticks:
@@ -130,7 +130,8 @@ def plot_case(name, data, columns_by_table, path):
                     at += v
             else:
                 body.append(f'<rect x="{LEFT}" y="{by}" width="{max(x(lo) - LEFT, 1):.1f}" height="{BAR}" fill="{c}"/>')
-            body.append(f'<rect x="{x(lo):.1f}" y="{by}" width="{x(med) - x(lo):.1f}" height="{BAR}" fill="{c}" opacity="0.35"/>'
+            body.append(f'<rect x="{x(lo):.1f}" y="{by}" width="{x(med) - x(lo):.1f}" height="{BAR}" fill="{c}" opacity="0.35">'
+                        f'<title>min {fmt(lo)} ms → median {fmt(med)} ms (of 9 samples)</title></rect>'
                         f'<text x="{x(med) + 6:.1f}" y="{by + BAR - 4}" fill="#e5e7eb" font-size="11">'
                         f'{fmt(lo)} ms <tspan fill="#9ca3af">· {lo / fastest:.2f}x · {fmt_per_node(lo * 1e6 / nodes)}</tspan></text>')
         y = y0 + height + 36
