@@ -41,10 +41,11 @@ struct Args {
     screenshot: Option<String>,
     hash: bool,
     boxes: bool,
+    dump: bool,
 }
 
 fn parse_args() -> Args {
-    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false };
+    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false, dump: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -55,6 +56,7 @@ fn parse_args() -> Args {
             "--screenshot" => args.screenshot = it.next(),
             "--hash" => args.hash = true,
             "--boxes" => args.boxes = true,
+            "--dump" => args.dump = true,
             _ => args.file = a,
         }
     }
@@ -139,6 +141,13 @@ fn main() {
         println!("BLITZ parse={parse} resolve={resolve}");
 
         if i + 1 == args.iters {
+            if args.dump {
+                // every element's final layout in `layout_hash` order, for diffing two builds
+                for (_, node) in doc.as_ref().tree().iter().filter(|(_, n)| n.is_element()) {
+                    let l = node.final_layout();
+                    println!("DUMP {} <{}> {} {} {} {}", node.id, node.element_data().unwrap().name.local, l.location.x, l.location.y, l.size.width, l.size.height);
+                }
+            }
             if args.hash {
                 println!("HASH {:016x}", layout_hash(doc.as_ref()));
                 let tree = doc.as_ref().tree();

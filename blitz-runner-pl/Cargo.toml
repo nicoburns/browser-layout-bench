@@ -1,7 +1,8 @@
 # Third build of the runner: the same `src/main.rs` against Blitz's parallel-layout prototype
-# (DioxusLabs/blitz#1034, branched from the `28f848d` the other builds use; it pins Taffy `8cbdeb1`
-# instead of `ea07c4c`), with `parallel-layout` + `parallel-construct` on. Not a workspace member
-# because it needs a different Blitz revision:
+# (DioxusLabs/blitz#1034) merged onto the revision the other builds use (Blitz `main` + #1237 with
+# Taffy pinned to `main` + #1343; here Taffy additionally carries taffy#1230, the prototype's batching
+# API), with `parallel-layout` + `parallel-construct` on. Branch: DioxusLabs/blitz `bench/main-1237-taffy1343-1034`.
+# Not a workspace member because it needs a different Blitz revision:
 #   cargo build --release --manifest-path blitz-runner-pl/Cargo.toml --target-dir target-pl
 [package]
 name = "layout-bench-blitz-pl"
@@ -16,10 +17,10 @@ name = "blitz-runner"
 path = "../blitz-runner/src/main.rs"
 
 [dependencies]
-blitz-dom = { git = "https://github.com/DioxusLabs/blitz", rev = "0500fd4a", default-features = false, features = ["log-phase-times", "floats", "writing-mode", "parallel-construct", "parallel-layout"] }
-blitz-html = { git = "https://github.com/DioxusLabs/blitz", rev = "0500fd4a", default-features = false }
-blitz-paint = { git = "https://github.com/DioxusLabs/blitz", rev = "0500fd4a", default-features = false }
-blitz-traits = { git = "https://github.com/DioxusLabs/blitz", rev = "0500fd4a" }
+blitz-dom = { git = "https://github.com/DioxusLabs/blitz", rev = "7f1cc97d35ab722c2f9d5415844c72cc3b1ba7bd", default-features = false, features = ["log-phase-times", "floats", "writing-mode", "parallel-construct", "parallel-layout"] }
+blitz-html = { git = "https://github.com/DioxusLabs/blitz", rev = "7f1cc97d35ab722c2f9d5415844c72cc3b1ba7bd", default-features = false }
+blitz-paint = { git = "https://github.com/DioxusLabs/blitz", rev = "7f1cc97d35ab722c2f9d5415844c72cc3b1ba7bd", default-features = false }
+blitz-traits = { git = "https://github.com/DioxusLabs/blitz", rev = "7f1cc97d35ab722c2f9d5415844c72cc3b1ba7bd" }
 anyrender = "0.14"
 anyrender_vello_cpu = "0.18"
 png = "0.18"
@@ -29,6 +30,21 @@ mimalloc = "0.1"
 
 [patch."https://github.com/DioxusLabs/blitz"]
 debug_timer = { path = "../vendor/debug_timer" }
+
+# Stylo pin carried by blitz#1237 (`TElement::set_may_have_animations`); a dependency's `[patch]` is not
+# applied transitively, so it is repeated here.
+[patch.crates-io]
+style = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo" }
+style_traits = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_traits" }
+style_atoms = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_atoms" }
+style_config = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_static_prefs" }
+style_dom = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_dom" }
+style_derive = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_derive" }
+style_malloc_size_of = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_malloc_size_of" }
+selectors = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
+servo_arc = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
+to_shmem = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
+to_shmem_derive = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
 
 [profile.release]
 debug = 1

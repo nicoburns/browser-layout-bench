@@ -541,10 +541,28 @@ def cmd_bench(args):
                 results[c["name"]]["engines"][e] += samples
                 best = agg([list(s.values())[0] for s in samples], "min")
                 print(f"round {r} {c['name']:24s} {e:10s} {len(samples)} samples, min first metric {fmt_ms(best)} ms", flush=True)
-        (OUT / "results.json").write_text(json.dumps(results, indent=1))
+        (OUT / args.out).write_text(json.dumps(results, indent=1))
+    if args.out != "results.json":
+        return
     md = report(results, args.agg, sorted({e for d in results.values() for e in d["engines"]}))
     (OUT / "report.md").write_text(md)
     print(md)
+
+
+def cmd_compare(args):
+    """Calibration: the min of each metric in out/<file> (a `bench --out` run) against out/results.json."""
+    stored = json.loads((OUT / "results.json").read_text())
+    fresh = json.loads((OUT / args.file).read_text())
+    print("| case | engine | metric | stored ms | fresh ms | fresh/stored |\n|---|---|---|---|---|---|")
+    for name, data in fresh.items():
+        for e, samples in data["engines"].items():
+            old = stored.get(name, {}).get("engines", {}).get(e)
+            if not samples or not old:
+                continue
+            for metric in [m for m in samples[0] if isinstance(samples[0][m], int)]:
+                a = agg([s[metric] for s in old if metric in s], "min")
+                b = agg([s[metric] for s in samples if metric in s], "min")
+                print(f"| {name} | {e} | {metric} | {fmt_ms(a)} | {fmt_ms(b)} | {b / a:.2f} |")
 
 
 def compare_boxes(a, b, tol=1.0):
@@ -655,6 +673,7 @@ def main():
     b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1, firefox1)")
     b.add_argument("--agg", default="min", choices=["min", "median"])
     b.add_argument("--merge", action="store_true", help="keep other engines' samples from out/results.json")
+    b.add_argument("--out", default="results.json", help="write samples to out/<file> instead (no report); e.g. a calibration run")
     r = sub.add_parser("report", help="rewrite out/report.md from out/results.json")
     r.add_argument("--agg", default="min", choices=["min", "median"])
     sub.add_parser("plot")
@@ -662,8 +681,10 @@ def main():
     v.add_argument("--engines", default="chrome,blitz,servo1,firefox1")
     v.add_argument("--filter", default="")
     v.add_argument("--cpus", default=None)
+    cmp_ = sub.add_parser("compare", help="min per metric of a `bench --out` run vs out/results.json")
+    cmp_.add_argument("file")
     args = ap.parse_args()
-    {"gen": cmd_gen, "bench": cmd_bench, "report": cmd_report, "verify": cmd_verify, "plot": cmd_plot}[args.cmd](args)
+    {"gen": cmd_gen, "bench": cmd_bench, "report": cmd_report, "verify": cmd_verify, "plot": cmd_plot, "compare": cmd_compare}[args.cmd](args)
 
 
 if __name__ == "__main__":

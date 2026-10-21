@@ -95,7 +95,7 @@ checksum = "3ded4057c258ba199e2d26386d3af3780957ecaee6c4ef4041c6b4b8b97c0b06"
 [[package]]
 name = "blitz-dom"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz#28f848d3bcf80dcb3b5af66ce34820172960d0c5"
+source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
 dependencies = [
  "app_units",
  "atomic_refcell",
@@ -128,7 +128,7 @@ dependencies = [
  "stylo_static_prefs",
  "stylo_taffy",
  "stylo_traits",
- "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=ea07c4c304216c9b48bdd88c46153c1cbe3cae10)",
+ "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=efb06f4b9aa4749a309430376488f483cdbbe618)",
  "thin-vec",
  "thread_local",
  "url",
@@ -138,7 +138,7 @@ dependencies = [
 [[package]]
 name = "blitz-html"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz#28f848d3bcf80dcb3b5af66ce34820172960d0c5"
+source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
 dependencies = [
  "blitz-dom",
  "blitz-traits",
@@ -149,7 +149,7 @@ dependencies = [
 [[package]]
 name = "blitz-paint"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz#28f848d3bcf80dcb3b5af66ce34820172960d0c5"
+source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
 dependencies = [
  "anyrender",
  "blitz-dom",
@@ -163,13 +163,13 @@ dependencies = [
  "skrifa",
  "smallvec",
  "stylo",
- "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=ea07c4c304216c9b48bdd88c46153c1cbe3cae10)",
+ "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=efb06f4b9aa4749a309430376488f483cdbbe618)",
 ]
 
 [[package]]
 name = "blitz-traits"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz#28f848d3bcf80dcb3b5af66ce34820172960d0c5"
+source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
 dependencies = [
  "atomic_refcell",
  "bitflags",
@@ -1774,8 +1774,7 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 [[package]]
 name = "selectors"
 version = "0.41.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8322aebea94a6cc288ff884e8a49bdbceef60206c400c6c46d22e62fc4fd91a6"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "bitflags",
  "cssparser",
@@ -1851,8 +1850,7 @@ dependencies = [
 [[package]]
 name = "servo_arc"
 version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4eceb519ec34d8290aaf6e46f435102f2bfa63f22b05a144fb16ab266d3b198"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "serde",
  "stable_deref_trait",
@@ -1987,8 +1985,7 @@ dependencies = [
 [[package]]
 name = "stylo"
 version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a255e46af2478628c48daab3774090caabd7812b1dd3ca98801c2b9c53491ed"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "app_units",
  "arrayvec",
@@ -2044,8 +2041,7 @@ dependencies = [
 [[package]]
 name = "stylo_atoms"
 version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee1771588fd747ef16f8b1990061b6f37c7d3251a0f9b74f405a44c0c5fb8966"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "string_cache",
  "string_cache_codegen",
@@ -2054,8 +2050,7 @@ dependencies = [
 [[package]]
 name = "stylo_derive"
 version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ee5c550c2e00a0b3c046bef84a9ee217e04e7c014142eeb96f9e48781c5cfd3"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -2067,8 +2062,7 @@ dependencies = [
 [[package]]
 name = "stylo_dom"
 version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9febcb03f2b669ef06b3e8a5209e6280971ed55cecf83fbf3c0562fcf2aa2ec6"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "bitflags",
  "stylo_malloc_size_of",
@@ -2077,8 +2071,7 @@ dependencies = [
 [[package]]
 name = "stylo_malloc_size_of"
 version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83ed69d55ee907599f093221004a28371925236f09f20961963020abf38bab6a"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "app_units",
  "cssparser",
@@ -2096,8 +2089,7 @@ dependencies = [
 [[package]]
 name = "stylo_static_prefs"
 version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6767c48a1590461db79f8b434ccc5a2d65600a3b716751f7999b35ccead1e024"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "toml",
 ]
@@ -2105,19 +2097,18 @@ dependencies = [
 [[package]]
 name = "stylo_taffy"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz#28f848d3bcf80dcb3b5af66ce34820172960d0c5"
+source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
 dependencies = [
  "bitflags",
  "stylo",
  "stylo_atoms",
- "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=ea07c4c304216c9b48bdd88c46153c1cbe3cae10)",
+ "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=efb06f4b9aa4749a309430376488f483cdbbe618)",
 ]
 
 [[package]]
 name = "stylo_traits"
 version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "645d6bfe40eb6e86ebe9f2d2adadcbced41bfa96175de7cb13d4d178d27bc83d"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "app_units",
  "bitflags",
@@ -2182,7 +2173,7 @@ dependencies = [
 [[package]]
 name = "taffy"
 version = "0.15.0"
-source = "git+https://github.com/DioxusLabs/taffy?rev=ea07c4c304216c9b48bdd88c46153c1cbe3cae10#ea07c4c304216c9b48bdd88c46153c1cbe3cae10"
+source = "git+https://github.com/DioxusLabs/taffy?rev=efb06f4b9aa4749a309430376488f483cdbbe618#efb06f4b9aa4749a309430376488f483cdbbe618"
 dependencies = [
  "serde",
  "slotmap",
@@ -2279,8 +2270,7 @@ dependencies = [
 [[package]]
 name = "to_shmem"
 version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbf077da8dd01cc18453bd7d9bc3a945c262f5f344562e5f6deb3914b4dd6f14"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "cssparser",
  "servo_arc",
@@ -2293,8 +2283,7 @@ dependencies = [
 [[package]]
 name = "to_shmem_derive"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f8e91a023810fd2019648410d00eea13a71f21d849e71d6d9ed936fb8061174"
+source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
 dependencies = [
  "darling",
  "proc-macro2",
