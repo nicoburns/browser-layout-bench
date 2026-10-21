@@ -116,7 +116,6 @@
 <text x="330" y="694" fill="#ffa37e" font-size="11" text-anchor="end">Firefox Styles+Reflow</text>
 <rect x="340.0" y="682" width="17.5" height="16" fill="#ffa37e" opacity="1.0"><title>style: 20.3 ms</title></rect>
 <rect x="357.5" y="682" width="21.0" height="16" fill="#ffa37e" opacity="0.65"><title>layout: 24.4 ms</title></rect>
-<rect x="378.4" y="682" width="0.0" height="16" fill="#6b7280" opacity="1.0"><title>other: 7.11e-15 ms</title></rect>
 <rect x="378.4" y="682" width="3.3" height="16" fill="#ffa37e" opacity="0.35"/><text x="387.7" y="694" fill="#e5e7eb" font-size="11">44.7 ms <tspan fill="#9ca3af">· 2.40x · 4.47 us/node</tspan></text>
 <text x="330" y="716" fill="#7B6CF0" font-size="11" text-anchor="end">Ladybird update_layout()</text>
 <rect x="340.0" y="704" width="307.6" height="16" fill="#7B6CF0" opacity="1.0"><title>style: 358 ms</title></rect>

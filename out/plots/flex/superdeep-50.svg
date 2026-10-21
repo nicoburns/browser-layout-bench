@@ -39,7 +39,6 @@
 <text x="374.4" y="238" fill="#0b1120" font-size="10" text-anchor="middle">0.32</text>
 <rect x="408.7" y="226" width="73.8" height="16" fill="#84d59b" opacity="0.65"><title>fragment tree: 0.343 ms</title></rect>
 <text x="445.6" y="238" fill="#0b1120" font-size="10" text-anchor="middle">0.343</text>
-<rect x="482.6" y="226" width="0.0" height="16" fill="#6b7280" opacity="1.0"><title>other: 1.11e-16 ms</title></rect>
 <rect x="482.6" y="226" width="4.1" height="16" fill="#84d59b" opacity="0.35"/><text x="492.7" y="238" fill="#e5e7eb" font-size="11">0.663 ms <tspan fill="#9ca3af">· 2.13x · 4.39 us/node</tspan></text>
 <text x="330" y="260" fill="#3E9593" font-size="11" text-anchor="end">Blitz construct+layout</text>
 <rect x="340.0" y="248" width="2.3" height="16" fill="#3E9593" opacity="1.0"><title>construct: 0.0105 ms</title></rect>
@@ -50,7 +49,6 @@
 <rect x="340.0" y="270" width="2.1" height="16" fill="#78b5b3" opacity="1.0"><title>construct: 0.00992 ms</title></rect>
 <rect x="342.1" y="270" width="64.9" height="16" fill="#78b5b3" opacity="0.65"><title>layout: 0.302 ms</title></rect>
 <text x="374.6" y="282" fill="#0b1120" font-size="10" text-anchor="middle">0.302</text>
-<rect x="407.0" y="270" width="0.0" height="16" fill="#6b7280" opacity="1.0"><title>other: 5.55e-17 ms</title></rect>
 <rect x="407.0" y="270" width="70.6" height="16" fill="#78b5b3" opacity="0.35"/><text x="483.6" y="282" fill="#e5e7eb" font-size="11">0.312 ms <tspan fill="#9ca3af">· 1.00x · 2.07 us/node</tspan></text>
 <text x="330" y="304" fill="#bbdad9" font-size="11" text-anchor="end">Blitz construct+layout (parallel construct+layout)</text>
 <rect x="340.0" y="292" width="2.7" height="16" fill="#bbdad9" opacity="1.0"><title>construct: 0.0127 ms</title></rect>

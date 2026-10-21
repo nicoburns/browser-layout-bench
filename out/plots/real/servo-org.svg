@@ -59,7 +59,6 @@
 <rect x="340.0" y="292" width="29.3" height="16" fill="#bbdad9" opacity="1.0"><title>construct: 0.478 ms</title></rect>
 <text x="354.7" y="304" fill="#0b1120" font-size="10" text-anchor="middle">0.478</text>
 <rect x="369.3" y="292" width="17.9" height="16" fill="#bbdad9" opacity="0.65"><title>layout: 0.292 ms</title></rect>
-<rect x="387.3" y="292" width="0.0" height="16" fill="#6b7280" opacity="1.0"><title>other: 1.11e-16 ms</title></rect>
 <rect x="387.3" y="292" width="28.7" height="16" fill="#bbdad9" opacity="0.35"/><text x="422.0" y="304" fill="#e5e7eb" font-size="11">0.77 ms <tspan fill="#9ca3af">· 1.00x · 3.4 us/node</tspan></text>
 <text x="16" y="364" fill="#f9fafb" font-size="13" font-weight="600">Style</text>
 <line x1="340.0" x2="340.0" y1="374" y2="556" stroke="#374151" stroke-dasharray="2 4"/><text x="340.0" y="570" fill="#9ca3af" font-size="10" text-anchor="middle">0</text>
@@ -117,7 +116,6 @@
 <rect x="340.0" y="682" width="24.5" height="16" fill="#ffa37e" opacity="1.0"><title>style: 1.42 ms</title></rect>
 <rect x="364.5" y="682" width="76.5" height="16" fill="#ffa37e" opacity="0.65"><title>layout: 4.45 ms</title></rect>
 <text x="402.7" y="694" fill="#0b1120" font-size="10" text-anchor="middle">4.45</text>
-<rect x="440.9" y="682" width="0.0" height="16" fill="#6b7280" opacity="1.0"><title>other: 8.88e-16 ms</title></rect>
 <rect x="440.9" y="682" width="13.0" height="16" fill="#ffa37e" opacity="0.35"/><text x="459.9" y="694" fill="#e5e7eb" font-size="11">5.87 ms <tspan fill="#9ca3af">· 3.61x · 26 us/node</tspan></text>
 <text x="330" y="716" fill="#7B6CF0" font-size="11" text-anchor="end">Ladybird update_layout()</text>
 <rect x="340.0" y="704" width="266.0" height="16" fill="#7B6CF0" opacity="1.0"><title>style: 15.5 ms</title></rect>

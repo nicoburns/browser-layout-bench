@@ -40,9 +40,14 @@ def case_path(name):
     return f"{suite}/{slug(rest)}.svg"
 
 
+def fmt(v):
+    """3 significant digits, never in exponent notation (`:.3g` would write 1.52e+03 and 8.88e-16)."""
+    return f"{v:.0f}" if v >= 100 else f"{v:.3g}" if v >= 1e-3 else "0"
+
+
 def fmt_per_node(ns):
     unit, v = ("ms", ns / 1e6) if ns >= 1e6 else ("us", ns / 1e3) if ns >= 1e3 else ("ns", ns)
-    return f"{v:.3g} {unit}/node"
+    return f"{fmt(v)} {unit}/node"
 
 
 def axis(max_value):
@@ -58,7 +63,7 @@ def stages(sample, key):
     """[(stage label, ms)] making up `sample[key]`, from the stages the sample records plus "other"."""
     parts = [(label, sample[k] / 1e6) for k, label in STAGES.get(key, []) if sample.get(k) is not None]
     rest = sample[key] / 1e6 - sum(v for _, v in parts)
-    if parts and rest > 0:
+    if parts and rest > 1e-3:  # below 1 us it is floating-point residue, not a stage
         parts.append(("other", rest))
     return parts
 
@@ -117,9 +122,9 @@ def plot_case(name, data, columns_by_table, path):
                     x0, x1 = x(at), x(min(at + v, lo))
                     fill, op = ("#6b7280", 1.0) if stage == "other" else (c, STAGE_OPACITY[min(i, len(STAGE_OPACITY) - 1)])
                     body.append(f'<rect x="{x0:.1f}" y="{by}" width="{max(x1 - x0, 0):.1f}" height="{BAR}" fill="{fill}" opacity="{op}"'
-                                f'><title>{html.escape(stage)}: {v:.3g} ms</title></rect>')
+                                f'><title>{html.escape(stage)}: {fmt(v)} ms</title></rect>')
                     if x1 - x0 >= 26:
-                        text = f"{stage} {v:.3g}" if x1 - x0 >= 14 + 6.5 * len(f"{stage} {v:.3g}") else f"{v:.3g}"
+                        text = f"{stage} {fmt(v)}" if x1 - x0 >= 14 + 6.5 * len(f"{stage} {fmt(v)}") else fmt(v)
                         body.append(f'<text x="{(x0 + x1) / 2:.1f}" y="{by + BAR - 4}" fill="{"#e5e7eb" if stage == "other" else "#0b1120"}" '
                                     f'font-size="10" text-anchor="middle">{html.escape(text)}</text>')
                     at += v
@@ -127,7 +132,7 @@ def plot_case(name, data, columns_by_table, path):
                 body.append(f'<rect x="{LEFT}" y="{by}" width="{max(x(lo) - LEFT, 1):.1f}" height="{BAR}" fill="{c}"/>')
             body.append(f'<rect x="{x(lo):.1f}" y="{by}" width="{x(med) - x(lo):.1f}" height="{BAR}" fill="{c}" opacity="0.35"/>'
                         f'<text x="{x(med) + 6:.1f}" y="{by + BAR - 4}" fill="#e5e7eb" font-size="11">'
-                        f'{lo:.3g} ms <tspan fill="#9ca3af">· {lo / fastest:.2f}x · {fmt_per_node(lo * 1e6 / nodes)}</tspan></text>')
+                        f'{fmt(lo)} ms <tspan fill="#9ca3af">· {lo / fastest:.2f}x · {fmt_per_node(lo * 1e6 / nodes)}</tspan></text>')
         y = y0 + height + 36
     total = y + 24
     svg = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{WIDTH}" height="{total}" viewBox="0 0 {WIDTH} {total}" '

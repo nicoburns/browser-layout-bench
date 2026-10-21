@@ -27,7 +27,6 @@
 <text x="355.7" y="194" fill="#0b1120" font-size="10" text-anchor="middle">0.582</text>
 <rect x="371.3" y="182" width="373.7" height="16" fill="#7B6CF0" opacity="0.65"><title>layout: 6.95 ms</title></rect>
 <text x="558.2" y="194" fill="#0b1120" font-size="10" text-anchor="middle">layout 6.95</text>
-<rect x="745.0" y="182" width="0.0" height="16" fill="#6b7280" opacity="1.0"><title>other: 8.88e-16 ms</title></rect>
 <rect x="745.0" y="182" width="23.5" height="16" fill="#7B6CF0" opacity="0.35"/><text x="774.5" y="194" fill="#e5e7eb" font-size="11">7.54 ms <tspan fill="#9ca3af">· 11.03x · 9.82 us/node</tspan></text>
 <text x="330" y="216" fill="#42BE65" font-size="11" text-anchor="end">Servo(1) Box+Fragment</text>
 <rect x="340.0" y="204" width="59.6" height="16" fill="#42BE65" opacity="1.0"><title>box tree: 1.11 ms</title></rect>
