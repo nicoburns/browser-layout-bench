@@ -5,6 +5,7 @@ import argparse, functools, http.server, json, os, re, shutil, statistics, subpr
 from pathlib import Path
 
 import engines_ladybird
+import pages
 import plot
 
 ROOT = Path(__file__).resolve().parent
@@ -735,6 +736,13 @@ def cmd_plot(args):
         print(p.relative_to(ROOT))
 
 
+def cmd_pages(args):
+    """Static site of out/results.json (landing, per-suite and comparison pages) into out/pages/."""
+    results = json.loads((OUT / "results.json").read_text())
+    for p in pages.build(results, COLUMNS, COUNT_KEYS, ROOT, OUT / "pages"):
+        print(p.relative_to(ROOT))
+
+
 def cmd_verify(args):
     from PIL import Image, ImageChops
     cases = [c for c in read_manifest() if args.filter in c["name"]]
@@ -810,6 +818,7 @@ def main():
     r = sub.add_parser("report", help="rewrite out/report.md from out/results.json")
     r.add_argument("--agg", default="min", choices=["min", "median"])
     sub.add_parser("plot")
+    sub.add_parser("pages", help="write the static results site to out/pages/")
     v = sub.add_parser("verify")
     v.add_argument("--engines", default="chrome,blitz,servo1,firefox")
     v.add_argument("--filter", default="")
@@ -822,7 +831,7 @@ def main():
     n.add_argument("--metric", default="style+layout", help="Chrome metric whose per-case minimum gives the factor")
     args = ap.parse_args()
     {"gen": cmd_gen, "bench": cmd_bench, "report": cmd_report, "verify": cmd_verify, "plot": cmd_plot, "compare": cmd_compare,
-     "normalize": cmd_normalize}[args.cmd](args)
+     "normalize": cmd_normalize, "pages": cmd_pages}[args.cmd](args)
 
 
 if __name__ == "__main__":
