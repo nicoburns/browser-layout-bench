@@ -18,6 +18,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "allocator-api2"
+version = "0.2.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "683d7910e743518b0e34f1186f92494becacb047c7b6bf616c96772180fef923"
+
+[[package]]
 name = "anes"
 version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -95,7 +101,7 @@ checksum = "3ded4057c258ba199e2d26386d3af3780957ecaee6c4ef4041c6b4b8b97c0b06"
 [[package]]
 name = "blitz-dom"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
+source = "git+https://github.com/DioxusLabs/blitz?rev=1c5265a8b3985e1ec05044a115b2ec6266e3fa91#1c5265a8b3985e1ec05044a115b2ec6266e3fa91"
 dependencies = [
  "app_units",
  "atomic_refcell",
@@ -128,7 +134,7 @@ dependencies = [
  "stylo_static_prefs",
  "stylo_taffy",
  "stylo_traits",
- "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=efb06f4b9aa4749a309430376488f483cdbbe618)",
+ "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=802e497b69689e1c93be2d16e9d53a973971bcb2)",
  "thin-vec",
  "thread_local",
  "url",
@@ -138,7 +144,7 @@ dependencies = [
 [[package]]
 name = "blitz-html"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
+source = "git+https://github.com/DioxusLabs/blitz?rev=1c5265a8b3985e1ec05044a115b2ec6266e3fa91#1c5265a8b3985e1ec05044a115b2ec6266e3fa91"
 dependencies = [
  "blitz-dom",
  "blitz-traits",
@@ -149,7 +155,7 @@ dependencies = [
 [[package]]
 name = "blitz-paint"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
+source = "git+https://github.com/DioxusLabs/blitz?rev=1c5265a8b3985e1ec05044a115b2ec6266e3fa91#1c5265a8b3985e1ec05044a115b2ec6266e3fa91"
 dependencies = [
  "anyrender",
  "blitz-dom",
@@ -163,13 +169,13 @@ dependencies = [
  "skrifa",
  "smallvec",
  "stylo",
- "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=efb06f4b9aa4749a309430376488f483cdbbe618)",
+ "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=802e497b69689e1c93be2d16e9d53a973971bcb2)",
 ]
 
 [[package]]
 name = "blitz-traits"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
+source = "git+https://github.com/DioxusLabs/blitz?rev=1c5265a8b3985e1ec05044a115b2ec6266e3fa91#1c5265a8b3985e1ec05044a115b2ec6266e3fa91"
 dependencies = [
  "atomic_refcell",
  "bitflags",
@@ -773,6 +779,8 @@ version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a"
 dependencies = [
+ "allocator-api2",
+ "equivalent",
  "foldhash",
 ]
 
@@ -1070,7 +1078,7 @@ dependencies = [
 name = "layout-bench-gen"
 version = "0.1.0"
 dependencies = [
- "rand",
+ "rand 0.9.5",
  "rand_chacha",
  "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=4e59968eda29ceeb0bbaeb3993c8cd38baa3d0a6)",
  "taffy_benchmarks",
@@ -1624,12 +1632,21 @@ checksum = "69cdb34c158ceb288df11e18b4bd39de994f6657d83847bdffdbd7f346754b0f"
 
 [[package]]
 name = "rand"
+version = "0.8.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e058c7de0b26af77780c769414d6257830bb240f3c38477dbc2c16e5f54d6d4c"
+dependencies = [
+ "rand_core 0.6.4",
+]
+
+[[package]]
+name = "rand"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b9ef1d0d795eb7d84685bca4f72f3649f064e6641543d3a8c415898726a57b41"
 dependencies = [
  "rand_chacha",
- "rand_core",
+ "rand_core 0.9.5",
 ]
 
 [[package]]
@@ -1639,8 +1656,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3022b5f1df60f26e1ffddd6c66e8aa15de382ae63b3a0c1bfc0e4d3e3f325cb"
 dependencies = [
  "ppv-lite86",
- "rand_core",
+ "rand_core 0.9.5",
 ]
+
+[[package]]
+name = "rand_core"
+version = "0.6.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 
 [[package]]
 name = "rand_core"
@@ -1774,11 +1797,12 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 [[package]]
 name = "selectors"
 version = "0.41.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "bitflags",
  "cssparser",
  "derive_more",
+ "hashbrown",
  "log",
  "new_debug_unreachable",
  "precomputed-hash",
@@ -1850,7 +1874,7 @@ dependencies = [
 [[package]]
 name = "servo_arc"
 version = "0.5.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "serde",
  "stable_deref_trait",
@@ -1985,7 +2009,7 @@ dependencies = [
 [[package]]
 name = "stylo"
 version = "0.22.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "app_units",
  "arrayvec",
@@ -1996,6 +2020,7 @@ dependencies = [
  "derive_more",
  "encoding_rs",
  "euclid",
+ "hashbrown",
  "icu_segmenter",
  "indexmap",
  "itertools 0.14.0",
@@ -2010,6 +2035,7 @@ dependencies = [
  "num_cpus",
  "parking_lot",
  "precomputed-hash",
+ "rand 0.8.8",
  "rayon",
  "rayon-core",
  "rustc-hash",
@@ -2041,7 +2067,7 @@ dependencies = [
 [[package]]
 name = "stylo_atoms"
 version = "0.22.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "string_cache",
  "string_cache_codegen",
@@ -2050,7 +2076,7 @@ dependencies = [
 [[package]]
 name = "stylo_derive"
 version = "0.22.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -2062,7 +2088,7 @@ dependencies = [
 [[package]]
 name = "stylo_dom"
 version = "0.22.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "bitflags",
  "stylo_malloc_size_of",
@@ -2071,11 +2097,12 @@ dependencies = [
 [[package]]
 name = "stylo_malloc_size_of"
 version = "0.22.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "app_units",
  "cssparser",
  "euclid",
+ "hashbrown",
  "parking_lot",
  "selectors",
  "servo_arc",
@@ -2089,7 +2116,7 @@ dependencies = [
 [[package]]
 name = "stylo_static_prefs"
 version = "0.22.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "toml",
 ]
@@ -2097,18 +2124,18 @@ dependencies = [
 [[package]]
 name = "stylo_taffy"
 version = "0.3.0-beta.4"
-source = "git+https://github.com/DioxusLabs/blitz?rev=32c4eb0ff32fbe236cda05674211749fbb125d71#32c4eb0ff32fbe236cda05674211749fbb125d71"
+source = "git+https://github.com/DioxusLabs/blitz?rev=1c5265a8b3985e1ec05044a115b2ec6266e3fa91#1c5265a8b3985e1ec05044a115b2ec6266e3fa91"
 dependencies = [
  "bitflags",
  "stylo",
  "stylo_atoms",
- "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=efb06f4b9aa4749a309430376488f483cdbbe618)",
+ "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=802e497b69689e1c93be2d16e9d53a973971bcb2)",
 ]
 
 [[package]]
 name = "stylo_traits"
 version = "0.22.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "app_units",
  "bitflags",
@@ -2183,7 +2210,7 @@ dependencies = [
 [[package]]
 name = "taffy"
 version = "0.15.0"
-source = "git+https://github.com/DioxusLabs/taffy?rev=efb06f4b9aa4749a309430376488f483cdbbe618#efb06f4b9aa4749a309430376488f483cdbbe618"
+source = "git+https://github.com/DioxusLabs/taffy?rev=802e497b69689e1c93be2d16e9d53a973971bcb2#802e497b69689e1c93be2d16e9d53a973971bcb2"
 dependencies = [
  "serde",
  "slotmap",
@@ -2197,7 +2224,7 @@ source = "git+https://github.com/DioxusLabs/taffy?rev=4e59968eda29ceeb0bbaeb3993
 dependencies = [
  "criterion",
  "parley 0.11.1",
- "rand",
+ "rand 0.9.5",
  "rand_chacha",
  "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=4e59968eda29ceeb0bbaeb3993c8cd38baa3d0a6)",
 ]
@@ -2216,6 +2243,9 @@ name = "thin-vec"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d6a4b9ba8738cb4a4f399d37e266becfd475e75eb73425b87a05a2f2039ba63e"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "thiserror"
@@ -2270,9 +2300,10 @@ dependencies = [
 [[package]]
 name = "to_shmem"
 version = "0.6.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "cssparser",
+ "hashbrown",
  "servo_arc",
  "smallbitvec",
  "smallvec",
@@ -2283,7 +2314,7 @@ dependencies = [
 [[package]]
 name = "to_shmem_derive"
 version = "0.2.0"
-source = "git+https://github.com/DioxusLabs/stylo?branch=note-may-have-animations-0.22#04b10366ba0763b47d0d0b3a40cec329387792e9"
+source = "git+https://github.com/DioxusLabs/stylo?rev=d6502e0002e9c40c43a0a4776f9e7eb93be360e3#d6502e0002e9c40c43a0a4776f9e7eb93be360e3"
 dependencies = [
  "darling",
  "proc-macro2",

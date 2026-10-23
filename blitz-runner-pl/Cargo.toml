@@ -17,10 +17,10 @@ name = "blitz-runner"
 path = "../blitz-runner/src/main.rs"
 
 [dependencies]
-blitz-dom = { git = "https://github.com/DioxusLabs/blitz", rev = "7f1cc97d35ab722c2f9d5415844c72cc3b1ba7bd", default-features = false, features = ["log-phase-times", "floats", "writing-mode", "parallel-construct", "parallel-layout"] }
-blitz-html = { git = "https://github.com/DioxusLabs/blitz", rev = "7f1cc97d35ab722c2f9d5415844c72cc3b1ba7bd", default-features = false }
-blitz-paint = { git = "https://github.com/DioxusLabs/blitz", rev = "7f1cc97d35ab722c2f9d5415844c72cc3b1ba7bd", default-features = false }
-blitz-traits = { git = "https://github.com/DioxusLabs/blitz", rev = "7f1cc97d35ab722c2f9d5415844c72cc3b1ba7bd" }
+blitz-dom = { git = "https://github.com/DioxusLabs/blitz", rev = "fac9b35833e89a67b892a45c01392a3e702d1920", default-features = false, features = ["log-phase-times", "floats", "writing-mode", "parallel-construct", "parallel-layout"] }
+blitz-html = { git = "https://github.com/DioxusLabs/blitz", rev = "fac9b35833e89a67b892a45c01392a3e702d1920", default-features = false }
+blitz-paint = { git = "https://github.com/DioxusLabs/blitz", rev = "fac9b35833e89a67b892a45c01392a3e702d1920", default-features = false }
+blitz-traits = { git = "https://github.com/DioxusLabs/blitz", rev = "fac9b35833e89a67b892a45c01392a3e702d1920" }
 anyrender = "0.14"
 anyrender_vello_cpu = "0.18"
 png = "0.18"
@@ -31,20 +31,6 @@ mimalloc = "0.1"
 [patch."https://github.com/DioxusLabs/blitz"]
 debug_timer = { path = "../vendor/debug_timer" }
 
-# Stylo pin carried by blitz#1237 (`TElement::set_may_have_animations`); a dependency's `[patch]` is not
-# applied transitively, so it is repeated here.
-[patch.crates-io]
-style = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo" }
-style_traits = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_traits" }
-style_atoms = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_atoms" }
-style_config = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_static_prefs" }
-style_dom = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_dom" }
-style_derive = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_derive" }
-style_malloc_size_of = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_malloc_size_of" }
-selectors = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
-servo_arc = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
-to_shmem = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
-to_shmem_derive = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
 
 [profile.release]
 debug = 1

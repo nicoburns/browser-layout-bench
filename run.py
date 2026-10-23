@@ -539,7 +539,8 @@ def report(results, how, engines):
              "Firefox and Ladybird but in the construction phase of Blitz and Servo, so \"Layout only\" is like-for-like only among "
              "Servo/Blitz/Taffy and \"Box construction + layout\" is the comparable table for text-bearing cases; Firefox's Reflow "
              "(shaping + layout; its frame construction is inside Styles) is listed there. Case names link to the case's bar chart; "
-             "one page of charts per suite: " + " · ".join(f"[{s}/](plots/{s}.md)" for s in plot.suites(results)) + ".", ""]
+             "one page of charts per suite: " + " · ".join(f"[{s}/](plots/{s}.md)" for s in plot.suites(results)) + "."
+             + normalized_note(results), ""]
     for title, cols in COLUMNS:
         cols = [c for c in cols if c[0] in engines]
         if not cols:
@@ -557,6 +558,21 @@ def report(results, how, engines):
         lines.append("")
     lines += spread_section(results, engines)
     return "\n".join(lines)
+
+
+def normalized_note(results):
+    """Sentence for the report header when some engines' samples were folded in by `normalize`."""
+    per_engine = {}
+    for data in results.values():
+        for e, samples in data["engines"].items():
+            per_engine.setdefault(e, []).extend(s["chrome_norm"] for s in samples if "chrome_norm" in s)
+    normalized = {e: v for e, v in per_engine.items() if v}
+    if not normalized:
+        return ""
+    return (" " + ", ".join(sorted(normalized)) + " were measured in a later run and scaled per case by Chrome's stored/new "
+            "`style+layout` ratio (median " + f"{statistics.median([f for v in normalized.values() for f in v]):.2f}"
+            "; see README, Versions and methodology): differences under ~10% between those and the other columns are within "
+            "the normalisation's uncertainty.")
 
 
 def spread_section(results, engines):
@@ -642,6 +658,37 @@ def cmd_compare(args):
                 a = agg([s[metric] for s in old if metric in s], "min")
                 b = agg([s[metric] for s in samples if metric in s], "min")
                 print(f"| {name} | {e} | {metric} | {fmt_ms(a)} | {fmt_ms(b)} | {b / a:.2f} |")
+
+
+# Sample keys that are counts or identities, not durations; everything else in a sample is ns.
+COUNT_KEYS = {"n_reflows", "n_layouts", "n_boxes", "total_objects", "root", "hash", "boxes", "chrome_norm"}
+
+
+def cmd_normalize(args):
+    """Fold a later run (`bench --out`, Chrome included) into out/results.json for the given engines,
+    scaling every duration of a case by the stored/new ratio of Chrome's `style+layout` minimum on that
+    case, so the VM's speed on the two days cancels to the extent Chrome tracks it (phase factors of one
+    case agree within ~2%, so one factor per case). The factor is kept in each sample as `chrome_norm`."""
+    stored = json.loads((OUT / "results.json").read_text())
+    fresh = json.loads((OUT / args.file).read_text())
+    engines = args.engines.split(",")
+    factors = []
+    for name, data in fresh.items():
+        if name not in stored or "chrome" not in data["engines"] or "chrome" not in stored[name]["engines"]:
+            print(f"{name}: no Chrome reference in both runs, skipped", file=sys.stderr)
+            continue
+        f = agg([s[args.metric] for s in stored[name]["engines"]["chrome"]], "min") / agg([s[args.metric] for s in data["engines"]["chrome"]], "min")
+        factors.append(f)
+        for e in engines:
+            if e not in data["engines"]:
+                continue
+            stored[name]["engines"][e] = [{k: round(v * f) if k not in COUNT_KEYS and isinstance(v, int) else v for k, v in s.items()}
+                                          | {"chrome_norm": round(f, 4)} for s in data["engines"][e]]
+        print(f"{name:40s} chrome {args.metric} stored/new {f:.3f}")
+    print(f"median factor {statistics.median(factors):.3f} over {len(factors)} cases", file=sys.stderr)
+    (OUT / "results.json").write_text(json.dumps(stored, indent=1))
+    md = report(stored, "min", sorted({e for d in stored.values() for e in d["engines"]}))
+    (OUT / "report.md").write_text(md)
 
 
 def compare_boxes(a, b, tol=1.0):
@@ -762,8 +809,13 @@ def main():
     v.add_argument("--cpus", default=None)
     cmp_ = sub.add_parser("compare", help="min per metric of a `bench --out` run vs out/results.json")
     cmp_.add_argument("file")
+    n = sub.add_parser("normalize", help="fold a `bench --out` run into out/results.json, scaled per case by Chrome's stored/new ratio")
+    n.add_argument("file")
+    n.add_argument("--engines", required=True, help="engines of the run to take (Chrome itself stays as stored)")
+    n.add_argument("--metric", default="style+layout", help="Chrome metric whose per-case minimum gives the factor")
     args = ap.parse_args()
-    {"gen": cmd_gen, "bench": cmd_bench, "report": cmd_report, "verify": cmd_verify, "plot": cmd_plot, "compare": cmd_compare}[args.cmd](args)
+    {"gen": cmd_gen, "bench": cmd_bench, "report": cmd_report, "verify": cmd_verify, "plot": cmd_plot, "compare": cmd_compare,
+     "normalize": cmd_normalize}[args.cmd](args)
 
 
 if __name__ == "__main__":

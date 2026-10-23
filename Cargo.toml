@@ -5,28 +5,14 @@ members = ["gen", "blitz-runner"]
 [workspace.dependencies]
 taffy = { git = "https://github.com/DioxusLabs/taffy", rev = "4e59968eda29ceeb0bbaeb3993c8cd38baa3d0a6", default-features = false, features = ["std", "taffy_tree", "flexbox", "grid", "block_layout", "content_size"] }
 taffy_benchmarks = { git = "https://github.com/DioxusLabs/taffy", rev = "4e59968eda29ceeb0bbaeb3993c8cd38baa3d0a6", package = "taffy_benchmarks" }
-blitz-dom = { git = "https://github.com/DioxusLabs/blitz", rev = "32c4eb0ff32fbe236cda05674211749fbb125d71", default-features = false }
-blitz-html = { git = "https://github.com/DioxusLabs/blitz", rev = "32c4eb0ff32fbe236cda05674211749fbb125d71", default-features = false }
-blitz-paint = { git = "https://github.com/DioxusLabs/blitz", rev = "32c4eb0ff32fbe236cda05674211749fbb125d71", default-features = false }
-blitz-traits = { git = "https://github.com/DioxusLabs/blitz", rev = "32c4eb0ff32fbe236cda05674211749fbb125d71" }
+blitz-dom = { git = "https://github.com/DioxusLabs/blitz", rev = "1c5265a8b3985e1ec05044a115b2ec6266e3fa91", default-features = false }
+blitz-html = { git = "https://github.com/DioxusLabs/blitz", rev = "1c5265a8b3985e1ec05044a115b2ec6266e3fa91", default-features = false }
+blitz-paint = { git = "https://github.com/DioxusLabs/blitz", rev = "1c5265a8b3985e1ec05044a115b2ec6266e3fa91", default-features = false }
+blitz-traits = { git = "https://github.com/DioxusLabs/blitz", rev = "1c5265a8b3985e1ec05044a115b2ec6266e3fa91" }
 
 [patch."https://github.com/DioxusLabs/blitz"]
 debug_timer = { path = "./vendor/debug_timer" }
 
-# Stylo pin carried by blitz#1237 (`TElement::set_may_have_animations`); a dependency's `[patch]` is not
-# applied transitively, so it is repeated here.
-[patch.crates-io]
-style = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo" }
-style_traits = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_traits" }
-style_atoms = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_atoms" }
-style_config = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_static_prefs" }
-style_dom = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_dom" }
-style_derive = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_derive" }
-style_malloc_size_of = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22", package = "stylo_malloc_size_of" }
-selectors = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
-servo_arc = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
-to_shmem = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
-to_shmem_derive = { git = "https://github.com/DioxusLabs/stylo", branch = "note-may-have-animations-0.22" }
 
 [profile.release]
 debug = 1
