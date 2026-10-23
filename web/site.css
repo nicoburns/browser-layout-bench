@@ -90,8 +90,12 @@ svg.chart .value tspan { fill: var(--muted); }
 svg.chart .whisker { stroke: #333; fill: none; }
 svg.chart .iqr { stroke: #333; stroke-width: 5; opacity: 0.25; }
 svg.chart .seg-label { font-size: 9.5px; fill: #fff; pointer-events: none; }
-svg.chart .row:hover rect { filter: brightness(0.9); }
 .empty { color: var(--muted); font-style: italic; }
 table.measured th, table.measured td { padding: 4px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
 table.measured thead th { background: var(--soft); }
 table.measured td code { color: var(--muted); font-size: 0.8em; }
+svg.chart .hit { fill: transparent; }
+svg.chart .whisker, svg.chart .iqr { pointer-events: none; }
+svg.chart .row:hover rect:not(.hit) { filter: brightness(0.9); }
+svg.chart [data-tip]:not(.hit):hover { filter: brightness(0.8); }
+.tip { position: fixed; left: 0; top: 0; z-index: 20; pointer-events: none; white-space: pre; background: #1f2328; color: #fff; font-size: 12px; line-height: 1.4; padding: 6px 9px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,.2); }

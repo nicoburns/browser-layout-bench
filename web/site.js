@@ -213,19 +213,20 @@
     bars.forEach((b, k) => {
       const info = D.engines[b.col.engine], y = top + GAP + k * (BAR + GAP), my = y + BAR / 2;
       const best = b.value === r.fastest && b.col.engine !== "taffy" && !b.unequal;
-      const grp = svg("g", { class: "row" }, svg("title", {}, tip(c, b)));
-      grp.append(svg("text", { class: "label" + (best ? " best" : ""), x: LEFT - 10, y: y + BAR - 4, "text-anchor": "end" },
+      const spread = tip(c, b), lo = X(b.min), hi = X(b.max), x0 = X(0);
+      const grp = svg("g", { class: "row" },
+        svg("rect", { class: "hit", x: x0, y: y - GAP / 2, width: hi + 4 - x0, height: BAR + GAP, "data-tip": spread }));
+      grp.append(svg("text", { class: "label" + (best ? " best" : ""), x: LEFT - 10, y: y + BAR - 4, "text-anchor": "end", "data-tip": spread },
         info.name + (b.unequal ? " ‡" : "")));
       const parts = stages(c, b);
-      const x0 = X(0);
       if (parts.length) {
         let at = 0;
         parts.forEach(([stage, v], i) => {
           const a = X(at), z = X(Math.min(at + v, b.value));
           const fill = stage === "other" ? "#8c959f" : info.colour;
           const op = stage === "other" ? 1 : [1, 0.7, 0.45, 0.3][Math.min(i, 3)];
-          grp.append(svg("rect", { x: a, y, width: Math.max(z - a, 0), height: BAR, fill, opacity: op },
-            svg("title", {}, `${stage}: ${fmt(v)} ms`)));
+          grp.append(svg("rect", { x: a, y, width: Math.max(z - a, 0), height: BAR, fill, opacity: op,
+            "data-tip": `${info.name} · ${stage}${stage === "other" ? " (rest of the span)" : ""}\n${fmt(v)} ms, ${(100 * v / b.value).toFixed(0)}% of ${fmt(b.value)} ms (${state.s})` }));
           if (z - a > 30) {
             const txt = z - a > 14 + 6 * (stage.length + 6) ? `${stage} ${fmt(v)}` : fmt(v);
             grp.append(svg("text", { class: "seg-label", x: (a + z) / 2, y: y + BAR - 4.5, "text-anchor": "middle",
@@ -234,15 +235,14 @@
           at += v;
         });
       } else {
-        grp.append(svg("rect", { x: x0, y, width: Math.max(X(b.value) - x0, 1), height: BAR, fill: info.colour }));
+        grp.append(svg("rect", { x: x0, y, width: Math.max(X(b.value) - x0, 1), height: BAR, fill: info.colour, "data-tip": spread }));
       }
-      const lo = X(b.min), hi = X(b.max);
       grp.append(svg("line", { class: "whisker", x1: lo, x2: hi, y1: my, y2: my }),
         svg("line", { class: "iqr", x1: X(b.q1), x2: X(b.q3), y1: my, y2: my }),
         svg("line", { class: "whisker", x1: X(b.median), x2: X(b.median), y1: y + 1, y2: y + BAR - 1, "stroke-width": 2 }),
         svg("line", { class: "whisker", x1: hi, x2: hi, y1: y + 4, y2: y + BAR - 4 }));
       const ratio = r.fastest ? ` · ${(b.value / r.fastest).toFixed(2)}× fastest` : "";
-      grp.append(svg("text", { class: "value", x: hi + 6, y: y + BAR - 4 }, `${fmt(b.value)} ms`,
+      grp.append(svg("text", { class: "value", x: hi + 6, y: y + BAR - 4, "data-tip": spread }, `${fmt(b.value)} ms`,
         svg("tspan", {}, `${ratio} · ${fmtNode(b.value * 1e6 / (c.nodes || 1))}`)));
       g.append(grp);
     });
@@ -281,6 +281,21 @@
     if (state.v === "table") renderTable(t, shownCases());
     else renderCharts(ch, shownCases());
   }
+  // One floating tooltip for every chart element with a data-tip (SVG <title> tooltips are slow to appear).
+  const tipBox = el("div", { class: "tip", hidden: "" });
+  document.body.append(tipBox);
+  document.addEventListener("mouseover", ev => {
+    const t = ev.target.closest && ev.target.closest("svg.chart [data-tip]");
+    tipBox.hidden = !t;
+    if (t) tipBox.textContent = t.getAttribute("data-tip");
+  });
+  document.addEventListener("mousemove", ev => {
+    if (tipBox.hidden) return;
+    const x = Math.min(ev.clientX + 14, innerWidth - tipBox.offsetWidth - 8);
+    const y = ev.clientY + 16 + tipBox.offsetHeight > innerHeight ? ev.clientY - tipBox.offsetHeight - 10 : ev.clientY + 16;
+    tipBox.style.transform = `translate(${x}px, ${y}px)`;
+  });
+
   if (document.getElementById("controls")) {
     update(true);
     const target = !location.hash.includes("=") && location.hash.length > 1 && document.getElementById(location.hash.slice(1));
