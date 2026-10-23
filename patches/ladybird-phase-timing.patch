@@ -20,7 +20,7 @@ index 2124b7ac..d65bd132 100644
  
      // A pass that reached a web face still waiting on its load cannot start the fetch itself: the fetch, the
 diff --git a/Libraries/LibWeb/Rust/src/layout/update_layout.rs b/Libraries/LibWeb/Rust/src/layout/update_layout.rs
-index 482b6090..58f5fee6 100644
+index 482b6090..899c22b4 100644
 --- a/Libraries/LibWeb/Rust/src/layout/update_layout.rs
 +++ b/Libraries/LibWeb/Rust/src/layout/update_layout.rs
 @@ -26,6 +26,20 @@ use crate::painting::recording_slot::FlightLicense;
@@ -94,7 +94,7 @@ index 482b6090..58f5fee6 100644
          answer.commits.push(commit);
          state.arena().note_full_layout();
          answer
-@@ -989,6 +1012,27 @@ unsafe fn update_layout(
+@@ -989,6 +1012,29 @@ unsafe fn update_layout(
      document_host: &DocumentHost,
      read: &BegunRead,
      inputs: &FfiLayoutUpdateInputs,
@@ -104,14 +104,16 @@ index 482b6090..58f5fee6 100644
 +        counter.store(0, Ordering::Relaxed);
 +    }
 +    unsafe { update_layout_timed(main_thread, document_host, read, inputs) };
-+    eprintln!(
-+        "LADYBIRD_PHASE style={} construct={} layout={} total={} full_layouts={}",
++    // One write: stderr is shared with the other WebContent processes, whose records must not interleave.
++    let record = format!(
++        "LADYBIRD_PHASE style={} construct={} layout={} total={} full_layouts={}\n",
 +        PHASE_STYLE_NS.load(Ordering::Relaxed),
 +        PHASE_CONSTRUCT_NS.load(Ordering::Relaxed),
 +        PHASE_LAYOUT_NS.load(Ordering::Relaxed),
 +        total_start.elapsed().as_nanos(),
 +        PHASE_FULL_LAYOUTS.load(Ordering::Relaxed),
 +    );
++    let _ = std::io::Write::write_all(&mut std::io::stderr().lock(), record.as_bytes());
 +}
 +
 +unsafe fn update_layout_timed(
@@ -122,7 +124,7 @@ index 482b6090..58f5fee6 100644
  ) {
      let host = layout_update_host(document_host);
      let layout_host = FfiLayoutHostCallbacks::of(main_thread);
-@@ -1016,7 +1060,9 @@ unsafe fn update_layout(
+@@ -1016,7 +1062,9 @@ unsafe fn update_layout(
      {
          layout_pass += 1;
  
@@ -220,3 +222,66 @@ index 716e7002..205c1fb2 100644
                  break;
              case HeadlessMode::Manual:
                  load_page_and_exit_on_close(*m_event_loop, *view, m_browser_options.urls.first());
+diff --git a/Services/WebContent/ConnectionFromClient.cpp b/Services/WebContent/ConnectionFromClient.cpp
+index c7a29b40..e287c3f8 100644
+--- a/Services/WebContent/ConnectionFromClient.cpp
++++ b/Services/WebContent/ConnectionFromClient.cpp
+@@ -20,6 +20,7 @@
+ #include <AK/Utf16StringBuilder.h>
+ #include <LibCompositing/FontServiceClient.h>
+ #include <LibCore/EventLoop.h>
++#include <LibCore/Timer.h>
+ #include <LibCore/Process.h>
+ #include <LibDevTools/IndexedDBSerialization.h>
+ #include <LibGC/Heap.h>
+@@ -36,6 +37,7 @@
+ #include <LibWeb/ARIA/RoleType.h>
+ #include <LibWeb/Bindings/MainThreadVM.h>
+ #include <LibWeb/CSS/CustomPropertyData.h>
++#include <LibWeb/CSS/FontFaceSet.h>
+ #include <LibWeb/CSS/Parser/ErrorReporter.h>
+ #include <LibWeb/CSS/StyleComputer.h>
+ #include <LibWeb/CSS/StyleScope.h>
+@@ -2578,6 +2580,22 @@ void ConnectionFromClient::request_internal_page_info(Web::PageId page_id, WebVi
+         return;
+     }
+ 
++    // Layout benchmark harness (local patch): the layout tree and text dumps describe the settled page. Scripts that
++    // wait on `document.fonts` run after the load event, so while the document's fonts are still loading, retry
++    // once they have loaded (the FontFaceSet becomes "loaded" in the task that resolves the last font's promise,
++    // so its reactions have run by the time this fires again).
++    if (has_flag(type, WebView::PageInfoType::LayoutTree) || has_flag(type, WebView::PageInfoType::Text)) {
++        auto* navigable = as_if<Web::HTML::LocalNavigable>(page->page().top_level_traversable().ptr());
++        if (auto document = navigable ? navigable->active_document() : nullptr;
++            document && document->fonts()->status() == Web::CSS::FontFaceSetLoadStatus::Loading) {
++            m_page_info_retry_timer = Core::Timer::create_single_shot(AK::Duration::from_milliseconds(1), [this, page_id, type] {
++                request_internal_page_info(page_id, type);
++            });
++            m_page_info_retry_timer->start();
++            return;
++        }
++    }
++
+     StringBuilder builder;
+ 
+     if (has_flag(type, WebView::PageInfoType::Text)) {
+diff --git a/Services/WebContent/ConnectionFromClient.h b/Services/WebContent/ConnectionFromClient.h
+index bb2c0d5e..64d3c39e 100644
+--- a/Services/WebContent/ConnectionFromClient.h
++++ b/Services/WebContent/ConnectionFromClient.h
+@@ -16,6 +16,7 @@
+ #include <AK/SourceLocation.h>
+ #include <LibCompositing/Types.h>
+ #include <LibCore/AnonymousBuffer.h>
++#include <LibCore/Forward.h>
+ #include <LibGC/Root.h>
+ #include <LibIPC/ConnectionFromClient.h>
+ #include <LibJS/Forward.h>
+@@ -350,6 +351,7 @@ private:
+     RefPtr<TestConnection> m_test_connection;
+     RefPtr<Web::Compositor::CompositorConnection> m_compositor_connection;
+     NonnullOwnPtr<PageHost> m_page_host;
++    RefPtr<Core::Timer> m_page_info_retry_timer;
+     OwnPtr<DevToolsDebugger> m_devtools_debugger;
+ 
+     bool m_did_notify_started_using_gamepads { false };

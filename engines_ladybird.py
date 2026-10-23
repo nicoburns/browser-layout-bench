@@ -9,9 +9,13 @@ from pathlib import Path
 
 LADYBIRD_BIN = Path(os.environ.get("LADYBIRD_BIN", Path.home() / "repos/ladybird/Build/release/bin/Ladybird"))
 # Seconds the patched headless modes wait after the load event before dumping the layout tree or
-# taking the screenshot: the font pages reveal from a `document.fonts` promise that resolves after
-# the load event, and the screenshot needs the reveal to have been painted.
-SETTLE_SECONDS = int(os.environ.get("LADYBIRD_SETTLE_SECONDS", "2"))
+# taking the screenshot. The font pages reveal from a `document.fonts` promise that resolves after
+# the load event; the patched layout-tree dump waits for the document's fonts to finish loading by
+# itself, so the bench needs no settle time. The screenshot has no such signal (`verify` only).
+SETTLE_SECONDS = int(os.environ.get("LADYBIRD_SETTLE_SECONDS", "0"))
+SCREENSHOT_SETTLE_SECONDS = max(SETTLE_SECONDS, 2)
+# fontconfig rescans the system fonts in every process unless its cache under XDG_CACHE_HOME persists.
+CACHE_DIR = Path(__file__).resolve().parent / "out/ladybird-cache"
 # `LADYBIRD_UPDATE url=<document url>` precedes each round's `LADYBIRD_PHASE k=v ...` line.
 RECORD_RE = re.compile(r"^LADYBIRD_(UPDATE|PHASE) (.*)$", re.M)
 # `Box <div#cb.cls> at [x,y] positioned flex-item [ml+bl+pl w pr+br+mr] [mt+bt+pt h pb+bb+mb] ...`
@@ -115,7 +119,7 @@ def run_ladybird(case, iters, cpus, reveal_dir, width, height, screenshot=None):
             s["boxes"] = boxes
         if screenshot and i == iters - 1:
             run_process(url, width, height, cpus, "screenshot",
-                        [f"--screenshot-path={screenshot}", f"--screenshot-delay={SETTLE_SECONDS}"])
+                        [f"--screenshot-path={screenshot}", f"--screenshot-delay={SCREENSHOT_SETTLE_SECONDS}"])
             crop_to_viewport(screenshot, width, height)
         samples.append(s)
     return samples
