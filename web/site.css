@@ -50,6 +50,9 @@ table.prose th { background: var(--soft); }
 .controls .seg button { font: inherit; border: 0; background: var(--bg); padding: 3px 9px; cursor: pointer; color: var(--fg); border-left: 1px solid var(--line); }
 .controls .seg button:first-child { border-left: 0; }
 .controls .seg button[aria-pressed="true"] { background: #dde3ea; font-weight: 600; }
+.controls .tabs { display: flex; gap: 2px; flex-basis: 100%; border-bottom: 1px solid var(--line); }
+.controls .tabs button { font: inherit; font-size: 0.95rem; border: 1px solid transparent; border-bottom: 0; background: none; padding: 5px 16px; cursor: pointer; color: var(--muted); border-radius: 6px 6px 0 0; margin-bottom: -1px; }
+.controls .tabs button[aria-selected="true"] { color: var(--fg); font-weight: 600; border-color: var(--line); background: var(--bg); }
 .controls .engines { display: flex; flex-wrap: wrap; gap: 4px; flex-basis: 100%; }
 .controls .chip { font: inherit; font-size: 0.8rem; border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px 1px 6px; background: var(--bg); cursor: pointer; display: inline-flex; align-items: center; gap: 5px; color: var(--fg); }
 .controls .chip i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; background: var(--c); }
@@ -72,9 +75,10 @@ table.results tbody tr:hover td, table.results tbody tr:hover th.case { backgrou
 
 /* Charts */
 .charts article { margin: 28px 0; scroll-margin-top: 110px; }
-.charts h2 { border: 0; margin: 12px 0 2px; font-size: 1.1rem; }
-.charts h2 code { font-size: 1em; background: none; padding: 0; }
-.charts .legend, .compare .legend { color: var(--muted); font-size: 0.8rem; margin: 0 0 4px; }
+.charts h2.suite { margin-top: 40px; }
+.charts h3 { margin: 12px 0 2px; font-size: 1.05rem; }
+.charts h3 code, .charts h2 code { font-size: 1em; background: none; padding: 0; }
+.charts .legend { color: var(--muted); font-size: 0.8rem; margin: 0 0 4px; }
 svg.chart { width: 100%; height: auto; display: block; font-family: inherit; }
 svg.chart text { font-size: 11px; }
 svg.chart .grid { stroke: var(--line); stroke-dasharray: 2 4; }
@@ -88,9 +92,4 @@ svg.chart .whisker { stroke: #333; fill: none; }
 svg.chart .iqr { stroke: #333; stroke-width: 5; opacity: 0.25; }
 svg.chart .seg-label { font-size: 9.5px; fill: #fff; pointer-events: none; }
 svg.chart .row:hover rect { filter: brightness(0.9); }
-svg.chart .case-label { fill: var(--fg); }
-svg.chart .case-label a { fill: var(--accent); }
-svg.chart .suite-label { fill: var(--muted); font-weight: 600; }
-.compare svg.chart .dot { stroke: #fff; stroke-width: 1; }
-.compare svg.chart .dot:hover { stroke: #000; }
 .empty { color: var(--muted); font-style: italic; }

@@ -5,7 +5,7 @@
   const D = window.DATA;
   const SVGNS = "http://www.w3.org/2000/svg";
   const UNITS = { ms: "ms", chrome: "× Chrome", fastest: "× fastest", node: "per node" };
-  const DEFAULTS = { g: "", t: D.tables.findIndex(t => t.title.startsWith("Box construction")), s: "min", u: "ms", x: "", off: [] };
+  const DEFAULTS = { v: "table", g: "", t: D.tables.findIndex(t => t.title.startsWith("Box construction")), s: "min", u: "ms", x: "lin", off: [] };
   const caseId = name => name.replace(/[^\w]+/g, "-");
   const unequal = new Map(D.unequal.map(u => [u.case + "|" + u.engine, u.note]));
 
@@ -15,9 +15,11 @@
     try { Object.assign(st, JSON.parse(localStorage.getItem("layout-bench") || "{}")); } catch (e) { /* ignore */ }
     const h = new URLSearchParams(location.hash.includes("=") ? location.hash.slice(1) : "");
     if (h.has("t")) st.t = +h.get("t");
-    for (const k of ["g", "s", "u", "x"]) if (h.has(k)) st[k] = h.get(k);
+    for (const k of ["v", "g", "s", "u", "x"]) if (h.has(k)) st[k] = h.get(k);
     const anchored = D.cases.find(c => "#" + caseId(c.name) === location.hash);
-    if (anchored) st.g = anchored.suite;
+    if (anchored) Object.assign(st, { g: anchored.suite, v: "charts" });
+    if (st.v !== "charts") st.v = "table";
+    if (st.x !== "log") st.x = "lin";
     if (!D.suites.some(s => s.name === st.g)) st.g = "";
     if (h.has("off")) st.off = h.get("off").split(",").filter(Boolean);
     if (!(st.t >= 0 && st.t < D.tables.length)) st.t = DEFAULTS.t;
@@ -28,8 +30,8 @@
   function saveState(toHash) {
     localStorage.setItem("layout-bench", JSON.stringify(state));
     if (!toHash) return;
-    const h = new URLSearchParams({ g: state.g, t: state.t, s: state.s, u: state.u });
-    if (state.x) h.set("x", state.x);
+    const h = new URLSearchParams({ v: state.v, g: state.g, t: state.t, s: state.s, u: state.u });
+    if (state.v === "charts") h.set("x", state.x);
     if (state.off.length) h.set("off", state.off.join(","));
     history.replaceState(null, "", "#" + h.toString());
   }
@@ -133,15 +135,6 @@
     return n;
   }
   const svg = (tag, attrs, ...kids) => el("svg:" + tag, attrs, ...kids);
-  function marker(shape, x, y, r, colour, attrs) {
-    const a = Object.assign({ fill: colour }, attrs);
-    if (shape === "square") return svg("rect", Object.assign(a, { x: x - r * 0.85, y: y - r * 0.85, width: r * 1.7, height: r * 1.7 }));
-    if (shape === "diamond") return svg("path", Object.assign(a, { d: `M${x} ${y - r * 1.2}L${x + r * 1.2} ${y}L${x} ${y + r * 1.2}L${x - r * 1.2} ${y}Z` }));
-    if (shape === "triangle") return svg("path", Object.assign(a, { d: `M${x} ${y - r * 1.2}L${x + r * 1.1} ${y + r * 0.9}L${x - r * 1.1} ${y + r * 0.9}Z` }));
-    if (shape === "cross") return svg("path", Object.assign(a, { d: `M${x - r} ${y - r}L${x + r} ${y + r}M${x - r} ${y + r}L${x + r} ${y - r}`, stroke: colour, "stroke-width": 2.2, fill: "none" }));
-    return svg("circle", Object.assign(a, { cx: x, cy: y, r }));
-  }
-
   // ---- scales ----
   function niceLinear(max) {
     const raw = max / 5, mag = Math.pow(10, Math.floor(Math.log10(raw)));
@@ -158,7 +151,7 @@
     const L = Math.log10(lo), H = Math.log10(hi);
     return { lo, hi, ticks, f: v => (Math.log10(Math.max(v, lo)) - L) / (H - L), log: true };
   }
-  const isLog = def => (state.x || def) === "log";
+  const isLog = () => state.x === "log";
   const unitAxisLabel = () => state.u === "node" ? "ns per node" : state.u === "ms" ? "ms" : UNITS[state.u];
 
   // ---- controls ----
@@ -170,9 +163,8 @@
     const inTable = new Set(D.tables[state.t].columns.map(c => c.engine));
     const chips = [...inTable].filter(e => D.engines[e]).map(e => {
       const info = D.engines[e], on = !state.off.includes(e);
-      const icon = svg("svg", { width: 12, height: 12, viewBox: "0 0 12 12", "aria-hidden": "true" }, marker(info.marker, 6, 6, 4, info.colour));
-      return el("button", { type: "button", class: "chip", "aria-pressed": String(on), title: e, on: { click: () => {
-        state.off = on ? state.off.concat(e) : state.off.filter(x => x !== e); update(); } } }, icon, info.name);
+      return el("button", { type: "button", class: "chip", style: `--c:${info.colour}`, "aria-pressed": String(on), title: e, on: { click: () => {
+        state.off = on ? state.off.concat(e) : state.off.filter(x => x !== e); update(); } } }, el("i"), info.name);
     });
     const tableSel = el("select", { on: { change: ev => { state.t = +ev.target.value; update(); } } },
       D.tables.map((t, i) => el("option", { value: i, selected: i === state.t ? "" : null }, t.title)));
@@ -180,20 +172,22 @@
       el("option", { value: "", selected: state.g === "" ? "" : null }, `All suites (${D.cases.length} cases)`),
       D.suites.map(s => el("option", { value: s.name, selected: s.name === state.g ? "" : null },
         `${s.name}/ (${D.cases.filter(c => c.suite === s.name).length} cases)`)));
-    box.replaceChildren(
+    const tabs = el("span", { class: "tabs", role: "tablist" }, Object.entries({ table: "Table", charts: "Charts" }).map(([v, label]) =>
+      el("button", { type: "button", role: "tab", "aria-selected": String(state.v === v), on: { click: () => { state.v = v; update(); } } }, label)));
+    box.replaceChildren(tabs,
       el("label", {}, "Suite", suiteSel),
       el("label", {}, "Comparison", tableSel),
       el("label", {}, "Statistic", seg("s", { min: "min", median: "median" })),
       el("label", {}, "Unit", seg("u", UNITS)),
-      el("label", {}, "Scale", seg("x", { "": "auto", lin: "linear", log: "log" })),
+      state.v === "charts" ? el("label", {}, "Scale", seg("x", { lin: "linear", log: "log" })) : null,
       el("span", { class: "engines" }, chips,
         el("button", { type: "button", class: "chip", on: { click: () => { state.off = []; update(); } } }, "all")));
   }
 
-  // Shows a case's chart: selects its suite, then scrolls to the chart once drawn.
+  // Shows a case's chart: switches to the Charts tab, then scrolls to the chart once drawn.
   function openCase(ev, c) {
     ev.preventDefault();
-    state.g = c.suite;
+    state.v = "charts";
     update();
     const target = document.getElementById(caseId(c.name));
     if (target) target.scrollIntoView();
@@ -243,7 +237,7 @@
     const maxV = Math.max(...bars.map(b => conv(b.max)).filter(v => v != null));
     const minV = Math.min(...bars.map(b => conv(b.min)).filter(v => v != null));
     if (!isFinite(maxV)) return el("p", { class: "empty" }, "No Chrome value to divide by.");
-    const log = isLog("lin");
+    const log = isLog();
     const sc = log ? niceLog(minV, maxV) : niceLinear(maxV);
     const X = v => LEFT + sc.f(v) * (W - LEFT - RIGHT);
     const h = bars.length * (BAR + GAP) + GAP, top = 4, H = top + h + 22;
@@ -293,79 +287,21 @@
     });
     return g;
   }
-  function renderCharts(host) {
-    if (!state.g) {
-      host.replaceChildren(el("p", { class: "legend" }, "Pick a suite (or click a case) for a bar chart per case, stacked by stage."));
-      return;
-    }
-    const cases = D.cases.filter(c => c.suite === state.g);
+  function renderCharts(host, cases) {
     const table = D.tables[state.t];
-    const stacked = !isLog("lin") && visible(table.columns).some(col => D.stages[col.metric]);
-    host.replaceChildren(el("h2", { class: "section" }, "Per case"),
-      el("p", { class: "legend" }, `${table.title}. Bar = ${state.s} of the samples, x axis in ${unitAxisLabel()} (${isLog("lin") ? "log" : "linear"}, per case); whisker = all samples (thick: p25–p75, tick: median). ` +
+    const stacked = !isLog() && visible(table.columns).some(col => D.stages[col.metric]);
+    let suite = null;
+    host.replaceChildren(el("h2", {}, table.title),
+      el("p", { class: "legend" }, `Bar = ${state.s} of the samples, x axis in ${unitAxisLabel()} (${isLog() ? "log; stacks are drawn as plain bars" : "linear"}, per case); whisker = all samples (thick: p25–p75, tick: median). ` +
         (stacked ? "Composite bars are stacked by the stages the engine records (solid → faint, pipeline order; grey = rest of the span). " : "") +
         `Label: ms · multiple of ${state.u === "chrome" ? "the Chrome bar" : "the fastest shown browser (bold)"} · time per node.`),
-      ...cases.map(c => el("article", { id: caseId(c.name) },
-        el("h2", {}, el("code", {}, c.name), " ", el("span", { class: "muted" }, c.nodes.toLocaleString("en") + " nodes")),
-        c.note ? el("p", { class: "caveat" }, c.note) : null,
-        caseChart(c))));
-  }
-
-  // ---- cross-case dot chart ----
-  function renderCompare(host) {
-    const table = D.tables[state.t], cols = visible(table.columns);
-    const rows = shownCases().map(c => row(c, cols));
-    const conv = (v, r) => inUnit(v, r);
-    const all = rows.flatMap(r => r.cells.filter(Boolean).flatMap(cl => [conv(cl.value, r), conv(cl.median, r)])).filter(v => v != null && v > 0);
-    if (!all.length) { host.replaceChildren(el("p", { class: "empty" }, "Nothing to show.")); return; }
-    const log = isLog("log");
-    const sc = log ? niceLog(Math.min(...all), Math.max(...all)) : niceLinear(Math.max(...all));
-    const L = 270, R = 30, RH = 17, SH = 22;
-    const X = v => L + sc.f(v) * (W - L - R);
-    let y = 24;
-    const body = [];
-    let suite = null;
-    for (const r of rows) {
-      if (r.c.suite !== suite) {
-        suite = r.c.suite;
-        y += 6;
-        body.push(svg("text", { class: "suite-label", x: 8, y: y + 12 }, suite + "/"));
-        y += SH - 6;
-      }
-      const my = y + RH / 2;
-      body.push(svg("line", { class: "grid", x1: L, x2: W - R, y1: my, y2: my, style: "stroke-dasharray:none;opacity:.5" }));
-      const c = r.c;
-      body.push(svg("a", { href: "#" + caseId(c.name), on: { click: ev => openCase(ev, c) } },
-        svg("text", { class: "case-label", x: L - 8, y: y + RH - 5, "text-anchor": "end" }, r.c.name.slice(r.c.suite.length + 1),
-          svg("tspan", { fill: "#656d76", "font-size": 10 }, "  " + r.c.nodes.toLocaleString("en")))));
-      r.cells.forEach(cl => {
-        if (!cl) return;
-        const v = conv(cl.value, r), m = conv(cl.median, r);
-        if (v == null) return;
-        const info = D.engines[cl.col.engine];
-        const t = svg("title", {}, tip(r.c, cl) + `\n${state.s}: ${fmt(cl.value)} ms` + (r.fastest ? ` · ${(cl.value / r.fastest).toFixed(2)}× fastest` : "") +
-          (r.chrome ? ` · ${(cl.value / r.chrome).toFixed(2)}× Chrome` : "") + ` · ${fmtNode(cl.value * 1e6 / (r.c.nodes || 1))}`);
-        const grp = svg("g", {}, t);
-        if (m !== v) grp.append(svg("line", { x1: X(v), x2: X(m), y1: my, y2: my, stroke: info.colour, "stroke-width": 1.5 }));
-        grp.append(marker(info.marker, X(v), my, 4.2, info.colour, { class: "dot", opacity: cl.unequal ? 0.35 : 0.95,
-          style: info.marker === "cross" ? `stroke:${info.colour}` : null }));
-        body.push(grp);
-      });
-      y += RH;
-    }
-    const H = y + 30;
-    const g = svg("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `${table.title} across cases` });
-    for (const t of sc.ticks) {
-      g.append(svg("line", { class: "grid", x1: X(t), x2: X(t), y1: 18, y2: y }),
-        svg("text", { class: "tick", x: X(t), y: 14, "text-anchor": "middle" }, fmt(t)),
-        svg("text", { class: "tick", x: X(t), y: y + 14, "text-anchor": "middle" }, fmt(t)));
-    }
-    g.append(svg("text", { class: "tick", x: 8, y: 14 }, unitAxisLabel() + (log ? " (log scale)" : "")));
-    if (state.u === "chrome" || state.u === "fastest") g.append(svg("line", { class: "ref", x1: X(1), x2: X(1), y1: 18, y2: y }));
-    g.append(...body);
-    host.replaceChildren(el("h2", {}, table.title),
-      el("p", { class: "legend" }, `Marker = ${state.s} of the samples in ${unitAxisLabel()}, line to the median of the samples; faded = ‡ unequal work. Hover a marker for ms, ratios and spread; click a case for its chart.`),
-      g);
+      ...cases.flatMap(c => {
+        const heading = !state.g && c.suite !== suite ? el("h2", { class: "suite" }, el("code", {}, (suite = c.suite) + "/")) : null;
+        return [heading, el("article", { id: caseId(c.name) },
+          el("h3", {}, el("code", {}, c.name), " ", el("span", { class: "muted" }, c.nodes.toLocaleString("en") + " nodes")),
+          c.note ? el("p", { class: "caveat" }, c.note) : null,
+          caseChart(c))];
+      }));
   }
 
   const shownCases = () => state.g ? D.cases.filter(c => c.suite === state.g) : D.cases;
@@ -373,18 +309,15 @@
   function update(initial) {
     saveState(!initial);
     renderControls();
-    const t = document.getElementById("table");
-    if (t) renderTable(t, shownCases());
     const sum = document.getElementById("summary");
-    if (sum) {
-      const s = D.suites.find(x => x.name === state.g);
-      sum.replaceChildren(s ? el("p", {}, el("strong", {}, el("code", {}, s.name + "/")), " " + s.blurb + " ",
-        el("a", { href: "#g=", on: { click: ev => pickSuite(ev, "") } }, "All suites")) : "");
-    }
-    const ch = document.getElementById("charts");
-    if (ch) renderCharts(ch);
-    const cmp = document.getElementById("compare");
-    if (cmp) renderCompare(cmp);
+    const s = D.suites.find(x => x.name === state.g);
+    sum.replaceChildren(s ? el("p", {}, el("strong", {}, el("code", {}, s.name + "/")), " " + s.blurb + " ",
+      el("a", { href: "#g=", on: { click: ev => pickSuite(ev, "") } }, "All suites")) : "");
+    const t = document.getElementById("table"), ch = document.getElementById("charts");
+    t.hidden = state.v !== "table";
+    ch.hidden = state.v !== "charts";
+    if (state.v === "table") renderTable(t, shownCases());
+    else renderCharts(ch, shownCases());
   }
   if (document.getElementById("controls")) {
     update(true);

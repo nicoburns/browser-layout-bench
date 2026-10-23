@@ -1,7 +1,7 @@
 """Static results site (out/pages/) from out/results.json: a landing page with the README methodology and
-the caveats, and one results page (cross-case chart, table, per-case charts of the chosen suite). The
-results page is a shell; `web/site.js` draws it from the exported `data.js`, so the suite, comparison,
-unit, scale and engine switches run in the browser. `./run.py pages` writes it; the Pages workflow deploys it."""
+the caveats, and one results page with a Table and a Charts tab (one stacked bar chart per case). The
+results page is a shell; `web/site.js` draws it from the exported `data.js`, so the tab, suite,
+comparison, unit, scale and engine switches run in the browser. `./run.py pages` writes it; the Pages workflow deploys it."""
 import html
 import json
 import re
@@ -27,12 +27,6 @@ COLOURS = {
     "servo1": "#2FA857", "servo": "#84D59B", "blitz": "#007672", "blitz-par": "#3E9593",
     "blitz-pcon": "#62AFAD", "blitz-par-pcon": "#88C6C4", "blitz-pcon-pl1": "#A9D8D6",
     "blitz-par-pcon-pl": "#C6E6E5", "taffy": "#E11D48",
-}
-# Marker per engine on the comparison chart, so variants sharing a hue stay distinguishable.
-MARKERS = {
-    "chrome": "circle", "firefox1": "circle", "firefox": "square", "ladybird": "circle", "servo1": "circle",
-    "servo": "square", "blitz": "circle", "blitz-par": "square", "blitz-pcon": "diamond", "blitz-par-pcon": "triangle",
-    "blitz-pcon-pl1": "diamond", "blitz-par-pcon-pl": "triangle", "taffy": "cross",
 }
 # Engine/case pairs README "Running" lists as unequal work: flagged and never the fastest of a row.
 UNEQUAL = {
@@ -160,7 +154,7 @@ def export(results, columns, count_keys):
               for title, cols in columns]
     engines = [e for e in ENGINE_NAMES if any(e in c["engines"] for c in cases)]
     return {"cases": cases, "tables": tables, "stages": plot.STAGES,
-            "engines": {e: {"name": ENGINE_NAMES[e], "colour": COLOURS[e], "marker": MARKERS[e]} for e in engines},
+            "engines": {e: {"name": ENGINE_NAMES[e], "colour": COLOURS[e]} for e in engines},
             "unequal": [{"case": c, "engine": e, "note": note} for (c, e), note in UNEQUAL.items()],
             "suites": [{"name": s, "blurb": SUITE_BLURBS.get(s, "")} for s in plot.suites(results)]}
 
@@ -234,7 +228,7 @@ def index_page(results, readme, caveats, by_suite):
 <section class="hero">
 <h1>Layout benchmark results</h1>
 {intro}
-<div class="cards">{cards}<a class="card" href="results.html#g="><h3>All suites</h3><p>Every case on one axis: pick a suite, a comparison table, a unit and the engines.</p><p class="meta">{len(results)} cases</p></a></div>
+<div class="cards">{cards}<a class="card" href="results.html#g="><h3>All suites</h3><p>Every case in one table: pick a suite, a comparison table, a unit and the engines.</p><p class="meta">{len(results)} cases</p></a></div>
 </section>
 
 <section id="reading">
@@ -275,13 +269,11 @@ def index_page(results, readme, caveats, by_suite):
 def results_page(results):
     return f"""
 <h1>Results</h1>
-<p>Pick a suite and one of the report's comparison tables. The chart puts one row per case and one marker per engine
-(the chosen statistic of its samples, with a line to their median; faster is to the left, log axis by default); the table
-gives the numbers; with a single suite selected, each case also gets a bar chart stacked by stage.</p>
+<p>Pick a suite and one of the report's comparison tables. The Table tab gives the numbers; the Charts tab draws a bar
+per engine for each case, stacked by stage, with the spread of the samples.</p>
 {controls()}
 {caveat_box(results)}
 <section id="summary"></section>
-<section id="compare" class="compare"></section>
 <section id="table" class="results-table"></section>
 <section id="charts" class="charts"></section>
 """
