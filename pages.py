@@ -14,12 +14,13 @@ import plot
 ASSETS = Path(__file__).resolve().parent / "web"
 REPO = "https://github.com/nicoburns/browser-layout-bench"
 
+# Browser name and variant per engine key; what each column measures is in `measured_table`.
 ENGINE_NAMES = {
-    "chrome": "Chrome", "firefox1": "Firefox (1 style thread)", "firefox": "Firefox", "ladybird": "Ladybird",
-    "servo1": "Servo (1 layout thread)", "servo": "Servo (3 layout threads)", "blitz": "Blitz",
-    "blitz-par": "Blitz, parallel style", "blitz-pcon": "Blitz, parallel construct",
-    "blitz-par-pcon": "Blitz, parallel style + construct", "blitz-pcon-pl1": "Blitz #1034 build, 1 thread",
-    "blitz-par-pcon-pl": "Blitz #1034 build, parallel style + construct + layout", "taffy": "Taffy",
+    "chrome": ("Chrome", ""), "firefox1": ("Firefox", "1 style thread"), "firefox": ("Firefox", ""),
+    "ladybird": ("Ladybird", ""), "servo1": ("Servo", "1 layout thread"), "servo": ("Servo", "3 layout threads"),
+    "blitz": ("Blitz", ""), "blitz-par": ("Blitz", "parallel style"), "blitz-pcon": ("Blitz", "parallel construct"),
+    "blitz-par-pcon": ("Blitz", "parallel style + construct"), "blitz-pcon-pl1": ("Blitz", "#1034 build, 1 layout thread"),
+    "blitz-par-pcon-pl": ("Blitz", "parallel style + construct + layout"), "taffy": ("Taffy", ""),
 }
 # Single-threaded-style engine -> its parallel-style twin; outside the Style table the single-threaded
 # column is dropped wherever the twin is in the same table.
@@ -158,9 +159,36 @@ def export(results, columns, count_keys):
               for title, cols in columns]
     engines = [e for e in ENGINE_NAMES if any(e in c["engines"] for c in cases)]
     return {"cases": cases, "tables": tables, "stages": plot.STAGES,
-            "engines": {e: {"name": ENGINE_NAMES[e], "colour": COLOURS[e]} for e in engines},
+            "engines": {e: {"name": engine_name(e), "browser": ENGINE_NAMES[e][0], "variant": ENGINE_NAMES[e][1],
+                            "colour": COLOURS[e]} for e in engines},
             "unequal": [{"case": c, "engine": e, "note": note} for (c, e), note in UNEQUAL.items()],
             "suites": [{"name": s, "blurb": SUITE_BLURBS.get(s, "")} for s in plot.suites(results)]}
+
+
+def engine_name(e):
+    browser, variant = ENGINE_NAMES[e]
+    return f"{browser} ({variant})" if variant else browser
+
+
+def measured_table(tables):
+    """About-page table: per engine (rows) and comparison (columns), the span it is timed by. The span is the
+    report label minus its engine prefix and variant parentheses (those are in the row name)."""
+    def span(label):
+        text = label.split(" ", 1)[1] if " " in label else ""
+        return inline(re.sub(r"\s*\((?:parallel|#)[^)]*\)|, parallel$", "", text), REPO)
+    def cell(label, metric):
+        text = span(label)
+        code = f"<code>{html.escape(metric)}</code>"
+        return code if text in ("", code) else f"{text} {code}"
+    cells = {(c["engine"], t["title"]): (c["label"], c["metric"]) for t in tables for c in t["columns"]}
+    engines = [e for e in ENGINE_NAMES if any(e == k[0] for k in cells)]
+    head = "".join(f"<th>{html.escape(t['title'])}</th>" for t in tables)
+    rows = "".join(
+        f"<tr><th>{html.escape(engine_name(e))}</th>" + "".join(
+            f'<td>{cell(*cells[e, t["title"]])}</td>'
+            if (e, t["title"]) in cells else "<td>–</td>" for t in tables) + "</tr>"
+        for e in engines)
+    return f'<div class="scroll"><table class="measured"><thead><tr><th>engine</th>{head}</tr></thead><tbody>{rows}</tbody></table></div>'
 
 
 def normalized_engines(results):
@@ -219,7 +247,7 @@ def controls():
     return '<div class="controls" id="controls"></div>'
 
 
-def about_page(results, readme, caveats, by_suite):
+def about_page(results, readme, caveats, by_suite, tables):
     intro = md_to_html(readme.split("\n## ", 1)[0].split("\n", 1)[1])
     cards = "".join(
         f'<a class="card" href="index.html#g={s}"><h3>{s}/</h3><p>{html.escape(SUITE_BLURBS.get(s, ""))}</p>'
@@ -239,6 +267,12 @@ def about_page(results, readme, caveats, by_suite):
 <h2>Reading the numbers</h2>
 {caveat_box(results)}
 {interpret}
+</section>
+
+<section id="measured">
+<h2>What each comparison measures</h2>
+<p>The span (and, in code, the metric key in <code>results.json</code>) each engine column is timed by; the results page labels columns by engine and variant only.</p>
+{measured_table(tables)}
 </section>
 
 <section id="versions-and-methodology">
@@ -299,7 +333,7 @@ def build(results, columns, count_keys, root, out_dir):
 
     write("data.js", "window.DATA = " + json.dumps(data, separators=(",", ":")) + ";\n")
     write("index.html", page("Results", results_page(results), "results", REPO))
-    write("about.html", page("About", about_page(results, readme, caveats, by_suite), "about", REPO))
+    write("about.html", page("About", about_page(results, readme, caveats, by_suite, data["tables"]), "about", REPO))
     for asset in ("site.css", "site.js"):
         shutil.copy(ASSETS / asset, out_dir / asset)
         written.append(out_dir / asset)

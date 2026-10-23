@@ -168,10 +168,10 @@
     const table = D.tables[state.t], cols = visible(table.columns);
     const thead = el("thead", {}, el("tr", {}, el("th", { class: "case" }, "case"), el("th", {}, "nodes"),
       cols.map(col => {
-        const [engine, ...phase] = col.label.split(" ");
+        const info = D.engines[col.engine];
         const norm = cases.some(c => c.engines[col.engine] && c.engines[col.engine].normalized);
-        return el("th", { class: norm ? "norm" : null, title: col.engine + " · " + col.metric }, engine,
-          el("small", {}, phase.join(" ").replace(/`/g, "").replace(/\+/g, " + ")));
+        return el("th", { class: norm ? "norm" : null, title: col.engine + " · " + col.metric }, info.browser,
+          info.variant ? el("small", {}, info.variant) : null);
       })));
     const tbody = el("tbody");
     let suite = null;
@@ -191,7 +191,8 @@
           return el("td", { class: best ? "best" : null, title: tip(c, cl) }, fmt(cl.value) + (cl.unequal ? " ‡" : ""), el("span", { class: "s" }, secondary(cl.value, r)));
         })));
     }
-    const caption = el("p", { class: "legend" }, `${table.title}: ${state.s} of the samples in ms; second line multiple of the Chrome column (1.00× = Chrome); bold = fastest shown browser of the row (Taffy and ‡ unequal-work cells excluded); † = Chrome-normalised later run. Hover a cell for its sample spread.`);
+    const caption = el("p", { class: "legend" }, `${table.title}: ${state.s} of the samples in ms; second line multiple of the Chrome column (1.00× = Chrome); bold = fastest shown browser of the row (Taffy and ‡ unequal-work cells excluded); † = Chrome-normalised later run. Hover a cell for its sample spread. `,
+      el("a", { href: "about.html#measured" }, "What each column measures"), ".");
     host.replaceChildren(el("h2", {}, table.title), caption, el("div", { class: "scroll" }, el("table", { class: "results" }, thead, tbody)));
   }
 
@@ -216,7 +217,7 @@
       const best = b.value === r.fastest && b.col.engine !== "taffy" && !b.unequal;
       const grp = svg("g", { class: "row" }, svg("title", {}, tip(c, b)));
       grp.append(svg("text", { class: "label" + (best ? " best" : ""), x: LEFT - 10, y: y + BAR - 4, "text-anchor": "end" },
-        b.col.label.replace(/`/g, "") + (b.normalized ? " †" : "") + (b.unequal ? " ‡" : "")));
+        info.name + (b.normalized ? " †" : "") + (b.unequal ? " ‡" : "")));
       const parts = stages(c, b);
       const x0 = X(0);
       if (parts.length) {
@@ -256,7 +257,8 @@
     host.replaceChildren(el("h2", {}, table.title),
       el("p", { class: "legend" }, `Bar = ${state.s} of the samples, x axis in ms (per case); whisker = all samples (thick: p25–p75, tick: median). ` +
         (stacked ? "Composite bars are stacked by the stages the engine records (solid → faint, pipeline order; grey = rest of the span). " : "") +
-        "Label: ms · multiple of the fastest shown browser (bold) · time per node."),
+        "Label: ms · multiple of the fastest shown browser (bold) · time per node. ",
+        el("a", { href: "about.html#measured" }, "What each column measures"), "."),
       ...cases.flatMap(c => {
         const heading = !state.g && c.suite !== suite ? [el("h2", { class: "suite" }, el("code", {}, (suite = c.suite) + "/"))] : [];
         return [...heading, el("article", { id: caseId(c.name) },

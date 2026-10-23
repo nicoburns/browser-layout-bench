@@ -92,3 +92,6 @@ svg.chart .iqr { stroke: #333; stroke-width: 5; opacity: 0.25; }
 svg.chart .seg-label { font-size: 9.5px; fill: #fff; pointer-events: none; }
 svg.chart .row:hover rect { filter: brightness(0.9); }
 .empty { color: var(--muted); font-style: italic; }
+table.measured th, table.measured td { padding: 4px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+table.measured thead th { background: var(--soft); }
+table.measured td code { color: var(--muted); font-size: 0.8em; }
