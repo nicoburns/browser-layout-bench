@@ -135,10 +135,20 @@ index 482b6090..899c22b4 100644
          // anything else of the update reads the layout.
          document_host.take_frame_in_with(read);
 diff --git a/Libraries/LibWebView/Application.cpp b/Libraries/LibWebView/Application.cpp
-index 716e7002..205c1fb2 100644
+index 716e7002..c56ee29c 100644
 --- a/Libraries/LibWebView/Application.cpp
 +++ b/Libraries/LibWebView/Application.cpp
-@@ -2013,7 +2013,9 @@ static NonnullRefPtr<Core::Timer> load_page_for_screenshot_and_exit(Core::EventL
+@@ -1560,6 +1560,9 @@ void Application::launch_spare_web_content_process()
+     // Disable spare processes when profiling WebContent. This reduces callgrind logging we are not interested in.
+     if (browser_options().profile_helper_process == ProcessType::WebContent)
+         return;
++    // Layout benchmark harness (local patch): a headless run loads one page, so a spare is never used.
++    if (browser_options().headless_mode.has_value())
++        return;
+ 
+     if (m_spare_web_content_process || m_has_queued_task_to_launch_spare_web_content_process)
+         return;
+@@ -2013,7 +2016,9 @@ static NonnullRefPtr<Core::Timer> load_page_for_screenshot_and_exit(Core::EventL
      auto timer = Core::Timer::create_single_shot(
          AK::Duration::from_seconds(screenshot_timeout),
          [&]() {
@@ -149,7 +159,7 @@ index 716e7002..205c1fb2 100644
                  ->when_resolved([&event_loop](auto const& path) {
                      outln("Saved screenshot to: {}", path);
                      event_loop.quit(0);
-@@ -2024,30 +2026,45 @@ static NonnullRefPtr<Core::Timer> load_page_for_screenshot_and_exit(Core::EventL
+@@ -2024,30 +2029,45 @@ static NonnullRefPtr<Core::Timer> load_page_for_screenshot_and_exit(Core::EventL
                  });
          });
  
@@ -209,7 +219,7 @@ index 716e7002..205c1fb2 100644
  }
  
  static void load_page_and_exit_on_close(Core::EventLoop& event_loop, HeadlessWebView& view, URL::URL const& url)
-@@ -2079,10 +2096,10 @@ ErrorOr<int> Application::execute()
+@@ -2079,10 +2099,10 @@ ErrorOr<int> Application::execute()
                  screenshot_timer = load_page_for_screenshot_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), m_browser_options.screenshot_delay);
                  break;
              case HeadlessMode::LayoutTree:
