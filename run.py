@@ -142,39 +142,56 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
 
 
 def parse_servo_trace(path):
-    from perfetto.trace_processor import TraceProcessor
-    tp = TraceProcessor(trace=str(path))
-    rows = list(tp.query("select id, parent_id, name, dur, ts from slice"))
-    tp.close()
-    by_id = {r.id: r for r in rows}
-    restyles = [r for r in rows if r.name == "restyle_and_build_trees"]
+    """Spans of servoshell's perfetto trace, decoded straight from the protobuf: the trace is a few
+    KB, and perfetto's TraceProcessor spends ~1 s per trace starting trace_processor_shell."""
+    from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import Trace, TrackEvent
+    trace = Trace()
+    trace.ParseFromString(Path(path).read_bytes())
+    # tracing_perfetto emits a span's BEGIN packet when the span closes, so packets are not in
+    # timestamp order; nest by (timestamp, ends before begins) per thread track, as the trace
+    # processor does.
+    events = sorted(((p.timestamp, p.track_event) for p in trace.packet if p.HasField("track_event")),
+                    key=lambda e: (e[0], e[1].type != TrackEvent.TYPE_SLICE_END))
+    rows, open_spans = [], {}
+    for ts, event in events:
+        stack = open_spans.setdefault(event.track_uuid, [])
+        if event.type == TrackEvent.TYPE_SLICE_BEGIN:
+            row = dict(id=len(rows), parent_id=stack[-1]["id"] if stack else None, name=event.name, ts=ts, dur=None)
+            rows.append(row)
+            stack.append(row)
+        elif event.type == TrackEvent.TYPE_SLICE_END and stack:
+            row = stack.pop()
+            row["dur"] = ts - row["ts"]
+    rows = [r for r in rows if r["dur"] is not None]
+    by_id = {r["id"]: r for r in rows}
+    restyles = [r for r in rows if r["name"] == "restyle_and_build_trees"]
     if not restyles:
         raise RuntimeError(f"no restyle_and_build_trees span in {path}")
     children = {}
     for r in rows:
-        children.setdefault(r.parent_id, []).append(r)
+        children.setdefault(r["parent_id"], []).append(r)
 
     def descendants(root_id):
         out, stack = [], [root_id]
         while stack:
             for r in children.get(stack.pop(), []):
                 out.append(r)
-                stack.append(r.id)
+                stack.append(r["id"])
         return out
 
     def total(root_id, name):
-        return sum(r.dur for r in descendants(root_id) if r.name == name)
+        return sum(r["dur"] for r in descendants(root_id) if r["name"] == name)
 
     # The reflow that laid the page out, i.e. the one after the reveal: the longest span is not
     # always it, as the first (`display:none`) reflow's `prepare_stylist_for_reflow` can outlast the
     # whole layout of a small page.
-    main = max(restyles, key=lambda r: total(r.id, "Box Tree Construction") + total(r.id, "Fragment Tree Construction"))
-    reflow = by_id[main.parent_id]
+    main = max(restyles, key=lambda r: total(r["id"], "Box Tree Construction") + total(r["id"], "Fragment Tree Construction"))
+    reflow = by_id[main["parent_id"]]
 
-    s = dict(style=total(main.id, "Styling"), box=total(main.id, "Box Tree Construction"),
-             fragment=total(main.id, "Fragment Tree Construction"), restyle_and_build=main.dur,
-             stacking_context=total(reflow.id, "Stacking Context Tree Construction"),
-             display_list=total(reflow.id, "Display List Construction"), reflow=reflow.dur,
+    s = dict(style=total(main["id"], "Styling"), box=total(main["id"], "Box Tree Construction"),
+             fragment=total(main["id"], "Fragment Tree Construction"), restyle_and_build=main["dur"],
+             stacking_context=total(reflow["id"], "Stacking Context Tree Construction"),
+             display_list=total(reflow["id"], "Display List Construction"), reflow=reflow["dur"],
              n_reflows=len(restyles))
     s["box+fragment"] = s["box"] + s["fragment"]
     return s
