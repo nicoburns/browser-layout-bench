@@ -82,7 +82,6 @@ table.results tbody tr:hover td, table.results tbody tr:hover th.case { backgrou
 svg.chart { width: 100%; height: auto; display: block; font-family: inherit; }
 svg.chart text { font-size: 11px; }
 svg.chart .grid { stroke: var(--line); stroke-dasharray: 2 4; }
-svg.chart .ref { stroke: #999; stroke-dasharray: 5 3; }
 svg.chart .tick { fill: var(--muted); font-size: 10px; }
 svg.chart .label { fill: var(--fg); }
 svg.chart .label.best { font-weight: 700; }

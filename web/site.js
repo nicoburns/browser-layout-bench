@@ -1,11 +1,10 @@
 // Draws the result tables and charts of the static site from window.DATA (written by pages.py).
-// State (table, statistic, unit, scale, hidden engines) is kept in the URL hash and localStorage.
+// State (tab, suite, table, statistic, hidden engines) is kept in the URL hash and localStorage.
 "use strict";
 (function () {
   const D = window.DATA;
   const SVGNS = "http://www.w3.org/2000/svg";
-  const UNITS = { ms: "ms", chrome: "× Chrome", fastest: "× fastest", node: "per node" };
-  const DEFAULTS = { v: "table", g: "", t: D.tables.findIndex(t => t.title.startsWith("Box construction")), s: "min", u: "ms", x: "lin", off: [] };
+  const DEFAULTS = { v: "table", g: "", t: D.tables.findIndex(t => t.title.startsWith("Box construction")), s: "min", off: [] };
   const caseId = name => name.replace(/[^\w]+/g, "-");
   const unequal = new Map(D.unequal.map(u => [u.case + "|" + u.engine, u.note]));
 
@@ -15,11 +14,10 @@
     try { Object.assign(st, JSON.parse(localStorage.getItem("layout-bench") || "{}")); } catch (e) { /* ignore */ }
     const h = new URLSearchParams(location.hash.includes("=") ? location.hash.slice(1) : "");
     if (h.has("t")) st.t = +h.get("t");
-    for (const k of ["v", "g", "s", "u", "x"]) if (h.has(k)) st[k] = h.get(k);
+    for (const k of ["v", "g", "s"]) if (h.has(k)) st[k] = h.get(k);
     const anchored = D.cases.find(c => "#" + caseId(c.name) === location.hash);
     if (anchored) Object.assign(st, { g: anchored.suite, v: "charts" });
     if (st.v !== "charts") st.v = "table";
-    if (st.x !== "log") st.x = "lin";
     if (!D.suites.some(s => s.name === st.g)) st.g = "";
     if (h.has("off")) st.off = h.get("off").split(",").filter(Boolean);
     if (!(st.t >= 0 && st.t < D.tables.length)) st.t = DEFAULTS.t;
@@ -30,8 +28,7 @@
   function saveState(toHash) {
     localStorage.setItem("layout-bench", JSON.stringify(state));
     if (!toHash) return;
-    const h = new URLSearchParams({ v: state.v, g: state.g, t: state.t, s: state.s, u: state.u });
-    if (state.v === "charts") h.set("x", state.x);
+    const h = new URLSearchParams({ v: state.v, g: state.g, t: state.t, s: state.s });
     if (state.off.length) h.set("off", state.off.join(","));
     history.replaceState(null, "", "#" + h.toString());
   }
@@ -88,13 +85,6 @@
     const chrome = chromeCol ? cell(c, chromeCol) : null;
     return { c, cells, fastest, chrome: chrome && chrome.value };
   }
-  function inUnit(v, r) {
-    if (v == null) return null;
-    if (state.u === "chrome") return r.chrome ? v / r.chrome : null;
-    if (state.u === "fastest") return r.fastest ? v / r.fastest : null;
-    if (state.u === "node") return v * 1e6 / (r.c.nodes || 1); // ns per node
-    return v;
-  }
   function fmt(v) {
     if (v == null) return "-";
     return v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v >= 1 ? v.toFixed(2) : v >= 0.01 ? v.toFixed(3) : v.toPrecision(2);
@@ -102,18 +92,8 @@
   function fmtNode(ns) {
     return ns >= 1e3 ? fmt(ns / 1e3) + " µs/node" : fmt(ns) + " ns/node";
   }
-  function fmtUnit(v) {
-    if (v == null) return "-";
-    if (state.u === "node") return fmtNode(v);
-    if (state.u === "ms") return fmt(v) + " ms";
-    return v.toFixed(2) + "×";
-  }
-  // Secondary text next to the ms figure: the chosen ratio (× Chrome in ms mode, as in report.md).
-  function secondary(v, r) {
-    if (state.u === "node") return fmtNode(v * 1e6 / (r.c.nodes || 1));
-    if (state.u === "fastest") return r.fastest ? (v / r.fastest).toFixed(2) + "× fastest" : "";
-    return r.chrome ? (v / r.chrome).toFixed(2) + "× Chrome" : "";
-  }
+  // Secondary text next to the ms figure, as in report.md.
+  const secondary = (v, r) => r.chrome ? (v / r.chrome).toFixed(2) + "× Chrome" : "";
   function tip(c, cl) {
     const lines = [`${c.name} · ${D.engines[cl.col.engine].name}: ${cl.col.label.replace(/`/g, "")}`,
       `${cl.vals.length} samples: min ${fmt(cl.min)} · p25 ${fmt(cl.q1)} · median ${fmt(cl.median)} · p75 ${fmt(cl.q3)} · max ${fmt(cl.max)} ms`,
@@ -144,15 +124,6 @@
     for (let t = 0; t <= top + step / 2; t += step) ticks.push(+t.toPrecision(12));
     return { lo: 0, hi: top, ticks, f: v => v / top };
   }
-  function niceLog(min, max) {
-    const lo = Math.pow(10, Math.floor(Math.log10(min))), hi = Math.pow(10, Math.ceil(Math.log10(max)));
-    const ticks = [];
-    for (let d = lo; d <= hi * 1.001; d *= 10) for (const m of [1, 2, 5]) if (d * m >= lo && d * m <= hi * 1.001) ticks.push(+(d * m).toPrecision(6));
-    const L = Math.log10(lo), H = Math.log10(hi);
-    return { lo, hi, ticks, f: v => (Math.log10(Math.max(v, lo)) - L) / (H - L), log: true };
-  }
-  const isLog = () => state.x === "log";
-  const unitAxisLabel = () => state.u === "node" ? "ns per node" : state.u === "ms" ? "ms" : UNITS[state.u];
 
   // ---- controls ----
   function renderControls() {
@@ -178,8 +149,6 @@
       el("label", {}, "Suite", suiteSel),
       el("label", {}, "Comparison", tableSel),
       el("label", {}, "Statistic", seg("s", { min: "min", median: "median" })),
-      el("label", {}, "Unit", seg("u", UNITS)),
-      ...(state.v === "charts" ? [el("label", {}, "Scale", seg("x", { lin: "linear", log: "log" }))] : []),
       el("span", { class: "engines" }, chips,
         el("button", { type: "button", class: "chip", on: { click: () => { state.off = []; update(); } } }, "all")));
   }
@@ -222,7 +191,7 @@
           return el("td", { class: best ? "best" : null, title: tip(c, cl) }, fmt(cl.value) + (cl.unequal ? " ‡" : ""), el("span", { class: "s" }, secondary(cl.value, r)));
         })));
     }
-    const caption = el("p", { class: "legend" }, `${table.title}: ${state.s} of the samples in ms; second line ${state.u === "node" ? "time per node" : state.u === "fastest" ? "multiple of the fastest shown engine of the row" : "multiple of the Chrome column (1.00× = Chrome)"}; bold = fastest shown browser of the row (Taffy and ‡ unequal-work cells excluded); † = Chrome-normalised later run. Hover a cell for its sample spread.`);
+    const caption = el("p", { class: "legend" }, `${table.title}: ${state.s} of the samples in ms; second line multiple of the Chrome column (1.00× = Chrome); bold = fastest shown browser of the row (Taffy and ‡ unequal-work cells excluded); † = Chrome-normalised later run. Hover a cell for its sample spread.`);
     host.replaceChildren(el("h2", {}, table.title), caption, el("div", { class: "scroll" }, el("table", { class: "results" }, thead, tbody)));
   }
 
@@ -233,12 +202,7 @@
     const r = row(c, cols);
     const bars = r.cells.filter(Boolean);
     if (!bars.length) return el("p", { class: "empty" }, "No samples for this comparison.");
-    const conv = v => inUnit(v, r);
-    const maxV = Math.max(...bars.map(b => conv(b.max)).filter(v => v != null));
-    const minV = Math.min(...bars.map(b => conv(b.min)).filter(v => v != null));
-    if (!isFinite(maxV)) return el("p", { class: "empty" }, "No Chrome value to divide by.");
-    const log = isLog();
-    const sc = log ? niceLog(minV, maxV) : niceLinear(maxV);
+    const sc = niceLinear(Math.max(...bars.map(b => b.max)));
     const X = v => LEFT + sc.f(v) * (W - LEFT - RIGHT);
     const h = bars.length * (BAR + GAP) + GAP, top = 4, H = top + h + 22;
     const g = svg("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `${c.name}: ${table.title}` });
@@ -246,20 +210,19 @@
       g.append(svg("line", { class: "grid", x1: X(t), x2: X(t), y1: top, y2: top + h }),
         svg("text", { class: "tick", x: X(t), y: top + h + 14, "text-anchor": "middle" }, fmt(t)));
     }
-    g.append(svg("text", { class: "tick", x: W - RIGHT + 30, y: top + h + 14 }, unitAxisLabel()));
-    if (state.u === "chrome" || state.u === "fastest") g.append(svg("line", { class: "ref", x1: X(1), x2: X(1), y1: top, y2: top + h }));
+    g.append(svg("text", { class: "tick", x: W - RIGHT + 30, y: top + h + 14 }, "ms"));
     bars.forEach((b, k) => {
       const info = D.engines[b.col.engine], y = top + GAP + k * (BAR + GAP), my = y + BAR / 2;
       const best = b.value === r.fastest && b.col.engine !== "taffy" && !b.unequal;
       const grp = svg("g", { class: "row" }, svg("title", {}, tip(c, b)));
       grp.append(svg("text", { class: "label" + (best ? " best" : ""), x: LEFT - 10, y: y + BAR - 4, "text-anchor": "end" },
         b.col.label.replace(/`/g, "") + (b.normalized ? " †" : "") + (b.unequal ? " ‡" : "")));
-      const parts = log ? [] : stages(c, b);
-      const x0 = X(sc.lo);
+      const parts = stages(c, b);
+      const x0 = X(0);
       if (parts.length) {
         let at = 0;
         parts.forEach(([stage, v], i) => {
-          const a = X(conv(at)), z = X(Math.min(conv(at + v), conv(b.value)));
+          const a = X(at), z = X(Math.min(at + v, b.value));
           const fill = stage === "other" ? "#8c959f" : info.colour;
           const op = stage === "other" ? 1 : [1, 0.7, 0.45, 0.3][Math.min(i, 3)];
           grp.append(svg("rect", { x: a, y, width: Math.max(z - a, 0), height: BAR, fill, opacity: op },
@@ -272,15 +235,14 @@
           at += v;
         });
       } else {
-        grp.append(svg("rect", { x: x0, y, width: Math.max(X(conv(b.value)) - x0, 1), height: BAR, fill: info.colour }));
+        grp.append(svg("rect", { x: x0, y, width: Math.max(X(b.value) - x0, 1), height: BAR, fill: info.colour }));
       }
-      const lo = X(conv(b.min)), hi = X(conv(b.max));
+      const lo = X(b.min), hi = X(b.max);
       grp.append(svg("line", { class: "whisker", x1: lo, x2: hi, y1: my, y2: my }),
-        svg("line", { class: "iqr", x1: X(conv(b.q1)), x2: X(conv(b.q3)), y1: my, y2: my }),
-        svg("line", { class: "whisker", x1: X(conv(b.median)), x2: X(conv(b.median)), y1: y + 1, y2: y + BAR - 1, "stroke-width": 2 }),
+        svg("line", { class: "iqr", x1: X(b.q1), x2: X(b.q3), y1: my, y2: my }),
+        svg("line", { class: "whisker", x1: X(b.median), x2: X(b.median), y1: y + 1, y2: y + BAR - 1, "stroke-width": 2 }),
         svg("line", { class: "whisker", x1: hi, x2: hi, y1: y + 4, y2: y + BAR - 4 }));
-      const ratio = state.u === "chrome" ? (r.chrome ? ` · ${(b.value / r.chrome).toFixed(2)}× Chrome` : "")
-        : r.fastest ? ` · ${(b.value / r.fastest).toFixed(2)}× fastest` : "";
+      const ratio = r.fastest ? ` · ${(b.value / r.fastest).toFixed(2)}× fastest` : "";
       grp.append(svg("text", { class: "value", x: hi + 6, y: y + BAR - 4 }, `${fmt(b.value)} ms`,
         svg("tspan", {}, `${ratio} · ${fmtNode(b.value * 1e6 / (c.nodes || 1))}`)));
       g.append(grp);
@@ -289,12 +251,12 @@
   }
   function renderCharts(host, cases) {
     const table = D.tables[state.t];
-    const stacked = !isLog() && visible(table.columns).some(col => D.stages[col.metric]);
+    const stacked = visible(table.columns).some(col => D.stages[col.metric]);
     let suite = null;
     host.replaceChildren(el("h2", {}, table.title),
-      el("p", { class: "legend" }, `Bar = ${state.s} of the samples, x axis in ${unitAxisLabel()} (${isLog() ? "log; stacks are drawn as plain bars" : "linear"}, per case); whisker = all samples (thick: p25–p75, tick: median). ` +
+      el("p", { class: "legend" }, `Bar = ${state.s} of the samples, x axis in ms (per case); whisker = all samples (thick: p25–p75, tick: median). ` +
         (stacked ? "Composite bars are stacked by the stages the engine records (solid → faint, pipeline order; grey = rest of the span). " : "") +
-        `Label: ms · multiple of ${state.u === "chrome" ? "the Chrome bar" : "the fastest shown browser (bold)"} · time per node.`),
+        "Label: ms · multiple of the fastest shown browser (bold) · time per node."),
       ...cases.flatMap(c => {
         const heading = !state.g && c.suite !== suite ? [el("h2", { class: "suite" }, el("code", {}, (suite = c.suite) + "/"))] : [];
         return [...heading, el("article", { id: caseId(c.name) },

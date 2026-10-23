@@ -1,7 +1,7 @@
 """Static results site (out/pages/) from out/results.json: a landing page with the README methodology and
 the caveats, and one results page with a Table and a Charts tab (one stacked bar chart per case). The
 results page is a shell; `web/site.js` draws it from the exported `data.js`, so the tab, suite,
-comparison, unit, scale and engine switches run in the browser. `./run.py pages` writes it; the Pages workflow deploys it."""
+comparison, statistic and engine switches run in the browser. `./run.py pages` writes it; the Pages workflow deploys it."""
 import html
 import json
 import re
@@ -228,7 +228,7 @@ def index_page(results, readme, caveats, by_suite):
 <section class="hero">
 <h1>Layout benchmark results</h1>
 {intro}
-<div class="cards">{cards}<a class="card" href="results.html#g="><h3>All suites</h3><p>Every case in one table: pick a suite, a comparison table, a unit and the engines.</p><p class="meta">{len(results)} cases</p></a></div>
+<div class="cards">{cards}<a class="card" href="results.html#g="><h3>All suites</h3><p>Every case in one table: pick a suite, a comparison table and the engines.</p><p class="meta">{len(results)} cases</p></a></div>
 </section>
 
 <section id="reading">
