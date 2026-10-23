@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Driver: generates the corpus, runs each engine on every page in interleaved rounds, and
 writes results.json + a Markdown report. See README.md for the measurement model."""
-import argparse, functools, http.server, json, os, re, shlex, shutil, statistics, subprocess, sys, tempfile, threading
+import argparse, functools, http.server, json, os, re, shutil, statistics, subprocess, sys, tempfile, threading
 from pathlib import Path
 
 import engines_ladybird
@@ -21,7 +21,7 @@ BLITZ_PL = ROOT / "target-pl/release/blitz-runner"
 SERVOSHELL = Path(os.environ.get("SERVOSHELL", Path.home() / "repos/servo/target/release/servoshell"))
 WIDTH, HEIGHT = 1280, 800
 ENGINES = ["taffy", "blitz", "blitz-par", "blitz-pcon", "blitz-par-pcon", "blitz-pcon-pl1", "blitz-par-pcon-pl",
-           "servo1", "servo", "chrome", "firefox1", "firefox", "ladybird"]
+           "servo1", "servo", "chrome", "firefox", "ladybird"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
                  "cb.offsetHeight;</script>\n")
@@ -327,51 +327,24 @@ def parse_firefox_profile(profile, url):
     return s
 
 
-def pin_content_processes(parent_pid, cpus):
-    """Pin Firefox's tab content processes (descendants of the parent whose command line ends in
-    `tab`) with taskset. Pinning the whole browser would put the parent process and compositor
-    on the same CPUs as the page's main thread, which inflated its reflow 3x on a single CPU."""
-    children = {}
-    for stat in Path("/proc").glob("[0-9]*/stat"):
-        try:
-            ppid = int(stat.read_text().rsplit(")", 1)[1].split()[1])
-            children.setdefault(ppid, []).append(int(stat.parent.name))
-        except (OSError, ValueError):
-            continue
-    pinned, stack = [], [parent_pid]
-    while stack:
-        for pid in children.get(stack.pop(), []):
-            stack.append(pid)
-            try:
-                cmdline = Path(f"/proc/{pid}/cmdline").read_bytes()
-            except OSError:  # exited between the /proc scan and now
-                continue
-            if cmdline.replace(b"\0", b" ").split()[-1:] == [b"tab"]:
-                subprocess.run(["taskset", "-a", "-p", "-c", cpus, str(pid)], check=True, capture_output=True)
-                pinned.append(pid)
-    if not pinned:
-        raise RuntimeError("no Firefox content process found to pin")
-    return pinned
-
-
-def launch_firefox(p, exe, env, prefs, attempts=3):
+def launch_firefox(p, exe, env, attempts=3):
     """Headless Firefox segfaults at launch now and then (5 of 306 launches in a bench run, none in
     80 back-to-back launches with or without the profiler); retry rather than lose the whole case."""
     from playwright.sync_api import Error
     for attempt in range(attempts):
         try:
-            return p.firefox.launch(executable_path=exe, env=env, firefox_user_prefs=prefs)
+            return p.firefox.launch(executable_path=exe, env=env)
         except Error as ex:
             if attempt == attempts - 1 or "Failed to launch" not in str(ex):
                 raise
             print(f"firefox: launch failed (attempt {attempt + 1}), retrying", file=sys.stderr)
 
 
-def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
-    return run_firefox_round([case], iters, cpus, stylo_threads, screenshot)[case["name"]]
+def run_firefox(case, iters, screenshot=None):
+    return run_firefox_round([case], iters, screenshot)[case["name"]]
 
 
-def run_firefox_round(cases, iters, cpus, stylo_threads=None, screenshot=None):
+def run_firefox_round(cases, iters, screenshot=None):
     """One Firefox process per call (= per round, for every case of the round), a fresh tab per iteration,
     all tabs in one content process (see `keep` below). The process's first page load gets an extra full
     reflow ~200 ms after the reveal (no elements restyled; 105 ms on Wikipedia, 64 ms on rustdoc) and
@@ -380,20 +353,14 @@ def run_firefox_round(cases, iters, cpus, stylo_threads=None, screenshot=None):
     process measured within 1% of each other on flex/wide/10000 and Wikipedia; a cold process is 10–20%
     slower on text-heavy pages. Returns {case name: samples}."""
     from playwright.sync_api import sync_playwright
-    prefs = {} if stylo_threads is None else {"layout.css.stylo-threads": stylo_threads}
     results = {}
     with sync_playwright() as p, tempfile.TemporaryDirectory() as d:
         exe = p.firefox.executable_path
-        pidfile, blank = Path(d) / "firefox.pid", Path(d) / "blank.html"
+        blank = Path(d) / "blank.html"
         blank.write_text("<!doctype html>\n")
-        if cpus:
-            wrapper = Path(d) / "firefox-with-pid"
-            wrapper.write_text(f"#!/bin/sh\necho $$ > {shlex.quote(str(pidfile))}\nexec {shlex.quote(exe)} \"$@\"\n")
-            wrapper.chmod(0o755)
-            exe = str(wrapper)
         profile = Path(d) / "profile.json"
         env = dict(os.environ, **FIREFOX_PROFILER_ENV, MOZ_PROFILER_SHUTDOWN=str(profile))
-        browser = launch_firefox(p, exe, env, prefs)
+        browser = launch_firefox(p, exe, env)
 
         def load(case, page_url):
             page = browser.new_page(viewport={"width": case["width"], "height": case["height"]})
@@ -403,11 +370,9 @@ def run_firefox_round(cases, iters, cpus, stylo_threads=None, screenshot=None):
 
         # Each new_page() is a new context, and the file content process exits with its last tab, so
         # this first file:// page stays open to keep every tab (warm-up included) in that one process;
-        # without it each tab gets a fresh, cold process. Pinning that process once is then enough.
+        # without it each tab gets a fresh, cold process.
         keep = browser.new_page()
         keep.goto(blank.as_uri(), wait_until="load")
-        if cpus:
-            pin_content_processes(int(pidfile.read_text()), cpus)
         roots = {}
         for case in cases:
             url = (REVEAL / case["file"]).resolve().as_uri()
@@ -433,14 +398,12 @@ def run_firefox_round(cases, iters, cpus, stylo_threads=None, screenshot=None):
 
 # Engines measured one process per round for all of the round's cases (`run_engine_round`) instead of one
 # process per case: Firefox's launch, warm-up, profile dump and decode are then paid once per round.
-BATCH_ENGINES = {"firefox1", "firefox"}
+BATCH_ENGINES = {"firefox"}
 
 
 def run_engine_round(engine, cases, iters, cpus):
-    if engine == "firefox1":
-        return run_firefox_round(cases, iters, cpus, 1)
     if engine == "firefox":
-        return run_firefox_round(cases, iters, None)
+        return run_firefox_round(cases, iters)
     raise ValueError(engine)
 
 
@@ -469,10 +432,8 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
         return run_servo(case, iters, None, int(m.group(1)), screenshot=screenshot)
     if engine == "chrome":
         return run_chrome(case, iters, None, screenshot=screenshot)
-    if engine == "firefox1":
-        return run_firefox(case, iters, cpus, stylo_threads=1, screenshot=screenshot)
     if engine == "firefox":
-        return run_firefox(case, iters, None, screenshot=screenshot)
+        return run_firefox(case, iters, screenshot=screenshot)
     if engine == "ladybird":
         return engines_ladybird.run_ladybird(case, iters, None, REVEAL, case["width"], case["height"], screenshot=screenshot)
     raise ValueError(engine)
@@ -518,20 +479,19 @@ COLUMNS = [
                       ("servo1", "box", "Servo(1) Box Tree"), ("servo", "box", "Servo(3) Box Tree"),
                       ("blitz", "construct", "Blitz construct (+pconstruct)"), ("blitz-pcon", "construct", "Blitz construct, parallel")]),
     ("Box construction + layout", [("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout"),
-                                   ("firefox1", "layout", "Firefox(1) Reflow"), ("firefox", "layout", "Firefox Reflow"),
+                                   ("firefox", "layout", "Firefox Reflow"),
                                    ("ladybird", "construct+layout", "Ladybird tree build+layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
                                    ("blitz", "construct+layout", "Blitz construct+layout"),
                                    ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)"),
                                    ("blitz-par-pcon-pl", "construct+layout", "Blitz construct+layout (parallel construct+layout)")]),
     ("Style", [("chrome", "style", "Chrome recalcStyle"),
-               ("firefox1", "style", "Firefox(1) Styles (incl. frame construction)"),
                ("firefox", "style", "Firefox Styles (incl. frame construction)"), ("ladybird", "style", "Ladybird update_style"),
                ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
                ("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)")]),
     ("Whole pipeline (style to laid-out tree)", [
         ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout"),
-        ("firefox1", "style+layout", "Firefox(1) Styles+Reflow"), ("firefox", "style+layout", "Firefox Styles+Reflow"),
+        ("firefox", "style+layout", "Firefox Styles+Reflow"),
         ("ladybird", "total", "Ladybird update_layout()"),
         ("servo1", "restyle_and_build", "Servo(1) restyle_and_build_trees"), ("servo", "restyle_and_build", "Servo(3) restyle_and_build_trees"),
         ("blitz", "resolve", "Blitz resolve()"), ("blitz-par", "resolve", "Blitz resolve() (parallel style)"),
@@ -559,8 +519,8 @@ def header(label):
 
 def report(results, how, engines):
     lines = [f"Times in ms, {how} over all rounds and iterations; second line of each cell is the multiple of the Chrome column "
-             "of the same table (1.00x = Chrome); bold = fastest engine of the row, Taffy excluded. Servo(n) = `layout_threads=n`; "
-             "Firefox(1) = `layout.css.stylo-threads=1` (no style worker threads). Text shaping is in the layout phase of Chrome, "
+             "of the same table (1.00x = Chrome); bold = fastest engine of the row, Taffy excluded. Servo(n) = `layout_threads=n`. "
+             "Text shaping is in the layout phase of Chrome, "
              "Firefox and Ladybird but in the construction phase of Blitz and Servo, so \"Layout only\" is like-for-like only among "
              "Servo/Blitz/Taffy and \"Box construction + layout\" is the comparable table for text-bearing cases; Firefox's Reflow "
              "(shaping + layout; its frame construction is inside Styles) is listed there. Case names link to the case's bar chart; "
@@ -843,7 +803,7 @@ def main():
     b.add_argument("--rounds", type=int, default=3)
     b.add_argument("--iters", type=int, default=3)
     b.add_argument("--filter", default="")
-    b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1, firefox1)")
+    b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1)")
     b.add_argument("--agg", default="min", choices=["min", "median"])
     b.add_argument("--merge", action="store_true", help="keep other engines' samples from out/results.json")
     b.add_argument("--out", default="results.json", help="write samples to out/<file> instead (no report); e.g. a calibration run")
@@ -851,7 +811,7 @@ def main():
     r.add_argument("--agg", default="min", choices=["min", "median"])
     sub.add_parser("plot")
     v = sub.add_parser("verify")
-    v.add_argument("--engines", default="chrome,blitz,servo1,firefox1")
+    v.add_argument("--engines", default="chrome,blitz,servo1,firefox")
     v.add_argument("--filter", default="")
     v.add_argument("--cpus", default=None)
     cmp_ = sub.add_parser("compare", help="min per metric of a `bench --out` run vs out/results.json")
