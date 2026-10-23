@@ -368,16 +368,20 @@ def launch_firefox(p, exe, env, prefs, attempts=3):
 
 
 def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
-    """One Firefox process per call (= per round, like Chrome), a fresh tab per iteration, all tabs in one
-    content process (see `keep` below). The process's first page load gets an extra full reflow ~200 ms
-    after the reveal (no elements restyled; 105 ms on Wikipedia, 64 ms on rustdoc) and cold font/text
-    caches, so tab 0 loads the page as a discarded warm-up (`?warmup`); the measured tabs load `?i=N`,
-    which is how their windows are told apart in the profile. Tabs 1–4 of a process measured within 1%
-    of each other on flex/wide/10000 and Wikipedia; a cold process is 10–20% slower on text-heavy pages."""
+    return run_firefox_round([case], iters, cpus, stylo_threads, screenshot)[case["name"]]
+
+
+def run_firefox_round(cases, iters, cpus, stylo_threads=None, screenshot=None):
+    """One Firefox process per call (= per round, for every case of the round), a fresh tab per iteration,
+    all tabs in one content process (see `keep` below). The process's first page load gets an extra full
+    reflow ~200 ms after the reveal (no elements restyled; 105 ms on Wikipedia, 64 ms on rustdoc) and
+    cold font/text caches, so each case first loads its page as a discarded warm-up (`?warmup`); the
+    measured tabs load `?i=N`, which is how their windows are told apart in the profile. Tabs 1–4 of a
+    process measured within 1% of each other on flex/wide/10000 and Wikipedia; a cold process is 10–20%
+    slower on text-heavy pages. Returns {case name: samples}."""
     from playwright.sync_api import sync_playwright
-    url = (REVEAL / case["file"]).resolve().as_uri()
     prefs = {} if stylo_threads is None else {"layout.css.stylo-threads": stylo_threads}
-    samples = []
+    results = {}
     with sync_playwright() as p, tempfile.TemporaryDirectory() as d:
         exe = p.firefox.executable_path
         pidfile, blank = Path(d) / "firefox.pid", Path(d) / "blank.html"
@@ -391,7 +395,7 @@ def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
         env = dict(os.environ, **FIREFOX_PROFILER_ENV, MOZ_PROFILER_SHUTDOWN=str(profile))
         browser = launch_firefox(p, exe, env, prefs)
 
-        def load(page_url):
+        def load(case, page_url):
             page = browser.new_page(viewport={"width": case["width"], "height": case["height"]})
             page.goto(page_url, wait_until="load", timeout=600_000)
             page.wait_for_function("document.getElementById('cb').style.display !== 'none'", timeout=600_000)
@@ -404,22 +408,41 @@ def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
         keep.goto(blank.as_uri(), wait_until="load")
         if cpus:
             pin_content_processes(int(pidfile.read_text()), cpus)
-        load(url + "?warmup").close()
-        roots = []
-        for i in range(iters):
-            page = load(f"{url}?i={i}")
-            page.evaluate("document.body.offsetHeight")
-            roots.append(page.evaluate(ROOT_RECT_JS))
-            if screenshot and i == iters - 1:
-                page.screenshot(path=str(screenshot))
-            page.close()
+        roots = {}
+        for case in cases:
+            url = (REVEAL / case["file"]).resolve().as_uri()
+            load(case, url + "?warmup").close()
+            roots[case["name"]] = []
+            for i in range(iters):
+                page = load(case, f"{url}?i={i}")
+                page.evaluate("document.body.offsetHeight")
+                roots[case["name"]].append(page.evaluate(ROOT_RECT_JS))
+                if screenshot and i == iters - 1:
+                    page.screenshot(path=str(screenshot))
+                page.close()
         browser.close()
         profile = json.loads(profile.read_text())
-        for i, root in enumerate(roots):
-            s = parse_firefox_profile(profile, f"{url}?i={i}")
-            s["root"] = root
-            samples.append(s)
-    return samples
+        for case in cases:
+            url = (REVEAL / case["file"]).resolve().as_uri()
+            samples = results[case["name"]] = []
+            for i, root in enumerate(roots[case["name"]]):
+                s = parse_firefox_profile(profile, f"{url}?i={i}")
+                s["root"] = root
+                samples.append(s)
+    return results
+
+# Engines measured one process per round for all of the round's cases (`run_engine_round`) instead of one
+# process per case: Firefox's launch, warm-up, profile dump and decode are then paid once per round.
+BATCH_ENGINES = {"firefox1", "firefox"}
+
+
+def run_engine_round(engine, cases, iters, cpus):
+    if engine == "firefox1":
+        return run_firefox_round(cases, iters, cpus, 1)
+    if engine == "firefox":
+        return run_firefox_round(cases, iters, None)
+    raise ValueError(engine)
+
 
 def run_engine(engine, case, iters, cpus, screenshot=None):
     if engine == "taffy":
@@ -606,10 +629,31 @@ def cmd_bench(args):
             results.setdefault(name, dict(nodes=data["nodes"], engines={}))["engines"].update(kept)
         order = [c["name"] for c in read_manifest()]
         results = dict(sorted(results.items(), key=lambda kv: order.index(kv[0]) if kv[0] in order else len(order)))
+    def record(r, name, e, samples):
+        results[name]["engines"][e] += samples
+        best = agg([list(s.values())[0] for s in samples], "min")
+        print(f"round {r} {name:24s} {e:10s} {len(samples)} samples, min first metric {fmt_ms(best)} ms", flush=True)
+
+    def run_batch(r, e):
+        try:
+            per_case = run_engine_round(e, cases, args.iters, args.cpus)
+        except Exception as ex:
+            print(f"round {r} {e}: FAILED {ex}", file=sys.stderr)
+            return
+        for name, samples in per_case.items():
+            record(r, name, e, samples)
+
     for r in range(args.rounds):
         order = engines if r % 2 == 0 else engines[::-1]
+        # batch engines keep their place in the round's engine order: those listed before the first
+        # per-case engine run before the per-case loop, the rest after it
+        first = next((i for i, e in enumerate(order) if e not in BATCH_ENGINES), len(order))
+        for e in order[:first]:
+            run_batch(r, e)
         for c in cases:
-            for e in order:
+            for e in order[first:]:
+                if e in BATCH_ENGINES:
+                    continue
                 if e == "taffy" and not c["taffy"]:
                     continue
                 try:
@@ -617,9 +661,10 @@ def cmd_bench(args):
                 except Exception as ex:
                     print(f"round {r} {c['name']} {e}: FAILED {ex}", file=sys.stderr)
                     continue
-                results[c["name"]]["engines"][e] += samples
-                best = agg([list(s.values())[0] for s in samples], "min")
-                print(f"round {r} {c['name']:24s} {e:10s} {len(samples)} samples, min first metric {fmt_ms(best)} ms", flush=True)
+                record(r, c["name"], e, samples)
+        for e in order[first:]:
+            if e in BATCH_ENGINES:
+                run_batch(r, e)
         (OUT / args.out).write_text(json.dumps(results, indent=1))
     if args.out != "results.json":
         return
