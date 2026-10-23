@@ -368,11 +368,12 @@ def launch_firefox(p, exe, env, prefs, attempts=3):
 
 
 def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
-    """One Firefox process per call (= per round, like Chrome), a fresh tab per iteration. The process's
-    first page load gets an extra full reflow ~200 ms after the reveal (no elements restyled; 105 ms on
-    Wikipedia, 64 ms on rustdoc) and cold font/text caches, so tab 0 loads the page as a discarded
-    warm-up (`?warmup`); the measured tabs load `?i=N`, which is how their windows are told apart in the
-    profile. Tabs 1–4 of a process measured within 1% of each other on flex/wide/10000 and Wikipedia."""
+    """One Firefox process per call (= per round, like Chrome), a fresh tab per iteration, all tabs in one
+    content process (see `keep` below). The process's first page load gets an extra full reflow ~200 ms
+    after the reveal (no elements restyled; 105 ms on Wikipedia, 64 ms on rustdoc) and cold font/text
+    caches, so tab 0 loads the page as a discarded warm-up (`?warmup`); the measured tabs load `?i=N`,
+    which is how their windows are told apart in the profile. Tabs 1–4 of a process measured within 1%
+    of each other on flex/wide/10000 and Wikipedia; a cold process is 10–20% slower on text-heavy pages."""
     from playwright.sync_api import sync_playwright
     url = (REVEAL / case["file"]).resolve().as_uri()
     prefs = {} if stylo_threads is None else {"layout.css.stylo-threads": stylo_threads}
@@ -380,12 +381,12 @@ def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
     with sync_playwright() as p, tempfile.TemporaryDirectory() as d:
         exe = p.firefox.executable_path
         pidfile, blank = Path(d) / "firefox.pid", Path(d) / "blank.html"
+        blank.write_text("<!doctype html>\n")
         if cpus:
             wrapper = Path(d) / "firefox-with-pid"
             wrapper.write_text(f"#!/bin/sh\necho $$ > {shlex.quote(str(pidfile))}\nexec {shlex.quote(exe)} \"$@\"\n")
             wrapper.chmod(0o755)
             exe = str(wrapper)
-            blank.write_text("<!doctype html>\n")
         profile = Path(d) / "profile.json"
         env = dict(os.environ, **FIREFOX_PROFILER_ENV, MOZ_PROFILER_SHUTDOWN=str(profile))
         browser = launch_firefox(p, exe, env, prefs)
@@ -396,15 +397,14 @@ def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
             page.wait_for_function("document.getElementById('cb').style.display !== 'none'", timeout=600_000)
             return page
 
+        # Each new_page() is a new context, and the file content process exits with its last tab, so
+        # this first file:// page stays open to keep every tab (warm-up included) in that one process;
+        # without it each tab gets a fresh, cold process. Pinning that process once is then enough.
+        keep = browser.new_page()
+        keep.goto(blank.as_uri(), wait_until="load")
         if cpus:
-            # a first file:// page puts the tabs in the file content process; it stays open so that
-            # process outlives the tabs, and the pin is repeated after the warm-up for any new process
-            keep = browser.new_page()
-            keep.goto(blank.as_uri(), wait_until="load")
             pin_content_processes(int(pidfile.read_text()), cpus)
         load(url + "?warmup").close()
-        if cpus:
-            pin_content_processes(int(pidfile.read_text()), cpus)
         roots = []
         for i in range(iters):
             page = load(f"{url}?i={i}")
