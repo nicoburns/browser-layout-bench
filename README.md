@@ -334,7 +334,7 @@ unset BASH_ENV   # the build script runs `bash -c` snippets; a BASH_ENV that ret
 The build took 36 min wall-clock on 8 cores (≈11 min of vcpkg dependencies — ICU, ffmpeg, Skia
 and friends are compiled from source when the binary cache has no entry for the toolchain — and
 ≈25 min for Ladybird itself). Applying the patch to an existing build and rebuilding takes
-~15 s: it only touches the Rust layout crate, one LibWeb file and LibWebView.
+~1 min: it only touches the Rust layout crate, one LibWeb file, LibWebView and WebContent.
 
 The patch instruments `Libraries/LibWeb/Rust/src/layout/update_layout.rs`, where LibWeb's layout
 update now lives (`Document::update_layout()` in `Libraries/LibWeb/Layout/UpdateLayout.cpp` calls
@@ -351,9 +351,18 @@ runner adds padding and border to get the border boxes it compares with Chrome's
 The patch also makes both headless modes wait `--screenshot-delay` seconds *after the load event*
 (upstream dumps the layout tree at the load event and counts the screenshot delay from the start
 of the load): the font pages reveal from a `document.fonts` promise that resolves after the load
-event, and the screenshot has to wait for the reveal to be painted. The runner passes
-`LADYBIRD_SETTLE_SECONDS` (default 2) for that delay, so every Ladybird process costs that much
-extra wall-clock on top of the load; it does not affect the phase timings.
+event, and the screenshot has to wait for the reveal to be painted. For the layout-tree dump the
+patch replaces the timer with a positive signal: WebContent answers the dump request only once
+the document's `FontFaceSet` is no longer `loading` (the reveal runs in the promise reaction that
+marks it loaded), so the bench runs with `--screenshot-delay=0` and the dump describes the first
+full layout of the revealed tree, never a later relayout. `LADYBIRD_SETTLE_SECONDS` (default 0)
+still adds a fixed delay to both modes; the screenshot (`verify` only) always waits ≥2 s. Two
+smaller process-start costs are avoided too: the runner keeps fontconfig's cache in
+`out/ladybird-cache` (a fresh `XDG_CACHE_HOME` per process made fontconfig rescan the ~2000
+system font files in the UI process, ~0.02 s of wall-clock), and the patch stops headless runs
+from prewarming the spare WebContent process Ladybird keeps for the next tab. A Ladybird
+iteration now costs ~0.25 s of wall-clock beyond the measured spans (was ~2.3 s); the phase
+timings are unchanged (validated old vs new on 7 cases).
 
 ### Ladybird vs Chrome
 
