@@ -179,7 +179,7 @@
       el("label", {}, "Comparison", tableSel),
       el("label", {}, "Statistic", seg("s", { min: "min", median: "median" })),
       el("label", {}, "Unit", seg("u", UNITS)),
-      state.v === "charts" ? el("label", {}, "Scale", seg("x", { lin: "linear", log: "log" })) : null,
+      ...(state.v === "charts" ? [el("label", {}, "Scale", seg("x", { lin: "linear", log: "log" }))] : []),
       el("span", { class: "engines" }, chips,
         el("button", { type: "button", class: "chip", on: { click: () => { state.off = []; update(); } } }, "all")));
   }
