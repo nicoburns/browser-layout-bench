@@ -2,51 +2,51 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Layout only
 
-| case | nodes | Chrome<br>Layout (incl. shaping) | Ladybird<br>layout (incl. shaping) | Servo(1)<br>Fragment Tree | Servo(3)<br>Fragment Tree | Blitz<br>`layout` | Blitz<br>`layout` (#1034 build, 1 thread) | Taffy |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| [flex/huge_nested/1000](plots/flex/huge-nested-1000.svg) | 911 | 0.912<br>1.00x | 4.527<br>4.96x | 1.131<br>1.24x | 0.772<br>0.85x | **0.595<br>0.65x** | 1.031<br>1.13x | 0.272<br>0.30x |
-| [flex/wide/1000](plots/flex/wide-1000.svg) | 1000 | 1.238<br>1.00x | 6.245<br>5.04x | 1.590<br>1.28x | 1.679<br>1.36x | **1.073<br>0.87x** | 1.460<br>1.18x | 0.447<br>0.36x |
-| [flex/absolute/1000](plots/flex/absolute-1000.svg) | 1003 | 1.308<br>1.00x | 4.135<br>3.16x | 1.369<br>1.05x | 1.489<br>1.14x | **0.777<br>0.59x** | 1.171<br>0.90x | 0.314<br>0.24x |
-| [flex/deep_auto/1000](plots/flex/deep-auto-1000.svg) | 767 | 1.661<br>1.00x | 6.953<br>4.19x | **1.468<br>0.88x** | 1.501<br>0.90x | 1.723<br>1.04x | 2.480<br>1.49x | 0.921<br>0.55x |
-| [flex/deep_random/1000](plots/flex/deep-random-1000.svg) | 767 | 0.906<br>1.00x | 5.626<br>6.21x | 1.101<br>1.22x | 1.159<br>1.28x | **0.808<br>0.89x** | 1.257<br>1.39x | 0.405<br>0.45x |
-| [flex/huge_nested/10000](plots/flex/huge-nested-10000.svg) | 9111 | 8.736<br>1.00x | 44.358<br>5.08x | 12.021<br>1.38x | 6.865<br>0.79x | **6.184<br>0.71x** | 7.382<br>0.85x | 3.156<br>0.36x |
-| [flex/wide/10000](plots/flex/wide-10000.svg) | 10001 | 12.819<br>1.00x | 69.032<br>5.39x | 16.214<br>1.26x | 17.869<br>1.39x | **12.044<br>0.94x** | 14.141<br>1.10x | 5.326<br>0.42x |
-| [flex/absolute/10000](plots/flex/absolute-10000.svg) | 10004 | 13.871<br>1.00x | 47.110<br>3.40x | 15.325<br>1.10x | 15.633<br>1.13x | **9.440<br>0.68x** | 11.079<br>0.80x | 4.041<br>0.29x |
-| [flex/deep_auto/10000](plots/flex/deep-auto-10000.svg) | 8191 | 17.363<br>1.00x | 63.792<br>3.67x | **16.643<br>0.96x** | 17.381<br>1.00x | 17.714<br>1.02x | 22.191<br>1.28x | 10.020<br>0.58x |
-| [flex/deep_random/10000](plots/flex/deep-random-10000.svg) | 8191 | 8.826<br>1.00x | 54.558<br>6.18x | 12.537<br>1.42x | 14.261<br>1.62x | **7.789<br>0.88x** | 9.925<br>1.12x | 4.685<br>0.53x |
-| [flex/superdeep/50](plots/flex/superdeep-50.svg) | 151 | 0.441<br>1.00x | 1.668<br>3.78x | 0.327<br>0.74x | 0.334<br>0.76x | **0.289<br>0.66x** | 0.538<br>1.22x | 0.146<br>0.33x |
-| [flex/superdeep/100](plots/flex/superdeep-100.svg) | 301 | 0.868<br>1.00x | 3.021<br>3.48x | 0.695<br>0.80x | 0.665<br>0.77x | **0.623<br>0.72x** | 0.847<br>0.98x | 0.291<br>0.33x |
-| [grid/wide/31x31](plots/grid/wide-31x31.svg) | 962 | 2.624<br>1.00x | 5.518<br>2.10x | 2.581<br>0.98x | 2.647<br>1.01x | **1.461<br>0.56x** | 2.225<br>0.85x | 0.609<br>0.23x |
-| [grid/wide/100x100](plots/grid/wide-100x100.svg) | 10001 | 36.154<br>1.00x | 66.159<br>1.83x | 26.779<br>0.74x | 27.155<br>0.75x | **14.795<br>0.41x** | 20.472<br>0.57x | 8.260<br>0.23x |
-| [grid/deep/2x2x5](plots/grid/deep-2x2x5.svg) | 1365 | 7.005<br>1.00x | 13.724<br>1.96x | 7.659<br>1.09x | 7.709<br>1.10x | **3.409<br>0.49x** | 5.180<br>0.74x | 2.526<br>0.36x |
-| [grid/deep/3x3x4](plots/grid/deep-3x3x4.svg) | 7381 | 30.085<br>1.00x | 70.957<br>2.36x | 42.178<br>1.40x | 37.167<br>1.24x | **17.097<br>0.57x** | 24.004<br>0.80x | 12.304<br>0.41x |
-| [grid/superdeep/100](plots/grid/superdeep-100.svg) | 101 | 1.492<br>1.00x | 2.484<br>1.67x | 1.199<br>0.80x | 1.222<br>0.82x | **0.454<br>0.30x** | 0.616<br>0.41x | 0.341<br>0.23x |
-| [pangui/expand_with_max_constraint](plots/pangui/expand-with-max-constraint.svg) | 3001 | 3.575<br>1.00x | 10.350<br>2.90x | 4.968<br>1.39x | 5.078<br>1.42x | **3.392<br>0.95x** | 4.104<br>1.15x | 1.465<br>0.41x |
-| [pangui/expand_with_min_constraint](plots/pangui/expand-with-min-constraint.svg) | 3001 | 3.572<br>1.00x | 10.188<br>2.85x | 4.907<br>1.37x | 5.336<br>1.49x | **3.250<br>0.91x** | 4.219<br>1.18x | 1.451<br>0.41x |
-| [pangui/fit_nesting](plots/pangui/fit-nesting.svg) | 101111 | 127.996<br>1.00x | 366.543<br>2.86x | 327.991<br>2.56x | 132.453<br>1.03x | **81.815<br>0.64x** | 86.364<br>0.67x | 32.136<br>0.25x |
-| [pangui/flex_expand_equal_weights](plots/pangui/flex-expand-equal-weights.svg) | 15001 | 11.974<br>1.00x | 44.127<br>3.69x | 14.445<br>1.21x | 14.974<br>1.25x | **7.112<br>0.59x** | 9.112<br>0.76x | 3.821<br>0.32x |
-| [pangui/flex_expand_weights](plots/pangui/flex-expand-weights.svg) | 15001 | **10.599<br>1.00x** | 37.216<br>3.51x | 17.287<br>1.63x | 19.175<br>1.81x | 11.088<br>1.05x | 13.260<br>1.25x | 5.751<br>0.54x |
-| [pangui/nested_vertical_stack](plots/pangui/nested-vertical-stack.svg) | 10001 | **7.265<br>1.00x** | 34.590<br>4.76x | 13.816<br>1.90x | 12.945<br>1.78x | 7.367<br>1.01x | 10.224<br>1.41x | 2.552<br>0.35x |
-| [pangui/padding_and_margin](plots/pangui/padding-and-margin.svg) | 101 | 0.137<br>1.00x | 0.617<br>4.51x | 0.186<br>1.36x | 0.198<br>1.44x | **0.061<br>0.44x** | 0.074<br>0.54x | 0.019<br>0.14x |
-| [pangui/percentage_and_ratio](plots/pangui/percentage-and-ratio.svg) | 10001 | 13.572<br>1.00x | 31.026<br>2.29x | 11.320<br>0.83x | 11.385<br>0.84x | **5.270<br>0.39x** | 7.608<br>0.56x | 2.521<br>0.19x |
-| [pangui/perpendicular_expand_with_wrap](plots/pangui/perpendicular-expand-with-wrap.svg) | 12001 | 13.749<br>1.00x | 39.809<br>2.90x | 12.736<br>0.93x | 13.337<br>0.97x | **11.897<br>0.87x** | 15.552<br>1.13x | 3.426<br>0.25x |
-| [pangui/pixels_with_min_expand_constraint](plots/pangui/pixels-with-min-expand-constraint.svg) | 30001 | 36.579<br>1.00x | 116.606<br>3.19x | 50.860<br>1.39x | 53.261<br>1.46x | **33.727<br>0.92x** | 39.736<br>1.09x | 15.520<br>0.42x |
-| [pangui/wide_no_wrap_simple_few](plots/pangui/wide-no-wrap-simple-few.svg) | 1001 | 0.772<br>1.00x | 2.514<br>3.26x | 1.094<br>1.42x | 1.175<br>1.52x | **0.540<br>0.70x** | 0.718<br>0.93x | 0.182<br>0.24x |
-| [pangui/wide_no_wrap_simple_many](plots/pangui/wide-no-wrap-simple-many.svg) | 100001 | 81.769<br>1.00x | 305.512<br>3.74x | 116.316<br>1.42x | 116.166<br>1.42x | **77.126<br>0.94x** | 100.535<br>1.23x | 28.808<br>0.35x |
-| [pangui/wide_wrapping](plots/pangui/wide-wrapping.svg) | 10001 | 8.966<br>1.00x | 32.691<br>3.65x | 11.073<br>1.23x | 10.568<br>1.18x | **6.786<br>0.76x** | 9.574<br>1.07x | 2.524<br>0.28x |
-| [text/paragraphs/100](plots/text/paragraphs-100.svg) | 101 | 5.490<br>1.00x | 9.051<br>1.65x | 2.407<br>0.44x | 1.377<br>0.25x | **0.703<br>0.13x** | 0.843<br>0.15x | - |
-| [text/flex_cards/100](plots/text/flex-cards-100.svg) | 301 | 3.626<br>1.00x | 6.722<br>1.85x | 1.509<br>0.42x | 1.661<br>0.46x | **0.986<br>0.27x** | 1.318<br>0.36x | - |
-| [text/inline_mixed/100](plots/text/inline-mixed-100.svg) | 1599 | 9.103<br>1.00x | 18.834<br>2.07x | 4.398<br>0.48x | 2.642<br>0.29x | **0.761<br>0.08x** | 0.960<br>0.11x | - |
-| [text/paragraphs/1000](plots/text/paragraphs-1000.svg) | 1001 | 51.783<br>1.00x | 90.645<br>1.75x | 25.148<br>0.49x | 10.965<br>0.21x | **6.313<br>0.12x** | 6.561<br>0.13x | - |
-| [text/flex_cards/1000](plots/text/flex-cards-1000.svg) | 3001 | 33.214<br>1.00x | 63.415<br>1.91x | 13.577<br>0.41x | 15.017<br>0.45x | **9.977<br>0.30x** | 11.369<br>0.34x | - |
-| [text/inline_mixed/1000](plots/text/inline-mixed-1000.svg) | 16361 | 84.178<br>1.00x | 186.091<br>2.21x | 46.885<br>0.56x | 18.557<br>0.22x | **8.022<br>0.10x** | 8.883<br>0.11x | - |
-| [real/wikipedia](plots/real/wikipedia.svg) | 21889 | 155.201<br>1.00x | 403.446<br>2.60x | 45.040<br>0.29x | 37.398<br>0.24x | **16.887<br>0.11x** | 18.743<br>0.12x | - |
-| [real/mdn](plots/real/mdn.svg) | 2212 | 11.176<br>1.00x | 45.893<br>4.11x | 5.600<br>0.50x | **2.891<br>0.26x** | 3.521<br>0.32x | 4.136<br>0.37x | - |
-| [real/rustdoc](plots/real/rustdoc.svg) | 15947 | 88.320<br>1.00x | 360.013<br>4.08x | 44.523<br>0.50x | 40.629<br>0.46x | **22.842<br>0.26x** | 25.025<br>0.28x | - |
-| [real/css-flexbox-1](plots/real/css-flexbox-1.svg) | 15890 | 87.237<br>1.00x | 200.453<br>2.30x | 41.930<br>0.48x | 46.143<br>0.53x | **22.199<br>0.25x** | 25.311<br>0.29x | - |
-| [real/servo-org](plots/real/servo-org.svg) | 226 | 2.193<br>1.00x | 4.547<br>2.07x | 1.229<br>0.56x | 0.974<br>0.44x | **0.372<br>0.17x** | 0.686<br>0.31x | - |
-| [real/dioxuslabs-com](plots/real/dioxuslabs-com.svg) | 158 | 3.027<br>1.00x | 15.923<br>5.26x | 0.850<br>0.28x | 0.582<br>0.19x | **0.440<br>0.15x** | 0.731<br>0.24x | - |
-| [real/bootstrap-dashboard](plots/real/bootstrap-dashboard.svg) | 199 | 1.647<br>1.00x | 2.771<br>1.68x | 0.783<br>0.48x | 0.772<br>0.47x | **0.567<br>0.34x** | 0.875<br>0.53x | - |
+| case | nodes | Chrome<br>Layout (incl. shaping) | Ladybird<br>layout (incl. shaping) | Servo(1)<br>Fragment Tree | Servo(3)<br>Fragment Tree | Blitz<br>`layout` | Blitz<br>`layout` (#1034 build, 1 thread) | Blitz<br>`layout` (#1034 build, parallel) | Taffy |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| [flex/huge_nested/1000](plots/flex/huge-nested-1000.svg) | 911 | 0.912<br>1.00x | 4.527<br>4.96x | 1.131<br>1.24x | 0.772<br>0.85x | 0.595<br>0.65x | 1.031<br>1.13x | **0.351<br>0.38x** | 0.272<br>0.30x |
+| [flex/wide/1000](plots/flex/wide-1000.svg) | 1000 | 1.238<br>1.00x | 6.245<br>5.04x | 1.590<br>1.28x | 1.679<br>1.36x | 1.073<br>0.87x | 1.460<br>1.18x | **0.758<br>0.61x** | 0.447<br>0.36x |
+| [flex/absolute/1000](plots/flex/absolute-1000.svg) | 1003 | 1.308<br>1.00x | 4.135<br>3.16x | 1.369<br>1.05x | 1.489<br>1.14x | **0.777<br>0.59x** | 1.171<br>0.90x | 0.825<br>0.63x | 0.314<br>0.24x |
+| [flex/deep_auto/1000](plots/flex/deep-auto-1000.svg) | 767 | 1.661<br>1.00x | 6.953<br>4.19x | 1.468<br>0.88x | 1.501<br>0.90x | 1.723<br>1.04x | 2.480<br>1.49x | **0.705<br>0.42x** | 0.921<br>0.55x |
+| [flex/deep_random/1000](plots/flex/deep-random-1000.svg) | 767 | 0.906<br>1.00x | 5.626<br>6.21x | 1.101<br>1.22x | 1.159<br>1.28x | 0.808<br>0.89x | 1.257<br>1.39x | **0.439<br>0.48x** | 0.405<br>0.45x |
+| [flex/huge_nested/10000](plots/flex/huge-nested-10000.svg) | 9111 | 8.736<br>1.00x | 44.358<br>5.08x | 12.021<br>1.38x | 6.865<br>0.79x | 6.184<br>0.71x | 7.382<br>0.85x | **1.972<br>0.23x** | 3.156<br>0.36x |
+| [flex/wide/10000](plots/flex/wide-10000.svg) | 10001 | 12.819<br>1.00x | 69.032<br>5.39x | 16.214<br>1.26x | 17.869<br>1.39x | 12.044<br>0.94x | 14.141<br>1.10x | **7.118<br>0.56x** | 5.326<br>0.42x |
+| [flex/absolute/10000](plots/flex/absolute-10000.svg) | 10004 | 13.871<br>1.00x | 47.110<br>3.40x | 15.325<br>1.10x | 15.633<br>1.13x | 9.440<br>0.68x | 11.079<br>0.80x | **6.029<br>0.43x** | 4.041<br>0.29x |
+| [flex/deep_auto/10000](plots/flex/deep-auto-10000.svg) | 8191 | 17.363<br>1.00x | 63.792<br>3.67x | 16.643<br>0.96x | 17.381<br>1.00x | 17.714<br>1.02x | 22.191<br>1.28x | **4.940<br>0.28x** | 10.020<br>0.58x |
+| [flex/deep_random/10000](plots/flex/deep-random-10000.svg) | 8191 | 8.826<br>1.00x | 54.558<br>6.18x | 12.537<br>1.42x | 14.261<br>1.62x | 7.789<br>0.88x | 9.925<br>1.12x | **3.058<br>0.35x** | 4.685<br>0.53x |
+| [flex/superdeep/50](plots/flex/superdeep-50.svg) | 151 | 0.441<br>1.00x | 1.668<br>3.78x | 0.327<br>0.74x | 0.334<br>0.76x | **0.289<br>0.66x** | 0.538<br>1.22x | 0.604<br>1.37x | 0.146<br>0.33x |
+| [flex/superdeep/100](plots/flex/superdeep-100.svg) | 301 | 0.868<br>1.00x | 3.021<br>3.48x | 0.695<br>0.80x | 0.665<br>0.77x | **0.623<br>0.72x** | 0.847<br>0.98x | 1.321<br>1.52x | 0.291<br>0.33x |
+| [grid/wide/31x31](plots/grid/wide-31x31.svg) | 962 | 2.624<br>1.00x | 5.518<br>2.10x | 2.581<br>0.98x | 2.647<br>1.01x | **1.461<br>0.56x** | 2.225<br>0.85x | 2.480<br>0.95x | 0.609<br>0.23x |
+| [grid/wide/100x100](plots/grid/wide-100x100.svg) | 10001 | 36.154<br>1.00x | 66.159<br>1.83x | 26.779<br>0.74x | 27.155<br>0.75x | **14.795<br>0.41x** | 20.472<br>0.57x | 17.280<br>0.48x | 8.260<br>0.23x |
+| [grid/deep/2x2x5](plots/grid/deep-2x2x5.svg) | 1365 | 7.005<br>1.00x | 13.724<br>1.96x | 7.659<br>1.09x | 7.709<br>1.10x | 3.409<br>0.49x | 5.180<br>0.74x | **1.391<br>0.20x** | 2.526<br>0.36x |
+| [grid/deep/3x3x4](plots/grid/deep-3x3x4.svg) | 7381 | 30.085<br>1.00x | 70.957<br>2.36x | 42.178<br>1.40x | 37.167<br>1.24x | 17.097<br>0.57x | 24.004<br>0.80x | **5.852<br>0.19x** | 12.304<br>0.41x |
+| [grid/superdeep/100](plots/grid/superdeep-100.svg) | 101 | 1.492<br>1.00x | 2.484<br>1.67x | 1.199<br>0.80x | 1.222<br>0.82x | **0.454<br>0.30x** | 0.616<br>0.41x | 0.482<br>0.32x | 0.341<br>0.23x |
+| [pangui/expand_with_max_constraint](plots/pangui/expand-with-max-constraint.svg) | 3001 | 3.575<br>1.00x | 10.350<br>2.90x | 4.968<br>1.39x | 5.078<br>1.42x | 3.392<br>0.95x | 4.104<br>1.15x | **2.337<br>0.65x** | 1.465<br>0.41x |
+| [pangui/expand_with_min_constraint](plots/pangui/expand-with-min-constraint.svg) | 3001 | 3.572<br>1.00x | 10.188<br>2.85x | 4.907<br>1.37x | 5.336<br>1.49x | 3.250<br>0.91x | 4.219<br>1.18x | **1.983<br>0.56x** | 1.451<br>0.41x |
+| [pangui/fit_nesting](plots/pangui/fit-nesting.svg) | 101111 | 127.996<br>1.00x | 366.543<br>2.86x | 327.991<br>2.56x | 132.453<br>1.03x | 81.815<br>0.64x | 86.364<br>0.67x | **24.243<br>0.19x** | 32.136<br>0.25x |
+| [pangui/flex_expand_equal_weights](plots/pangui/flex-expand-equal-weights.svg) | 15001 | 11.974<br>1.00x | 44.127<br>3.69x | 14.445<br>1.21x | 14.974<br>1.25x | **7.112<br>0.59x** | 9.112<br>0.76x | 7.593<br>0.63x | 3.821<br>0.32x |
+| [pangui/flex_expand_weights](plots/pangui/flex-expand-weights.svg) | 15001 | 10.599<br>1.00x | 37.216<br>3.51x | 17.287<br>1.63x | 19.175<br>1.81x | 11.088<br>1.05x | 13.260<br>1.25x | **5.404<br>0.51x** | 5.751<br>0.54x |
+| [pangui/nested_vertical_stack](plots/pangui/nested-vertical-stack.svg) | 10001 | **7.265<br>1.00x** | 34.590<br>4.76x | 13.816<br>1.90x | 12.945<br>1.78x | 7.367<br>1.01x | 10.224<br>1.41x | 8.726<br>1.20x | 2.552<br>0.35x |
+| [pangui/padding_and_margin](plots/pangui/padding-and-margin.svg) | 101 | 0.137<br>1.00x | 0.617<br>4.51x | 0.186<br>1.36x | 0.198<br>1.44x | **0.061<br>0.44x** | 0.074<br>0.54x | 0.087<br>0.64x | 0.019<br>0.14x |
+| [pangui/percentage_and_ratio](plots/pangui/percentage-and-ratio.svg) | 10001 | 13.572<br>1.00x | 31.026<br>2.29x | 11.320<br>0.83x | 11.385<br>0.84x | **5.270<br>0.39x** | 7.608<br>0.56x | 5.454<br>0.40x | 2.521<br>0.19x |
+| [pangui/perpendicular_expand_with_wrap](plots/pangui/perpendicular-expand-with-wrap.svg) | 12001 | 13.749<br>1.00x | 39.809<br>2.90x | 12.736<br>0.93x | 13.337<br>0.97x | **11.897<br>0.87x** | 15.552<br>1.13x | 12.568<br>0.91x | 3.426<br>0.25x |
+| [pangui/pixels_with_min_expand_constraint](plots/pangui/pixels-with-min-expand-constraint.svg) | 30001 | 36.579<br>1.00x | 116.606<br>3.19x | 50.860<br>1.39x | 53.261<br>1.46x | 33.727<br>0.92x | 39.736<br>1.09x | **17.009<br>0.46x** | 15.520<br>0.42x |
+| [pangui/wide_no_wrap_simple_few](plots/pangui/wide-no-wrap-simple-few.svg) | 1001 | 0.772<br>1.00x | 2.514<br>3.26x | 1.094<br>1.42x | 1.175<br>1.52x | **0.540<br>0.70x** | 0.718<br>0.93x | 0.689<br>0.89x | 0.182<br>0.24x |
+| [pangui/wide_no_wrap_simple_many](plots/pangui/wide-no-wrap-simple-many.svg) | 100001 | 81.769<br>1.00x | 305.512<br>3.74x | 116.316<br>1.42x | 116.166<br>1.42x | 77.126<br>0.94x | 100.535<br>1.23x | **76.459<br>0.94x** | 28.808<br>0.35x |
+| [pangui/wide_wrapping](plots/pangui/wide-wrapping.svg) | 10001 | 8.966<br>1.00x | 32.691<br>3.65x | 11.073<br>1.23x | 10.568<br>1.18x | **6.786<br>0.76x** | 9.574<br>1.07x | 8.440<br>0.94x | 2.524<br>0.28x |
+| [text/paragraphs/100](plots/text/paragraphs-100.svg) | 101 | 5.490<br>1.00x | 9.051<br>1.65x | 2.407<br>0.44x | 1.377<br>0.25x | 0.703<br>0.13x | 0.843<br>0.15x | **0.216<br>0.04x** | - |
+| [text/flex_cards/100](plots/text/flex-cards-100.svg) | 301 | 3.626<br>1.00x | 6.722<br>1.85x | 1.509<br>0.42x | 1.661<br>0.46x | 0.986<br>0.27x | 1.318<br>0.36x | **0.379<br>0.10x** | - |
+| [text/inline_mixed/100](plots/text/inline-mixed-100.svg) | 1599 | 9.103<br>1.00x | 18.834<br>2.07x | 4.398<br>0.48x | 2.642<br>0.29x | 0.761<br>0.08x | 0.960<br>0.11x | **0.239<br>0.03x** | - |
+| [text/paragraphs/1000](plots/text/paragraphs-1000.svg) | 1001 | 51.783<br>1.00x | 90.645<br>1.75x | 25.148<br>0.49x | 10.965<br>0.21x | 6.313<br>0.12x | 6.561<br>0.13x | **1.777<br>0.03x** | - |
+| [text/flex_cards/1000](plots/text/flex-cards-1000.svg) | 3001 | 33.214<br>1.00x | 63.415<br>1.91x | 13.577<br>0.41x | 15.017<br>0.45x | 9.977<br>0.30x | 11.369<br>0.34x | **3.090<br>0.09x** | - |
+| [text/inline_mixed/1000](plots/text/inline-mixed-1000.svg) | 16361 | 84.178<br>1.00x | 186.091<br>2.21x | 46.885<br>0.56x | 18.557<br>0.22x | 8.022<br>0.10x | 8.883<br>0.11x | **1.917<br>0.02x** | - |
+| [real/wikipedia](plots/real/wikipedia.svg) | 21889 | 155.201<br>1.00x | 403.446<br>2.60x | 45.040<br>0.29x | 37.398<br>0.24x | 16.887<br>0.11x | 18.743<br>0.12x | **14.703<br>0.09x** | - |
+| [real/mdn](plots/real/mdn.svg) | 2212 | 11.176<br>1.00x | 45.893<br>4.11x | 5.600<br>0.50x | 2.891<br>0.26x | 3.521<br>0.32x | 4.136<br>0.37x | **1.452<br>0.13x** | - |
+| [real/rustdoc](plots/real/rustdoc.svg) | 15947 | 88.320<br>1.00x | 360.013<br>4.08x | 44.523<br>0.50x | 40.629<br>0.46x | 22.842<br>0.26x | 25.025<br>0.28x | **21.287<br>0.24x** | - |
+| [real/css-flexbox-1](plots/real/css-flexbox-1.svg) | 15890 | 87.237<br>1.00x | 200.453<br>2.30x | 41.930<br>0.48x | 46.143<br>0.53x | **22.199<br>0.25x** | 25.311<br>0.29x | 30.263<br>0.35x | - |
+| [real/servo-org](plots/real/servo-org.svg) | 226 | 2.193<br>1.00x | 4.547<br>2.07x | 1.229<br>0.56x | 0.974<br>0.44x | 0.372<br>0.17x | 0.686<br>0.31x | **0.222<br>0.10x** | - |
+| [real/dioxuslabs-com](plots/real/dioxuslabs-com.svg) | 158 | 3.027<br>1.00x | 15.923<br>5.26x | 0.850<br>0.28x | 0.582<br>0.19x | 0.440<br>0.15x | 0.731<br>0.24x | **0.316<br>0.10x** | - |
+| [real/bootstrap-dashboard](plots/real/bootstrap-dashboard.svg) | 199 | 1.647<br>1.00x | 2.771<br>1.68x | 0.783<br>0.48x | 0.772<br>0.47x | 0.567<br>0.34x | 0.875<br>0.53x | **0.465<br>0.28x** | - |
 
 ### Construction
 
@@ -98,51 +98,51 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Box construction + layout
 
-| case | nodes | Chrome<br>rebuildLayoutTree + Layout | Firefox(1)<br>Reflow | Firefox<br>Reflow | Ladybird<br>tree build + layout | Servo(1)<br>Box + Fragment | Servo(3)<br>Box + Fragment | Blitz<br>construct + layout | Blitz<br>construct + layout (parallel construct) |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| [flex/huge_nested/1000](plots/flex/huge-nested-1000.svg) | 911 | 1.238<br>1.00x | 1.277<br>1.03x | 1.339<br>1.08x | 5.113<br>4.13x | 1.907<br>1.54x | 1.297<br>1.05x | **0.646<br>0.52x** | 0.647<br>0.52x |
-| [flex/wide/1000](plots/flex/wide-1000.svg) | 1000 | 1.612<br>1.00x | 2.085<br>1.29x | 2.174<br>1.35x | 6.929<br>4.30x | 2.565<br>1.59x | 2.381<br>1.48x | 1.148<br>0.71x | **1.087<br>0.67x** |
-| [flex/absolute/1000](plots/flex/absolute-1000.svg) | 1003 | 1.875<br>1.00x | 2.439<br>1.30x | 2.460<br>1.31x | 4.849<br>2.59x | 2.505<br>1.34x | 2.184<br>1.16x | 0.839<br>0.45x | **0.830<br>0.44x** |
-| [flex/deep_auto/1000](plots/flex/deep-auto-1000.svg) | 767 | 1.949<br>1.00x | **1.194<br>0.61x** | 1.217<br>0.62x | 7.535<br>3.87x | 2.524<br>1.29x | 2.579<br>1.32x | 1.779<br>0.91x | 1.830<br>0.94x |
-| [flex/deep_random/1000](plots/flex/deep-random-1000.svg) | 767 | 1.199<br>1.00x | 1.562<br>1.30x | 1.644<br>1.37x | 6.214<br>5.18x | 2.102<br>1.75x | 2.229<br>1.86x | **0.873<br>0.73x** | 0.876<br>0.73x |
-| [flex/huge_nested/10000](plots/flex/huge-nested-10000.svg) | 9111 | 12.321<br>1.00x | 12.047<br>0.98x | 13.053<br>1.06x | 50.896<br>4.13x | 19.800<br>1.61x | 10.002<br>0.81x | 6.769<br>0.55x | **6.241<br>0.51x** |
-| [flex/wide/10000](plots/flex/wide-10000.svg) | 10001 | 16.229<br>1.00x | 20.823<br>1.28x | 22.130<br>1.36x | 75.922<br>4.68x | 26.432<br>1.63x | 23.664<br>1.46x | 12.900<br>0.79x | **11.756<br>0.72x** |
-| [flex/absolute/10000](plots/flex/absolute-10000.svg) | 10004 | 19.759<br>1.00x | 24.045<br>1.22x | 24.398<br>1.23x | 55.028<br>2.78x | 27.273<br>1.38x | 22.808<br>1.15x | 10.339<br>0.52x | **9.255<br>0.47x** |
-| [flex/deep_auto/10000](plots/flex/deep-auto-10000.svg) | 8191 | 20.912<br>1.00x | **12.149<br>0.58x** | 12.456<br>0.60x | 70.017<br>3.35x | 26.367<br>1.26x | 27.011<br>1.29x | 18.380<br>0.88x | 18.160<br>0.87x |
-| [flex/deep_random/10000](plots/flex/deep-random-10000.svg) | 8191 | 11.927<br>1.00x | 15.741<br>1.32x | 16.538<br>1.39x | 61.353<br>5.14x | 22.245<br>1.87x | 23.926<br>2.01x | 8.673<br>0.73x | **8.570<br>0.72x** |
-| [flex/superdeep/50](plots/flex/superdeep-50.svg) | 151 | 0.528<br>1.00x | 0.492<br>0.93x | 0.494<br>0.94x | 1.865<br>3.53x | 0.630<br>1.19x | 0.622<br>1.18x | 0.299<br>0.57x | **0.287<br>0.54x** |
-| [flex/superdeep/100](plots/flex/superdeep-100.svg) | 301 | 1.048<br>1.00x | 0.940<br>0.90x | 0.942<br>0.90x | 3.478<br>3.32x | 1.226<br>1.17x | 1.184<br>1.13x | 0.678<br>0.65x | **0.650<br>0.62x** |
-| [grid/wide/31x31](plots/grid/wide-31x31.svg) | 962 | 2.946<br>1.00x | 2.855<br>0.97x | 2.924<br>0.99x | 6.166<br>2.09x | 3.430<br>1.16x | 3.508<br>1.19x | **1.510<br>0.51x** | 1.563<br>0.53x |
-| [grid/wide/100x100](plots/grid/wide-100x100.svg) | 10001 | 39.466<br>1.00x | 33.456<br>0.85x | 33.561<br>0.85x | 73.232<br>1.86x | 35.567<br>0.90x | 36.202<br>0.92x | 15.777<br>0.40x | **15.526<br>0.39x** |
-| [grid/deep/2x2x5](plots/grid/deep-2x2x5.svg) | 1365 | 7.565<br>1.00x | 10.915<br>1.44x | 10.951<br>1.45x | 14.686<br>1.94x | 9.111<br>1.20x | 8.732<br>1.15x | **3.502<br>0.46x** | 3.547<br>0.47x |
-| [grid/deep/3x3x4](plots/grid/deep-3x3x4.svg) | 7381 | 32.832<br>1.00x | 43.506<br>1.33x | 44.362<br>1.35x | 76.115<br>2.32x | 52.102<br>1.59x | 41.479<br>1.26x | 17.669<br>0.54x | **16.948<br>0.52x** |
-| [grid/superdeep/100](plots/grid/superdeep-100.svg) | 101 | 1.587<br>1.00x | 10.743<br>6.77x | 10.664<br>6.72x | 2.717<br>1.71x | 1.667<br>1.05x | 1.672<br>1.05x | 0.465<br>0.29x | **0.436<br>0.27x** |
-| [pangui/expand_with_max_constraint](plots/pangui/expand-with-max-constraint.svg) | 3001 | 4.750<br>1.00x | 4.222<br>0.89x | 4.396<br>0.93x | 12.221<br>2.57x | 8.056<br>1.70x | 6.777<br>1.43x | 3.614<br>0.76x | **3.575<br>0.75x** |
-| [pangui/expand_with_min_constraint](plots/pangui/expand-with-min-constraint.svg) | 3001 | 4.736<br>1.00x | 4.037<br>0.85x | 4.063<br>0.86x | 12.033<br>2.54x | 7.959<br>1.68x | 7.160<br>1.51x | **3.457<br>0.73x** | 3.569<br>0.75x |
-| [pangui/fit_nesting](plots/pangui/fit-nesting.svg) | 101111 | 167.505<br>1.00x | 123.095<br>0.73x | 129.757<br>0.77x | 461.121<br>2.75x | 421.233<br>2.51x | 162.797<br>0.97x | **92.000<br>0.55x** | 92.467<br>0.55x |
-| [pangui/flex_expand_equal_weights](plots/pangui/flex-expand-equal-weights.svg) | 15001 | 17.535<br>1.00x | 20.727<br>1.18x | 22.194<br>1.27x | 55.534<br>3.17x | 26.813<br>1.53x | 27.210<br>1.55x | **8.828<br>0.50x** | 8.983<br>0.51x |
-| [pangui/flex_expand_weights](plots/pangui/flex-expand-weights.svg) | 15001 | 16.063<br>1.00x | 32.129<br>2.00x | 32.948<br>2.05x | 47.376<br>2.95x | 33.518<br>2.09x | 28.052<br>1.75x | 12.284<br>0.76x | **11.555<br>0.72x** |
-| [pangui/nested_vertical_stack](plots/pangui/nested-vertical-stack.svg) | 10001 | 10.734<br>1.00x | 20.196<br>1.88x | 21.412<br>1.99x | 41.635<br>3.88x | 23.536<br>2.19x | 21.382<br>1.99x | 8.453<br>0.79x | **7.695<br>0.72x** |
-| [pangui/padding_and_margin](plots/pangui/padding-and-margin.svg) | 101 | 0.194<br>1.00x | 0.260<br>1.34x | 0.265<br>1.37x | 0.729<br>3.76x | 0.337<br>1.74x | 0.375<br>1.94x | **0.072<br>0.37x** | 0.075<br>0.38x |
-| [pangui/percentage_and_ratio](plots/pangui/percentage-and-ratio.svg) | 10001 | 17.374<br>1.00x | 16.293<br>0.94x | 17.118<br>0.99x | 38.020<br>2.19x | 21.172<br>1.22x | 20.183<br>1.16x | **6.312<br>0.36x** | 6.341<br>0.36x |
-| [pangui/perpendicular_expand_with_wrap](plots/pangui/perpendicular-expand-with-wrap.svg) | 12001 | 17.952<br>1.00x | 20.979<br>1.17x | 22.577<br>1.26x | 48.242<br>2.69x | 24.234<br>1.35x | 23.933<br>1.33x | 13.287<br>0.74x | **12.574<br>0.70x** |
-| [pangui/pixels_with_min_expand_constraint](plots/pangui/pixels-with-min-expand-constraint.svg) | 30001 | 48.396<br>1.00x | 43.196<br>0.89x | 42.796<br>0.88x | 139.188<br>2.88x | 88.848<br>1.84x | 71.391<br>1.48x | 36.705<br>0.76x | **36.474<br>0.75x** |
-| [pangui/wide_no_wrap_simple_few](plots/pangui/wide-no-wrap-simple-few.svg) | 1001 | 1.127<br>1.00x | 1.348<br>1.20x | 1.398<br>1.24x | 3.141<br>2.79x | 1.878<br>1.67x | 2.050<br>1.82x | **0.593<br>0.53x** | 0.593<br>0.53x |
-| [pangui/wide_no_wrap_simple_many](plots/pangui/wide-no-wrap-simple-many.svg) | 100001 | 118.036<br>1.00x | 196.832<br>1.67x | 182.890<br>1.55x | 404.908<br>3.43x | 228.587<br>1.94x | 196.788<br>1.67x | **91.404<br>0.77x** | 93.773<br>0.79x |
-| [pangui/wide_wrapping](plots/pangui/wide-wrapping.svg) | 10001 | 12.639<br>1.00x | 13.292<br>1.05x | 15.105<br>1.20x | 39.653<br>3.14x | 21.341<br>1.69x | 19.857<br>1.57x | 7.986<br>0.63x | **7.788<br>0.62x** |
-| [text/paragraphs/100](plots/text/paragraphs-100.svg) | 101 | 5.578<br>1.00x | 5.498<br>0.99x | 5.382<br>0.96x | 9.231<br>1.65x | 18.180<br>3.26x | 15.107<br>2.71x | 9.919<br>1.78x | **2.695<br>0.48x** |
-| [text/flex_cards/100](plots/text/flex-cards-100.svg) | 301 | 3.792<br>1.00x | 4.585<br>1.21x | 4.421<br>1.17x | 7.083<br>1.87x | 7.600<br>2.00x | 6.791<br>1.79x | 4.164<br>1.10x | **1.890<br>0.50x** |
-| [text/inline_mixed/100](plots/text/inline-mixed-100.svg) | 1599 | 10.103<br>1.00x | 12.903<br>1.28x | 13.035<br>1.29x | 21.044<br>2.08x | 27.500<br>2.72x | 15.381<br>1.52x | 12.709<br>1.26x | **3.425<br>0.34x** |
-| [text/paragraphs/1000](plots/text/paragraphs-1000.svg) | 1001 | 52.360<br>1.00x | 40.374<br>0.77x | 40.657<br>0.78x | 91.889<br>1.75x | 189.388<br>3.62x | 148.257<br>2.83x | 89.619<br>1.71x | **18.189<br>0.35x** |
-| [text/flex_cards/1000](plots/text/flex-cards-1000.svg) | 3001 | 34.691<br>1.00x | 27.813<br>0.80x | 27.942<br>0.81x | 66.449<br>1.92x | 72.495<br>2.09x | 57.112<br>1.65x | 41.475<br>1.20x | **16.843<br>0.49x** |
-| [text/inline_mixed/1000](plots/text/inline-mixed-1000.svg) | 16361 | 94.366<br>1.00x | 91.998<br>0.97x | 91.763<br>0.97x | 208.493<br>2.21x | 290.935<br>3.08x | 133.919<br>1.42x | 124.718<br>1.32x | **31.031<br>0.33x** |
-| [real/wikipedia](plots/real/wikipedia.svg) | 21889 | 175.695<br>1.00x | 176.115<br>1.00x | 174.135<br>0.99x | 462.356<br>2.63x | 256.253<br>1.46x | 113.407<br>0.65x | 85.517<br>0.49x | **33.896<br>0.19x** |
-| [real/mdn](plots/real/mdn.svg) | 2212 | 12.581<br>1.00x | 12.893<br>1.02x | 12.802<br>1.02x | 50.343<br>4.00x | 20.795<br>1.65x | 10.102<br>0.80x | 9.578<br>0.76x | **6.090<br>0.48x** |
-| [real/rustdoc](plots/real/rustdoc.svg) | 15947 | 101.098<br>1.00x | 84.159<br>0.83x | 82.727<br>0.82x | 395.031<br>3.91x | 169.531<br>1.68x | 93.540<br>0.93x | 73.713<br>0.73x | **37.084<br>0.37x** |
-| [real/css-flexbox-1](plots/real/css-flexbox-1.svg) | 15890 | 98.079<br>1.00x | 94.019<br>0.96x | 95.404<br>0.97x | 240.688<br>2.45x | 176.874<br>1.80x | 123.243<br>1.26x | 81.143<br>0.83x | **39.044<br>0.40x** |
-| [real/servo-org](plots/real/servo-org.svg) | 226 | 2.418<br>1.00x | 4.478<br>1.85x | 4.445<br>1.84x | 5.259<br>2.17x | 4.971<br>2.06x | 3.822<br>1.58x | 1.226<br>0.51x | **0.908<br>0.38x** |
-| [real/dioxuslabs-com](plots/real/dioxuslabs-com.svg) | 158 | 3.197<br>1.00x | 4.986<br>1.56x | 5.012<br>1.57x | 16.165<br>5.06x | 4.526<br>1.42x | 4.886<br>1.53x | 0.789<br>0.25x | **0.747<br>0.23x** |
-| [real/bootstrap-dashboard](plots/real/bootstrap-dashboard.svg) | 199 | 1.840<br>1.00x | 2.210<br>1.20x | 2.377<br>1.29x | 2.940<br>1.60x | 2.841<br>1.54x | 2.728<br>1.48x | 1.053<br>0.57x | **0.971<br>0.53x** |
+| case | nodes | Chrome<br>rebuildLayoutTree + Layout | Firefox(1)<br>Reflow | Firefox<br>Reflow | Ladybird<br>tree build + layout | Servo(1)<br>Box + Fragment | Servo(3)<br>Box + Fragment | Blitz<br>construct + layout | Blitz<br>construct + layout (parallel construct) | Blitz<br>construct + layout (parallel construct + layout) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| [flex/huge_nested/1000](plots/flex/huge-nested-1000.svg) | 911 | 1.238<br>1.00x | 1.277<br>1.03x | 1.339<br>1.08x | 5.113<br>4.13x | 1.907<br>1.54x | 1.297<br>1.05x | 0.646<br>0.52x | 0.647<br>0.52x | **0.479<br>0.39x** |
+| [flex/wide/1000](plots/flex/wide-1000.svg) | 1000 | 1.612<br>1.00x | 2.085<br>1.29x | 2.174<br>1.35x | 6.929<br>4.30x | 2.565<br>1.59x | 2.381<br>1.48x | 1.148<br>0.71x | 1.087<br>0.67x | **0.914<br>0.57x** |
+| [flex/absolute/1000](plots/flex/absolute-1000.svg) | 1003 | 1.875<br>1.00x | 2.439<br>1.30x | 2.460<br>1.31x | 4.849<br>2.59x | 2.505<br>1.34x | 2.184<br>1.16x | 0.839<br>0.45x | **0.830<br>0.44x** | 0.924<br>0.49x |
+| [flex/deep_auto/1000](plots/flex/deep-auto-1000.svg) | 767 | 1.949<br>1.00x | 1.194<br>0.61x | 1.217<br>0.62x | 7.535<br>3.87x | 2.524<br>1.29x | 2.579<br>1.32x | 1.779<br>0.91x | 1.830<br>0.94x | **0.851<br>0.44x** |
+| [flex/deep_random/1000](plots/flex/deep-random-1000.svg) | 767 | 1.199<br>1.00x | 1.562<br>1.30x | 1.644<br>1.37x | 6.214<br>5.18x | 2.102<br>1.75x | 2.229<br>1.86x | 0.873<br>0.73x | 0.876<br>0.73x | **0.632<br>0.53x** |
+| [flex/huge_nested/10000](plots/flex/huge-nested-10000.svg) | 9111 | 12.321<br>1.00x | 12.047<br>0.98x | 13.053<br>1.06x | 50.896<br>4.13x | 19.800<br>1.61x | 10.002<br>0.81x | 6.769<br>0.55x | 6.241<br>0.51x | **2.753<br>0.22x** |
+| [flex/wide/10000](plots/flex/wide-10000.svg) | 10001 | 16.229<br>1.00x | 20.823<br>1.28x | 22.130<br>1.36x | 75.922<br>4.68x | 26.432<br>1.63x | 23.664<br>1.46x | 12.900<br>0.79x | 11.756<br>0.72x | **8.290<br>0.51x** |
+| [flex/absolute/10000](plots/flex/absolute-10000.svg) | 10004 | 19.759<br>1.00x | 24.045<br>1.22x | 24.398<br>1.23x | 55.028<br>2.78x | 27.273<br>1.38x | 22.808<br>1.15x | 10.339<br>0.52x | 9.255<br>0.47x | **7.188<br>0.36x** |
+| [flex/deep_auto/10000](plots/flex/deep-auto-10000.svg) | 8191 | 20.912<br>1.00x | 12.149<br>0.58x | 12.456<br>0.60x | 70.017<br>3.35x | 26.367<br>1.26x | 27.011<br>1.29x | 18.380<br>0.88x | 18.160<br>0.87x | **5.998<br>0.29x** |
+| [flex/deep_random/10000](plots/flex/deep-random-10000.svg) | 8191 | 11.927<br>1.00x | 15.741<br>1.32x | 16.538<br>1.39x | 61.353<br>5.14x | 22.245<br>1.87x | 23.926<br>2.01x | 8.673<br>0.73x | 8.570<br>0.72x | **4.019<br>0.34x** |
+| [flex/superdeep/50](plots/flex/superdeep-50.svg) | 151 | 0.528<br>1.00x | 0.492<br>0.93x | 0.494<br>0.94x | 1.865<br>3.53x | 0.630<br>1.19x | 0.622<br>1.18x | 0.299<br>0.57x | **0.287<br>0.54x** | 0.615<br>1.17x |
+| [flex/superdeep/100](plots/flex/superdeep-100.svg) | 301 | 1.048<br>1.00x | 0.940<br>0.90x | 0.942<br>0.90x | 3.478<br>3.32x | 1.226<br>1.17x | 1.184<br>1.13x | 0.678<br>0.65x | **0.650<br>0.62x** | 1.397<br>1.33x |
+| [grid/wide/31x31](plots/grid/wide-31x31.svg) | 962 | 2.946<br>1.00x | 2.855<br>0.97x | 2.924<br>0.99x | 6.166<br>2.09x | 3.430<br>1.16x | 3.508<br>1.19x | **1.510<br>0.51x** | 1.563<br>0.53x | 2.567<br>0.87x |
+| [grid/wide/100x100](plots/grid/wide-100x100.svg) | 10001 | 39.466<br>1.00x | 33.456<br>0.85x | 33.561<br>0.85x | 73.232<br>1.86x | 35.567<br>0.90x | 36.202<br>0.92x | 15.777<br>0.40x | **15.526<br>0.39x** | 18.447<br>0.47x |
+| [grid/deep/2x2x5](plots/grid/deep-2x2x5.svg) | 1365 | 7.565<br>1.00x | 10.915<br>1.44x | 10.951<br>1.45x | 14.686<br>1.94x | 9.111<br>1.20x | 8.732<br>1.15x | 3.502<br>0.46x | 3.547<br>0.47x | **1.571<br>0.21x** |
+| [grid/deep/3x3x4](plots/grid/deep-3x3x4.svg) | 7381 | 32.832<br>1.00x | 43.506<br>1.33x | 44.362<br>1.35x | 76.115<br>2.32x | 52.102<br>1.59x | 41.479<br>1.26x | 17.669<br>0.54x | 16.948<br>0.52x | **6.593<br>0.20x** |
+| [grid/superdeep/100](plots/grid/superdeep-100.svg) | 101 | 1.587<br>1.00x | 10.743<br>6.77x | 10.664<br>6.72x | 2.717<br>1.71x | 1.667<br>1.05x | 1.672<br>1.05x | 0.465<br>0.29x | **0.436<br>0.27x** | 0.493<br>0.31x |
+| [pangui/expand_with_max_constraint](plots/pangui/expand-with-max-constraint.svg) | 3001 | 4.750<br>1.00x | 4.222<br>0.89x | 4.396<br>0.93x | 12.221<br>2.57x | 8.056<br>1.70x | 6.777<br>1.43x | 3.614<br>0.76x | 3.575<br>0.75x | **2.748<br>0.58x** |
+| [pangui/expand_with_min_constraint](plots/pangui/expand-with-min-constraint.svg) | 3001 | 4.736<br>1.00x | 4.037<br>0.85x | 4.063<br>0.86x | 12.033<br>2.54x | 7.959<br>1.68x | 7.160<br>1.51x | 3.457<br>0.73x | 3.569<br>0.75x | **2.399<br>0.51x** |
+| [pangui/fit_nesting](plots/pangui/fit-nesting.svg) | 101111 | 167.505<br>1.00x | 123.095<br>0.73x | 129.757<br>0.77x | 461.121<br>2.75x | 421.233<br>2.51x | 162.797<br>0.97x | 92.000<br>0.55x | 92.467<br>0.55x | **36.846<br>0.22x** |
+| [pangui/flex_expand_equal_weights](plots/pangui/flex-expand-equal-weights.svg) | 15001 | 17.535<br>1.00x | 20.727<br>1.18x | 22.194<br>1.27x | 55.534<br>3.17x | 26.813<br>1.53x | 27.210<br>1.55x | **8.828<br>0.50x** | 8.983<br>0.51x | 9.555<br>0.54x |
+| [pangui/flex_expand_weights](plots/pangui/flex-expand-weights.svg) | 15001 | 16.063<br>1.00x | 32.129<br>2.00x | 32.948<br>2.05x | 47.376<br>2.95x | 33.518<br>2.09x | 28.052<br>1.75x | 12.284<br>0.76x | 11.555<br>0.72x | **7.183<br>0.45x** |
+| [pangui/nested_vertical_stack](plots/pangui/nested-vertical-stack.svg) | 10001 | 10.734<br>1.00x | 20.196<br>1.88x | 21.412<br>1.99x | 41.635<br>3.88x | 23.536<br>2.19x | 21.382<br>1.99x | 8.453<br>0.79x | **7.695<br>0.72x** | 10.107<br>0.94x |
+| [pangui/padding_and_margin](plots/pangui/padding-and-margin.svg) | 101 | 0.194<br>1.00x | 0.260<br>1.34x | 0.265<br>1.37x | 0.729<br>3.76x | 0.337<br>1.74x | 0.375<br>1.94x | **0.072<br>0.37x** | 0.075<br>0.38x | 0.103<br>0.53x |
+| [pangui/percentage_and_ratio](plots/pangui/percentage-and-ratio.svg) | 10001 | 17.374<br>1.00x | 16.293<br>0.94x | 17.118<br>0.99x | 38.020<br>2.19x | 21.172<br>1.22x | 20.183<br>1.16x | **6.312<br>0.36x** | 6.341<br>0.36x | 6.694<br>0.39x |
+| [pangui/perpendicular_expand_with_wrap](plots/pangui/perpendicular-expand-with-wrap.svg) | 12001 | 17.952<br>1.00x | 20.979<br>1.17x | 22.577<br>1.26x | 48.242<br>2.69x | 24.234<br>1.35x | 23.933<br>1.33x | 13.287<br>0.74x | **12.574<br>0.70x** | 14.238<br>0.79x |
+| [pangui/pixels_with_min_expand_constraint](plots/pangui/pixels-with-min-expand-constraint.svg) | 30001 | 48.396<br>1.00x | 43.196<br>0.89x | 42.796<br>0.88x | 139.188<br>2.88x | 88.848<br>1.84x | 71.391<br>1.48x | 36.705<br>0.76x | 36.474<br>0.75x | **20.293<br>0.42x** |
+| [pangui/wide_no_wrap_simple_few](plots/pangui/wide-no-wrap-simple-few.svg) | 1001 | 1.127<br>1.00x | 1.348<br>1.20x | 1.398<br>1.24x | 3.141<br>2.79x | 1.878<br>1.67x | 2.050<br>1.82x | **0.593<br>0.53x** | 0.593<br>0.53x | 0.792<br>0.70x |
+| [pangui/wide_no_wrap_simple_many](plots/pangui/wide-no-wrap-simple-many.svg) | 100001 | 118.036<br>1.00x | 196.832<br>1.67x | 182.890<br>1.55x | 404.908<br>3.43x | 228.587<br>1.94x | 196.788<br>1.67x | **91.404<br>0.77x** | 93.773<br>0.79x | 91.732<br>0.78x |
+| [pangui/wide_wrapping](plots/pangui/wide-wrapping.svg) | 10001 | 12.639<br>1.00x | 13.292<br>1.05x | 15.105<br>1.20x | 39.653<br>3.14x | 21.341<br>1.69x | 19.857<br>1.57x | 7.986<br>0.63x | **7.788<br>0.62x** | 9.658<br>0.76x |
+| [text/paragraphs/100](plots/text/paragraphs-100.svg) | 101 | 5.578<br>1.00x | 5.498<br>0.99x | 5.382<br>0.96x | 9.231<br>1.65x | 18.180<br>3.26x | 15.107<br>2.71x | 9.919<br>1.78x | 2.695<br>0.48x | **2.115<br>0.38x** |
+| [text/flex_cards/100](plots/text/flex-cards-100.svg) | 301 | 3.792<br>1.00x | 4.585<br>1.21x | 4.421<br>1.17x | 7.083<br>1.87x | 7.600<br>2.00x | 6.791<br>1.79x | 4.164<br>1.10x | 1.890<br>0.50x | **1.259<br>0.33x** |
+| [text/inline_mixed/100](plots/text/inline-mixed-100.svg) | 1599 | 10.103<br>1.00x | 12.903<br>1.28x | 13.035<br>1.29x | 21.044<br>2.08x | 27.500<br>2.72x | 15.381<br>1.52x | 12.709<br>1.26x | 3.425<br>0.34x | **3.361<br>0.33x** |
+| [text/paragraphs/1000](plots/text/paragraphs-1000.svg) | 1001 | 52.360<br>1.00x | 40.374<br>0.77x | 40.657<br>0.78x | 91.889<br>1.75x | 189.388<br>3.62x | 148.257<br>2.83x | 89.619<br>1.71x | **18.189<br>0.35x** | 19.096<br>0.36x |
+| [text/flex_cards/1000](plots/text/flex-cards-1000.svg) | 3001 | 34.691<br>1.00x | 27.813<br>0.80x | 27.942<br>0.81x | 66.449<br>1.92x | 72.495<br>2.09x | 57.112<br>1.65x | 41.475<br>1.20x | 16.843<br>0.49x | **10.756<br>0.31x** |
+| [text/inline_mixed/1000](plots/text/inline-mixed-1000.svg) | 16361 | 94.366<br>1.00x | 91.998<br>0.97x | 91.763<br>0.97x | 208.493<br>2.21x | 290.935<br>3.08x | 133.919<br>1.42x | 124.718<br>1.32x | 31.031<br>0.33x | **28.612<br>0.30x** |
+| [real/wikipedia](plots/real/wikipedia.svg) | 21889 | 175.695<br>1.00x | 176.115<br>1.00x | 174.135<br>0.99x | 462.356<br>2.63x | 256.253<br>1.46x | 113.407<br>0.65x | 85.517<br>0.49x | **33.896<br>0.19x** | 39.406<br>0.22x |
+| [real/mdn](plots/real/mdn.svg) | 2212 | 12.581<br>1.00x | 12.893<br>1.02x | 12.802<br>1.02x | 50.343<br>4.00x | 20.795<br>1.65x | 10.102<br>0.80x | 9.578<br>0.76x | 6.090<br>0.48x | **3.746<br>0.30x** |
+| [real/rustdoc](plots/real/rustdoc.svg) | 15947 | 101.098<br>1.00x | 84.159<br>0.83x | 82.727<br>0.82x | 395.031<br>3.91x | 169.531<br>1.68x | 93.540<br>0.93x | 73.713<br>0.73x | 37.084<br>0.37x | **35.040<br>0.35x** |
+| [real/css-flexbox-1](plots/real/css-flexbox-1.svg) | 15890 | 98.079<br>1.00x | 94.019<br>0.96x | 95.404<br>0.97x | 240.688<br>2.45x | 176.874<br>1.80x | 123.243<br>1.26x | 81.143<br>0.83x | **39.044<br>0.40x** | 57.099<br>0.58x |
+| [real/servo-org](plots/real/servo-org.svg) | 226 | 2.418<br>1.00x | 4.478<br>1.85x | 4.445<br>1.84x | 5.259<br>2.17x | 4.971<br>2.06x | 3.822<br>1.58x | 1.226<br>0.51x | 0.908<br>0.38x | **0.682<br>0.28x** |
+| [real/dioxuslabs-com](plots/real/dioxuslabs-com.svg) | 158 | 3.197<br>1.00x | 4.986<br>1.56x | 5.012<br>1.57x | 16.165<br>5.06x | 4.526<br>1.42x | 4.886<br>1.53x | 0.789<br>0.25x | 0.747<br>0.23x | **0.596<br>0.19x** |
+| [real/bootstrap-dashboard](plots/real/bootstrap-dashboard.svg) | 199 | 1.840<br>1.00x | 2.210<br>1.20x | 2.377<br>1.29x | 2.940<br>1.60x | 2.841<br>1.54x | 2.728<br>1.48x | 1.053<br>0.57x | 0.971<br>0.53x | **0.823<br>0.45x** |
 
 ### Style
 
@@ -242,52 +242,52 @@ Times in ms, min over all rounds and iterations; second line of each cell is the
 
 ### Sample spread
 
-Median ÷ min of the samples behind each cell above (1.00 = all samples equal), per engine on blitz `layout`, blitz-par `style`, blitz-par-pcon `resolve`, blitz-par-pcon-pl `resolve`, blitz-pcon `construct`, blitz-pcon-pl1 `layout`, chrome `layout`, firefox `layout`, firefox1 `layout`, ladybird `layout`, servo `fragment`, servo1 `fragment`, taffy `layout`.
+Median ÷ min of the samples behind each cell above (1.00 = all samples equal), per engine on blitz `layout`, blitz-par `style`, blitz-par-pcon `resolve`, blitz-par-pcon-pl `layout`, blitz-pcon `construct`, blitz-pcon-pl1 `layout`, chrome `layout`, firefox `layout`, firefox1 `layout`, ladybird `layout`, servo `fragment`, servo1 `fragment`, taffy `layout`.
 
 | case | blitz | blitz-par | blitz-par-pcon | blitz-par-pcon-pl | blitz-pcon | blitz-pcon-pl1 | chrome | firefox | firefox1 | ladybird | servo | servo1 | taffy |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| flex/huge_nested/1000 | 1.08 | 1.79 | 1.41 | 1.56 | 1.08 | 1.21 | 1.02 | 1.07 | 1.09 | 1.03 | 1.15 | 1.11 | 1.02 |
-| flex/wide/1000 | 1.05 | 1.33 | 1.26 | 1.34 | 1.11 | 1.16 | 1.02 | 1.07 | 1.07 | 1.02 | 1.28 | 1.23 | 1.02 |
-| flex/absolute/1000 | 1.08 | 1.71 | 1.42 | 1.09 | 1.08 | 1.32 | 1.02 | 1.11 | 1.07 | 1.06 | 1.06 | 1.04 | 1.02 |
-| flex/deep_auto/1000 | 1.08 | 1.37 | 1.64 | 1.93 | 1.19 | 1.06 | 1.01 | 1.06 | 1.03 | 1.06 | 1.03 | 1.05 | 1.01 |
-| flex/deep_random/1000 | 2.56 | 1.34 | 1.27 | 1.25 | 1.12 | 1.16 | 1.02 | 1.03 | 1.05 | 1.01 | 1.16 | 1.15 | 1.01 |
-| flex/huge_nested/10000 | 1.18 | 1.16 | 1.12 | 1.26 | 1.30 | 1.80 | 1.01 | 1.02 | 1.08 | 1.01 | 1.26 | 1.10 | 1.00 |
-| flex/wide/10000 | 1.08 | 1.27 | 1.17 | 1.14 | 1.38 | 1.18 | 1.04 | 1.02 | 1.14 | 1.01 | 1.22 | 1.14 | 1.00 |
-| flex/absolute/10000 | 1.88 | 1.31 | 1.14 | 1.19 | 1.24 | 1.19 | 1.06 | 1.04 | 1.03 | 1.03 | 1.13 | 1.08 | 1.00 |
-| flex/deep_auto/10000 | 1.08 | 1.16 | 1.08 | 1.48 | 1.22 | 1.25 | 1.02 | 1.03 | 1.13 | 1.03 | 1.11 | 1.11 | 1.00 |
+| flex/huge_nested/1000 | 1.08 | 1.79 | 1.41 | 1.17 | 1.08 | 1.21 | 1.02 | 1.07 | 1.09 | 1.03 | 1.15 | 1.11 | 1.02 |
+| flex/wide/1000 | 1.05 | 1.33 | 1.26 | 1.43 | 1.11 | 1.16 | 1.02 | 1.07 | 1.07 | 1.02 | 1.28 | 1.23 | 1.02 |
+| flex/absolute/1000 | 1.08 | 1.71 | 1.42 | 1.50 | 1.08 | 1.32 | 1.02 | 1.11 | 1.07 | 1.06 | 1.06 | 1.04 | 1.02 |
+| flex/deep_auto/1000 | 1.08 | 1.37 | 1.64 | 1.37 | 1.19 | 1.06 | 1.01 | 1.06 | 1.03 | 1.06 | 1.03 | 1.05 | 1.01 |
+| flex/deep_random/1000 | 2.56 | 1.34 | 1.27 | 1.19 | 1.12 | 1.16 | 1.02 | 1.03 | 1.05 | 1.01 | 1.16 | 1.15 | 1.01 |
+| flex/huge_nested/10000 | 1.18 | 1.16 | 1.12 | 1.48 | 1.30 | 1.80 | 1.01 | 1.02 | 1.08 | 1.01 | 1.26 | 1.10 | 1.00 |
+| flex/wide/10000 | 1.08 | 1.27 | 1.17 | 1.24 | 1.38 | 1.18 | 1.04 | 1.02 | 1.14 | 1.01 | 1.22 | 1.14 | 1.00 |
+| flex/absolute/10000 | 1.88 | 1.31 | 1.14 | 1.21 | 1.24 | 1.19 | 1.06 | 1.04 | 1.03 | 1.03 | 1.13 | 1.08 | 1.00 |
+| flex/deep_auto/10000 | 1.08 | 1.16 | 1.08 | 1.91 | 1.22 | 1.25 | 1.02 | 1.03 | 1.13 | 1.03 | 1.11 | 1.11 | 1.00 |
 | flex/deep_random/10000 | 1.12 | 1.21 | 1.07 | 1.25 | 1.34 | 1.18 | 1.17 | 1.09 | 1.04 | 1.03 | 1.22 | 1.23 | 1.00 |
-| flex/superdeep/50 | 1.16 | 1.21 | 1.29 | 1.66 | 1.21 | 1.18 | 1.09 | 1.22 | 1.09 | 1.02 | 1.09 | 1.08 | 1.07 |
-| flex/superdeep/100 | 1.14 | 1.10 | 1.23 | 1.44 | 1.19 | 1.32 | 1.05 | 1.05 | 1.04 | 1.01 | 1.10 | 1.16 | 1.02 |
-| grid/wide/31x31 | 1.25 | 1.74 | 1.43 | 1.25 | 1.23 | 1.39 | 1.04 | 1.03 | 1.02 | 1.01 | 1.10 | 1.04 | 1.01 |
-| grid/wide/100x100 | 1.09 | 1.19 | 1.11 | 1.28 | 1.41 | 1.27 | 1.04 | 1.04 | 1.08 | 1.03 | 1.10 | 1.09 | 1.02 |
-| grid/deep/2x2x5 | 1.10 | 1.10 | 1.08 | 1.39 | 1.03 | 1.08 | 1.03 | 1.02 | 1.01 | 1.01 | 1.12 | 1.20 | 1.04 |
-| grid/deep/3x3x4 | 1.06 | 1.15 | 1.14 | 1.16 | 1.14 | 1.10 | 1.01 | 1.05 | 1.06 | 1.07 | 1.30 | 1.09 | 1.01 |
+| flex/superdeep/50 | 1.16 | 1.21 | 1.29 | 1.11 | 1.21 | 1.18 | 1.09 | 1.22 | 1.09 | 1.02 | 1.09 | 1.08 | 1.07 |
+| flex/superdeep/100 | 1.14 | 1.10 | 1.23 | 1.27 | 1.19 | 1.32 | 1.05 | 1.05 | 1.04 | 1.01 | 1.10 | 1.16 | 1.02 |
+| grid/wide/31x31 | 1.25 | 1.74 | 1.43 | 1.06 | 1.23 | 1.39 | 1.04 | 1.03 | 1.02 | 1.01 | 1.10 | 1.04 | 1.01 |
+| grid/wide/100x100 | 1.09 | 1.19 | 1.11 | 1.24 | 1.41 | 1.27 | 1.04 | 1.04 | 1.08 | 1.03 | 1.10 | 1.09 | 1.02 |
+| grid/deep/2x2x5 | 1.10 | 1.10 | 1.08 | 1.13 | 1.03 | 1.08 | 1.03 | 1.02 | 1.01 | 1.01 | 1.12 | 1.20 | 1.04 |
+| grid/deep/3x3x4 | 1.06 | 1.15 | 1.14 | 1.15 | 1.14 | 1.10 | 1.01 | 1.05 | 1.06 | 1.07 | 1.30 | 1.09 | 1.01 |
 | grid/superdeep/100 | 1.34 | 1.24 | 1.12 | 1.31 | 1.29 | 1.13 | 1.04 | 1.05 | 1.03 | 1.05 | 1.18 | 1.06 | 1.07 |
-| pangui/expand_with_max_constraint | 1.06 | 1.84 | 1.11 | 1.13 | 1.09 | 1.09 | 1.02 | 1.02 | 1.04 | 1.03 | 1.09 | 1.10 | 1.01 |
-| pangui/expand_with_min_constraint | 1.12 | 1.52 | 1.29 | 1.39 | 1.12 | 1.17 | 1.04 | 1.04 | 1.03 | 1.10 | 1.13 | 1.16 | 1.01 |
-| pangui/fit_nesting | 1.06 | 1.19 | 1.14 | 1.07 | 1.02 | 1.08 | 1.05 | 1.06 | 1.05 | 1.02 | 1.08 | 1.07 | 1.01 |
-| pangui/flex_expand_equal_weights | 1.29 | 1.23 | 1.07 | 1.20 | 1.27 | 1.22 | 1.05 | 1.12 | 1.10 | 1.06 | 1.22 | 1.12 | 1.01 |
-| pangui/flex_expand_weights | 1.12 | 1.19 | 1.20 | 1.14 | 1.11 | 1.14 | 1.07 | 1.03 | 1.13 | 1.03 | 1.13 | 1.21 | 1.00 |
-| pangui/nested_vertical_stack | 1.18 | 1.22 | 1.11 | 1.22 | 1.62 | 1.28 | 1.08 | 1.08 | 1.09 | 1.03 | 1.09 | 1.08 | 1.01 |
-| pangui/padding_and_margin | 1.29 | 1.07 | 1.14 | 1.08 | 1.26 | 1.28 | 1.07 | 1.10 | 1.08 | 1.03 | 1.13 | 1.16 | 1.03 |
-| pangui/percentage_and_ratio | 1.08 | 1.14 | 1.23 | 1.30 | 1.44 | 1.15 | 1.05 | 1.06 | 1.05 | 1.03 | 1.11 | 1.12 | 1.01 |
-| pangui/perpendicular_expand_with_wrap | 1.10 | 1.21 | 1.26 | 1.18 | 1.28 | 1.10 | 1.05 | 1.05 | 1.09 | 1.06 | 1.20 | 1.10 | 1.03 |
-| pangui/pixels_with_min_expand_constraint | 1.08 | 1.13 | 1.11 | 1.14 | 1.26 | 1.13 | 1.03 | 1.06 | 1.15 | 1.03 | 1.14 | 1.05 | 1.01 |
-| pangui/wide_no_wrap_simple_few | 1.63 | 1.56 | 1.18 | 1.64 | 1.22 | 1.82 | 1.05 | 1.03 | 1.06 | 1.08 | 1.14 | 1.08 | 1.02 |
-| pangui/wide_no_wrap_simple_many | 1.03 | 1.23 | 1.17 | 1.26 | 1.08 | 1.13 | 1.05 | 1.22 | 1.08 | 1.06 | 1.19 | 1.17 | 1.03 |
-| pangui/wide_wrapping | 1.12 | 1.37 | 1.16 | 1.26 | 1.08 | 1.22 | 1.04 | 1.02 | 1.16 | 1.04 | 1.46 | 1.23 | 1.01 |
-| text/paragraphs/100 | 1.21 | 1.15 | 1.59 | 1.69 | 1.49 | 1.34 | 1.01 | 1.04 | 1.03 | 1.01 | 1.12 | 1.28 | - |
-| text/flex_cards/100 | 1.05 | 1.15 | 1.15 | 1.33 | 1.88 | 1.14 | 1.09 | 1.10 | 1.04 | 1.01 | 1.44 | 1.12 | - |
-| text/inline_mixed/100 | 1.06 | 1.71 | 1.80 | 1.32 | 1.58 | 1.36 | 1.03 | 1.07 | 1.05 | 1.03 | 1.28 | 1.08 | - |
-| text/paragraphs/1000 | 1.07 | 1.03 | 1.15 | 1.18 | 1.24 | 1.27 | 1.07 | 1.07 | 1.04 | 1.03 | 1.56 | 1.18 | - |
-| text/flex_cards/1000 | 1.14 | 1.42 | 1.31 | 1.14 | 1.25 | 1.10 | 1.03 | 1.08 | 1.04 | 1.03 | 1.12 | 1.21 | - |
-| text/inline_mixed/1000 | 1.09 | 1.23 | 1.08 | 1.33 | 1.19 | 1.13 | 1.01 | 1.04 | 1.06 | 1.02 | 1.27 | 1.12 | - |
-| real/wikipedia | 1.30 | 1.16 | 1.18 | 1.07 | 1.32 | 1.14 | 1.13 | 1.08 | 1.03 | 1.04 | 1.37 | 1.42 | - |
-| real/mdn | 1.08 | 1.51 | 1.24 | 1.54 | 1.15 | 1.18 | 1.03 | 1.03 | 1.06 | 1.03 | 1.53 | 1.19 | - |
-| real/rustdoc | 2.12 | 1.07 | 1.19 | 1.12 | 1.19 | 1.02 | 1.06 | 1.06 | 1.06 | 1.03 | 1.66 | 1.21 | - |
-| real/css-flexbox-1 | 1.11 | 1.24 | 1.18 | 1.26 | 1.36 | 1.26 | 1.03 | 1.02 | 1.10 | 1.04 | 1.21 | 1.18 | - |
-| real/servo-org | 1.12 | 1.06 | 1.16 | 1.28 | 1.75 | 1.34 | 1.05 | 1.16 | 1.09 | 1.01 | 1.19 | 1.15 | - |
-| real/dioxuslabs-com | 1.15 | 1.14 | 1.12 | 1.19 | 1.64 | 1.23 | 1.44 | 1.05 | 1.09 | 1.06 | 2.01 | 1.21 | - |
-| real/bootstrap-dashboard | 1.09 | 1.47 | 1.72 | 2.17 | 2.62 | 1.37 | 1.06 | 1.03 | 1.06 | 1.08 | 3.24 | 1.45 | - |
-| **median case** | 1.11 | 1.22 | 1.17 | 1.26 | 1.24 | 1.18 | 1.04 | 1.05 | 1.06 | 1.03 | 1.16 | 1.12 | 1.01 |
-| **p90 case** | 1.52 | 1.71 | 1.52 | 1.65 | 1.64 | 1.37 | 1.09 | 1.12 | 1.13 | 1.06 | 1.55 | 1.23 | 1.04 |
+| pangui/expand_with_max_constraint | 1.06 | 1.84 | 1.11 | 1.35 | 1.09 | 1.09 | 1.02 | 1.02 | 1.04 | 1.03 | 1.09 | 1.10 | 1.01 |
+| pangui/expand_with_min_constraint | 1.12 | 1.52 | 1.29 | 1.49 | 1.12 | 1.17 | 1.04 | 1.04 | 1.03 | 1.10 | 1.13 | 1.16 | 1.01 |
+| pangui/fit_nesting | 1.06 | 1.19 | 1.14 | 1.12 | 1.02 | 1.08 | 1.05 | 1.06 | 1.05 | 1.02 | 1.08 | 1.07 | 1.01 |
+| pangui/flex_expand_equal_weights | 1.29 | 1.23 | 1.07 | 1.18 | 1.27 | 1.22 | 1.05 | 1.12 | 1.10 | 1.06 | 1.22 | 1.12 | 1.01 |
+| pangui/flex_expand_weights | 1.12 | 1.19 | 1.20 | 1.21 | 1.11 | 1.14 | 1.07 | 1.03 | 1.13 | 1.03 | 1.13 | 1.21 | 1.00 |
+| pangui/nested_vertical_stack | 1.18 | 1.22 | 1.11 | 1.24 | 1.62 | 1.28 | 1.08 | 1.08 | 1.09 | 1.03 | 1.09 | 1.08 | 1.01 |
+| pangui/padding_and_margin | 1.29 | 1.07 | 1.14 | 1.07 | 1.26 | 1.28 | 1.07 | 1.10 | 1.08 | 1.03 | 1.13 | 1.16 | 1.03 |
+| pangui/percentage_and_ratio | 1.08 | 1.14 | 1.23 | 1.21 | 1.44 | 1.15 | 1.05 | 1.06 | 1.05 | 1.03 | 1.11 | 1.12 | 1.01 |
+| pangui/perpendicular_expand_with_wrap | 1.10 | 1.21 | 1.26 | 1.19 | 1.28 | 1.10 | 1.05 | 1.05 | 1.09 | 1.06 | 1.20 | 1.10 | 1.03 |
+| pangui/pixels_with_min_expand_constraint | 1.08 | 1.13 | 1.11 | 1.21 | 1.26 | 1.13 | 1.03 | 1.06 | 1.15 | 1.03 | 1.14 | 1.05 | 1.01 |
+| pangui/wide_no_wrap_simple_few | 1.63 | 1.56 | 1.18 | 1.51 | 1.22 | 1.82 | 1.05 | 1.03 | 1.06 | 1.08 | 1.14 | 1.08 | 1.02 |
+| pangui/wide_no_wrap_simple_many | 1.03 | 1.23 | 1.17 | 1.17 | 1.08 | 1.13 | 1.05 | 1.22 | 1.08 | 1.06 | 1.19 | 1.17 | 1.03 |
+| pangui/wide_wrapping | 1.12 | 1.37 | 1.16 | 1.15 | 1.08 | 1.22 | 1.04 | 1.02 | 1.16 | 1.04 | 1.46 | 1.23 | 1.01 |
+| text/paragraphs/100 | 1.21 | 1.15 | 1.59 | 1.24 | 1.49 | 1.34 | 1.01 | 1.04 | 1.03 | 1.01 | 1.12 | 1.28 | - |
+| text/flex_cards/100 | 1.05 | 1.15 | 1.15 | 1.08 | 1.88 | 1.14 | 1.09 | 1.10 | 1.04 | 1.01 | 1.44 | 1.12 | - |
+| text/inline_mixed/100 | 1.06 | 1.71 | 1.80 | 1.55 | 1.58 | 1.36 | 1.03 | 1.07 | 1.05 | 1.03 | 1.28 | 1.08 | - |
+| text/paragraphs/1000 | 1.07 | 1.03 | 1.15 | 1.19 | 1.24 | 1.27 | 1.07 | 1.07 | 1.04 | 1.03 | 1.56 | 1.18 | - |
+| text/flex_cards/1000 | 1.14 | 1.42 | 1.31 | 1.28 | 1.25 | 1.10 | 1.03 | 1.08 | 1.04 | 1.03 | 1.12 | 1.21 | - |
+| text/inline_mixed/1000 | 1.09 | 1.23 | 1.08 | 1.47 | 1.19 | 1.13 | 1.01 | 1.04 | 1.06 | 1.02 | 1.27 | 1.12 | - |
+| real/wikipedia | 1.30 | 1.16 | 1.18 | 1.18 | 1.32 | 1.14 | 1.13 | 1.08 | 1.03 | 1.04 | 1.37 | 1.42 | - |
+| real/mdn | 1.08 | 1.51 | 1.24 | 1.22 | 1.15 | 1.18 | 1.03 | 1.03 | 1.06 | 1.03 | 1.53 | 1.19 | - |
+| real/rustdoc | 2.12 | 1.07 | 1.19 | 1.07 | 1.19 | 1.02 | 1.06 | 1.06 | 1.06 | 1.03 | 1.66 | 1.21 | - |
+| real/css-flexbox-1 | 1.11 | 1.24 | 1.18 | 1.65 | 1.36 | 1.26 | 1.03 | 1.02 | 1.10 | 1.04 | 1.21 | 1.18 | - |
+| real/servo-org | 1.12 | 1.06 | 1.16 | 1.26 | 1.75 | 1.34 | 1.05 | 1.16 | 1.09 | 1.01 | 1.19 | 1.15 | - |
+| real/dioxuslabs-com | 1.15 | 1.14 | 1.12 | 1.22 | 1.64 | 1.23 | 1.44 | 1.05 | 1.09 | 1.06 | 2.01 | 1.21 | - |
+| real/bootstrap-dashboard | 1.09 | 1.47 | 1.72 | 1.93 | 2.62 | 1.37 | 1.06 | 1.03 | 1.06 | 1.08 | 3.24 | 1.45 | - |
+| **median case** | 1.11 | 1.22 | 1.17 | 1.22 | 1.24 | 1.18 | 1.04 | 1.05 | 1.06 | 1.03 | 1.16 | 1.12 | 1.01 |
+| **p90 case** | 1.52 | 1.71 | 1.52 | 1.53 | 1.64 | 1.37 | 1.09 | 1.12 | 1.13 | 1.06 | 1.55 | 1.23 | 1.04 |
