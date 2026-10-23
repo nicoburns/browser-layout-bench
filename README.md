@@ -270,21 +270,24 @@ grid differently, while the box sizes agree within 1px.
 
 ## Versions and methodology
 
-Measured on 2026-10-20 on an 8-vCPU Intel Xeon AWS VM (31 GB, Ubuntu 22.04.5, kernel 6.8.0-1060-aws),
-rustc 1.99.1, Python Playwright 1.64.0. Every number in `out/` comes from this machine; children
+Measured on 2026-10-23 in one 27-minute window (all engines interleaved, `bench --rounds 3 --iters 3 --cpus 2`)
+on an 8-vCPU Intel Xeon AWS VM (31 GB, Ubuntu 22.04.5, kernel 6.8.0-1060-aws), rustc 1.99.1, Python
+Playwright 1.64.0; the raw run is `out/runs/2026-10-23-full.json`. Every number in `out/` comes from this machine; children
 sessions that add engines or cases only verify equal work and run a one-round smoke test, the
 measurement is redone here with `bench --merge`.
 
-The Servo and Blitz columns were re-measured on 2026-10-23 (newer Servo and Blitz, same Chrome) with
-Chrome re-run alongside as a drift control, and folded into `results.json` by `run.py normalize`: the
-VM was ~6% slower that day (Chrome `style+layout` minimum stored/new median 0.94, p10 0.89, p90 0.98
-over the 43 cases), so every duration of a Servo/Blitz sample is multiplied by the stored/new ratio of
-Chrome's `style+layout` minimum on its case (the per-phase ratios of a case agree within ~2%, so one
-factor per case; it is kept in each sample as `chrome_norm`). The raw run is `out/runs/2026-10-23-blitz-servo-chrome.json`.
-Limits: the factor carries Chrome's own 1–3% sample noise, and the drift is not engine-neutral — in a
-same-window A/B the old servoshell measured 1.10–1.20× its stored text/real numbers while Chrome moved
-1.00–1.15× on the same cases — so differences under ~10% between the Servo/Blitz columns and the
-Chrome/Firefox/Ladybird/Taffy columns are within the normalisation's uncertainty.
+Earlier epochs: the 2026-10-20 run (`out/runs/2026-10-23-blitz-servo-chrome.json` re-measured its Servo and
+Blitz columns on 2026-10-23 and folded them in via `run.py normalize`). Against that epoch the 2026-10-23
+window is a uniform ~11% slower for every engine (per-case minimum new/old median 1.08–1.14, Chrome
+`style+layout` 1.115, p10 1.09, p90 1.17), so the absolute times rose but the cross-engine ratios did not.
+
+Known artefact of this run: `servo1` is pinned as a whole process to one CPU, and in this window its thread
+handoffs between the style, box and fragment spans paid a scheduler slice of ~3 ms on a share of samples, so
+the Servo(1) `restyle_and_build` ("Whole pipeline") column is 3–5 ms high on cases under ~20 ms (e.g.
+`flex/absolute/1000` 14.3 ms where the spans sum to 9.3; the earlier run of the same binary had a 1.3 ms gap).
+The per-stage Servo(1) columns and `servo` (unpinned) are unaffected. `layout_threads=1` already makes
+Servo's style and layout single-threaded, so future runs should give `servo1` two CPUs (`--cpus 2,3`:
+steady 1.4 ms gap) or leave it unpinned rather than pin it to one.
 
 | engine | version | how it is driven and timed |
 |---|---|---|
