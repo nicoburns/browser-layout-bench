@@ -256,11 +256,10 @@ def firefox_installed():
         return Path(p.firefox.executable_path).exists()
 
 
-def parse_firefox_profile(path, url):
-    """Marker intervals of the content process that loaded `url`: Styles (style traversal and frame
-    construction), Reflow (layout), DoFlushPendingNotifications (the flush containing both) and
-    DisplayList. Times are ms floats; returned in ns like the other engines."""
-    profile = json.loads(path.read_text())
+def parse_firefox_profile(profile, url):
+    """Marker intervals of the content process that loaded `url`, from the decoded profile JSON: Styles
+    (style traversal and frame construction), Reflow (layout), DoFlushPendingNotifications (the flush
+    containing both) and DisplayList. Times are ms floats; returned in ns like the other engines."""
     for proc in profile.get("processes", []):
         window_ids = {pg["innerWindowID"] for pg in proc.get("pages", []) if pg["url"] == url}
         if window_ids:
@@ -398,6 +397,7 @@ def run_firefox(case, iters, cpus, stylo_threads=None, screenshot=None):
                 page.screenshot(path=str(screenshot))
             page.close()
         browser.close()
+        profile = json.loads(profile.read_text())
         for i, root in enumerate(roots):
             s = parse_firefox_profile(profile, f"{url}?i={i}")
             s["root"] = root
