@@ -296,8 +296,8 @@
         (stacked ? "Composite bars are stacked by the stages the engine records (solid → faint, pipeline order; grey = rest of the span). " : "") +
         `Label: ms · multiple of ${state.u === "chrome" ? "the Chrome bar" : "the fastest shown browser (bold)"} · time per node.`),
       ...cases.flatMap(c => {
-        const heading = !state.g && c.suite !== suite ? el("h2", { class: "suite" }, el("code", {}, (suite = c.suite) + "/")) : null;
-        return [heading, el("article", { id: caseId(c.name) },
+        const heading = !state.g && c.suite !== suite ? [el("h2", { class: "suite" }, el("code", {}, (suite = c.suite) + "/"))] : [];
+        return [...heading, el("article", { id: caseId(c.name) },
           el("h3", {}, el("code", {}, c.name), " ", el("span", { class: "muted" }, c.nodes.toLocaleString("en") + " nodes")),
           c.note ? el("p", { class: "caveat" }, c.note) : null,
           caseChart(c))];

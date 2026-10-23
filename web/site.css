@@ -74,7 +74,7 @@ table.results thead th.norm::after { content: "†"; color: var(--muted); margin
 table.results tbody tr:hover td, table.results tbody tr:hover th.case { background: #f0f6ff; }
 
 /* Charts */
-.charts article { margin: 28px 0; scroll-margin-top: 110px; }
+.charts article { margin: 28px 0; scroll-margin-top: 150px; }
 .charts h2.suite { margin-top: 40px; }
 .charts h3 { margin: 12px 0 2px; font-size: 1.05rem; }
 .charts h3 code, .charts h2 code { font-size: 1em; background: none; padding: 0; }
