@@ -232,10 +232,11 @@ times are minima over 9 samples unless the statistic switch says otherwise.</foo
 
 
 def caveat_box(results):
-    """The normalisation caveat shown next to every table and chart."""
+    """The normalisation caveat (when samples carry `chrome_norm`) and a caveats link, next to every table and chart."""
     normalized = normalized_engines(results)
     if not normalized:
-        return ""
+        return ('<p class="caveat">All columns come from one measurement window (<a href="about.html#versions-and-methodology">'
+                'methodology</a>). Rankings carry the <a href="about.html#caveats">equal-work and sampling caveats</a>.</p>')
     return (f'<p class="caveat">The Servo and Blitz columns ({html.escape(", ".join(normalized))}) were measured in a later run '
             f"and scaled per case by Chrome's stored/new <code>style+layout</code> ratio (median {norm_factor_median(results):.2f}); "
             "differences under ~10% between them and the Chrome, Firefox, Ladybird and Taffy columns are within the normalisation's "
