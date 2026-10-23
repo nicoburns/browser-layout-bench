@@ -16,7 +16,7 @@ REPO = "https://github.com/nicoburns/browser-layout-bench"
 
 # Browser name and variant per engine key; what each column measures is in `measured_table`.
 ENGINE_NAMES = {
-    "chrome": ("Chrome", ""), "firefox1": ("Firefox", "1 style thread"), "firefox": ("Firefox", ""),
+    "chrome": ("Chrome", ""), "firefox": ("Firefox", ""),
     "ladybird": ("Ladybird", ""), "servo1": ("Servo", "1 layout thread"), "servo": ("Servo", "3 layout threads"),
     "blitz": ("Blitz", ""), "blitz-par": ("Blitz", "parallel style"), "blitz-pcon": ("Blitz", "parallel construct"),
     "blitz-par-pcon": ("Blitz", "parallel style + construct"), "blitz-pcon-pl1": ("Blitz", "#1034 build, 1 layout thread"),
@@ -24,10 +24,10 @@ ENGINE_NAMES = {
 }
 # Single-threaded-style engine -> its parallel-style twin; outside the Style table the single-threaded
 # column is dropped wherever the twin is in the same table.
-SINGLE_STYLE_THREAD = {"firefox1": "firefox", "blitz": "blitz-par"}
+SINGLE_STYLE_THREAD = {"blitz": "blitz-par"}
 # plot.COLOURS is tuned for its dark background; these are the same engine hues for white.
 COLOURS = {
-    "chrome": "#E8A100", "firefox1": "#FF7139", "firefox": "#FFA37E", "ladybird": "#7B6CF0",
+    "chrome": "#E8A100", "firefox": "#FF7139", "ladybird": "#7B6CF0",
     "servo1": "#2FA857", "servo": "#84D59B", "blitz": "#007672", "blitz-par": "#3E9593",
     "blitz-pcon": "#62AFAD", "blitz-par-pcon": "#88C6C4", "blitz-pcon-pl1": "#A9D8D6",
     "blitz-par-pcon-pl": "#C6E6E5", "taffy": "#E11D48",
