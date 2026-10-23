@@ -1,6 +1,6 @@
-"""Static results site (out/pages/) from out/results.json: a landing page with the README methodology and
-the caveats, and one results page with a Table and a Charts tab (one stacked bar chart per case). The
-results page is a shell; `web/site.js` draws it from the exported `data.js`, so the tab, suite,
+"""Static results site (out/pages/) from out/results.json: the results page (index.html) with a Table and a
+Charts tab (one stacked bar chart per case), and an About page with the README methodology and the caveats.
+The results page is a shell; `web/site.js` draws it from the exported `data.js`, so the tab, suite,
 comparison, statistic and engine switches run in the browser. `./run.py pages` writes it; the Pages workflow deploys it."""
 import html
 import json
@@ -171,7 +171,7 @@ def norm_factor_median(results):
 # ---- pages ----
 
 def page(title, body, active, root_url):
-    nav = [("index.html", "Overview", "index"), ("results.html", "Results", "results")]
+    nav = [("index.html", "Results", "results"), ("about.html", "About", "about")]
     links = "".join(f'<a href="{href}" class="{"active" if key == active else ""}">{html.escape(label)}</a>' for href, label, key in nav)
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -207,18 +207,18 @@ def caveat_box(results):
     return (f'<p class="caveat"><strong>†</strong> The Servo and Blitz columns ({html.escape(", ".join(normalized))}) were measured in a later run '
             f"and scaled per case by Chrome's stored/new <code>style+layout</code> ratio (median {norm_factor_median(results):.2f}); "
             "differences under ~10% between them and the Chrome, Firefox, Ladybird and Taffy columns are within the normalisation's "
-            'uncertainty (<a href="index.html#versions-and-methodology">methodology</a>). Rankings also carry the '
-            '<a href="index.html#caveats">equal-work and sampling caveats</a>.</p>')
+            'uncertainty (<a href="about.html#versions-and-methodology">methodology</a>). Rankings also carry the '
+            '<a href="about.html#caveats">equal-work and sampling caveats</a>.</p>')
 
 
 def controls():
     return '<div class="controls" id="controls"></div>'
 
 
-def index_page(results, readme, caveats, by_suite):
+def about_page(results, readme, caveats, by_suite):
     intro = md_to_html(readme.split("\n## ", 1)[0].split("\n", 1)[1])
     cards = "".join(
-        f'<a class="card" href="results.html#g={s}"><h3>{s}/</h3><p>{html.escape(SUITE_BLURBS.get(s, ""))}</p>'
+        f'<a class="card" href="index.html#g={s}"><h3>{s}/</h3><p>{html.escape(SUITE_BLURBS.get(s, ""))}</p>'
         f'<p class="meta">{len(cases)} cases · {min(c["nodes"] for c in cases):,}–{max(c["nodes"] for c in cases):,} nodes</p></a>'
         for s, cases in by_suite.items())
     interpret = md_to_html(section(caveats, "How to interpret the results"))
@@ -228,7 +228,7 @@ def index_page(results, readme, caveats, by_suite):
 <section class="hero">
 <h1>Layout benchmark results</h1>
 {intro}
-<div class="cards">{cards}<a class="card" href="results.html#g="><h3>All suites</h3><p>Every case in one table: pick a suite, a comparison table and the engines.</p><p class="meta">{len(results)} cases</p></a></div>
+<div class="cards">{cards}<a class="card" href="index.html#g="><h3>All suites</h3><p>Every case in one table: pick a suite, a comparison table and the engines.</p><p class="meta">{len(results)} cases</p></a></div>
 </section>
 
 <section id="reading">
@@ -294,8 +294,8 @@ def build(results, columns, count_keys, root, out_dir):
         written.append(out_dir / name)
 
     write("data.js", "window.DATA = " + json.dumps(data, separators=(",", ":")) + ";\n")
-    write("index.html", page("Overview", index_page(results, readme, caveats, by_suite), "index", REPO))
-    write("results.html", page("Results", results_page(results), "results", REPO))
+    write("index.html", page("Results", results_page(results), "results", REPO))
+    write("about.html", page("About", about_page(results, readme, caveats, by_suite), "about", REPO))
     for asset in ("site.css", "site.js"):
         shutil.copy(ASSETS / asset, out_dir / asset)
         written.append(out_dir / asset)
