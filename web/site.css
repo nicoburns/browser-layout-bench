@@ -37,6 +37,7 @@ footer { max-width: 1240px; margin: 0 auto; padding: 16px 20px 40px; color: var(
 
 /* Prose tables (README/CAVEATS) and result tables both scroll inside their box, never the page. */
 .scroll { overflow: auto; max-width: 100%; border: 1px solid var(--line); border-radius: 6px; }
+.scroll > table { width: 100%; }
 table { border-collapse: separate; border-spacing: 0; font-size: 0.85rem; }
 table.prose td, table.prose th { padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
 table.prose td.right { text-align: right; }
