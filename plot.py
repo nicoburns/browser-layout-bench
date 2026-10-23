@@ -22,7 +22,7 @@ COLOURS = {
     "chrome": "#FBBC04", "firefox1": "#FF7139", "firefox": "#ffa37e", "ladybird": "#7B6CF0",
     "servo1": "#42BE65", "servo": "#84d59b", "blitz": "#3E9593", "blitz-par": "#5ba5a3",
     "blitz-pcon": "#78b5b3", "blitz-par-pcon": "#95c5c4", "blitz-pcon-pl1": "#a8cfce",
-    "blitz-pcon-pl": "#bbdad9", "blitz-par-pcon-pl": "#cfe4e4", "taffy": "#fb7185"
+    "blitz-par-pcon-pl": "#cfe4e4", "taffy": "#fb7185"
 }
 
 

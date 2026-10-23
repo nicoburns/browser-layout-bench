@@ -20,7 +20,7 @@ BLITZ_PCON = ROOT / "target-pcon/release/blitz-runner"
 BLITZ_PL = ROOT / "target-pl/release/blitz-runner"
 SERVOSHELL = Path(os.environ.get("SERVOSHELL", Path.home() / "repos/servo/target/release/servoshell"))
 WIDTH, HEIGHT = 1280, 800
-ENGINES = ["taffy", "blitz", "blitz-par", "blitz-pcon", "blitz-par-pcon", "blitz-pcon-pl1", "blitz-pcon-pl", "blitz-par-pcon-pl",
+ENGINES = ["taffy", "blitz", "blitz-par", "blitz-pcon", "blitz-par-pcon", "blitz-pcon-pl1", "blitz-par-pcon-pl",
            "servo1", "servo", "chrome", "firefox1", "firefox", "ladybird"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
@@ -419,8 +419,6 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
     # 1-thread pool, i.e. the feature's bookkeeping without the parallelism, pinned like `blitz`
     if engine == "blitz-pcon-pl1":
         return run_blitz(case, iters, cpus, screenshot=screenshot, binary=BLITZ_PL, env={"BLITZ_PARALLEL_LAYOUT_THREADS": "1"})
-    if engine == "blitz-pcon-pl":
-        return run_blitz(case, iters, None, screenshot=screenshot, binary=BLITZ_PL)
     if engine == "blitz-par-pcon-pl":
         return run_blitz(case, iters, None, parallel=True, screenshot=screenshot, binary=BLITZ_PL)
     if engine == "servo1":
@@ -474,7 +472,7 @@ COLUMNS = [
     ("Layout only", [("chrome", "layout", "Chrome Layout (incl. shaping)"), ("ladybird", "layout", "Ladybird layout (incl. shaping)"),
                      ("servo1", "fragment", "Servo(1) Fragment Tree"), ("servo", "fragment", "Servo(3) Fragment Tree"),
                      ("blitz", "layout", "Blitz `layout`"), ("blitz-pcon-pl1", "layout", "Blitz `layout` (#1034 build, 1 thread)"),
-                     ("blitz-pcon-pl", "layout", "Blitz `layout` (parallel layout)"), ("taffy", "layout", "Taffy")]),
+                     ("taffy", "layout", "Taffy")]),
     ("Construction", [("chrome", "construct", "Chrome rebuildLayoutTree"), ("ladybird", "construct", "Ladybird tree build"),
                       ("servo1", "box", "Servo(1) Box Tree"), ("servo", "box", "Servo(3) Box Tree"),
                       ("blitz", "construct", "Blitz construct (+pconstruct)"), ("blitz-pcon", "construct", "Blitz construct, parallel")]),
@@ -483,8 +481,7 @@ COLUMNS = [
                                    ("ladybird", "construct+layout", "Ladybird tree build+layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
                                    ("blitz", "construct+layout", "Blitz construct+layout"),
-                                   ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)"),
-                                   ("blitz-pcon-pl", "construct+layout", "Blitz construct+layout (parallel construct+layout)")]),
+                                   ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)")]),
     ("Style", [("chrome", "style", "Chrome recalcStyle"),
                ("firefox1", "style", "Firefox(1) Styles (incl. frame construction)"),
                ("firefox", "style", "Firefox Styles (incl. frame construction)"), ("ladybird", "style", "Ladybird update_style"),
