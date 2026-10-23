@@ -5,7 +5,8 @@
   const D = window.DATA;
   const SVGNS = "http://www.w3.org/2000/svg";
   const UNITS = { ms: "ms", chrome: "× Chrome", fastest: "× fastest", node: "per node" };
-  const DEFAULTS = { t: D.tables.findIndex(t => t.title.startsWith("Box construction")), s: "min", u: "ms", x: "", off: [] };
+  const DEFAULTS = { g: "", t: D.tables.findIndex(t => t.title.startsWith("Box construction")), s: "min", u: "ms", x: "", off: [] };
+  const caseId = name => name.replace(/[^\w]+/g, "-");
   const unequal = new Map(D.unequal.map(u => [u.case + "|" + u.engine, u.note]));
 
   // ---- state ----
@@ -14,7 +15,10 @@
     try { Object.assign(st, JSON.parse(localStorage.getItem("layout-bench") || "{}")); } catch (e) { /* ignore */ }
     const h = new URLSearchParams(location.hash.includes("=") ? location.hash.slice(1) : "");
     if (h.has("t")) st.t = +h.get("t");
-    for (const k of ["s", "u", "x"]) if (h.has(k)) st[k] = h.get(k);
+    for (const k of ["g", "s", "u", "x"]) if (h.has(k)) st[k] = h.get(k);
+    const anchored = D.cases.find(c => "#" + caseId(c.name) === location.hash);
+    if (anchored) st.g = anchored.suite;
+    if (!D.suites.some(s => s.name === st.g)) st.g = "";
     if (h.has("off")) st.off = h.get("off").split(",").filter(Boolean);
     if (!(st.t >= 0 && st.t < D.tables.length)) st.t = DEFAULTS.t;
     return st;
@@ -24,14 +28,13 @@
   function saveState(toHash) {
     localStorage.setItem("layout-bench", JSON.stringify(state));
     if (!toHash) return;
-    const h = new URLSearchParams({ t: state.t, s: state.s, u: state.u });
+    const h = new URLSearchParams({ g: state.g, t: state.t, s: state.s, u: state.u });
     if (state.x) h.set("x", state.x);
     if (state.off.length) h.set("off", state.off.join(","));
     history.replaceState(null, "", "#" + h.toString());
   }
 
   // ---- numbers ----
-  const caseId = name => name.replace(/[^\w]+/g, "-");
   function samples(c, engine, metric) {
     const e = c.engines[engine];
     if (!e) return [];
@@ -173,7 +176,12 @@
     });
     const tableSel = el("select", { on: { change: ev => { state.t = +ev.target.value; update(); } } },
       D.tables.map((t, i) => el("option", { value: i, selected: i === state.t ? "" : null }, t.title)));
+    const suiteSel = el("select", { on: { change: ev => { state.g = ev.target.value; update(); } } },
+      el("option", { value: "", selected: state.g === "" ? "" : null }, `All suites (${D.cases.length} cases)`),
+      D.suites.map(s => el("option", { value: s.name, selected: s.name === state.g ? "" : null },
+        `${s.name}/ (${D.cases.filter(c => c.suite === s.name).length} cases)`)));
     box.replaceChildren(
+      el("label", {}, "Suite", suiteSel),
       el("label", {}, "Comparison", tableSel),
       el("label", {}, "Statistic", seg("s", { min: "min", median: "median" })),
       el("label", {}, "Unit", seg("u", UNITS)),
@@ -181,6 +189,16 @@
       el("span", { class: "engines" }, chips,
         el("button", { type: "button", class: "chip", on: { click: () => { state.off = []; update(); } } }, "all")));
   }
+
+  // Shows a case's chart: selects its suite, then scrolls to the chart once drawn.
+  function openCase(ev, c) {
+    ev.preventDefault();
+    state.g = c.suite;
+    update();
+    const target = document.getElementById(caseId(c.name));
+    if (target) target.scrollIntoView();
+  }
+  const pickSuite = (ev, suite) => { ev.preventDefault(); state.g = suite; update(); window.scrollTo(0, 0); };
 
   // ---- table ----
   function renderTable(host, cases) {
@@ -195,14 +213,14 @@
     const tbody = el("tbody");
     let suite = null;
     for (const c of cases) {
-      if (host.dataset.suite === "" && c.suite !== suite) {
-        suite = c.suite;
-        tbody.append(el("tr", { class: "group" }, el("th", { colspan: 2 }, el("a", { href: suite + ".html" }, suite + "/")),
+      if (!state.g && c.suite !== suite) {
+        const s = suite = c.suite;
+        tbody.append(el("tr", { class: "group" }, el("th", { colspan: 2 }, el("a", { href: "#g=" + s, on: { click: ev => pickSuite(ev, s) } }, s + "/")),
           el("td", { colspan: cols.length })));
       }
       const r = row(c, cols);
-      const href = (host.dataset.suite === "" ? c.suite + ".html" : "") + "#" + caseId(c.name);
-      tbody.append(el("tr", {}, el("th", { class: "case" }, el("a", { href }, host.dataset.suite ? c.name.slice(c.suite.length + 1) : c.name)),
+      tbody.append(el("tr", {}, el("th", { class: "case" }, el("a", { href: "#" + caseId(c.name), on: { click: ev => openCase(ev, c) } },
+        state.g ? c.name.slice(c.suite.length + 1) : c.name)),
         el("td", {}, c.nodes.toLocaleString("en")),
         r.cells.map(cl => {
           if (!cl) return el("td", { class: "na" }, "–");
@@ -276,7 +294,11 @@
     return g;
   }
   function renderCharts(host) {
-    const cases = D.cases.filter(c => c.suite === host.dataset.suite);
+    if (!state.g) {
+      host.replaceChildren(el("p", { class: "legend" }, "Pick a suite (or click a case) for a bar chart per case, stacked by stage."));
+      return;
+    }
+    const cases = D.cases.filter(c => c.suite === state.g);
     const table = D.tables[state.t];
     const stacked = !isLog("lin") && visible(table.columns).some(col => D.stages[col.metric]);
     host.replaceChildren(el("h2", { class: "section" }, "Per case"),
@@ -292,7 +314,7 @@
   // ---- cross-case dot chart ----
   function renderCompare(host) {
     const table = D.tables[state.t], cols = visible(table.columns);
-    const rows = D.cases.map(c => row(c, cols));
+    const rows = shownCases().map(c => row(c, cols));
     const conv = (v, r) => inUnit(v, r);
     const all = rows.flatMap(r => r.cells.filter(Boolean).flatMap(cl => [conv(cl.value, r), conv(cl.median, r)])).filter(v => v != null && v > 0);
     if (!all.length) { host.replaceChildren(el("p", { class: "empty" }, "Nothing to show.")); return; }
@@ -312,7 +334,8 @@
       }
       const my = y + RH / 2;
       body.push(svg("line", { class: "grid", x1: L, x2: W - R, y1: my, y2: my, style: "stroke-dasharray:none;opacity:.5" }));
-      body.push(svg("a", { href: `${r.c.suite}.html#${caseId(r.c.name)}` },
+      const c = r.c;
+      body.push(svg("a", { href: "#" + caseId(c.name), on: { click: ev => openCase(ev, c) } },
         svg("text", { class: "case-label", x: L - 8, y: y + RH - 5, "text-anchor": "end" }, r.c.name.slice(r.c.suite.length + 1),
           svg("tspan", { fill: "#656d76", "font-size": 10 }, "  " + r.c.nodes.toLocaleString("en")))));
       r.cells.forEach(cl => {
@@ -345,11 +368,19 @@
       g);
   }
 
+  const shownCases = () => state.g ? D.cases.filter(c => c.suite === state.g) : D.cases;
+
   function update(initial) {
     saveState(!initial);
     renderControls();
     const t = document.getElementById("table");
-    if (t) renderTable(t, t.dataset.suite ? D.cases.filter(c => c.suite === t.dataset.suite) : D.cases);
+    if (t) renderTable(t, shownCases());
+    const sum = document.getElementById("summary");
+    if (sum) {
+      const s = D.suites.find(x => x.name === state.g);
+      sum.replaceChildren(s ? el("p", {}, el("strong", {}, el("code", {}, s.name + "/")), " " + s.blurb + " ",
+        el("a", { href: "#g=", on: { click: ev => pickSuite(ev, "") } }, "All suites")) : "");
+    }
     const ch = document.getElementById("charts");
     if (ch) renderCharts(ch);
     const cmp = document.getElementById("compare");

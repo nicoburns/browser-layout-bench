@@ -1,7 +1,7 @@
 """Static results site (out/pages/) from out/results.json: a landing page with the README methodology and
-the caveats, one page per suite (tables + per-case charts) and a cross-case comparison page. The pages
-are shells; `web/site.js` draws the tables and charts from the exported `data.js`, so the engine,
-scale and unit switches run in the browser. `./run.py pages` writes it; the Pages workflow deploys it."""
+the caveats, and one results page (cross-case chart, table, per-case charts of the chosen suite). The
+results page is a shell; `web/site.js` draws it from the exported `data.js`, so the suite, comparison,
+unit, scale and engine switches run in the browser. `./run.py pages` writes it; the Pages workflow deploys it."""
 import html
 import json
 import re
@@ -53,11 +53,6 @@ SUITE_BLURBS = {
     "text": "Hand-built prose pages set in DejaVu Sans: shaping and line breaking as well as layout.",
     "real": "Seven saved web pages frozen by real/freeze.py (scripts removed, fonts replaced, images as placeholders).",
 }
-
-
-def case_id(name):
-    """Element id of a case on its suite page (`site.js` computes the same): flex/wide/1000 -> flex-wide-1000."""
-    return re.sub(r"[^\w]+", "-", name)
 
 
 def slug(text):
@@ -166,7 +161,8 @@ def export(results, columns, count_keys):
     engines = [e for e in ENGINE_NAMES if any(e in c["engines"] for c in cases)]
     return {"cases": cases, "tables": tables, "stages": plot.STAGES,
             "engines": {e: {"name": ENGINE_NAMES[e], "colour": COLOURS[e], "marker": MARKERS[e]} for e in engines},
-            "unequal": [{"case": c, "engine": e, "note": note} for (c, e), note in UNEQUAL.items()]}
+            "unequal": [{"case": c, "engine": e, "note": note} for (c, e), note in UNEQUAL.items()],
+            "suites": [{"name": s, "blurb": SUITE_BLURBS.get(s, "")} for s in plot.suites(results)]}
 
 
 def normalized_engines(results):
@@ -180,9 +176,8 @@ def norm_factor_median(results):
 
 # ---- pages ----
 
-def page(title, body, suites, active, root_url):
-    nav = [("index.html", "Overview", "index"), ("compare.html", "Compare", "compare")]
-    nav += [(f"{s}.html", f"{s}/", s) for s in suites]
+def page(title, body, active, root_url):
+    nav = [("index.html", "Overview", "index"), ("results.html", "Results", "results")]
     links = "".join(f'<a href="{href}" class="{"active" if key == active else ""}">{html.escape(label)}</a>' for href, label, key in nav)
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -222,14 +217,14 @@ def caveat_box(results):
             '<a href="index.html#caveats">equal-work and sampling caveats</a>.</p>')
 
 
-def controls(show_table=True):
-    return f"""<div class="controls" id="controls" data-show-table="{int(show_table)}"></div>"""
+def controls():
+    return '<div class="controls" id="controls"></div>'
 
 
-def index_page(results, readme, caveats, suites, by_suite):
+def index_page(results, readme, caveats, by_suite):
     intro = md_to_html(readme.split("\n## ", 1)[0].split("\n", 1)[1])
     cards = "".join(
-        f'<a class="card" href="{s}.html"><h3>{s}/</h3><p>{html.escape(SUITE_BLURBS.get(s, ""))}</p>'
+        f'<a class="card" href="results.html#g={s}"><h3>{s}/</h3><p>{html.escape(SUITE_BLURBS.get(s, ""))}</p>'
         f'<p class="meta">{len(cases)} cases · {min(c["nodes"] for c in cases):,}–{max(c["nodes"] for c in cases):,} nodes</p></a>'
         for s, cases in by_suite.items())
     interpret = md_to_html(section(caveats, "How to interpret the results"))
@@ -239,7 +234,7 @@ def index_page(results, readme, caveats, suites, by_suite):
 <section class="hero">
 <h1>Layout benchmark results</h1>
 {intro}
-<div class="cards">{cards}<a class="card" href="compare.html"><h3>Compare</h3><p>Every case on one axis: pick a comparison table, a unit and the engines.</p><p class="meta">{len(results)} cases</p></a></div>
+<div class="cards">{cards}<a class="card" href="results.html#g="><h3>All suites</h3><p>Every case on one axis: pick a suite, a comparison table, a unit and the engines.</p><p class="meta">{len(results)} cases</p></a></div>
 </section>
 
 <section id="reading">
@@ -277,28 +272,18 @@ def index_page(results, readme, caveats, suites, by_suite):
 """
 
 
-def suite_page(suite, cases, results):
-    anchors = " · ".join(f'<a href="#{case_id(c["name"])}">{html.escape(c["name"].partition("/")[2])}</a>' for c in cases)
+def results_page(results):
     return f"""
-<h1><code>{suite}/</code> <span class="muted">{len(cases)} cases</span></h1>
-<p>{html.escape(SUITE_BLURBS.get(suite, ""))} Cases: {anchors}.</p>
+<h1>Results</h1>
+<p>Pick a suite and one of the report's comparison tables. The chart puts one row per case and one marker per engine
+(the chosen statistic of its samples, with a line to their median; faster is to the left, log axis by default); the table
+gives the numbers; with a single suite selected, each case also gets a bar chart stacked by stage.</p>
 {controls()}
 {caveat_box(results)}
-<section id="table" class="results-table" data-suite="{suite}"></section>
-<section id="charts" class="charts" data-suite="{suite}"></section>
-"""
-
-
-def compare_page(results):
-    return f"""
-<h1>Compare engines across cases</h1>
-<p>One row per case, one dot per engine: the chosen statistic of that engine's samples on the metric the selected
-comparison table pairs it with, with a whisker to the median of the samples. Faster is to the left; the axis is logarithmic
-by default because the cases span three orders of magnitude.</p>
-{controls()}
-{caveat_box(results)}
+<section id="summary"></section>
 <section id="compare" class="compare"></section>
-<section id="table" class="results-table" data-suite=""></section>
+<section id="table" class="results-table"></section>
+<section id="charts" class="charts"></section>
 """
 
 
@@ -308,7 +293,8 @@ def build(results, columns, count_keys, root, out_dir):
     data = export(results, columns, count_keys)
     suites = plot.suites(results)
     by_suite = {s: [c for c in data["cases"] if c["suite"] == s] for s in suites}
-    out_dir.mkdir(parents=True, exist_ok=True)
+    shutil.rmtree(out_dir, ignore_errors=True)
+    out_dir.mkdir(parents=True)
     written = []
 
     def write(name, text):
@@ -316,10 +302,8 @@ def build(results, columns, count_keys, root, out_dir):
         written.append(out_dir / name)
 
     write("data.js", "window.DATA = " + json.dumps(data, separators=(",", ":")) + ";\n")
-    write("index.html", page("Overview", index_page(results, readme, caveats, suites, by_suite), suites, "index", REPO))
-    write("compare.html", page("Compare", compare_page(results), suites, "compare", REPO))
-    for s in suites:
-        write(f"{s}.html", page(f"{s}/", suite_page(s, by_suite[s], results), suites, s, REPO))
+    write("index.html", page("Overview", index_page(results, readme, caveats, by_suite), "index", REPO))
+    write("results.html", page("Results", results_page(results), "results", REPO))
     for asset in ("site.css", "site.js"):
         shutil.copy(ASSETS / asset, out_dir / asset)
         written.append(out_dir / asset)
