@@ -62,7 +62,7 @@ table.prose th { background: var(--soft); }
 .results-table .scroll { max-height: calc(100vh - 120px); }
 table.results th, table.results td { padding: 5px 8px; border-bottom: 1px solid var(--line); border-right: 1px solid #eef1f4; white-space: nowrap; text-align: right; vertical-align: top; }
 table.results thead th { position: sticky; top: 0; z-index: 2; background: var(--soft); font-weight: 600; text-align: right; vertical-align: bottom; }
-table.results thead th small { display: block; font-weight: 400; color: var(--muted); white-space: normal; max-width: 10em; margin-left: auto; overflow-wrap: anywhere; }
+table.results thead th:not(.case) { white-space: normal; min-width: 5.5em; max-width: 9em; }
 table.results th.case { position: sticky; left: 0; z-index: 1; background: var(--bg); text-align: left; font-weight: 400; }
 table.results thead th.case { z-index: 3; background: var(--soft); }
 table.results tr.group th { position: sticky; left: 0; text-align: left; background: var(--soft); font-weight: 600; z-index: 1; }
@@ -70,7 +70,6 @@ table.results td .s { display: block; color: var(--muted); font-size: 0.8em; }
 table.results td.best { font-weight: 700; }
 table.results td.best .s { font-weight: 400; }
 table.results td.na { color: var(--muted); text-align: center; }
-table.results thead th.norm::after { content: "†"; color: var(--muted); margin-left: 2px; }
 table.results tbody tr:hover td, table.results tbody tr:hover th.case { background: #f0f6ff; }
 
 /* Charts */

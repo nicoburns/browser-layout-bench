@@ -98,7 +98,7 @@
     const lines = [`${c.name} · ${D.engines[cl.col.engine].name}: ${cl.col.label.replace(/`/g, "")}`,
       `${cl.vals.length} samples: min ${fmt(cl.min)} · p25 ${fmt(cl.q1)} · median ${fmt(cl.median)} · p75 ${fmt(cl.q3)} · max ${fmt(cl.max)} ms`,
       `median ÷ min ${(cl.median / cl.min).toFixed(2)}`];
-    if (cl.normalized) lines.push("† measured in a later run, Chrome-normalised (~10% uncertainty)");
+    if (cl.normalized) lines.push("Measured in a later run, Chrome-normalised (~10% uncertainty)");
     if (cl.unequal) lines.push("‡ not equal work: " + cl.unequal);
     return lines.join("\n");
   }
@@ -169,9 +169,7 @@
     const thead = el("thead", {}, el("tr", {}, el("th", { class: "case" }, "case"), el("th", {}, "nodes"),
       cols.map(col => {
         const info = D.engines[col.engine];
-        const norm = cases.some(c => c.engines[col.engine] && c.engines[col.engine].normalized);
-        return el("th", { class: norm ? "norm" : null, title: col.engine + " · " + col.metric }, info.browser,
-          info.variant ? el("small", {}, info.variant) : null);
+        return el("th", { title: col.engine + " · " + col.metric }, info.name);
       })));
     const tbody = el("tbody");
     let suite = null;
@@ -191,7 +189,7 @@
           return el("td", { class: best ? "best" : null, title: tip(c, cl) }, fmt(cl.value) + (cl.unequal ? " ‡" : ""), el("span", { class: "s" }, secondary(cl.value, r)));
         })));
     }
-    const caption = el("p", { class: "legend" }, `${table.title}: ${state.s} of the samples in ms; second line multiple of the Chrome column (1.00× = Chrome); bold = fastest shown browser of the row (Taffy and ‡ unequal-work cells excluded); † = Chrome-normalised later run. Hover a cell for its sample spread. `,
+    const caption = el("p", { class: "legend" }, `${table.title}: ${state.s} of the samples in ms; second line multiple of the Chrome column (1.00× = Chrome); bold = fastest shown browser of the row (Taffy and ‡ unequal-work cells excluded). Hover a cell for its sample spread. `,
       el("a", { href: "about.html#measured" }, "What each column measures"), ".");
     host.replaceChildren(el("h2", {}, table.title), caption, el("div", { class: "scroll" }, el("table", { class: "results" }, thead, tbody)));
   }
@@ -217,7 +215,7 @@
       const best = b.value === r.fastest && b.col.engine !== "taffy" && !b.unequal;
       const grp = svg("g", { class: "row" }, svg("title", {}, tip(c, b)));
       grp.append(svg("text", { class: "label" + (best ? " best" : ""), x: LEFT - 10, y: y + BAR - 4, "text-anchor": "end" },
-        info.name + (b.normalized ? " †" : "") + (b.unequal ? " ‡" : "")));
+        info.name + (b.unequal ? " ‡" : "")));
       const parts = stages(c, b);
       const x0 = X(0);
       if (parts.length) {

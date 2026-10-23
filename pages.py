@@ -236,7 +236,7 @@ def caveat_box(results):
     normalized = normalized_engines(results)
     if not normalized:
         return ""
-    return (f'<p class="caveat"><strong>†</strong> The Servo and Blitz columns ({html.escape(", ".join(normalized))}) were measured in a later run '
+    return (f'<p class="caveat">The Servo and Blitz columns ({html.escape(", ".join(normalized))}) were measured in a later run '
             f"and scaled per case by Chrome's stored/new <code>style+layout</code> ratio (median {norm_factor_median(results):.2f}); "
             "differences under ~10% between them and the Chrome, Firefox, Ladybird and Taffy columns are within the normalisation's "
             'uncertainty (<a href="about.html#versions-and-methodology">methodology</a>). Rankings also carry the '
