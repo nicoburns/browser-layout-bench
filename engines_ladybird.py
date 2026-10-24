@@ -17,9 +17,10 @@ CACHE_DIR = Path(__file__).resolve().parent / "out/ladybird-cache"
 # Every window gets its own WebContent process (`iframe`, Ladybird's default); `disable` would put all
 # of the round's windows in one process, so each sample would run in a warm process.
 SITE_ISOLATION = "iframe"
-WARMUP = True
-UPDATE_RE = re.compile(r"^LADYBIRD_UPDATE pid=(\d+) url=(\S+) reason=(\S+)", re.M)
-PHASE_RE = re.compile(r"^LADYBIRD_PHASE pid=(\d+) (.*)$", re.M)
+# A case's first load in a fresh browser is 14-18 % slower in `layout` on the real pages (the UI process's
+# font service, which hands WebContent the system fonts, is cold) and within 2 % on the synthetic pages
+# (one font), so only the real pages get a discarded warm-up load.
+WARMUP_PREFIX = "real/"
 RECORD_RE = re.compile(r"^LADYBIRD_(UPDATE|PHASE) pid=(\d+) (.*)$", re.M)
 REVEALED_JS = "return document.getElementById('cb').style.display !== 'none'"
 BOXES_JS = ("return [...document.querySelectorAll('#cb div, #cb p, #cb h3')]"
@@ -143,8 +144,8 @@ def run_ladybird(case, iters, reveal_dir, root_rect_js, screenshot=None):
 
 def run_ladybird_round(cases, iters, reveal_dir, root_rect_js, screenshot=None):
     """One browser per call (= per round, for every case of the round), a fresh window (and WebContent
-    process) per iteration; per case a discarded warm-up load first (`?warmup`), the measured windows
-    load `?i=N`. Per-iteration dicts like the other engines': `style`, `construct`, `layout`,
+    process) per iteration; the real pages get a discarded warm-up load first (`?warmup`), the measured
+    windows load `?i=N`. Per-iteration dicts like the other engines': `style`, `construct`, `layout`,
     `construct+layout`, `total` (the whole `update_layout()` call) of the reveal's layout update,
     `n_layouts`, the number of the document's updates that ran a full layout pass, and `root`.
     Returns {case name: samples}."""
@@ -154,7 +155,7 @@ def run_ladybird_round(cases, iters, reveal_dir, root_rect_js, screenshot=None):
         try:
             for case in cases:
                 url = (reveal_dir / case["file"]).resolve().as_uri()
-                if WARMUP:
+                if case["name"].startswith(WARMUP_PREFIX):
                     session.load(url + "?warmup", case["width"], case["height"])
                     session.close_window()
                 for i in range(iters):
