@@ -5,6 +5,7 @@ import argparse, functools, http.server, json, os, re, shutil, statistics, subpr
 from pathlib import Path
 
 import engines_ladybird
+import engines_servo
 import engines_webkit
 import pages
 import plot
@@ -143,9 +144,11 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
     return samples
 
 
-def parse_servo_trace(path):
+def servo_trace_rows(path):
     """Spans of servoshell's perfetto trace, decoded straight from the protobuf: the trace is a few
-    KB, and perfetto's TraceProcessor spends ~1 s per trace starting trace_processor_shell."""
+    KB, and perfetto's TraceProcessor spends ~1 s per trace starting trace_processor_shell. Each
+    span keeps its `track` and `thread` name (one track per thread) as the trace has no pipeline
+    attributes."""
     from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import Trace, TrackEvent
     trace = Trace()
     trace.ParseFromString(Path(path).read_bytes())
@@ -154,52 +157,70 @@ def parse_servo_trace(path):
     # processor does.
     events = sorted(((p.timestamp, p.track_event) for p in trace.packet if p.HasField("track_event")),
                     key=lambda e: (e[0], e[1].type != TrackEvent.TYPE_SLICE_END))
+    threads = {p.track_descriptor.uuid: p.track_descriptor.thread.thread_name
+               for p in trace.packet if p.HasField("track_descriptor")}
     rows, open_spans = [], {}
     for ts, event in events:
         stack = open_spans.setdefault(event.track_uuid, [])
         if event.type == TrackEvent.TYPE_SLICE_BEGIN:
-            row = dict(id=len(rows), parent_id=stack[-1]["id"] if stack else None, name=event.name, ts=ts, dur=None)
+            row = dict(id=len(rows), parent_id=stack[-1]["id"] if stack else None, name=event.name, ts=ts, dur=None,
+                       track=event.track_uuid, thread=threads.get(event.track_uuid, ""))
             rows.append(row)
             stack.append(row)
         elif event.type == TrackEvent.TYPE_SLICE_END and stack:
             row = stack.pop()
             row["dur"] = ts - row["ts"]
-    rows = [r for r in rows if r["dur"] is not None]
-    by_id = {r["id"]: r for r in rows}
-    restyles = [r for r in rows if r["name"] == "restyle_and_build_trees"]
-    if not restyles:
-        raise RuntimeError(f"no restyle_and_build_trees span in {path}")
-    children = {}
-    for r in rows:
-        children.setdefault(r["parent_id"], []).append(r)
+    return [r for r in rows if r["dur"] is not None]
 
-    def descendants(root_id):
-        out, stack = [], [root_id]
-        while stack:
-            for r in children.get(stack.pop(), []):
-                out.append(r)
-                stack.append(r["id"])
-        return out
+
+def servo_sample(rows, main, n_reflows):
+    """The sample for the `restyle_and_build_trees` span `main` and its enclosing `handle_reflow`. The
+    phases are the spans within a span's time on any track: with `layout_threads` > 1 the box and
+    fragment passes run on a rayon worker (`StyleThread#N`), nested under nothing."""
+    by_id = {r["id"]: r for r in rows}
 
     def total(root_id, name):
-        return sum(r["dur"] for r in descendants(root_id) if r["name"] == name)
+        root = by_id[root_id]
+        end = root["ts"] + root["dur"]
+        return sum(r["dur"] for r in rows if r["name"] == name and root["ts"] <= r["ts"] and r["ts"] + r["dur"] <= end)
 
-    # The reflow that laid the page out, i.e. the one after the reveal: the longest span is not
-    # always it, as the first (`display:none`) reflow's `prepare_stylist_for_reflow` can outlast the
-    # whole layout of a small page.
-    main = max(restyles, key=lambda r: total(r["id"], "Box Tree Construction") + total(r["id"], "Fragment Tree Construction"))
     reflow = by_id[main["parent_id"]]
 
     s = dict(style=total(main["id"], "Styling"), box=total(main["id"], "Box Tree Construction"),
              fragment=total(main["id"], "Fragment Tree Construction"), restyle_and_build=main["dur"],
              stacking_context=total(reflow["id"], "Stacking Context Tree Construction"),
              display_list=total(reflow["id"], "Display List Construction"), reflow=reflow["dur"],
-             n_reflows=len(restyles))
+             n_reflows=n_reflows)
     s["box+fragment"] = s["box"] + s["fragment"]
     return s
 
 
-@functools.cache
+def servo_window_sample(rows, window):
+    """The reveal reflow of one WebDriver window (see engines_servo). The page runs on a script thread
+    of its own, the `Script#N` thread whose first span lies between the window's navigation and its
+    close (the window's `about:blank` thread starts earlier; other windows are closed before the next
+    opens; `StyleThread#N` workers start lazily, so only script threads are considered). Of
+    that thread's `restyle_and_build_trees` spans up to the observed reveal, the reveal's is the one
+    that built the tree: the others laid the page out with `#cb` hidden (0 to 4 of them, one per 20 ms
+    of parsing) or relaid a wide page out for its scrollbar right after the reveal, 0.01-0.02 ms of
+    box construction each, so neither their count nor their order tells them apart."""
+    first = {}
+    for r in rows:
+        if r["thread"].startswith("Script"):
+            first.setdefault(r["track"], r["ts"])
+    tracks = [t for t, ts in first.items() if window["nav"] <= ts < window["closed"]]
+    if len(tracks) != 1:
+        raise RuntimeError(f"{window['url']}: {len(tracks)} script threads started while it was open")
+    # A reflow still open when servoshell is killed at the end of the round (it waits on the painter
+    # after a page's last restyle) has no `handle_reflow` parent; the reveal's reflow is complete,
+    # as the reveal script's `offsetHeight` forced it.
+    restyles = [r for r in rows if r["track"] == tracks[0] and r["name"] == "restyle_and_build_trees"
+                and r["ts"] <= window["revealed"] and r["parent_id"] is not None]
+    if not restyles:
+        raise RuntimeError(f"{window['url']}: no reflow before the reveal")
+    return max((servo_sample(rows, r, len(restyles)) for r in restyles), key=lambda s: s["box+fragment"])
+
+
 def corpus_server():
     """Servo's fetch rejects `file://` fonts (CORS mode, opaque origin), so it gets the corpus over
     localhost HTTP instead. Returns the base URL."""
@@ -211,20 +232,41 @@ def corpus_server():
     return f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def run_servo(case, iters, cpus, threads, screenshot=None):
-    samples = []
-    url = f"{corpus_server()}/reveal/{case['file']}"
-    env = dict(os.environ, SERVO_TRACING="layout::layout_impl=trace,layout::flow::root=trace")
-    for i in range(iters):
-        with tempfile.TemporaryDirectory() as d:
-            cmd = [str(SERVOSHELL), "-z", "-x", f"--window-size={case['width']}x{case['height']}", "--pref", f"layout_threads={threads}"]
-            if screenshot and i == iters - 1:
-                cmd += ["-o", str(screenshot)]
-            cmd.append(url)
-            subprocess.run((["taskset", "-c", cpus] if cpus else []) + cmd, check=True, cwd=d, env=env,
-                           capture_output=True, text=True, timeout=600)
-            samples.append(parse_servo_trace(Path(d) / "servo.pftrace"))
-    return samples
+def run_servo_round(cases, iters, cpus, threads, screenshot=None, warmup=True):
+    """One servoshell per call (= per round, for every case of the round) driven over WebDriver
+    (engines_servo), a fresh window per iteration (`?i=N`, closed once revealed) so every sample is
+    still a first layout, but in a warm process like Chrome's, WebKit's and Firefox's. Each case first
+    loads its page as a discarded warm-up (`?warmup`). Returns {case name: samples}."""
+    windows = {}
+    with tempfile.TemporaryDirectory() as d:
+        browser = engines_servo.Browser(SERVOSHELL, threads, cpus, d, WIDTH, HEIGHT)
+        try:
+            for case in cases:
+                url = f"{corpus_server()}/reveal/{case['file']}"
+                if warmup:
+                    browser.close(browser.load(url + "?warmup", case["width"], case["height"]))
+                windows[case["name"]] = []
+                for i in range(iters):
+                    w = browser.load(f"{url}?i={i}", case["width"], case["height"])
+                    w["root"] = browser.js("return " + ROOT_RECT_JS)
+                    if screenshot and i == iters - 1:
+                        browser.screenshot(screenshot)
+                        w["boxes"] = [tuple(b) for b in browser.js(
+                            "return [...document.querySelectorAll('#cb div, #cb p, #cb h3')].map(e=>{const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height]})")]
+                        w["fonts"] = browser.js("return [...document.fonts].map(f=>f.status).join(',')")
+                    browser.close(w)
+                    windows[case["name"]].append(w)
+        finally:
+            browser.quit()
+        rows = servo_trace_rows(Path(d) / "servo.pftrace")
+    results = {}
+    for name, ws in windows.items():
+        results[name] = []
+        for w in ws:
+            s = servo_window_sample(rows, w)
+            s.update({k: w[k] for k in ("root", "boxes", "fonts") if k in w})
+            results[name].append(s)
+    return results
 
 
 def run_chrome(case, iters, cpus, screenshot=None):
@@ -399,13 +441,18 @@ def run_firefox_round(cases, iters, screenshot=None):
     return results
 
 # Engines measured one process per round for all of the round's cases (`run_engine_round`) instead of one
-# process per case: Firefox's launch, warm-up, profile dump and decode are then paid once per round.
-BATCH_ENGINES = {"firefox"}
+# process per case: Firefox's launch, warm-up, profile dump and decode, and servoshell's launch, warm-up
+# and trace decode, are then paid once per round.
+BATCH_ENGINES = {"firefox", "servo1", "servo"}
 
 
 def run_engine_round(engine, cases, iters, cpus):
     if engine == "firefox":
         return run_firefox_round(cases, iters)
+    if engine == "servo1":
+        return run_servo_round(cases, iters, cpus, 1)
+    if engine == "servo":
+        return run_servo_round(cases, iters, None, 3)
     raise ValueError(engine)
 
 
@@ -427,11 +474,11 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
     if engine == "blitz-par-pcon-pl":
         return run_blitz(case, iters, None, parallel=True, screenshot=screenshot, binary=BLITZ_PL)
     if engine == "servo1":
-        return run_servo(case, iters, cpus, 1, screenshot=screenshot)
+        return run_servo_round([case], iters, cpus, 1, screenshot=screenshot)[case["name"]]
     if engine == "servo":
-        return run_servo(case, iters, None, 3, screenshot=screenshot)
+        return run_servo_round([case], iters, None, 3, screenshot=screenshot)[case["name"]]
     if m := re.fullmatch(r"servo(\d+)", engine):  # ad-hoc `layout_threads=N` sweeps, not in ENGINES
-        return run_servo(case, iters, None, int(m.group(1)), screenshot=screenshot)
+        return run_servo_round([case], iters, None, int(m.group(1)), screenshot=screenshot)[case["name"]]
     if engine == "chrome":
         return run_chrome(case, iters, None, screenshot=screenshot)
     if engine == "webkit":
@@ -821,7 +868,9 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("gen")
     b = sub.add_parser("bench")
-    b.add_argument("--engines", default=",".join(ENGINES))
+    b.add_argument("--engines", default=",".join(ENGINES),
+                   help="comma-separated engine ids (servoN = N layout threads); firefox, servo1 and servo run one "
+                        "browser per round for all of the round's cases")
     b.add_argument("--rounds", type=int, default=3)
     b.add_argument("--iters", type=int, default=3)
     b.add_argument("--filter", default="")
