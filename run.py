@@ -147,7 +147,8 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
 def servo_trace_rows(path):
     """Spans of servoshell's perfetto trace, decoded straight from the protobuf: the trace is a few
     KB, and perfetto's TraceProcessor spends ~1 s per trace starting trace_processor_shell. Each
-    span keeps its `track` (one per thread) as the trace has no pipeline attributes."""
+    span keeps its `track` and `thread` name (one track per thread) as the trace has no pipeline
+    attributes."""
     from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import Trace, TrackEvent
     trace = Trace()
     trace.ParseFromString(Path(path).read_bytes())
@@ -156,12 +157,14 @@ def servo_trace_rows(path):
     # processor does.
     events = sorted(((p.timestamp, p.track_event) for p in trace.packet if p.HasField("track_event")),
                     key=lambda e: (e[0], e[1].type != TrackEvent.TYPE_SLICE_END))
+    threads = {p.track_descriptor.uuid: p.track_descriptor.thread.thread_name
+               for p in trace.packet if p.HasField("track_descriptor")}
     rows, open_spans = [], {}
     for ts, event in events:
         stack = open_spans.setdefault(event.track_uuid, [])
         if event.type == TrackEvent.TYPE_SLICE_BEGIN:
             row = dict(id=len(rows), parent_id=stack[-1]["id"] if stack else None, name=event.name, ts=ts, dur=None,
-                       track=event.track_uuid)
+                       track=event.track_uuid, thread=threads.get(event.track_uuid, ""))
             rows.append(row)
             stack.append(row)
         elif event.type == TrackEvent.TYPE_SLICE_END and stack:
@@ -194,15 +197,17 @@ def servo_sample(rows, main, n_reflows):
 
 def servo_window_sample(rows, window):
     """The reveal reflow of one WebDriver window (see engines_servo). The page runs on a script thread
-    of its own, the one whose first span lies between the window's navigation and its close (the
-    window's `about:blank` thread starts earlier; other windows are closed before the next opens). Of
+    of its own, the `Script#N` thread whose first span lies between the window's navigation and its
+    close (the window's `about:blank` thread starts earlier; other windows are closed before the next
+    opens; `StyleThread#N` workers start lazily, so only script threads are considered). Of
     that thread's `restyle_and_build_trees` spans up to the observed reveal, the reveal's is the one
     that built the tree: the others laid the page out with `#cb` hidden (0 to 4 of them, one per 20 ms
     of parsing) or relaid a wide page out for its scrollbar right after the reveal, 0.01-0.02 ms of
     box construction each, so neither their count nor their order tells them apart."""
     first = {}
     for r in rows:
-        first.setdefault(r["track"], r["ts"])
+        if r["thread"].startswith("Script"):
+            first.setdefault(r["track"], r["ts"])
     tracks = [t for t, ts in first.items() if window["nav"] <= ts < window["closed"]]
     if len(tracks) != 1:
         raise RuntimeError(f"{window['url']}: {len(tracks)} script threads started while it was open")
