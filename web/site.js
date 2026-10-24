@@ -1,10 +1,10 @@
 // Draws the result tables and charts of the static site from window.DATA (written by pages.py).
-// State (tab, suite, table, statistic, hidden engines) is kept in the URL hash and localStorage.
+// State (tab, suite, table, statistic, engines switched off/on) is kept in the URL hash and localStorage.
 "use strict";
 (function () {
   const D = window.DATA;
   const SVGNS = "http://www.w3.org/2000/svg";
-  const DEFAULTS = { v: "table", g: "", t: D.tables.findIndex(t => t.title.startsWith("Box construction")), s: "min", off: [] };
+  const DEFAULTS = { v: "table", g: "", t: D.tables.findIndex(t => t.title.startsWith("Box construction")), s: "min", off: [], on: [] };
   const caseId = name => name.replace(/[^\w]+/g, "-");
   const unequal = new Map(D.unequal.map(u => [u.case + "|" + u.engine, u.note]));
 
@@ -19,7 +19,7 @@
     if (anchored) Object.assign(st, { g: anchored.suite, v: "charts" });
     if (st.v !== "charts") st.v = "table";
     if (!D.suites.some(s => s.name === st.g)) st.g = "";
-    if (h.has("off")) st.off = h.get("off").split(",").filter(Boolean);
+    for (const k of ["off", "on"]) if (h.has(k)) st[k] = h.get(k).split(",").filter(Boolean);
     if (!(st.t >= 0 && st.t < D.tables.length)) st.t = DEFAULTS.t;
     return st;
   }
@@ -29,7 +29,7 @@
     localStorage.setItem("layout-bench", JSON.stringify(state));
     if (!toHash) return;
     const h = new URLSearchParams({ v: state.v, g: state.g, t: state.t, s: state.s });
-    if (state.off.length) h.set("off", state.off.join(","));
+    for (const k of ["off", "on"]) if (state[k].length) h.set(k, state[k].join(","));
     history.replaceState(null, "", "#" + h.toString());
   }
 
@@ -75,7 +75,9 @@
     const f = total ? cl.value / total : 1;
     return parts.map(([l, v]) => [l, v * f]);
   }
-  const visible = cols => cols.filter(col => !state.off.includes(col.engine) && D.engines[col.engine]);
+  // An engine is shown if switched on, or if it is on by default in this table and not switched off.
+  const shown = e => state.on.includes(e) || (!state.off.includes(e) && !D.tables[state.t].hidden.includes(e));
+  const visible = cols => cols.filter(col => shown(col.engine) && D.engines[col.engine]);
   // Row context: every visible column's cell plus the references the units divide by.
   function row(c, cols) {
     const cells = cols.map(col => cell(c, col));
@@ -133,9 +135,10 @@
       el("button", { type: "button", "aria-pressed": String(state[key] === v), on: { click: () => { state[key] = v; onPick && onPick(); update(); } } }, label)));
     const inTable = new Set(D.tables[state.t].columns.map(c => c.engine));
     const chips = [...inTable].filter(e => D.engines[e]).map(e => {
-      const info = D.engines[e], on = !state.off.includes(e);
+      const info = D.engines[e], on = shown(e);
       return el("button", { type: "button", class: "chip", style: `--c:${info.colour}`, "aria-pressed": String(on), title: e, on: { click: () => {
-        state.off = on ? state.off.concat(e) : state.off.filter(x => x !== e); update(); } } }, el("i"), info.name);
+        state.off = on ? state.off.concat(e) : state.off.filter(x => x !== e);
+        state.on = on ? state.on.filter(x => x !== e) : state.on.concat(e); update(); } } }, el("i"), info.name);
     });
     const tableSel = el("select", { on: { change: ev => { state.t = +ev.target.value; update(); } } },
       D.tables.map((t, i) => el("option", { value: i, selected: i === state.t ? "" : null }, t.title)));
@@ -150,7 +153,8 @@
       el("label", {}, "Comparison", tableSel),
       el("label", {}, "Statistic", seg("s", { min: "min", median: "median" })),
       el("span", { class: "engines" }, chips,
-        el("button", { type: "button", class: "chip", on: { click: () => { state.off = []; update(); } } }, "all")));
+        el("button", { type: "button", class: "chip", on: { click: () => { state.off = []; state.on = [...new Set(state.on.concat(D.tables[state.t].hidden))]; update(); } } }, "all"),
+        el("button", { type: "button", class: "chip", on: { click: () => { state.off = []; state.on = []; update(); } } }, "defaults")));
   }
 
   // Shows a case's chart: switches to the Charts tab, then scrolls to the chart once drawn.
