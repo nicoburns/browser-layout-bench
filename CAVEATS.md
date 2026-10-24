@@ -112,7 +112,10 @@ and [documented protocol](README.md#versions-and-methodology).
   global allocator (with glibc, allocator work and page faults were ~37% of the `layout`
   phase on the 100k-node cases).
 - **Chrome:** fresh pages within one browser launch.
-- **Servo/Firefox/Ladybird:** fresh process per iteration.
+- **Servo:** fresh process per iteration.
+- **Firefox/Ladybird:** one browser per round, then a fresh tab per iteration (Firefox: a discarded
+  warm-up load per case, all tabs in one content process; Ladybird: a fresh WebContent process per
+  window, the UI process's font service warm, a warm-up load only for the real pages).
 
 Excluding startup time does not eliminate differences in allocator, font,
 thread-pool, and other process-local caches. This is neither a consistently cold
