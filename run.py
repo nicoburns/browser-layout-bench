@@ -211,8 +211,11 @@ def servo_window_sample(rows, window):
     tracks = [t for t, ts in first.items() if window["nav"] <= ts < window["closed"]]
     if len(tracks) != 1:
         raise RuntimeError(f"{window['url']}: {len(tracks)} script threads started while it was open")
+    # A reflow still open when servoshell is killed at the end of the round (it waits on the painter
+    # after a page's last restyle) has no `handle_reflow` parent; the reveal's reflow is complete,
+    # as the reveal script's `offsetHeight` forced it.
     restyles = [r for r in rows if r["track"] == tracks[0] and r["name"] == "restyle_and_build_trees"
-                and r["ts"] <= window["revealed"]]
+                and r["ts"] <= window["revealed"] and r["parent_id"] is not None]
     if not restyles:
         raise RuntimeError(f"{window['url']}: no reflow before the reveal")
     return max((servo_sample(rows, r, len(restyles)) for r in restyles), key=lambda s: s["box+fragment"])
