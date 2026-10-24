@@ -98,6 +98,13 @@ overflow, Ladybird: the `<body>` box in the layout-tree dump; Servo reports neit
 | `real/dioxuslabs-com` | 158 | 7.8% / 1.2% / 3.3% / 2.7% | 2/48, 6 | 1,232 / 1,232 / 1,232 / 1,232 |
 | `real/bootstrap-dashboard` | 199 | 2.9% / 1.3% / 1.9% / 1.8% | 4/12, 1 | 1,136 / 1,136 / 1,154 / 1,136 |
 
+WebKit (`./run.py verify --engines chrome,webkit --filter real/`, 2026-10-24; details and the two saturated
+flex cases in `out/webkit.md`): px differing vs Chrome 6.0% / 3.6% / 1.8% / 1.6% / 1.2% / 1.0% / 1.4% in the
+table's order; boxes 208/866 sizes (594 positions), 4/176 (23), 0/1792 (0), 3/471 (428), 0/84 (0), 0/48 (0),
+2/12 (2); page heights 84,997 / 19,788 / 155,326 / 90,170 / 5,444 / 1,232 / 1,136. WebKit uses the same 1/64 px
+`int32` `LayoutUnit` as Blink and clamps `flex/wide/10000` and `flex/absolute/10000` at the same 33,554,432 px
+(8,440 / 5,800 boxes clamped vs Chrome's 8,416 / 5,729), so those two cases are not equal work for it either.
+
 Chrome and Firefox agree on every page to within 0.3% of the page height (the pixel difference is
 glyph rasterisation plus a few 1px line-height roundings). Known differences, each with the CSS
 feature responsible (Blitz unless stated; "positions" differ wherever an earlier height does):
@@ -152,6 +159,7 @@ them is the heights and box counts above, which pin each remaining difference to
 | `blitz-pcon-pl1` / `blitz-par-pcon-pl` | third build of the same `src/main.rs` against the parallel-layout prototype [blitz#1034](https://github.com/DioxusLabs/blitz/pull/1034) (`blitz-runner-pl/Cargo.toml`: #1034 merged onto the Blitz revision of the other builds, with taffy#1230 merged onto their Taffy; features `parallel-layout` + `parallel-construct`): Taffy hands Blitz batches of independent sibling layouts, which run on the rayon pool when their estimated weight is above a threshold. `pl1` = `BLITZ_PARALLEL_LAYOUT_THREADS=1` (a dedicated one-thread pool, i.e. the feature's batching/bookkeeping without parallelism) and pinned like `blitz`, the baseline for the feature's cost; `par-pcon-pl` = everything parallel | same |
 | `servo1` / `servo` | servoshell built with `--features tracing-perfetto`, `--pref layout_threads=1` / `3` (default), one process per iteration, spans read from `servo.pftrace` | `Styling`, `Box Tree Construction`, `Fragment Tree Construction`, `restyle_and_build_trees`, `Stacking Context Tree Construction`, `Display List Construction`, `handle_reflow` |
 | `chrome` | Playwright chromium-headless-shell, CDP `Tracing` with `devtools.timeline` + `blink_style` | `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (= both), `Layout` |
+| `webkit` | Playwright WebKit (WPE MiniBrowser), driven directly over its `--inspector-pipe` protocol by `engines_webkit.py` (Playwright exposes no raw session for WebKit); new page per iteration, corpus served over localhost HTTP with COOP/COEP headers (a cross-origin-isolated page gets a 20 µs `performance.now()` instead of 1 ms); phases timed by a bootstrap script's `performance.now()` around the reveal's forced style update (`getComputedStyle`) and forced layout (`offsetHeight`); the Inspector `Timeline` domain is used by `verify` only, to count layouts (recording it doubles the style time, see [Versions and methodology](#versions-and-methodology)) | `style` (style resolution, includes render-tree construction), `layout` (includes text shaping / line layout), `style+layout` |
 | `firefox` | Playwright Firefox, one process per round for all of the round's cases (launch retried on the occasional startup segfault), per case a discarded warm-up tab then a fresh tab per iteration, all in one content process kept alive by a blank `file://` page (a process's first load gets an extra full reflow and cold font caches; a cold process is 10–20% slower on text-heavy pages, and a case's first load in a warm process is still 10–100% slower on text/real pages, hence the warm-up per case), Gecko profiler started at launch (`MOZ_PROFILER_STARTUP`, markers only) and written at shutdown (`MOZ_PROFILER_SHUTDOWN`); default `layout.css.stylo-threads` (6 on this VM) | `Styles` (style traversal + frame construction), `Reflow`, `DoFlushPendingNotifications` (the flush containing both), `DisplayList` |
 | `ladybird` | `Ladybird --headless=layout-tree`, one process per iteration, built with `patches/ladybird-phase-timing.patch` which prints `LADYBIRD_PHASE style=<ns> construct=<ns> layout=<ns> total=<ns> full_layouts=<n>` to stderr for every `Document::update_layout()` round (see [Ladybird](#ladybird)) | `style` (`Document::update_style()`), `construct` (layout tree build, `LayoutRoundJob::build`), `layout` (`lay_out_root` / `lay_out_boundary`, the layout pass including the `LayoutState` commit), `total` (the whole round) |
 
@@ -162,22 +170,24 @@ Phase mapping used in the report:
   are only comparable with each other.
 - Box construction + layout: Blitz `construct + layout` ≈ Servo Box Tree + Fragment Tree ≈ Chrome
   `rebuildLayoutTree + Layout` (Chrome builds `LayoutObject`s inside `UpdateLayoutTree`, not `Layout`)
-  ≈ Ladybird `construct + layout` ≈ Firefox `Reflow`. Firefox's frame construction happens inside the
+  ≈ Ladybird `construct + layout` ≈ Firefox `Reflow` ≈ WebKit `layout` (WebKit, like Firefox, builds its
+  render tree while resolving style, so `layout` is the whole box pass). Firefox's frame construction happens inside the
   `Styles` flush with no marker of its own, so `Reflow` under-counts this table by the frame-construction
   time (small: it is a tree walk with no shaping) and `Styles` over-counts the Style table by the same amount.
 - Text shaping sits in different phases: Blitz shapes when it builds the Parley inline layout in `construct`
   (`build_inline_layout_into`, run as the deferred `pconstruct` tasks), Servo in Box Tree Construction
   (`inline/shaping_queue.rs::shape_batch` → `font.shape_text` while building each inline formatting context), whereas Chrome (`NGInlineNode::PrepareLayout`
-  → HarfBuzz inside `Layout`), Firefox (`nsTextFrame::Reflow` → `EnsureTextRun` → `gfxFont::ShapeText`)
+  → HarfBuzz inside `Layout`), WebKit (inline layout measures runs through `FontCascade::width`, which shapes),
+  Firefox (`nsTextFrame::Reflow` → `EnsureTextRun` → `gfxFont::ShapeText`)
   and Ladybird (`inline_level_iterator.rs::shape_glyph_data` → `shape_text` during inline layout) shape
   lazily while laying out. Shaping dominates construction on text-heavy pages (Blitz Wikipedia: construct
   60 ms vs layout 20 ms), so "Box construction + layout" is the like-for-like table for any case with text;
   "Layout only" is like-for-like only among Taffy, Blitz and Servo (the `text/` cases have no Taffy tree).
-- Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `recalcStyle`; Firefox `Styles` is listed
-  here too but, like Chrome's `UpdateLayoutTree`, it includes frame construction; Ladybird `style` is `update_style()`.
+- Style: Blitz `style` ≈ Servo `Styling` ≈ Chrome `recalcStyle`; Firefox `Styles` and WebKit `style` are listed
+  here too but, like Chrome's `UpdateLayoutTree`, they include frame / render-tree construction; Ladybird `style` is `update_style()`.
 - Whole pipeline (style to laid-out tree): Blitz `resolve()` ≈ Servo `restyle_and_build_trees` (Styling + Box
   Tree + Fragment Tree, plus stylist preparation and damage computation) ≈ Chrome `UpdateLayoutTree + Layout`
-  ≈ Firefox `Styles + Reflow` ≈ Ladybird `update_layout()`. None of these includes display-list or paint work:
+  ≈ Firefox `Styles + Reflow` ≈ WebKit `style + layout` ≈ Ladybird `update_layout()`. None of these includes display-list or paint work:
   Blitz's `resolve()` ends with `build_paint_tree` (the stacking-context / paint-order lists, ~0.3 ms on
   Wikipedia; scene generation in `blitz_paint::paint_scene` is outside the timed interval), Servo's stacking-context tree is built by the enclosing `handle_reflow` (recorded as `reflow`, not
   shown in the table; ~9 ms on Wikipedia), and the measured reflows build no display list.
@@ -218,8 +228,9 @@ Linux-specific flags):
 - Rust toolchain (measured with rustc 1.99.1; Blitz and Taffy are pinned by `rev` in `Cargo.toml`
   and `blitz-runner-pl/Cargo.toml`, Stylo by `Cargo.lock`).
 - Python ≥ 3.8 with `pip install playwright==1.64.0 perfetto pillow && python -m playwright install
-  chromium firefox` (the Playwright version fixes the Chrome and Firefox builds, see the table below;
-  Firefox is optional: `run.py` skips `firefox*` with a message if it is not installed).
+  chromium firefox webkit && python -m playwright install-deps webkit` (the Playwright version fixes the
+  Chrome, Firefox and WebKit builds, see the table below; Firefox and WebKit are optional: `run.py` skips
+  `firefox*` and `webkit` with a message if they are not installed).
 - A Servo checkout at `981beee7c` built with `./mach build --release --features tracing-perfetto`
   (`SERVOSHELL=/path/to/servoshell` if not at `~/repos/servo/target/release/servoshell`; skipped
   with a message if missing).
@@ -273,7 +284,9 @@ grid differently, while the box sizes agree within 1px.
 
 Measured on 2026-10-23 in one 27-minute window (all engines interleaved, `bench --rounds 3 --iters 3 --cpus 2`)
 on an 8-vCPU Intel Xeon AWS VM (31 GB, Ubuntu 22.04.5, kernel 6.8.0-1060-aws), rustc 1.99.1, Python
-Playwright 1.64.0; the raw run is `out/runs/2026-10-23-full.json`. Every number in `out/` comes from this machine; children
+Playwright 1.64.0; the raw run is `out/runs/2026-10-23-full.json`. WebKit was added on 2026-10-24 and is not in
+that run yet (its column appears once it is measured here with `bench --merge`; the branch's smoke run is in
+`out/webkit.md`). Every number in `out/` comes from this machine; children
 sessions that add engines or cases only verify equal work and run a one-round smoke test, the
 measurement is redone here with `bench --merge`.
 
@@ -293,6 +306,7 @@ steady 1.4 ms gap) or leave it unpinned rather than pin it to one.
 | engine | version | how it is driven and timed |
 |---|---|---|
 | Chrome | Chromium 156.0.8078.4 (Playwright `chromium_headless_shell-1248`, headless shell, `--no-sandbox`) | New page per iteration, 1280×800, `file://` reveal page, `load` + wait for the reveal; CDP `Tracing` with categories `devtools.timeline`, `disabled-by-default-devtools.timeline`, `blink`, `blink_style`; longest `X` event of each name: `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (both), `Layout` (fragment-tree layout). `totalObjects` from the `Layout` event is the equal-work count. Not pinned (multi-process). |
+| WebKit | WebKit 27.2 (Playwright `webkit-2370`, the WPE MiniBrowser bundle Playwright 1.64.0 installs; `browser.version` = `27.2`, user agent `AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15`; the bundle names no upstream WebKit revision) | New page per iteration at the case's viewport, corpus served over localhost HTTP with `Cross-Origin-Opener-Policy: same-origin` + `Cross-Origin-Embedder-Policy: require-corp` (the reveal page is otherwise unchanged; WebKit swaps the page into a fresh web process on the navigation, so every sample is a cold process), `load` + wait for the reveal. Driven directly over the binary's `--inspector-pipe` protocol (`engines_webkit.py`). Phase times come from a `Page.setBootstrapScript` that wraps `HTMLElement.prototype.offsetHeight`: on the reveal script's `cb.offsetHeight` it takes `performance.now()`, forces style with `getComputedStyle(cb).display` (`style`: style resolution and render-tree construction of the revealed tree), then the original getter (`layout`: the box layout, including line layout and shaping). Cross-origin isolation turns `performance.now()` from 1 ms to 20 µs resolution (`Performance::allowHighPrecisionTime`). The Web Inspector `Timeline` domain would give the same intervals as `RecalculateStyles`/`Layout` records (agreement within 0.3 ms when both are on) but recording emits an `InvalidateLayout` record with a captured JS stack for every renderer that gets dirtied (one per box, 101k on `pangui/fit_nesting`), which makes the style phase 2–2.5× slower, so it is only turned on by `verify` to count layouts (`n_layouts`; one `Layout` of the revealed tree per sample, preceded only by the ≤1 ms layout of the hidden page on cases whose reveal awaits `document.fonts`). Not pinned (multi-process). |
 | Firefox | Firefox 157.0 (Playwright `firefox-1555`) | One browser launch per round for all of the round's cases; per case a discarded warm-up tab (`?warmup`) then a fresh tab per iteration (`?i=N`, the profile is filtered by page URL), all tabs of the round in one content process (a blank `file://` page is kept open: each Playwright `new_page()` is a new context and the file content process exits with its last tab, so otherwise every sample would run in a fresh cold process, 10–20% slower on text-heavy pages): a Firefox process's first page load does a second full reflow ~200 ms after the first with nothing restyled (105 ms on Wikipedia, 64 ms on rustdoc; absent on a second load of the same page) that Chrome, Servo and Ladybird have no counterpart to, and its first reflow runs 5–15 % slower on cold font/text caches; in a warm process a case's own first load is still 10–100% slower on text/real pages (rustdoc, paragraphs: cold shaped-word/font caches), so the warm-up is per case. Gecko profiler on from startup (`MOZ_PROFILER_STARTUP=1`, features `nostacksampling,nomarkerstacks`, filter `GeckoMain`), profile written by `MOZ_PROFILER_SHUTDOWN`; the content process whose page is the case is read for the `Styles` interval marker (style, includes frame construction), `Reflow` start/end pairs (layout; the longest one is reported, the sum is within 1% of it) and `DisplayList`. Default `layout.css.stylo-threads` (5 style workers here), unpinned. |
 | Servo | servoshell 0.7.0-981beee7c8 (built 2026-10-23 from servo/servo `981beee7c`, `./mach build --release --features tracing-perfetto`; Stylo `633f43ad`) | One process per iteration (`-z -x`, 1280×800), page served over localhost HTTP (its fetch rejects `file://` fonts); `SERVO_TRACING=layout::layout_impl=trace,layout::flow::root=trace` (phase spans only; per-item spans would add >10×), spans read from `servo.pftrace` (decoded directly from the protobuf with the `perfetto` package's generated classes; its TraceProcessor costs ~1 s per trace): `Styling`, `Box Tree Construction`, `Fragment Tree Construction`, `Stacking Context Tree Construction`, `Display List Construction`, `handle_reflow`, from the reflow with the most box + fragment construction (the one after the reveal; the first, `display:none` reflow's stylesheet preparation can outlast the whole layout of a small page). `servo1` = `--pref layout_threads=1`, pinned; `servo` = default 3 layout threads (Stylo pool shared by style and box construction), unpinned. |
 | Blitz | DioxusLabs/blitz `main` `1c5265a8` (2026-10-23; blitz-dom with Taffy `main` `802e497b`, Stylo 0.22 at `DioxusLabs/stylo` `d6502e00`, Parley 0.12.0, harfrust 0.12.0, skrifa 0.44.0); the `*-pl` engines: [blitz#1034](https://github.com/DioxusLabs/blitz/pull/1034) rebased on that `main` (`fac9b358`, with [taffy#1230](https://github.com/DioxusLabs/taffy/pull/1230) rebased on Taffy `main`, `a2b0f009`) | `blitz-runner` (this repo): fresh `HtmlDocument` per iteration from the plain `corpus/*.html`, `incremental=false`, one `resolve()`; phase times from Blitz's own `log-phase-times` timer via a vendored `debug_timer` printing ns: `style`, `construct` (+ `pconstruct`, the deferred Parley layout builds = shaping), `layout` (Taffy + Parley line breaking), `paint_tree`, `resolve`. Built with blitz-dom's opt-in `floats` and `writing-mode` features (as `apps/browser` does for floats; neither is in blitz-dom's defaults). Global allocator mimalloc (`blitz-runner/src/main.rs`): with glibc malloc the `layout` phase of `pangui/wide_no_wrap_simple_many` is 233 ms instead of 147 ms (per-node `LayoutData` boxes and Taffy's item vectors, re-faulted every iteration because the heap top is trimmed when the previous document is dropped). `blitz` = sequential style, pinned; `blitz-par` = `StyleThreading::Parallel`; `blitz-pcon` / `blitz-par-pcon` = second build with `--features parallel-construct` (deferred construction on the rayon pool). Equal work: hash of every element's final box, `--boxes` dump. |

@@ -149,19 +149,19 @@ Sources: [Servo tracing filter](README.md#servo-tracing-filter),
 [versions and methodology](README.md#versions-and-methodology),
 [Taffy's optional wrapper](gen/src/main.rs), and [Blitz's outer timer](blitz-runner/src/main.rs).
 
-## 6. Text shaping is in construction for Blitz/Servo but in layout for Chrome/Firefox/Ladybird
+## 6. Text shaping is in construction for Blitz/Servo but in layout for Chrome/WebKit/Firefox/Ladybird
 
 Blitz shapes when it builds the Parley inline layout (`construct`, including the deferred
-`pconstruct` tasks) and Servo during Box Tree Construction; Chrome, Firefox and Ladybird shape
+`pconstruct` tasks) and Servo during Box Tree Construction; Chrome, WebKit, Firefox and Ladybird shape
 text lazily while laying it out, so their layout figures include shaping, line breaking and font
 fallback and their construction figures (where they exist) are a tree walk. The "Layout only"
 table therefore compares different work on any case with text: Blitz `layout` and Servo Fragment
 Tree are post-shaping line breaking and box placement, Chrome `Layout` and Ladybird `layout` are
 shaping plus that. The "Box construction + layout" table contains the same work for every engine
-and is where Firefox's `Reflow` is listed (its frame construction happens inside the `Styles`
-flush, with no marker of its own, so that table under-counts Firefox by the frame-construction
-time and the Style table over-counts it by the same amount; frame construction is a tree walk
-with no shaping, so the amount is small relative to Reflow on text-heavy pages). The `flex/`,
+and is where Firefox's `Reflow` and WebKit's `layout` are listed (their frame / render-tree
+construction happens inside the style flush, with no marker of its own, so that table under-counts
+them by the construction time and the Style table over-counts them by the same amount; it is a
+tree walk with no shaping, so the amount is small relative to layout on text-heavy pages). The `flex/`,
 `grid/` and most `pangui/` cases have no text, so there the two tables differ only by genuine
 construction cost and "Layout only" is comparable across all engines.
 

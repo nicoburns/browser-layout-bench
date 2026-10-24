@@ -5,6 +5,7 @@ import argparse, functools, http.server, json, os, re, shutil, statistics, subpr
 from pathlib import Path
 
 import engines_ladybird
+import engines_webkit
 import pages
 import plot
 
@@ -22,7 +23,7 @@ BLITZ_PL = ROOT / "target-pl/release/blitz-runner"
 SERVOSHELL = Path(os.environ.get("SERVOSHELL", Path.home() / "repos/servo/target/release/servoshell"))
 WIDTH, HEIGHT = 1280, 800
 ENGINES = ["taffy", "blitz", "blitz-par", "blitz-pcon", "blitz-par-pcon", "blitz-pcon-pl1", "blitz-par-pcon-pl",
-           "servo1", "servo", "chrome", "firefox", "ladybird"]
+           "servo1", "servo", "chrome", "webkit", "firefox", "ladybird"]
 
 REVEAL_SCRIPT = ("<script>var cb=document.getElementById('cb');cb.style.display='block';"
                  "cb.offsetHeight;</script>\n")
@@ -433,6 +434,8 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
         return run_servo(case, iters, None, int(m.group(1)), screenshot=screenshot)
     if engine == "chrome":
         return run_chrome(case, iters, None, screenshot=screenshot)
+    if engine == "webkit":
+        return engines_webkit.run_webkit(case, iters, CORPUS, case["width"], case["height"], ROOT_RECT_JS, screenshot=screenshot)
     if engine == "firefox":
         return run_firefox(case, iters, screenshot=screenshot)
     if engine == "ladybird":
@@ -449,6 +452,9 @@ def available_engines(engines):
         print(f"servo: {SERVOSHELL} not found (set SERVOSHELL to a servoshell built with --features tracing-perfetto); skipping",
               file=sys.stderr)
         engines = [e for e in engines if not re.fullmatch(r"servo\d*", e)]
+    if "webkit" in engines and not engines_webkit.available():
+        print(engines_webkit.skip_message(), file=sys.stderr)
+        engines = [e for e in engines if e != "webkit"]
     if "ladybird" in engines and not engines_ladybird.available():
         print(engines_ladybird.skip_message(), file=sys.stderr)
         engines = [e for e in engines if e != "ladybird"]
@@ -468,7 +474,7 @@ def fmt_ms(ns):
     return "-" if ns is None else f"{ns / 1e6:.3f}"
 
 
-# Column order within every table: Chrome, Firefox, Servo, Blitz, Taffy; the Chrome column is the
+# Column order within every table: Chrome, WebKit, Firefox, Servo, Blitz, Taffy; the Chrome column is the
 # reference for the multipliers.
 COLUMNS = [
     ("Layout only", [("chrome", "layout", "Chrome Layout (incl. shaping)"), ("ladybird", "layout", "Ladybird layout (incl. shaping)"),
@@ -480,18 +486,20 @@ COLUMNS = [
                       ("servo1", "box", "Servo(1) Box Tree"), ("servo", "box", "Servo(3) Box Tree"),
                       ("blitz", "construct", "Blitz construct (+pconstruct)"), ("blitz-pcon", "construct", "Blitz construct, parallel")]),
     ("Box construction + layout", [("chrome", "construct+layout", "Chrome rebuildLayoutTree+Layout"),
+                                   ("webkit", "layout", "WebKit Layout (incl. shaping)"),
                                    ("firefox", "layout", "Firefox Reflow"),
                                    ("ladybird", "construct+layout", "Ladybird tree build+layout"),
                                    ("servo1", "box+fragment", "Servo(1) Box+Fragment"), ("servo", "box+fragment", "Servo(3) Box+Fragment"),
                                    ("blitz", "construct+layout", "Blitz construct+layout"),
                                    ("blitz-pcon", "construct+layout", "Blitz construct+layout (parallel construct)"),
                                    ("blitz-par-pcon-pl", "construct+layout", "Blitz construct+layout (parallel construct+layout)")]),
-    ("Style", [("chrome", "style", "Chrome recalcStyle"),
+    ("Style", [("chrome", "style", "Chrome recalcStyle"), ("webkit", "style", "WebKit RecalculateStyles (incl. render-tree construction)"),
                ("firefox", "style", "Firefox Styles (incl. frame construction)"), ("ladybird", "style", "Ladybird update_style"),
                ("servo1", "style", "Servo(1) Styling"), ("servo", "style", "Servo(3) Styling"),
                ("blitz", "style", "Blitz style"), ("blitz-par", "style", "Blitz style (parallel)")]),
     ("Whole pipeline (style to laid-out tree)", [
         ("chrome", "style+layout", "Chrome UpdateLayoutTree+Layout"),
+        ("webkit", "style+layout", "WebKit RecalculateStyles+Layout"),
         ("firefox", "style+layout", "Firefox Styles+Reflow"),
         ("ladybird", "total", "Ladybird update_layout()"),
         ("servo1", "restyle_and_build", "Servo(1) restyle_and_build_trees"), ("servo", "restyle_and_build", "Servo(3) restyle_and_build_trees"),
@@ -766,9 +774,11 @@ def cmd_verify(args):
             if "boxes" in s:
                 boxes[e] = s["boxes"]
             if "fonts" in s and s["fonts"]:
-                notes.append(f"chrome fonts={s['fonts']}")
+                notes.append(f"{e} fonts={s['fonts']}")
             if "total_objects" in s:
                 notes.append(f"chrome objects={s['total_objects']} layouts={s['n_layouts']}")
+            elif "n_layouts" in s:
+                notes.append(f"{e} layouts={s['n_layouts']}")
             if "styled" in s:
                 notes.append(f"{e} styled={s['styled']} reflows={s['n_reflows']} (sum {s['layout_sum'] / s['layout']:.2f}x longest)")
             elif "n_reflows" in s:
@@ -820,7 +830,7 @@ def main():
     sub.add_parser("plot")
     sub.add_parser("pages", help="write the static results site to out/pages/")
     v = sub.add_parser("verify")
-    v.add_argument("--engines", default="chrome,blitz,servo1,firefox")
+    v.add_argument("--engines", default="chrome,webkit,blitz,servo1,firefox")
     v.add_argument("--filter", default="")
     v.add_argument("--cpus", default=None)
     cmp_ = sub.add_parser("compare", help="min per metric of a `bench --out` run vs out/results.json")
