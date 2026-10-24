@@ -868,7 +868,9 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("gen")
     b = sub.add_parser("bench")
-    b.add_argument("--engines", default=",".join(ENGINES))
+    b.add_argument("--engines", default=",".join(ENGINES),
+                   help="comma-separated engine ids (servoN = N layout threads); firefox, servo1 and servo run one "
+                        "browser per round for all of the round's cases")
     b.add_argument("--rounds", type=int, default=3)
     b.add_argument("--iters", type=int, default=3)
     b.add_argument("--filter", default="")
