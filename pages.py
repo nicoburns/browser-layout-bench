@@ -240,9 +240,10 @@ def caveat_box(results):
     normalized = normalized_engines(results)
     if not normalized:
         return '<p class="caveat">Rankings carry the <a href="about.html#caveats">equal-work and sampling caveats</a>.</p>'
-    return (f'<p class="caveat">The Servo and Blitz columns ({html.escape(", ".join(normalized))}) were measured in a later run '
+    names = ", ".join(engine_name(e) for e in normalized)
+    return (f'<p class="caveat">The {html.escape(names)} {"columns were" if len(normalized) > 1 else "column was"} measured in a later run '
             f"and scaled per case by Chrome's stored/new <code>style+layout</code> ratio (median {norm_factor_median(results):.2f}); "
-            "differences under ~10% between them and the Chrome, Firefox, Ladybird and Taffy columns are within the normalisation's "
+            "differences under ~10% between those and the other columns are within the normalisation's "
             'uncertainty (<a href="about.html#versions-and-methodology">methodology</a>). Rankings also carry the '
             '<a href="about.html#caveats">equal-work and sampling caveats</a>.</p>')
 
