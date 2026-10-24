@@ -1,126 +1,185 @@
-"""Ladybird (LibWeb) runner for run.py. One `Ladybird --headless` process per iteration; the phase
-times are the `LADYBIRD_PHASE style=<ns> construct=<ns> layout=<ns> total=<ns> full_layouts=<n>`
-lines that WebContent prints to stderr once per `Document::update_layout()` with
-patches/ladybird-phase-timing.patch applied (see README.md). The layout-tree dump headless mode
-exits as soon as the page has loaded and gives every box's position and box model, which `verify`
-compares with Chrome's `getBoundingClientRect()`."""
-import os, re, subprocess, tempfile
+"""Ladybird (LibWeb) runner for run.py. One Ladybird per round, driven over its WebDriver server
+(`WebDriver --headless`, plain HTTP with `urllib`): a fresh window per iteration, closed afterwards,
+with the session's initial about:blank window kept open. The phase times are the `LADYBIRD_PHASE
+pid=<pid> style=<ns> construct=<ns> layout=<ns> total=<ns> full_layouts=<n>` lines that WebContent
+prints to stderr once per `Document::update_layout()` with patches/ladybird-phase-timing.patch
+applied (see README.md); the `LADYBIRD_UPDATE pid=<pid> url=<url> reason=<reason>` line the same
+process printed before names the document and the trigger of that update, and the window's URL
+(`?i=N`) says which iteration it was."""
+import base64, json, os, re, socket, subprocess, tempfile, time, urllib.error, urllib.request
 from pathlib import Path
 
 LADYBIRD_BIN = Path(os.environ.get("LADYBIRD_BIN", Path.home() / "repos/ladybird/Build/release/bin/Ladybird"))
-# Seconds the patched headless modes wait after the load event before dumping the layout tree or
-# taking the screenshot. The font pages reveal from a `document.fonts` promise that resolves after
-# the load event; the patched layout-tree dump waits for the document's fonts to finish loading by
-# itself, so the bench needs no settle time. The screenshot has no such signal (`verify` only).
-SETTLE_SECONDS = int(os.environ.get("LADYBIRD_SETTLE_SECONDS", "0"))
-SCREENSHOT_SETTLE_SECONDS = max(SETTLE_SECONDS, 2)
+WEBDRIVER_BIN = LADYBIRD_BIN.parent / "WebDriver"
+WAIT_SECONDS = int(os.environ.get("LADYBIRD_WAIT_SECONDS", "600"))
 # fontconfig rescans the system fonts in every process unless its cache under XDG_CACHE_HOME persists.
 CACHE_DIR = Path(__file__).resolve().parent / "out/ladybird-cache"
-# `LADYBIRD_UPDATE url=<document url>` precedes each round's `LADYBIRD_PHASE k=v ...` line.
-RECORD_RE = re.compile(r"^LADYBIRD_(UPDATE|PHASE) (.*)$", re.M)
-# `Box <div#cb.cls> at [x,y] positioned flex-item [ml+bl+pl w pr+br+mr] [mt+bt+pt h pb+bb+mb] ...`
-BOX_RE = re.compile(r"^( *)(\w+) <(\w+)([#.][^>]*)?> at \[([-\d.]+),([-\d.]+)\](?: [^\[\]]+)? "
-                    r"\[([-\d.+]+) ([-\d.]+) ([-\d.+]+)\] \[([-\d.+]+) ([-\d.]+) ([-\d.+]+)\]")
+# Every window gets its own WebContent process (`iframe`, Ladybird's default); `disable` would put all
+# of the round's windows in one process, so each sample would run in a warm process.
+SITE_ISOLATION = "iframe"
+WARMUP = True
+UPDATE_RE = re.compile(r"^LADYBIRD_UPDATE pid=(\d+) url=(\S+) reason=(\S+)", re.M)
+PHASE_RE = re.compile(r"^LADYBIRD_PHASE pid=(\d+) (.*)$", re.M)
+RECORD_RE = re.compile(r"^LADYBIRD_(UPDATE|PHASE) pid=(\d+) (.*)$", re.M)
+REVEALED_JS = "return document.getElementById('cb').style.display !== 'none'"
+BOXES_JS = ("return [...document.querySelectorAll('#cb div, #cb p, #cb h3')]"
+            ".map(e=>{const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height]})")
+FONTS_JS = "return [...document.fonts].map(f=>f.status).join(',')"
 
 
 def available():
-    return LADYBIRD_BIN.exists()
+    return LADYBIRD_BIN.exists() and WEBDRIVER_BIN.exists()
 
 
 def skip_message():
-    return f"ladybird: {LADYBIRD_BIN} not found (set LADYBIRD_BIN), skipping"
+    return f"ladybird: {LADYBIRD_BIN} or {WEBDRIVER_BIN} not found (set LADYBIRD_BIN; build the `WebDriver` target), skipping"
 
 
-def parse_phases(stderr, url):
-    """The layout update rounds of the document at `url` in one process's stderr, in order, each as
-    metric -> ns (the process also lays out the initial about:blank documents)."""
-    rounds, current = [], None
-    for kind, rest in RECORD_RE.findall(stderr):
+def parse_updates(stderr):
+    """{document url: [update, ...]} in order, each update the metric -> ns dict of a `LADYBIRD_PHASE`
+    line plus its `reason`. Lines of the round's WebContent processes interleave on stderr, so a
+    `PHASE` line belongs to the last `UPDATE` line with the same pid."""
+    pending, updates = {}, {}
+    for kind, pid, rest in RECORD_RE.findall(stderr):
         if kind == "UPDATE":
-            current = rest.removeprefix("url=")
-        elif current == url:
-            rounds.append({k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", rest)})
-    return rounds
+            url, reason = re.fullmatch(r"url=(\S+) reason=(\S+)", rest).groups()
+            pending[pid] = (url, reason)
+        elif pid in pending:
+            url, reason = pending[pid]
+            updates.setdefault(url, []).append({k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", rest)} | {"reason": reason})
+    return updates
 
 
-def parse_layout_tree(dump, root_id="cb"):
-    """Border boxes (x, y, w, h) of the `div`/`p`/`h3` descendants of `#root_id` in the layout tree
-    dump, in tree (= document) order, plus the number of boxes in the whole tree and the root
-    child's size. The dump's `at [x,y]` is the content box; the border box adds padding and border."""
-    boxes, root, n_boxes, cb_indent = [], None, 0, None
-    for line in dump.splitlines():
-        m = BOX_RE.match(line)
-        if not m:
-            continue
-        n_boxes += 1
-        indent, tag, ids = len(m.group(1)), m.group(3), m.group(4) or ""
-        if cb_indent is not None and indent <= cb_indent:
-            cb_indent = None
-        if cb_indent is None:
-            if tag in ("div", "body") and f"#{root_id}" in ids:
-                cb_indent = indent
-                if tag == "body":  # the real pages' `#cb` is the body: its own size is the root size
-                    root = f"{float(m.group(8)):.1f}x{float(m.group(11)):.1f}"
-            continue
-        if tag not in ("div", "p", "h3"):
-            continue
-        x, y = float(m.group(5)), float(m.group(6))
-        ml, bl, pl = (float(v) for v in m.group(7).split("+"))
-        pr, br, mr = (float(v) for v in m.group(9).split("+"))
-        mt, bt, pt = (float(v) for v in m.group(10).split("+"))
-        pb, bb, mb = (float(v) for v in m.group(12).split("+"))
-        w, h = float(m.group(8)) + pl + pr + bl + br, float(m.group(11)) + pt + pb + bt + bb
-        boxes.append((x - pl - bl, y - pt - bt, w, h))
-        if root is None:
-            root = f"{w:.1f}x{h:.1f}"
-    return boxes, n_boxes, root
+def reveal_update(updates):
+    """The update the reveal script's `cb.offsetHeight` forced right after showing `#cb`: the first full
+    layout of the revealed tree (the `display:none` document's own updates come before it, later ones
+    are relayouts)."""
+    for u in updates:
+        if u["reason"] == "HTMLElementOffsetHeight" and u["full_layouts"] > 0:
+            return u
+    raise RuntimeError("no HTMLElementOffsetHeight layout update (patch applied?)")
 
 
-def run_process(url, width, height, cpus, mode, extra=(), timeout=1200):
-    cmd = [str(LADYBIRD_BIN), f"--headless={mode}", f"--window-width={width}", f"--window-height={height}", *extra, url]
-    if cpus:
-        cmd = ["taskset", "-c", cpus] + cmd
-    env = dict(os.environ)
-    env.setdefault("QT_QPA_PLATFORM", "offscreen")
-    with tempfile.TemporaryDirectory() as home:
-        # A private config/profile per process, so no session state leaks between iterations.
+def free_port():
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        return s.getsockname()[1]
+
+
+class Session:
+    """One `WebDriver --headless` server and the one Ladybird (UI process) it launches for the session."""
+
+    def __init__(self, home):
+        self.port = free_port()
+        env = dict(os.environ)
+        env.setdefault("QT_QPA_PLATFORM", "offscreen")
+        # A private config/profile per browser, so no session state leaks between rounds.
         env.update(XDG_CONFIG_HOME=f"{home}/config", XDG_DATA_HOME=f"{home}/data", XDG_CACHE_HOME=str(CACHE_DIR),
                    XDG_RUNTIME_DIR=f"{home}/run")  # Ladybird's IPC sockets; /run/user/<uid> may not exist
         os.mkdir(f"{home}/run", 0o700)
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
-        return subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=timeout, env=env, cwd=home)
+        self.stderr_path = Path(home) / "stderr.txt"
+        self.stderr = self.stderr_path.open("w")  # inherited by Ladybird and its WebContent processes
+        self.proc = subprocess.Popen([str(WEBDRIVER_BIN), "--headless", "--port", str(self.port), f"--site-isolation={SITE_ISOLATION}",
+                                      f"--profiles-directory={home}"], env=env, cwd=home, stdin=subprocess.DEVNULL,
+                                     stdout=subprocess.DEVNULL, stderr=self.stderr)
+        deadline = time.monotonic() + 30
+        while True:
+            try:
+                self.request("GET", "/status")
+                break
+            except (urllib.error.URLError, ConnectionError, RuntimeError):
+                if self.proc.poll() is not None or time.monotonic() > deadline:
+                    raise RuntimeError(f"WebDriver did not start: {self.stderr_path.read_text()[-500:]}")
+                time.sleep(0.02)
+        self.id = self.request("POST", "/session", {"capabilities": {"alwaysMatch": {}}})["sessionId"]
+        self.request("POST", f"/session/{self.id}/timeouts", {"pageLoad": WAIT_SECONDS * 1000, "script": WAIT_SECONDS * 1000})
+        self.blank = self.request("GET", f"/session/{self.id}/window/handles")[0]
+
+    def close(self):
+        try:
+            self.request("DELETE", f"/session/{self.id}")
+        finally:
+            self.proc.terminate()
+            self.proc.wait(timeout=30)
+            self.stderr.close()
+
+    def request(self, method, path, body=None):
+        req = urllib.request.Request(f"http://127.0.0.1:{self.port}{path}", method=method,
+                                     data=json.dumps(body).encode() if body is not None else None,
+                                     headers={"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=WAIT_SECONDS) as resp:
+                return json.loads(resp.read())["value"]
+        except urllib.error.HTTPError as e:
+            raise RuntimeError(f"{method} {path}: {e.code} {e.read()[:300]}")
+
+    def command(self, name, body=None):
+        return self.request("POST", f"/session/{self.id}/{name}", body if body is not None else {})
+
+    def execute(self, script):
+        return self.command("execute/sync", {"script": script, "args": []})
+
+    def load(self, url, width, height):
+        """`url` in a new window of the given viewport, after its `load` event and the reveal."""
+        handle = self.command("window/new", {"type": "tab"})["handle"]
+        self.command("window", {"handle": handle})
+        self.command("window/rect", {"width": width, "height": height})
+        self.command("url", {"url": url})
+        deadline = time.monotonic() + WAIT_SECONDS
+        while not self.execute(REVEALED_JS):
+            if time.monotonic() > deadline:
+                raise TimeoutError(f"{url}: not revealed after {WAIT_SECONDS}s")
+            time.sleep(0.005)
+
+    def close_window(self):
+        self.request("DELETE", f"/session/{self.id}/window")
+        self.command("window", {"handle": self.blank})
 
 
-def crop_to_viewport(path, width, height):
-    """The headless screenshot is the view's backing store, which is the viewport plus a padding band
-    to the right and below; keep the viewport."""
-    from PIL import Image
-    with Image.open(path) as im:
-        im.crop((0, 0, width, height)).convert("RGB").save(path)
+def run_ladybird(case, iters, reveal_dir, root_rect_js, screenshot=None):
+    return run_ladybird_round([case], iters, reveal_dir, root_rect_js, screenshot=screenshot)[case["name"]]
 
 
-def run_ladybird(case, iters, cpus, reveal_dir, width, height, screenshot=None):
-    """Per-iteration dicts like the other engines': `style`, `construct`, `layout`,
-    `construct+layout`, `total` (the whole `update_layout()` call) from the longest layout update
-    of the process (the one after the reveal; the `display:none` document's update is tiny), and
-    `n_layouts`, the number of updates that ran a full layout pass."""
-    url = (reveal_dir / case["file"]).resolve().as_uri()
-    samples = []
-    for i in range(iters):
-        proc = run_process(url, width, height, cpus, "layout-tree", [f"--screenshot-delay={SETTLE_SECONDS}"])
-        phases = parse_phases(proc.stderr, url)
-        if not phases:
-            raise RuntimeError(f"no LADYBIRD_PHASE lines for {url} on stderr (patch applied?): {proc.stderr[-500:]}")
-        main = max(phases, key=lambda p: p["layout"])
-        s = dict(style=main["style"], construct=main["construct"], layout=main["layout"], total=main["total"],
-                 n_layouts=sum(1 for p in phases if p.get("full_layouts", 0) > 0))
-        s["construct+layout"] = s["construct"] + s["layout"]
-        boxes, s["n_boxes"], s["root"] = parse_layout_tree(proc.stdout)
-        if screenshot:  # verify only: the boxes would make results.json huge
-            s["boxes"] = boxes
-        if screenshot and i == iters - 1:
-            run_process(url, width, height, cpus, "screenshot",
-                        [f"--screenshot-path={screenshot}", f"--screenshot-delay={SCREENSHOT_SETTLE_SECONDS}"])
-            crop_to_viewport(screenshot, width, height)
-        samples.append(s)
-    return samples
+def run_ladybird_round(cases, iters, reveal_dir, root_rect_js, screenshot=None):
+    """One browser per call (= per round, for every case of the round), a fresh window (and WebContent
+    process) per iteration; per case a discarded warm-up load first (`?warmup`), the measured windows
+    load `?i=N`. Per-iteration dicts like the other engines': `style`, `construct`, `layout`,
+    `construct+layout`, `total` (the whole `update_layout()` call) of the reveal's layout update,
+    `n_layouts`, the number of the document's updates that ran a full layout pass, and `root`.
+    Returns {case name: samples}."""
+    extra, results = {}, {}
+    with tempfile.TemporaryDirectory() as home:
+        session = Session(home)
+        try:
+            for case in cases:
+                url = (reveal_dir / case["file"]).resolve().as_uri()
+                if WARMUP:
+                    session.load(url + "?warmup", case["width"], case["height"])
+                    session.close_window()
+                for i in range(iters):
+                    session.load(f"{url}?i={i}", case["width"], case["height"])
+                    session.execute("return document.body.offsetHeight")
+                    e = extra[f"{url}?i={i}"] = {"root": session.execute("return " + root_rect_js)}
+                    if screenshot and i == iters - 1:
+                        Path(screenshot).write_bytes(base64.b64decode(session.request("GET", f"/session/{session.id}/screenshot")))
+                        e["boxes"] = [tuple(b) for b in session.execute(BOXES_JS)]
+                        e["fonts"] = session.execute(FONTS_JS)
+                    session.close_window()
+        finally:
+            session.close()
+        updates = parse_updates(session.stderr_path.read_text())
+    for case in cases:
+        url = (reveal_dir / case["file"]).resolve().as_uri()
+        samples = results[case["name"]] = []
+        for i in range(iters):
+            page = updates.get(f"{url}?i={i}")
+            if not page:
+                raise RuntimeError(f"no LADYBIRD_PHASE lines for {url}?i={i} on stderr (patch applied?)")
+            main = reveal_update(page)
+            s = dict(style=main["style"], construct=main["construct"], layout=main["layout"], total=main["total"],
+                     n_layouts=sum(1 for u in page if u["full_layouts"] > 0))
+            s["construct+layout"] = s["construct"] + s["layout"]
+            s.update(extra[f"{url}?i={i}"])
+            samples.append(s)
+    return results
