@@ -25,6 +25,8 @@ ENGINE_NAMES = {
 # Single-threaded-style engine -> its parallel-style twin; outside the Style table the single-threaded
 # column is dropped wherever the twin is in the same table.
 SINGLE_STYLE_THREAD = {"blitz": "blitz-par"}
+# Switched off until the reader turns them on: non-default configurations, and Ladybird, whose bars dwarf the rest.
+HIDDEN_BY_DEFAULT = {"ladybird", "servo1", "blitz", "blitz-par", "blitz-pcon", "blitz-pcon-pl1", "blitz-par-pcon-pl"}
 # plot.COLOURS is tuned for its dark background; these are the same engine hues for white.
 COLOURS = {
     "chrome": "#E8A100", "webkit": "#0A84FF", "firefox": "#FF7139", "ladybird": "#7B6CF0",
@@ -154,9 +156,11 @@ def export(results, columns, count_keys):
                           "normalized": any("chrome_norm" in s for s in samples)}
         cases.append({"name": name, "suite": name.split("/")[0], "nodes": data["nodes"], "engines": engines,
                       "note": CASE_NOTES.get(name)})
-    tables = [{"title": title, "columns": [{"engine": e, "metric": m, "label": label} for e, m, label in cols
-                                           if title == "Style" or SINGLE_STYLE_THREAD.get(e) not in {c[0] for c in cols}]}
-              for title, cols in columns]
+    tables = []
+    for title, cols in columns:
+        cols = [{"engine": e, "metric": m, "label": label} for e, m, label in cols
+                if title == "Style" or SINGLE_STYLE_THREAD.get(e) not in {c[0] for c in cols}]
+        tables.append({"title": title, "columns": cols, "hidden": [c["engine"] for c in cols if c["engine"] in HIDDEN_BY_DEFAULT]})
     engines = [e for e in ENGINE_NAMES if any(e in c["engines"] for c in cases)]
     return {"cases": cases, "tables": tables, "stages": plot.STAGES,
             "engines": {e: {"name": engine_name(e), "browser": ENGINE_NAMES[e][0], "variant": ENGINE_NAMES[e][1],
