@@ -12,7 +12,7 @@ measured style time, so the Timeline is only used by `verify` to count layouts. 
 is 1 ms-grained unless the page is cross-origin isolated, hence the corpus is served over localhost
 HTTP with COOP/COEP headers (20 µs grain), which also makes WebKit swap the page into a new process
 (a provisional Inspector target) on navigation."""
-import base64, functools, http.server, json, os, subprocess, threading, time
+import base64, functools, http.server, json, os, select, subprocess, threading, time
 from pathlib import Path
 
 LAUNCH_ARGS = ["--inspector-pipe", "--headless", "--no-startup-window"]
@@ -55,6 +55,12 @@ def isolated_server(directory):
 
         def log_message(self, *args):
             pass
+
+        def handle(self):
+            try:
+                super().handle()
+            except ConnectionResetError:
+                pass
     server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(Handler, directory=str(directory)))
     threading.Thread(target=server.serve_forever, daemon=True).start()
     return f"http://127.0.0.1:{server.server_address[1]}"
@@ -82,9 +88,11 @@ class Browser:
         self.proc.wait()
         os.close(self.w), os.close(self.r)
 
-    def recv(self):
-        """Blocks for the next message; events go to `self.events`, replies are returned."""
+    def recv(self, deadline=None):
+        """Blocks for the next message (until `deadline`, if given); events go to `self.events`, replies are returned."""
         while b"\0" not in self.buf:
+            if deadline and not select.select([self.r], [], [], max(0.0, deadline - time.monotonic()))[0]:
+                raise TimeoutError(f"nothing from WebKit for {WAIT_SECONDS}s")
             chunk = os.read(self.r, 1 << 16)
             if not chunk:
                 raise RuntimeError("WebKit closed the inspector pipe")
@@ -117,23 +125,22 @@ class Browser:
             if reply and reply["id"] == want:
                 return reply.get("result", {})
 
-    def wait_event(self, method, deadline, target=None):
-        """Blocks until an event `method` (from `target`, if given) arrives; ones already received count."""
-        seen = 0
+    def wait_event(self, methods, deadline, since=0):
+        """Blocks until an event of one of `methods` arrives; ones already received (from index `since`) count."""
         while True:
-            for e in self.events[seen:]:
-                if e["method"] == method and target in (None, e.get("targetId")):
+            for e in self.events[since:]:
+                if e["method"] in methods:
                     return e
-            seen = len(self.events)
+            since = len(self.events)
             if time.monotonic() > deadline:
-                raise TimeoutError(f"no {method} after {WAIT_SECONDS}s")
-            self.recv()
+                raise TimeoutError(f"no {'/'.join(methods)} after {WAIT_SECONDS}s")
+            self.recv(deadline)
 
     def new_page(self, width, height):
         """A page of the given viewport, paused at about:blank; returns (proxy, target)."""
         self.events.clear()
         proxy = self.send("Playwright.createPage", {"browserContextId": self.context})["pageProxyId"]
-        target = self.wait_event("Target.targetCreated", time.monotonic() + WAIT_SECONDS)["params"]["targetInfo"]["targetId"]
+        target = self.wait_event(["Target.targetCreated"], time.monotonic() + WAIT_SECONDS)["params"]["targetInfo"]["targetId"]
         self.send("Emulation.setDeviceMetricsOverride", {"width": width, "height": height, "fixedLayout": False,
                                                          "deviceScaleFactor": 1}, page_proxy=proxy)
         return proxy, target
@@ -148,18 +155,21 @@ class Browser:
         self.send("Target.resume", {"targetId": target}, page_proxy=proxy)
 
     def navigate(self, proxy, target, url, deadline, timeline=False):
-        """Loads `url` in the paused page, following the process swap its COOP header always causes (the
-        page continues as a new, paused Inspector target); returns the new target once it fired `load`."""
+        """Loads `url` in the paused page, following the process swap its COOP header normally causes (the
+        page continues as a new, paused Inspector target); returns the target that fired `load`."""
         self.enable(proxy, target, timeline)
         frame = self.send("Page.getResourceTree", page_proxy=proxy, target=target)["frameTree"]["frame"]["id"]
-        self.events.clear()
+        since = len(self.events)
         self.send("Playwright.navigate", {"url": url, "pageProxyId": proxy, "frameId": frame})
-        e = self.wait_event("Target.targetCreated", deadline)
-        del self.events[:self.events.index(e) + 1]
-        target = e["params"]["targetInfo"]["targetId"]
-        self.enable(proxy, target, timeline)
-        self.wait_event("Page.loadEventFired", deadline, target)
-        return target
+        while True:
+            e = self.wait_event(["Target.targetCreated", "Page.loadEventFired"], deadline, since)
+            since = self.events.index(e) + 1
+            if e["method"] == "Page.loadEventFired":
+                if e["targetId"] == target:
+                    return target
+            else:
+                target = e["params"]["targetInfo"]["targetId"]
+                self.enable(proxy, target, timeline)
 
     def evaluate(self, js, proxy, target):
         r = self.send("Runtime.evaluate", {"expression": js, "returnByValue": True}, page_proxy=proxy, target=target)
