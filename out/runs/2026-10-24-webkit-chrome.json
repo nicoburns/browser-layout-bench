@@ -1,0 +1,6968 @@
+{
+ "flex/huge_nested/1000": {
+  "nodes": 911,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 949000,
+     "style": 1582000,
+     "construct": 340000,
+     "update_layout_tree": 1981000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 915,
+     "construct+layout": 1289000,
+     "style+layout": 2930000
+    },
+    {
+     "layout": 1109000,
+     "style": 1690000,
+     "construct": 385000,
+     "update_layout_tree": 2134000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 915,
+     "construct+layout": 1494000,
+     "style+layout": 3243000
+    },
+    {
+     "layout": 924000,
+     "style": 1729000,
+     "construct": 412000,
+     "update_layout_tree": 2192000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 915,
+     "construct+layout": 1336000,
+     "style+layout": 3116000
+    },
+    {
+     "layout": 945000,
+     "style": 1546000,
+     "construct": 343000,
+     "update_layout_tree": 1944000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 915,
+     "construct+layout": 1288000,
+     "style+layout": 2889000
+    },
+    {
+     "layout": 919000,
+     "style": 1465000,
+     "construct": 319000,
+     "update_layout_tree": 1835000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 915,
+     "construct+layout": 1238000,
+     "style+layout": 2754000
+    },
+    {
+     "layout": 915000,
+     "style": 1480000,
+     "construct": 335000,
+     "update_layout_tree": 1872000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 915,
+     "construct+layout": 1250000,
+     "style+layout": 2787000
+    },
+    {
+     "layout": 930000,
+     "style": 1469000,
+     "construct": 333000,
+     "update_layout_tree": 1861000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 915,
+     "construct+layout": 1263000,
+     "style+layout": 2791000
+    },
+    {
+     "layout": 934000,
+     "style": 1497000,
+     "construct": 361000,
+     "update_layout_tree": 1916000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 915,
+     "construct+layout": 1295000,
+     "style+layout": 2850000
+    },
+    {
+     "layout": 915000,
+     "style": 1465000,
+     "construct": 328000,
+     "update_layout_tree": 1850000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 915,
+     "construct+layout": 1243000,
+     "style+layout": 2765000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 3440000,
+     "layout": 2160000,
+     "style+layout": 5600000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 3660000,
+     "layout": 2280000,
+     "style+layout": 5940000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 3120000,
+     "layout": 2100000,
+     "style+layout": 5220000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 3480000,
+     "layout": 2340000,
+     "style+layout": 5820000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 3860000,
+     "layout": 2320000,
+     "style+layout": 6180000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 3400000,
+     "layout": 2440000,
+     "style+layout": 5840000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 3200000,
+     "layout": 2000000,
+     "style+layout": 5200000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 3140000,
+     "layout": 2000000,
+     "style+layout": 5140000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 3260000,
+     "layout": 1960000,
+     "style+layout": 5220000,
+     "root": "100.0x10.0"
+    }
+   ]
+  }
+ },
+ "flex/wide/1000": {
+  "nodes": 1000,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 1236000,
+     "style": 1358000,
+     "construct": 365000,
+     "update_layout_tree": 1780000,
+     "n_layouts": 1,
+     "root": "83418.7x500.0",
+     "total_objects": 1004,
+     "construct+layout": 1601000,
+     "style+layout": 3016000
+    },
+    {
+     "layout": 1383000,
+     "style": 1422000,
+     "construct": 387000,
+     "update_layout_tree": 1868000,
+     "n_layouts": 1,
+     "root": "83418.7x500.0",
+     "total_objects": 1004,
+     "construct+layout": 1770000,
+     "style+layout": 3251000
+    },
+    {
+     "layout": 1234000,
+     "style": 1326000,
+     "construct": 358000,
+     "update_layout_tree": 1743000,
+     "n_layouts": 1,
+     "root": "83418.7x500.0",
+     "total_objects": 1004,
+     "construct+layout": 1592000,
+     "style+layout": 2977000
+    },
+    {
+     "layout": 1268000,
+     "style": 1384000,
+     "construct": 358000,
+     "update_layout_tree": 1801000,
+     "n_layouts": 1,
+     "root": "83418.7x500.0",
+     "total_objects": 1004,
+     "construct+layout": 1626000,
+     "style+layout": 3069000
+    },
+    {
+     "layout": 1234000,
+     "style": 1372000,
+     "construct": 360000,
+     "update_layout_tree": 1789000,
+     "n_layouts": 1,
+     "root": "83418.7x500.0",
+     "total_objects": 1004,
+     "construct+layout": 1594000,
+     "style+layout": 3023000
+    },
+    {
+     "layout": 1223000,
+     "style": 1363000,
+     "construct": 361000,
+     "update_layout_tree": 1779000,
+     "n_layouts": 1,
+     "root": "83418.7x500.0",
+     "total_objects": 1004,
+     "construct+layout": 1584000,
+     "style+layout": 3002000
+    },
+    {
+     "layout": 1253000,
+     "style": 1377000,
+     "construct": 356000,
+     "update_layout_tree": 1794000,
+     "n_layouts": 1,
+     "root": "83418.7x500.0",
+     "total_objects": 1004,
+     "construct+layout": 1609000,
+     "style+layout": 3047000
+    },
+    {
+     "layout": 1232000,
+     "style": 1356000,
+     "construct": 360000,
+     "update_layout_tree": 1774000,
+     "n_layouts": 1,
+     "root": "83418.7x500.0",
+     "total_objects": 1004,
+     "construct+layout": 1592000,
+     "style+layout": 3006000
+    },
+    {
+     "layout": 1243000,
+     "style": 1367000,
+     "construct": 360000,
+     "update_layout_tree": 1786000,
+     "n_layouts": 1,
+     "root": "83418.7x500.0",
+     "total_objects": 1004,
+     "construct+layout": 1603000,
+     "style+layout": 3029000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 3340000,
+     "layout": 2760000,
+     "style+layout": 6100000,
+     "root": "83418.7x500.0"
+    },
+    {
+     "style": 3400000,
+     "layout": 2740000,
+     "style+layout": 6140000,
+     "root": "83418.7x500.0"
+    },
+    {
+     "style": 3200000,
+     "layout": 2740000,
+     "style+layout": 5940000,
+     "root": "83418.7x500.0"
+    },
+    {
+     "style": 3400000,
+     "layout": 2760000,
+     "style+layout": 6160000,
+     "root": "83418.7x500.0"
+    },
+    {
+     "style": 3980000,
+     "layout": 2780000,
+     "style+layout": 6760000,
+     "root": "83418.7x500.0"
+    },
+    {
+     "style": 3340000,
+     "layout": 2780000,
+     "style+layout": 6120000,
+     "root": "83418.7x500.0"
+    },
+    {
+     "style": 3360000,
+     "layout": 2740000,
+     "style+layout": 6100000,
+     "root": "83418.7x500.0"
+    },
+    {
+     "style": 3340000,
+     "layout": 2740000,
+     "style+layout": 6080000,
+     "root": "83418.7x500.0"
+    },
+    {
+     "style": 3360000,
+     "layout": 2740000,
+     "style+layout": 6100000,
+     "root": "83418.7x500.0"
+    }
+   ]
+  }
+ },
+ "flex/absolute/1000": {
+  "nodes": 1003,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 1322000,
+     "style": 1588000,
+     "construct": 589000,
+     "update_layout_tree": 2242000,
+     "n_layouts": 1,
+     "root": "42816.1x499.0",
+     "total_objects": 1007,
+     "construct+layout": 1911000,
+     "style+layout": 3564000
+    },
+    {
+     "layout": 1283000,
+     "style": 1562000,
+     "construct": 547000,
+     "update_layout_tree": 2176000,
+     "n_layouts": 1,
+     "root": "42816.1x499.0",
+     "total_objects": 1007,
+     "construct+layout": 1830000,
+     "style+layout": 3459000
+    },
+    {
+     "layout": 1308000,
+     "style": 1601000,
+     "construct": 553000,
+     "update_layout_tree": 2213000,
+     "n_layouts": 1,
+     "root": "42816.1x499.0",
+     "total_objects": 1007,
+     "construct+layout": 1861000,
+     "style+layout": 3521000
+    },
+    {
+     "layout": 1314000,
+     "style": 1653000,
+     "construct": 560000,
+     "update_layout_tree": 2272000,
+     "n_layouts": 1,
+     "root": "42816.1x499.0",
+     "total_objects": 1007,
+     "construct+layout": 1874000,
+     "style+layout": 3586000
+    },
+    {
+     "layout": 1415000,
+     "style": 1627000,
+     "construct": 564000,
+     "update_layout_tree": 2250000,
+     "n_layouts": 1,
+     "root": "42816.1x499.0",
+     "total_objects": 1007,
+     "construct+layout": 1979000,
+     "style+layout": 3665000
+    },
+    {
+     "layout": 1293000,
+     "style": 1577000,
+     "construct": 587000,
+     "update_layout_tree": 2233000,
+     "n_layouts": 1,
+     "root": "42816.1x499.0",
+     "total_objects": 1007,
+     "construct+layout": 1880000,
+     "style+layout": 3526000
+    },
+    {
+     "layout": 1325000,
+     "style": 1687000,
+     "construct": 577000,
+     "update_layout_tree": 2327000,
+     "n_layouts": 1,
+     "root": "42816.1x499.0",
+     "total_objects": 1007,
+     "construct+layout": 1902000,
+     "style+layout": 3652000
+    },
+    {
+     "layout": 1318000,
+     "style": 1611000,
+     "construct": 595000,
+     "update_layout_tree": 2267000,
+     "n_layouts": 1,
+     "root": "42816.1x499.0",
+     "total_objects": 1007,
+     "construct+layout": 1913000,
+     "style+layout": 3585000
+    },
+    {
+     "layout": 1352000,
+     "style": 1596000,
+     "construct": 561000,
+     "update_layout_tree": 2218000,
+     "n_layouts": 1,
+     "root": "42816.1x499.0",
+     "total_objects": 1007,
+     "construct+layout": 1913000,
+     "style+layout": 3570000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 4160000,
+     "layout": 2480000,
+     "style+layout": 6640000,
+     "root": "42816.1x499.0"
+    },
+    {
+     "style": 4140000,
+     "layout": 2500000,
+     "style+layout": 6640000,
+     "root": "42816.1x499.0"
+    },
+    {
+     "style": 4140000,
+     "layout": 2620000,
+     "style+layout": 6760000,
+     "root": "42816.1x499.0"
+    },
+    {
+     "style": 4220000,
+     "layout": 2480000,
+     "style+layout": 6700000,
+     "root": "42816.1x499.0"
+    },
+    {
+     "style": 4260000,
+     "layout": 2420000,
+     "style+layout": 6680000,
+     "root": "42816.1x499.0"
+    },
+    {
+     "style": 4260000,
+     "layout": 2480000,
+     "style+layout": 6740000,
+     "root": "42816.1x499.0"
+    },
+    {
+     "style": 4220000,
+     "layout": 2500000,
+     "style+layout": 6720000,
+     "root": "42816.1x499.0"
+    },
+    {
+     "style": 4100000,
+     "layout": 2460000,
+     "style+layout": 6560000,
+     "root": "42816.1x499.0"
+    },
+    {
+     "style": 4160000,
+     "layout": 2500000,
+     "style+layout": 6660000,
+     "root": "42816.1x499.0"
+    }
+   ]
+  }
+ },
+ "flex/deep_auto/1000": {
+  "nodes": 767,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 1704000,
+     "style": 817000,
+     "construct": 295000,
+     "update_layout_tree": 1163000,
+     "n_layouts": 1,
+     "root": "15320.0x180.0",
+     "total_objects": 771,
+     "construct+layout": 1999000,
+     "style+layout": 2867000
+    },
+    {
+     "layout": 1678000,
+     "style": 773000,
+     "construct": 277000,
+     "update_layout_tree": 1104000,
+     "n_layouts": 1,
+     "root": "15320.0x180.0",
+     "total_objects": 771,
+     "construct+layout": 1955000,
+     "style+layout": 2782000
+    },
+    {
+     "layout": 1664000,
+     "style": 808000,
+     "construct": 300000,
+     "update_layout_tree": 1163000,
+     "n_layouts": 1,
+     "root": "15320.0x180.0",
+     "total_objects": 771,
+     "construct+layout": 1964000,
+     "style+layout": 2827000
+    },
+    {
+     "layout": 1679000,
+     "style": 806000,
+     "construct": 297000,
+     "update_layout_tree": 1162000,
+     "n_layouts": 1,
+     "root": "15320.0x180.0",
+     "total_objects": 771,
+     "construct+layout": 1976000,
+     "style+layout": 2841000
+    },
+    {
+     "layout": 1666000,
+     "style": 798000,
+     "construct": 292000,
+     "update_layout_tree": 1147000,
+     "n_layouts": 1,
+     "root": "15320.0x180.0",
+     "total_objects": 771,
+     "construct+layout": 1958000,
+     "style+layout": 2813000
+    },
+    {
+     "layout": 1651000,
+     "style": 857000,
+     "construct": 303000,
+     "update_layout_tree": 1218000,
+     "n_layouts": 1,
+     "root": "15320.0x180.0",
+     "total_objects": 771,
+     "construct+layout": 1954000,
+     "style+layout": 2869000
+    },
+    {
+     "layout": 1661000,
+     "style": 901000,
+     "construct": 308000,
+     "update_layout_tree": 1260000,
+     "n_layouts": 1,
+     "root": "15320.0x180.0",
+     "total_objects": 771,
+     "construct+layout": 1969000,
+     "style+layout": 2921000
+    },
+    {
+     "layout": 1656000,
+     "style": 803000,
+     "construct": 291000,
+     "update_layout_tree": 1155000,
+     "n_layouts": 1,
+     "root": "15320.0x180.0",
+     "total_objects": 771,
+     "construct+layout": 1947000,
+     "style+layout": 2811000
+    },
+    {
+     "layout": 1898000,
+     "style": 960000,
+     "construct": 348000,
+     "update_layout_tree": 1371000,
+     "n_layouts": 1,
+     "root": "15320.0x180.0",
+     "total_objects": 771,
+     "construct+layout": 2246000,
+     "style+layout": 3269000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 2100000,
+     "layout": 1960000,
+     "style+layout": 4060000,
+     "root": "15320.0x180.0"
+    },
+    {
+     "style": 2140000,
+     "layout": 2040000,
+     "style+layout": 4180000,
+     "root": "15320.0x180.0"
+    },
+    {
+     "style": 2120000,
+     "layout": 1940000,
+     "style+layout": 4060000,
+     "root": "15320.0x180.0"
+    },
+    {
+     "style": 2200000,
+     "layout": 2060000,
+     "style+layout": 4260000,
+     "root": "15320.0x180.0"
+    },
+    {
+     "style": 2100000,
+     "layout": 1960000,
+     "style+layout": 4060000,
+     "root": "15320.0x180.0"
+    },
+    {
+     "style": 2100000,
+     "layout": 1920000,
+     "style+layout": 4020000,
+     "root": "15320.0x180.0"
+    },
+    {
+     "style": 2140000,
+     "layout": 2000000,
+     "style+layout": 4140000,
+     "root": "15320.0x180.0"
+    },
+    {
+     "style": 2480000,
+     "layout": 2420000,
+     "style+layout": 4900000,
+     "root": "15320.0x180.0"
+    },
+    {
+     "style": 2600000,
+     "layout": 2340000,
+     "style+layout": 4940000,
+     "root": "15320.0x180.0"
+    }
+   ]
+  }
+ },
+ "flex/deep_random/1000": {
+  "nodes": 767,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 914000,
+     "style": 953000,
+     "construct": 292000,
+     "update_layout_tree": 1298000,
+     "n_layouts": 1,
+     "root": "415.9x367.7",
+     "total_objects": 771,
+     "construct+layout": 1206000,
+     "style+layout": 2212000
+    },
+    {
+     "layout": 899000,
+     "style": 952000,
+     "construct": 300000,
+     "update_layout_tree": 1310000,
+     "n_layouts": 1,
+     "root": "415.9x367.7",
+     "total_objects": 771,
+     "construct+layout": 1199000,
+     "style+layout": 2209000
+    },
+    {
+     "layout": 907000,
+     "style": 947000,
+     "construct": 299000,
+     "update_layout_tree": 1302000,
+     "n_layouts": 1,
+     "root": "415.9x367.7",
+     "total_objects": 771,
+     "construct+layout": 1206000,
+     "style+layout": 2209000
+    },
+    {
+     "layout": 1017000,
+     "style": 1071000,
+     "construct": 343000,
+     "update_layout_tree": 1479000,
+     "n_layouts": 1,
+     "root": "415.9x367.7",
+     "total_objects": 771,
+     "construct+layout": 1360000,
+     "style+layout": 2496000
+    },
+    {
+     "layout": 1036000,
+     "style": 1009000,
+     "construct": 322000,
+     "update_layout_tree": 1381000,
+     "n_layouts": 1,
+     "root": "415.9x367.7",
+     "total_objects": 771,
+     "construct+layout": 1358000,
+     "style+layout": 2417000
+    },
+    {
+     "layout": 887000,
+     "style": 932000,
+     "construct": 284000,
+     "update_layout_tree": 1265000,
+     "n_layouts": 1,
+     "root": "415.9x367.7",
+     "total_objects": 771,
+     "construct+layout": 1171000,
+     "style+layout": 2152000
+    },
+    {
+     "layout": 923000,
+     "style": 950000,
+     "construct": 314000,
+     "update_layout_tree": 1318000,
+     "n_layouts": 1,
+     "root": "415.9x367.7",
+     "total_objects": 771,
+     "construct+layout": 1237000,
+     "style+layout": 2241000
+    },
+    {
+     "layout": 978000,
+     "style": 949000,
+     "construct": 305000,
+     "update_layout_tree": 1306000,
+     "n_layouts": 1,
+     "root": "415.9x367.7",
+     "total_objects": 771,
+     "construct+layout": 1283000,
+     "style+layout": 2284000
+    },
+    {
+     "layout": 910000,
+     "style": 953000,
+     "construct": 298000,
+     "update_layout_tree": 1307000,
+     "n_layouts": 1,
+     "root": "415.9x367.7",
+     "total_objects": 771,
+     "construct+layout": 1208000,
+     "style+layout": 2217000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 2760000,
+     "layout": 3040000,
+     "style+layout": 5800000,
+     "root": "415.9x367.7"
+    },
+    {
+     "style": 2480000,
+     "layout": 2640000,
+     "style+layout": 5120000,
+     "root": "415.9x367.7"
+    },
+    {
+     "style": 2720000,
+     "layout": 2940000,
+     "style+layout": 5660000,
+     "root": "415.9x367.7"
+    },
+    {
+     "style": 2680000,
+     "layout": 3060000,
+     "style+layout": 5740000,
+     "root": "415.9x367.7"
+    },
+    {
+     "style": 2580000,
+     "layout": 2700000,
+     "style+layout": 5280000,
+     "root": "415.9x367.7"
+    },
+    {
+     "style": 2620000,
+     "layout": 2900000,
+     "style+layout": 5520000,
+     "root": "415.9x367.7"
+    },
+    {
+     "style": 2400000,
+     "layout": 2700000,
+     "style+layout": 5100000,
+     "root": "415.9x367.7"
+    },
+    {
+     "style": 2400000,
+     "layout": 2600000,
+     "style+layout": 5000000,
+     "root": "415.9x367.7"
+    },
+    {
+     "style": 2360000,
+     "layout": 2600000,
+     "style+layout": 4960000,
+     "root": "415.9x367.7"
+    }
+   ]
+  }
+ },
+ "flex/huge_nested/10000": {
+  "nodes": 9111,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 8781000,
+     "style": 14714000,
+     "construct": 3645000,
+     "update_layout_tree": 18422000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 9115,
+     "construct+layout": 12426000,
+     "style+layout": 27203000
+    },
+    {
+     "layout": 8765000,
+     "style": 13927000,
+     "construct": 3532000,
+     "update_layout_tree": 17512000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 9115,
+     "construct+layout": 12297000,
+     "style+layout": 26277000
+    },
+    {
+     "layout": 8630000,
+     "style": 14196000,
+     "construct": 3761000,
+     "update_layout_tree": 18013000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 9115,
+     "construct+layout": 12391000,
+     "style+layout": 26643000
+    },
+    {
+     "layout": 8911000,
+     "style": 14297000,
+     "construct": 3581000,
+     "update_layout_tree": 17941000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 9115,
+     "construct+layout": 12492000,
+     "style+layout": 26852000
+    },
+    {
+     "layout": 8790000,
+     "style": 14285000,
+     "construct": 3601000,
+     "update_layout_tree": 17944000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 9115,
+     "construct+layout": 12391000,
+     "style+layout": 26734000
+    },
+    {
+     "layout": 9002000,
+     "style": 14406000,
+     "construct": 4025000,
+     "update_layout_tree": 18487000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 9115,
+     "construct+layout": 13027000,
+     "style+layout": 27489000
+    },
+    {
+     "layout": 8769000,
+     "style": 14233000,
+     "construct": 3651000,
+     "update_layout_tree": 17944000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 9115,
+     "construct+layout": 12420000,
+     "style+layout": 26713000
+    },
+    {
+     "layout": 8800000,
+     "style": 14400000,
+     "construct": 3677000,
+     "update_layout_tree": 18133000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 9115,
+     "construct+layout": 12477000,
+     "style+layout": 26933000
+    },
+    {
+     "layout": 8793000,
+     "style": 14476000,
+     "construct": 3651000,
+     "update_layout_tree": 18185000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 9115,
+     "construct+layout": 12444000,
+     "style+layout": 26978000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 29620000,
+     "layout": 18360000,
+     "style+layout": 47980000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 29740000,
+     "layout": 18440000,
+     "style+layout": 48180000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 38260000,
+     "layout": 18600000,
+     "style+layout": 56860000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 30640000,
+     "layout": 18420000,
+     "style+layout": 49060000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 30360000,
+     "layout": 18320000,
+     "style+layout": 48680000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 30280000,
+     "layout": 18340000,
+     "style+layout": 48620000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 30100000,
+     "layout": 18240000,
+     "style+layout": 48340000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 30420000,
+     "layout": 18640000,
+     "style+layout": 49060000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 31680000,
+     "layout": 18420000,
+     "style+layout": 50100000,
+     "root": "100.0x10.0"
+    }
+   ]
+  }
+ },
+ "flex/wide/10000": {
+  "nodes": 10001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 13175000,
+     "style": 13429000,
+     "construct": 3520000,
+     "update_layout_tree": 17008000,
+     "n_layouts": 1,
+     "root": "854596.9x500.0",
+     "total_objects": 10005,
+     "construct+layout": 16695000,
+     "style+layout": 30183000
+    },
+    {
+     "layout": 13036000,
+     "style": 13063000,
+     "construct": 3431000,
+     "update_layout_tree": 16553000,
+     "n_layouts": 1,
+     "root": "854596.9x500.0",
+     "total_objects": 10005,
+     "construct+layout": 16467000,
+     "style+layout": 29589000
+    },
+    {
+     "layout": 14418000,
+     "style": 13201000,
+     "construct": 3519000,
+     "update_layout_tree": 16778000,
+     "n_layouts": 1,
+     "root": "854596.9x500.0",
+     "total_objects": 10005,
+     "construct+layout": 17937000,
+     "style+layout": 31196000
+    },
+    {
+     "layout": 13251000,
+     "style": 13028000,
+     "construct": 3420000,
+     "update_layout_tree": 16520000,
+     "n_layouts": 1,
+     "root": "854596.9x500.0",
+     "total_objects": 10005,
+     "construct+layout": 16671000,
+     "style+layout": 29771000
+    },
+    {
+     "layout": 13431000,
+     "style": 13094000,
+     "construct": 3466000,
+     "update_layout_tree": 16619000,
+     "n_layouts": 1,
+     "root": "854596.9x500.0",
+     "total_objects": 10005,
+     "construct+layout": 16897000,
+     "style+layout": 30050000
+    },
+    {
+     "layout": 13638000,
+     "style": 13469000,
+     "construct": 3463000,
+     "update_layout_tree": 16989000,
+     "n_layouts": 1,
+     "root": "854596.9x500.0",
+     "total_objects": 10005,
+     "construct+layout": 17101000,
+     "style+layout": 30627000
+    },
+    {
+     "layout": 12844000,
+     "style": 13152000,
+     "construct": 3415000,
+     "update_layout_tree": 16634000,
+     "n_layouts": 1,
+     "root": "854596.9x500.0",
+     "total_objects": 10005,
+     "construct+layout": 16259000,
+     "style+layout": 29478000
+    },
+    {
+     "layout": 12980000,
+     "style": 13123000,
+     "construct": 3464000,
+     "update_layout_tree": 16648000,
+     "n_layouts": 1,
+     "root": "854596.9x500.0",
+     "total_objects": 10005,
+     "construct+layout": 16444000,
+     "style+layout": 29628000
+    },
+    {
+     "layout": 12713000,
+     "style": 13143000,
+     "construct": 3340000,
+     "update_layout_tree": 16504000,
+     "n_layouts": 2,
+     "root": "854596.9x500.0",
+     "total_objects": 10005,
+     "construct+layout": 16053000,
+     "style+layout": 29217000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 32340000,
+     "layout": 26680000,
+     "style+layout": 59020000,
+     "root": "854596.9x500.0"
+    },
+    {
+     "style": 32120000,
+     "layout": 27120000,
+     "style+layout": 59240000,
+     "root": "854596.9x500.0"
+    },
+    {
+     "style": 32240000,
+     "layout": 27720000,
+     "style+layout": 59960000,
+     "root": "854596.9x500.0"
+    },
+    {
+     "style": 33880000,
+     "layout": 27520000,
+     "style+layout": 61400000,
+     "root": "854596.9x500.0"
+    },
+    {
+     "style": 32400000,
+     "layout": 26840000,
+     "style+layout": 59240000,
+     "root": "854596.9x500.0"
+    },
+    {
+     "style": 33360000,
+     "layout": 27160000,
+     "style+layout": 60520000,
+     "root": "854596.9x500.0"
+    },
+    {
+     "style": 32380000,
+     "layout": 27000000,
+     "style+layout": 59380000,
+     "root": "854596.9x500.0"
+    },
+    {
+     "style": 32560000,
+     "layout": 27420000,
+     "style+layout": 59980000,
+     "root": "854596.9x500.0"
+    },
+    {
+     "style": 37500000,
+     "layout": 27560000,
+     "style+layout": 65060000,
+     "root": "854596.9x500.0"
+    }
+   ]
+  }
+ },
+ "flex/absolute/10000": {
+  "nodes": 10004,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 13770000,
+     "style": 15494000,
+     "construct": 5735000,
+     "update_layout_tree": 21251000,
+     "n_layouts": 2,
+     "root": "423959.3x499.8",
+     "total_objects": 10008,
+     "construct+layout": 19505000,
+     "style+layout": 35021000
+    },
+    {
+     "layout": 13718000,
+     "style": 15785000,
+     "construct": 5881000,
+     "update_layout_tree": 21689000,
+     "n_layouts": 2,
+     "root": "423959.3x499.8",
+     "total_objects": 10008,
+     "construct+layout": 19599000,
+     "style+layout": 35407000
+    },
+    {
+     "layout": 14027000,
+     "style": 15645000,
+     "construct": 5853000,
+     "update_layout_tree": 21519000,
+     "n_layouts": 2,
+     "root": "423959.3x499.8",
+     "total_objects": 10008,
+     "construct+layout": 19880000,
+     "style+layout": 35546000
+    },
+    {
+     "layout": 15490000,
+     "style": 16270000,
+     "construct": 6050000,
+     "update_layout_tree": 22340000,
+     "n_layouts": 2,
+     "root": "423959.3x499.8",
+     "total_objects": 10008,
+     "construct+layout": 21540000,
+     "style+layout": 37830000
+    },
+    {
+     "layout": 15901000,
+     "style": 16955000,
+     "construct": 7288000,
+     "update_layout_tree": 24266000,
+     "n_layouts": 2,
+     "root": "423959.3x499.8",
+     "total_objects": 10008,
+     "construct+layout": 23189000,
+     "style+layout": 40167000
+    },
+    {
+     "layout": 14774000,
+     "style": 16627000,
+     "construct": 6109000,
+     "update_layout_tree": 22758000,
+     "n_layouts": 2,
+     "root": "423959.3x499.8",
+     "total_objects": 10008,
+     "construct+layout": 20883000,
+     "style+layout": 37532000
+    },
+    {
+     "layout": 15453000,
+     "style": 15798000,
+     "construct": 6257000,
+     "update_layout_tree": 22078000,
+     "n_layouts": 2,
+     "root": "423959.3x499.8",
+     "total_objects": 10008,
+     "construct+layout": 21710000,
+     "style+layout": 37531000
+    },
+    {
+     "layout": 15193000,
+     "style": 18095000,
+     "construct": 6433000,
+     "update_layout_tree": 24553000,
+     "n_layouts": 2,
+     "root": "423959.3x499.8",
+     "total_objects": 10008,
+     "construct+layout": 21626000,
+     "style+layout": 39746000
+    },
+    {
+     "layout": 16019000,
+     "style": 15627000,
+     "construct": 6281000,
+     "update_layout_tree": 21932000,
+     "n_layouts": 2,
+     "root": "423959.3x499.8",
+     "total_objects": 10008,
+     "construct+layout": 22300000,
+     "style+layout": 37951000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 41620000,
+     "layout": 24700000,
+     "style+layout": 66320000,
+     "root": "423959.3x499.8"
+    },
+    {
+     "style": 43160000,
+     "layout": 27920000,
+     "style+layout": 71080000,
+     "root": "423959.3x499.8"
+    },
+    {
+     "style": 43140000,
+     "layout": 26580000,
+     "style+layout": 69720000,
+     "root": "423959.3x499.8"
+    },
+    {
+     "style": 40500000,
+     "layout": 25200000,
+     "style+layout": 65700000,
+     "root": "423959.3x499.8"
+    },
+    {
+     "style": 41600000,
+     "layout": 25340000,
+     "style+layout": 66940000,
+     "root": "423959.3x499.8"
+    },
+    {
+     "style": 47360000,
+     "layout": 27440000,
+     "style+layout": 74800000,
+     "root": "423959.3x499.8"
+    },
+    {
+     "style": 43160000,
+     "layout": 26600000,
+     "style+layout": 69760000,
+     "root": "423959.3x499.8"
+    },
+    {
+     "style": 42280000,
+     "layout": 25020000,
+     "style+layout": 67300000,
+     "root": "423959.3x499.8"
+    },
+    {
+     "style": 42000000,
+     "layout": 25720000,
+     "style+layout": 67720000,
+     "root": "423959.3x499.8"
+    }
+   ]
+  }
+ },
+ "flex/deep_auto/10000": {
+  "nodes": 8191,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 17821000,
+     "style": 10813000,
+     "construct": 3753000,
+     "update_layout_tree": 14632000,
+     "n_layouts": 1,
+     "root": "163800.0x240.0",
+     "total_objects": 8195,
+     "construct+layout": 21574000,
+     "style+layout": 32453000
+    },
+    {
+     "layout": 18169000,
+     "style": 15213000,
+     "construct": 3738000,
+     "update_layout_tree": 19077000,
+     "n_layouts": 1,
+     "root": "163800.0x240.0",
+     "total_objects": 8195,
+     "construct+layout": 21907000,
+     "style+layout": 37246000
+    },
+    {
+     "layout": 19766000,
+     "style": 10462000,
+     "construct": 3822000,
+     "update_layout_tree": 14344000,
+     "n_layouts": 1,
+     "root": "163800.0x240.0",
+     "total_objects": 8195,
+     "construct+layout": 23588000,
+     "style+layout": 34110000
+    },
+    {
+     "layout": 17331000,
+     "style": 10224000,
+     "construct": 3633000,
+     "update_layout_tree": 13930000,
+     "n_layouts": 1,
+     "root": "163800.0x240.0",
+     "total_objects": 8195,
+     "construct+layout": 20964000,
+     "style+layout": 31261000
+    },
+    {
+     "layout": 17597000,
+     "style": 10113000,
+     "construct": 3570000,
+     "update_layout_tree": 13740000,
+     "n_layouts": 1,
+     "root": "163800.0x240.0",
+     "total_objects": 8195,
+     "construct+layout": 21167000,
+     "style+layout": 31337000
+    },
+    {
+     "layout": 16987000,
+     "style": 10127000,
+     "construct": 3561000,
+     "update_layout_tree": 13745000,
+     "n_layouts": 1,
+     "root": "163800.0x240.0",
+     "total_objects": 8195,
+     "construct+layout": 20548000,
+     "style+layout": 30732000
+    },
+    {
+     "layout": 17560000,
+     "style": 10327000,
+     "construct": 3565000,
+     "update_layout_tree": 13959000,
+     "n_layouts": 1,
+     "root": "163800.0x240.0",
+     "total_objects": 8195,
+     "construct+layout": 21125000,
+     "style+layout": 31519000
+    },
+    {
+     "layout": 17352000,
+     "style": 10165000,
+     "construct": 3372000,
+     "update_layout_tree": 13608000,
+     "n_layouts": 1,
+     "root": "163800.0x240.0",
+     "total_objects": 8195,
+     "construct+layout": 20724000,
+     "style+layout": 30960000
+    },
+    {
+     "layout": 17401000,
+     "style": 10339000,
+     "construct": 3645000,
+     "update_layout_tree": 14044000,
+     "n_layouts": 1,
+     "root": "163800.0x240.0",
+     "total_objects": 8195,
+     "construct+layout": 21046000,
+     "style+layout": 31445000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 24060000,
+     "layout": 17900000,
+     "style+layout": 41960000,
+     "root": "163800.0x240.0"
+    },
+    {
+     "style": 24160000,
+     "layout": 17800000,
+     "style+layout": 41960000,
+     "root": "163800.0x240.0"
+    },
+    {
+     "style": 23200000,
+     "layout": 17720000,
+     "style+layout": 40920000,
+     "root": "163800.0x240.0"
+    },
+    {
+     "style": 24460000,
+     "layout": 18480000,
+     "style+layout": 42940000,
+     "root": "163800.0x240.0"
+    },
+    {
+     "style": 24180000,
+     "layout": 17980000,
+     "style+layout": 42160000,
+     "root": "163800.0x240.0"
+    },
+    {
+     "style": 27580000,
+     "layout": 19020000,
+     "style+layout": 46600000,
+     "root": "163800.0x240.0"
+    },
+    {
+     "style": 25200000,
+     "layout": 18180000,
+     "style+layout": 43380000,
+     "root": "163800.0x240.0"
+    },
+    {
+     "style": 24100000,
+     "layout": 18240000,
+     "style+layout": 42340000,
+     "root": "163800.0x240.0"
+    },
+    {
+     "style": 24700000,
+     "layout": 18140000,
+     "style+layout": 42840000,
+     "root": "163800.0x240.0"
+    }
+   ]
+  }
+ },
+ "flex/deep_random/10000": {
+  "nodes": 8191,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 8899000,
+     "style": 10023000,
+     "construct": 3134000,
+     "update_layout_tree": 13217000,
+     "n_layouts": 1,
+     "root": "1326.1x357.8",
+     "total_objects": 8195,
+     "construct+layout": 12033000,
+     "style+layout": 22116000
+    },
+    {
+     "layout": 10935000,
+     "style": 11036000,
+     "construct": 4897000,
+     "update_layout_tree": 15995000,
+     "n_layouts": 1,
+     "root": "1326.1x357.8",
+     "total_objects": 8195,
+     "construct+layout": 15832000,
+     "style+layout": 26930000
+    },
+    {
+     "layout": 9111000,
+     "style": 10292000,
+     "construct": 3222000,
+     "update_layout_tree": 13573000,
+     "n_layouts": 1,
+     "root": "1326.1x357.8",
+     "total_objects": 8195,
+     "construct+layout": 12333000,
+     "style+layout": 22684000
+    },
+    {
+     "layout": 9583000,
+     "style": 10005000,
+     "construct": 3201000,
+     "update_layout_tree": 13265000,
+     "n_layouts": 1,
+     "root": "1326.1x357.8",
+     "total_objects": 8195,
+     "construct+layout": 12784000,
+     "style+layout": 22848000
+    },
+    {
+     "layout": 9047000,
+     "style": 9933000,
+     "construct": 3244000,
+     "update_layout_tree": 13242000,
+     "n_layouts": 1,
+     "root": "1326.1x357.8",
+     "total_objects": 8195,
+     "construct+layout": 12291000,
+     "style+layout": 22289000
+    },
+    {
+     "layout": 8933000,
+     "style": 9976000,
+     "construct": 3241000,
+     "update_layout_tree": 13272000,
+     "n_layouts": 1,
+     "root": "1326.1x357.8",
+     "total_objects": 8195,
+     "construct+layout": 12174000,
+     "style+layout": 22205000
+    },
+    {
+     "layout": 8872000,
+     "style": 10135000,
+     "construct": 3254000,
+     "update_layout_tree": 13459000,
+     "n_layouts": 1,
+     "root": "1326.1x357.8",
+     "total_objects": 8195,
+     "construct+layout": 12126000,
+     "style+layout": 22331000
+    },
+    {
+     "layout": 8769000,
+     "style": 9853000,
+     "construct": 3201000,
+     "update_layout_tree": 13115000,
+     "n_layouts": 1,
+     "root": "1326.1x357.8",
+     "total_objects": 8195,
+     "construct+layout": 11970000,
+     "style+layout": 21884000
+    },
+    {
+     "layout": 9155000,
+     "style": 10747000,
+     "construct": 3231000,
+     "update_layout_tree": 14039000,
+     "n_layouts": 1,
+     "root": "1326.1x357.8",
+     "total_objects": 8195,
+     "construct+layout": 12386000,
+     "style+layout": 23194000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 25800000,
+     "layout": 23900000,
+     "style+layout": 49700000,
+     "root": "1326.1x357.8"
+    },
+    {
+     "style": 24580000,
+     "layout": 23600000,
+     "style+layout": 48180000,
+     "root": "1326.1x357.8"
+    },
+    {
+     "style": 24920000,
+     "layout": 23380000,
+     "style+layout": 48300000,
+     "root": "1326.1x357.8"
+    },
+    {
+     "style": 25620000,
+     "layout": 24020000,
+     "style+layout": 49640000,
+     "root": "1326.1x357.8"
+    },
+    {
+     "style": 25820000,
+     "layout": 24140000,
+     "style+layout": 49960000,
+     "root": "1326.1x357.8"
+    },
+    {
+     "style": 25760000,
+     "layout": 24960000,
+     "style+layout": 50720000,
+     "root": "1326.1x357.8"
+    },
+    {
+     "style": 25760000,
+     "layout": 24140000,
+     "style+layout": 49900000,
+     "root": "1326.1x357.8"
+    },
+    {
+     "style": 25660000,
+     "layout": 23620000,
+     "style+layout": 49280000,
+     "root": "1326.1x357.8"
+    },
+    {
+     "style": 25820000,
+     "layout": 23520000,
+     "style+layout": 49340000,
+     "root": "1326.1x357.8"
+    }
+   ]
+  }
+ },
+ "flex/superdeep/50": {
+  "nodes": 151,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 457000,
+     "style": 313000,
+     "construct": 92000,
+     "update_layout_tree": 463000,
+     "n_layouts": 1,
+     "root": "3000.0x1000.0",
+     "total_objects": 155,
+     "construct+layout": 549000,
+     "style+layout": 920000
+    },
+    {
+     "layout": 435000,
+     "style": 282000,
+     "construct": 87000,
+     "update_layout_tree": 431000,
+     "n_layouts": 1,
+     "root": "3000.0x1000.0",
+     "total_objects": 155,
+     "construct+layout": 522000,
+     "style+layout": 866000
+    },
+    {
+     "layout": 429000,
+     "style": 301000,
+     "construct": 96000,
+     "update_layout_tree": 451000,
+     "n_layouts": 1,
+     "root": "3000.0x1000.0",
+     "total_objects": 155,
+     "construct+layout": 525000,
+     "style+layout": 880000
+    },
+    {
+     "layout": 456000,
+     "style": 303000,
+     "construct": 90000,
+     "update_layout_tree": 448000,
+     "n_layouts": 1,
+     "root": "3000.0x1000.0",
+     "total_objects": 155,
+     "construct+layout": 546000,
+     "style+layout": 904000
+    },
+    {
+     "layout": 463000,
+     "style": 298000,
+     "construct": 85000,
+     "update_layout_tree": 439000,
+     "n_layouts": 1,
+     "root": "3000.0x1000.0",
+     "total_objects": 155,
+     "construct+layout": 548000,
+     "style+layout": 902000
+    },
+    {
+     "layout": 452000,
+     "style": 296000,
+     "construct": 85000,
+     "update_layout_tree": 437000,
+     "n_layouts": 1,
+     "root": "3000.0x1000.0",
+     "total_objects": 155,
+     "construct+layout": 537000,
+     "style+layout": 889000
+    },
+    {
+     "layout": 460000,
+     "style": 300000,
+     "construct": 93000,
+     "update_layout_tree": 452000,
+     "n_layouts": 1,
+     "root": "3000.0x1000.0",
+     "total_objects": 155,
+     "construct+layout": 553000,
+     "style+layout": 912000
+    },
+    {
+     "layout": 437000,
+     "style": 306000,
+     "construct": 97000,
+     "update_layout_tree": 458000,
+     "n_layouts": 1,
+     "root": "3000.0x1000.0",
+     "total_objects": 155,
+     "construct+layout": 534000,
+     "style+layout": 895000
+    },
+    {
+     "layout": 464000,
+     "style": 354000,
+     "construct": 106000,
+     "update_layout_tree": 520000,
+     "n_layouts": 1,
+     "root": "3000.0x1000.0",
+     "total_objects": 155,
+     "construct+layout": 570000,
+     "style+layout": 984000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 680000,
+     "layout": 500000,
+     "style+layout": 1180000,
+     "root": "3000.0x1000.0"
+    },
+    {
+     "style": 660000,
+     "layout": 540000,
+     "style+layout": 1200000,
+     "root": "3000.0x1000.0"
+    },
+    {
+     "style": 660000,
+     "layout": 500000,
+     "style+layout": 1160000,
+     "root": "3000.0x1000.0"
+    },
+    {
+     "style": 660000,
+     "layout": 500000,
+     "style+layout": 1160000,
+     "root": "3000.0x1000.0"
+    },
+    {
+     "style": 640000,
+     "layout": 500000,
+     "style+layout": 1140000,
+     "root": "3000.0x1000.0"
+    },
+    {
+     "style": 660000,
+     "layout": 500000,
+     "style+layout": 1160000,
+     "root": "3000.0x1000.0"
+    },
+    {
+     "style": 620000,
+     "layout": 520000,
+     "style+layout": 1140000,
+     "root": "3000.0x1000.0"
+    },
+    {
+     "style": 780000,
+     "layout": 600000,
+     "style+layout": 1380000,
+     "root": "3000.0x1000.0"
+    },
+    {
+     "style": 740000,
+     "layout": 620000,
+     "style+layout": 1360000,
+     "root": "3000.0x1000.0"
+    }
+   ]
+  }
+ },
+ "flex/superdeep/100": {
+  "nodes": 301,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 957000,
+     "style": 524000,
+     "construct": 196000,
+     "update_layout_tree": 771000,
+     "n_layouts": 1,
+     "root": "6000.0x2000.0",
+     "total_objects": 305,
+     "construct+layout": 1153000,
+     "style+layout": 1728000
+    },
+    {
+     "layout": 851000,
+     "style": 506000,
+     "construct": 186000,
+     "update_layout_tree": 749000,
+     "n_layouts": 1,
+     "root": "6000.0x2000.0",
+     "total_objects": 305,
+     "construct+layout": 1037000,
+     "style+layout": 1600000
+    },
+    {
+     "layout": 853000,
+     "style": 510000,
+     "construct": 173000,
+     "update_layout_tree": 738000,
+     "n_layouts": 1,
+     "root": "6000.0x2000.0",
+     "total_objects": 305,
+     "construct+layout": 1026000,
+     "style+layout": 1591000
+    },
+    {
+     "layout": 953000,
+     "style": 602000,
+     "construct": 210000,
+     "update_layout_tree": 876000,
+     "n_layouts": 1,
+     "root": "6000.0x2000.0",
+     "total_objects": 305,
+     "construct+layout": 1163000,
+     "style+layout": 1829000
+    },
+    {
+     "layout": 966000,
+     "style": 685000,
+     "construct": 207000,
+     "update_layout_tree": 956000,
+     "n_layouts": 1,
+     "root": "6000.0x2000.0",
+     "total_objects": 305,
+     "construct+layout": 1173000,
+     "style+layout": 1922000
+    },
+    {
+     "layout": 1061000,
+     "style": 618000,
+     "construct": 225000,
+     "update_layout_tree": 908000,
+     "n_layouts": 1,
+     "root": "6000.0x2000.0",
+     "total_objects": 305,
+     "construct+layout": 1286000,
+     "style+layout": 1969000
+    },
+    {
+     "layout": 884000,
+     "style": 521000,
+     "construct": 192000,
+     "update_layout_tree": 769000,
+     "n_layouts": 1,
+     "root": "6000.0x2000.0",
+     "total_objects": 305,
+     "construct+layout": 1076000,
+     "style+layout": 1653000
+    },
+    {
+     "layout": 868000,
+     "style": 541000,
+     "construct": 186000,
+     "update_layout_tree": 785000,
+     "n_layouts": 1,
+     "root": "6000.0x2000.0",
+     "total_objects": 305,
+     "construct+layout": 1054000,
+     "style+layout": 1653000
+    },
+    {
+     "layout": 867000,
+     "style": 550000,
+     "construct": 179000,
+     "update_layout_tree": 787000,
+     "n_layouts": 1,
+     "root": "6000.0x2000.0",
+     "total_objects": 305,
+     "construct+layout": 1046000,
+     "style+layout": 1654000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 1360000,
+     "layout": 1120000,
+     "style+layout": 2480000,
+     "root": "6000.0x2000.0"
+    },
+    {
+     "style": 1280000,
+     "layout": 960000,
+     "style+layout": 2240000,
+     "root": "6000.0x2000.0"
+    },
+    {
+     "style": 1260000,
+     "layout": 1000000,
+     "style+layout": 2260000,
+     "root": "6000.0x2000.0"
+    },
+    {
+     "style": 1180000,
+     "layout": 1100000,
+     "style+layout": 2280000,
+     "root": "6000.0x2000.0"
+    },
+    {
+     "style": 1300000,
+     "layout": 1100000,
+     "style+layout": 2400000,
+     "root": "6000.0x2000.0"
+    },
+    {
+     "style": 1140000,
+     "layout": 900000,
+     "style+layout": 2040000,
+     "root": "6000.0x2000.0"
+    },
+    {
+     "style": 1140000,
+     "layout": 960000,
+     "style+layout": 2100000,
+     "root": "6000.0x2000.0"
+    },
+    {
+     "style": 1100000,
+     "layout": 920000,
+     "style+layout": 2020000,
+     "root": "6000.0x2000.0"
+    },
+    {
+     "style": 1120000,
+     "layout": 900000,
+     "style+layout": 2020000,
+     "root": "6000.0x2000.0"
+    }
+   ]
+  }
+ },
+ "grid/wide/31x31": {
+  "nodes": 962,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 2672000,
+     "style": 1246000,
+     "construct": 354000,
+     "update_layout_tree": 1665000,
+     "n_layouts": 1,
+     "root": "1278.5x596.6",
+     "total_objects": 966,
+     "construct+layout": 3026000,
+     "style+layout": 4337000
+    },
+    {
+     "layout": 3069000,
+     "style": 1394000,
+     "construct": 372000,
+     "update_layout_tree": 1840000,
+     "n_layouts": 1,
+     "root": "1278.5x596.6",
+     "total_objects": 966,
+     "construct+layout": 3441000,
+     "style+layout": 4909000
+    },
+    {
+     "layout": 2841000,
+     "style": 1262000,
+     "construct": 337000,
+     "update_layout_tree": 1657000,
+     "n_layouts": 1,
+     "root": "1278.5x596.6",
+     "total_objects": 966,
+     "construct+layout": 3178000,
+     "style+layout": 4498000
+    },
+    {
+     "layout": 2639000,
+     "style": 1223000,
+     "construct": 340000,
+     "update_layout_tree": 1625000,
+     "n_layouts": 1,
+     "root": "1278.5x596.6",
+     "total_objects": 966,
+     "construct+layout": 2979000,
+     "style+layout": 4264000
+    },
+    {
+     "layout": 2579000,
+     "style": 1185000,
+     "construct": 324000,
+     "update_layout_tree": 1566000,
+     "n_layouts": 1,
+     "root": "1278.5x596.6",
+     "total_objects": 966,
+     "construct+layout": 2903000,
+     "style+layout": 4145000
+    },
+    {
+     "layout": 2587000,
+     "style": 1187000,
+     "construct": 326000,
+     "update_layout_tree": 1578000,
+     "n_layouts": 1,
+     "root": "1278.5x596.6",
+     "total_objects": 966,
+     "construct+layout": 2913000,
+     "style+layout": 4165000
+    },
+    {
+     "layout": 2655000,
+     "style": 1243000,
+     "construct": 347000,
+     "update_layout_tree": 1654000,
+     "n_layouts": 1,
+     "root": "1278.5x596.6",
+     "total_objects": 966,
+     "construct+layout": 3002000,
+     "style+layout": 4309000
+    },
+    {
+     "layout": 2590000,
+     "style": 1235000,
+     "construct": 333000,
+     "update_layout_tree": 1628000,
+     "n_layouts": 1,
+     "root": "1278.5x596.6",
+     "total_objects": 966,
+     "construct+layout": 2923000,
+     "style+layout": 4218000
+    },
+    {
+     "layout": 2623000,
+     "style": 1228000,
+     "construct": 344000,
+     "update_layout_tree": 1631000,
+     "n_layouts": 1,
+     "root": "1278.5x596.6",
+     "total_objects": 966,
+     "construct+layout": 2967000,
+     "style+layout": 4254000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 3280000,
+     "layout": 3580000,
+     "style+layout": 6860000,
+     "root": "1278.5x596.6"
+    },
+    {
+     "style": 3260000,
+     "layout": 3600000,
+     "style+layout": 6860000,
+     "root": "1278.5x596.6"
+    },
+    {
+     "style": 3260000,
+     "layout": 3580000,
+     "style+layout": 6840000,
+     "root": "1278.5x596.6"
+    },
+    {
+     "style": 3160000,
+     "layout": 3560000,
+     "style+layout": 6720000,
+     "root": "1278.5x596.6"
+    },
+    {
+     "style": 3300000,
+     "layout": 3600000,
+     "style+layout": 6900000,
+     "root": "1278.5x596.6"
+    },
+    {
+     "style": 3240000,
+     "layout": 3580000,
+     "style+layout": 6820000,
+     "root": "1278.5x596.6"
+    },
+    {
+     "style": 3200000,
+     "layout": 3660000,
+     "style+layout": 6860000,
+     "root": "1278.5x596.6"
+    },
+    {
+     "style": 3280000,
+     "layout": 3660000,
+     "style+layout": 6940000,
+     "root": "1278.5x596.6"
+    },
+    {
+     "style": 3300000,
+     "layout": 3580000,
+     "style+layout": 6880000,
+     "root": "1278.5x596.6"
+    }
+   ]
+  }
+ },
+ "grid/wide/100x100": {
+  "nodes": 10001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 37677000,
+     "style": 12422000,
+     "construct": 3240000,
+     "update_layout_tree": 15722000,
+     "n_layouts": 1,
+     "root": "4304.1x4729.3",
+     "total_objects": 10005,
+     "construct+layout": 40917000,
+     "style+layout": 53399000
+    },
+    {
+     "layout": 35233000,
+     "style": 12443000,
+     "construct": 3392000,
+     "update_layout_tree": 15895000,
+     "n_layouts": 1,
+     "root": "4304.1x4729.3",
+     "total_objects": 10005,
+     "construct+layout": 38625000,
+     "style+layout": 51128000
+    },
+    {
+     "layout": 37460000,
+     "style": 12160000,
+     "construct": 3339000,
+     "update_layout_tree": 15558000,
+     "n_layouts": 1,
+     "root": "4304.1x4729.3",
+     "total_objects": 10005,
+     "construct+layout": 40799000,
+     "style+layout": 53018000
+    },
+    {
+     "layout": 35824000,
+     "style": 12599000,
+     "construct": 3266000,
+     "update_layout_tree": 15925000,
+     "n_layouts": 1,
+     "root": "4304.1x4729.3",
+     "total_objects": 10005,
+     "construct+layout": 39090000,
+     "style+layout": 51749000
+    },
+    {
+     "layout": 37895000,
+     "style": 12322000,
+     "construct": 3270000,
+     "update_layout_tree": 15674000,
+     "n_layouts": 1,
+     "root": "4304.1x4729.3",
+     "total_objects": 10005,
+     "construct+layout": 41165000,
+     "style+layout": 53569000
+    },
+    {
+     "layout": 35658000,
+     "style": 14972000,
+     "construct": 3281000,
+     "update_layout_tree": 18309000,
+     "n_layouts": 1,
+     "root": "4304.1x4729.3",
+     "total_objects": 10005,
+     "construct+layout": 38939000,
+     "style+layout": 53967000
+    },
+    {
+     "layout": 37204000,
+     "style": 12489000,
+     "construct": 3267000,
+     "update_layout_tree": 15816000,
+     "n_layouts": 1,
+     "root": "4304.1x4729.3",
+     "total_objects": 10005,
+     "construct+layout": 40471000,
+     "style+layout": 53020000
+    },
+    {
+     "layout": 36575000,
+     "style": 12382000,
+     "construct": 3291000,
+     "update_layout_tree": 15730000,
+     "n_layouts": 1,
+     "root": "4304.1x4729.3",
+     "total_objects": 10005,
+     "construct+layout": 39866000,
+     "style+layout": 52305000
+    },
+    {
+     "layout": 37032000,
+     "style": 12298000,
+     "construct": 3272000,
+     "update_layout_tree": 15625000,
+     "n_layouts": 1,
+     "root": "4304.1x4729.3",
+     "total_objects": 10005,
+     "construct+layout": 40304000,
+     "style+layout": 52657000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 32300000,
+     "layout": 40400000,
+     "style+layout": 72700000,
+     "root": "4304.1x4729.3"
+    },
+    {
+     "style": 31040000,
+     "layout": 44860000,
+     "style+layout": 75900000,
+     "root": "4304.1x4729.3"
+    },
+    {
+     "style": 31140000,
+     "layout": 39820000,
+     "style+layout": 70960000,
+     "root": "4304.1x4729.3"
+    },
+    {
+     "style": 31680000,
+     "layout": 39780000,
+     "style+layout": 71460000,
+     "root": "4304.1x4729.3"
+    },
+    {
+     "style": 31600000,
+     "layout": 39720000,
+     "style+layout": 71320000,
+     "root": "4304.1x4729.3"
+    },
+    {
+     "style": 32540000,
+     "layout": 40040000,
+     "style+layout": 72580000,
+     "root": "4304.1x4729.3"
+    },
+    {
+     "style": 31960000,
+     "layout": 40340000,
+     "style+layout": 72300000,
+     "root": "4304.1x4729.3"
+    },
+    {
+     "style": 32940000,
+     "layout": 41520000,
+     "style+layout": 74460000,
+     "root": "4304.1x4729.3"
+    },
+    {
+     "style": 31920000,
+     "layout": 40500000,
+     "style+layout": 72420000,
+     "root": "4304.1x4729.3"
+    }
+   ]
+  }
+ },
+ "grid/deep/2x2x5": {
+  "nodes": 1365,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 6851000,
+     "style": 2150000,
+     "construct": 541000,
+     "update_layout_tree": 2775000,
+     "n_layouts": 1,
+     "root": "1753.6x2466.1",
+     "total_objects": 1369,
+     "construct+layout": 7392000,
+     "style+layout": 9626000
+    },
+    {
+     "layout": 6931000,
+     "style": 2144000,
+     "construct": 559000,
+     "update_layout_tree": 2759000,
+     "n_layouts": 1,
+     "root": "1753.6x2466.1",
+     "total_objects": 1369,
+     "construct+layout": 7490000,
+     "style+layout": 9690000
+    },
+    {
+     "layout": 7095000,
+     "style": 2182000,
+     "construct": 560000,
+     "update_layout_tree": 2805000,
+     "n_layouts": 1,
+     "root": "1753.6x2466.1",
+     "total_objects": 1369,
+     "construct+layout": 7655000,
+     "style+layout": 9900000
+    },
+    {
+     "layout": 7005000,
+     "style": 2180000,
+     "construct": 637000,
+     "update_layout_tree": 2878000,
+     "n_layouts": 1,
+     "root": "1753.6x2466.1",
+     "total_objects": 1369,
+     "construct+layout": 7642000,
+     "style+layout": 9883000
+    },
+    {
+     "layout": 7012000,
+     "style": 2279000,
+     "construct": 553000,
+     "update_layout_tree": 2896000,
+     "n_layouts": 1,
+     "root": "1753.6x2466.1",
+     "total_objects": 1369,
+     "construct+layout": 7565000,
+     "style+layout": 9908000
+    },
+    {
+     "layout": 7078000,
+     "style": 2233000,
+     "construct": 563000,
+     "update_layout_tree": 2859000,
+     "n_layouts": 1,
+     "root": "1753.6x2466.1",
+     "total_objects": 1369,
+     "construct+layout": 7641000,
+     "style+layout": 9937000
+    },
+    {
+     "layout": 7875000,
+     "style": 2494000,
+     "construct": 619000,
+     "update_layout_tree": 3186000,
+     "n_layouts": 1,
+     "root": "1753.6x2466.1",
+     "total_objects": 1369,
+     "construct+layout": 8494000,
+     "style+layout": 11061000
+    },
+    {
+     "layout": 6977000,
+     "style": 2201000,
+     "construct": 551000,
+     "update_layout_tree": 2821000,
+     "n_layouts": 1,
+     "root": "1753.6x2466.1",
+     "total_objects": 1369,
+     "construct+layout": 7528000,
+     "style+layout": 9798000
+    },
+    {
+     "layout": 8239000,
+     "style": 2471000,
+     "construct": 579000,
+     "update_layout_tree": 3119000,
+     "n_layouts": 1,
+     "root": "1753.6x2466.1",
+     "total_objects": 1369,
+     "construct+layout": 8818000,
+     "style+layout": 11358000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 6700000,
+     "layout": 18540000,
+     "style+layout": 25240000,
+     "root": "1753.6x2466.1"
+    },
+    {
+     "style": 6480000,
+     "layout": 18720000,
+     "style+layout": 25200000,
+     "root": "1753.6x2466.1"
+    },
+    {
+     "style": 6380000,
+     "layout": 18400000,
+     "style+layout": 24780000,
+     "root": "1753.6x2466.1"
+    },
+    {
+     "style": 6840000,
+     "layout": 18820000,
+     "style+layout": 25660000,
+     "root": "1753.6x2466.1"
+    },
+    {
+     "style": 6700000,
+     "layout": 18800000,
+     "style+layout": 25500000,
+     "root": "1753.6x2466.1"
+    },
+    {
+     "style": 6800000,
+     "layout": 18740000,
+     "style+layout": 25540000,
+     "root": "1753.6x2466.1"
+    },
+    {
+     "style": 7680000,
+     "layout": 21740000,
+     "style+layout": 29420000,
+     "root": "1753.6x2466.1"
+    },
+    {
+     "style": 7720000,
+     "layout": 20300000,
+     "style+layout": 28020000,
+     "root": "1753.6x2466.1"
+    },
+    {
+     "style": 6420000,
+     "layout": 18640000,
+     "style+layout": 25060000,
+     "root": "1753.6x2466.1"
+    }
+   ]
+  }
+ },
+ "grid/deep/3x3x4": {
+  "nodes": 7381,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 30552000,
+     "style": 10964000,
+     "construct": 2717000,
+     "update_layout_tree": 13744000,
+     "n_layouts": 1,
+     "root": "7929.4x7868.4",
+     "total_objects": 7385,
+     "construct+layout": 33269000,
+     "style+layout": 44296000
+    },
+    {
+     "layout": 34245000,
+     "style": 11090000,
+     "construct": 2955000,
+     "update_layout_tree": 14110000,
+     "n_layouts": 1,
+     "root": "7929.4x7868.4",
+     "total_objects": 7385,
+     "construct+layout": 37200000,
+     "style+layout": 48355000
+    },
+    {
+     "layout": 31699000,
+     "style": 12057000,
+     "construct": 3063000,
+     "update_layout_tree": 15185000,
+     "n_layouts": 1,
+     "root": "7929.4x7868.4",
+     "total_objects": 7385,
+     "construct+layout": 34762000,
+     "style+layout": 46884000
+    },
+    {
+     "layout": 29918000,
+     "style": 10943000,
+     "construct": 2875000,
+     "update_layout_tree": 13881000,
+     "n_layouts": 1,
+     "root": "7929.4x7868.4",
+     "total_objects": 7385,
+     "construct+layout": 32793000,
+     "style+layout": 43799000
+    },
+    {
+     "layout": 30044000,
+     "style": 10963000,
+     "construct": 2728000,
+     "update_layout_tree": 13751000,
+     "n_layouts": 1,
+     "root": "7929.4x7868.4",
+     "total_objects": 7385,
+     "construct+layout": 32772000,
+     "style+layout": 43795000
+    },
+    {
+     "layout": 30189000,
+     "style": 10848000,
+     "construct": 2766000,
+     "update_layout_tree": 13671000,
+     "n_layouts": 1,
+     "root": "7929.4x7868.4",
+     "total_objects": 7385,
+     "construct+layout": 32955000,
+     "style+layout": 43860000
+    },
+    {
+     "layout": 30098000,
+     "style": 10846000,
+     "construct": 2708000,
+     "update_layout_tree": 13614000,
+     "n_layouts": 1,
+     "root": "7929.4x7868.4",
+     "total_objects": 7385,
+     "construct+layout": 32806000,
+     "style+layout": 43712000
+    },
+    {
+     "layout": 30350000,
+     "style": 10846000,
+     "construct": 2764000,
+     "update_layout_tree": 13672000,
+     "n_layouts": 1,
+     "root": "7929.4x7868.4",
+     "total_objects": 7385,
+     "construct+layout": 33114000,
+     "style+layout": 44022000
+    },
+    {
+     "layout": 29368000,
+     "style": 10725000,
+     "construct": 2692000,
+     "update_layout_tree": 13474000,
+     "n_layouts": 1,
+     "root": "7929.4x7868.4",
+     "total_objects": 7385,
+     "construct+layout": 32060000,
+     "style+layout": 42842000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 30780000,
+     "layout": 90060000,
+     "style+layout": 120840000,
+     "root": "7929.4x7868.4"
+    },
+    {
+     "style": 28320000,
+     "layout": 86840000,
+     "style+layout": 115160000,
+     "root": "7929.4x7868.4"
+    },
+    {
+     "style": 29420000,
+     "layout": 82900000,
+     "style+layout": 112320000,
+     "root": "7929.4x7868.4"
+    },
+    {
+     "style": 31440000,
+     "layout": 92640000,
+     "style+layout": 124080000,
+     "root": "7929.4x7868.4"
+    },
+    {
+     "style": 34020000,
+     "layout": 91880000,
+     "style+layout": 125900000,
+     "root": "7929.4x7868.4"
+    },
+    {
+     "style": 32100000,
+     "layout": 90800000,
+     "style+layout": 122900000,
+     "root": "7929.4x7868.4"
+    },
+    {
+     "style": 28600000,
+     "layout": 83620000,
+     "style+layout": 112220000,
+     "root": "7929.4x7868.4"
+    },
+    {
+     "style": 27940000,
+     "layout": 103640000,
+     "style+layout": 131580000,
+     "root": "7929.4x7868.4"
+    },
+    {
+     "style": 28240000,
+     "layout": 82360000,
+     "style+layout": 110600000,
+     "root": "7929.4x7868.4"
+    }
+   ]
+  }
+ },
+ "grid/superdeep/100": {
+  "nodes": 101,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 1462000,
+     "style": 195000,
+     "construct": 98000,
+     "update_layout_tree": 351000,
+     "n_layouts": 1,
+     "root": "158.7x82.6",
+     "total_objects": 105,
+     "construct+layout": 1560000,
+     "style+layout": 1813000
+    },
+    {
+     "layout": 1463000,
+     "style": 204000,
+     "construct": 135000,
+     "update_layout_tree": 765000,
+     "n_layouts": 1,
+     "root": "158.7x82.6",
+     "total_objects": 105,
+     "construct+layout": 1598000,
+     "style+layout": 2228000
+    },
+    {
+     "layout": 1379000,
+     "style": 192000,
+     "construct": 85000,
+     "update_layout_tree": 333000,
+     "n_layouts": 1,
+     "root": "158.7x82.6",
+     "total_objects": 105,
+     "construct+layout": 1464000,
+     "style+layout": 1712000
+    },
+    {
+     "layout": 1667000,
+     "style": 203000,
+     "construct": 92000,
+     "update_layout_tree": 349000,
+     "n_layouts": 1,
+     "root": "158.7x82.6",
+     "total_objects": 105,
+     "construct+layout": 1759000,
+     "style+layout": 2016000
+    },
+    {
+     "layout": 1604000,
+     "style": 209000,
+     "construct": 86000,
+     "update_layout_tree": 353000,
+     "n_layouts": 1,
+     "root": "158.7x82.6",
+     "total_objects": 105,
+     "construct+layout": 1690000,
+     "style+layout": 1957000
+    },
+    {
+     "layout": 1663000,
+     "style": 213000,
+     "construct": 97000,
+     "update_layout_tree": 378000,
+     "n_layouts": 1,
+     "root": "158.7x82.6",
+     "total_objects": 105,
+     "construct+layout": 1760000,
+     "style+layout": 2041000
+    },
+    {
+     "layout": 1506000,
+     "style": 214000,
+     "construct": 89000,
+     "update_layout_tree": 352000,
+     "n_layouts": 1,
+     "root": "158.7x82.6",
+     "total_objects": 105,
+     "construct+layout": 1595000,
+     "style+layout": 1858000
+    },
+    {
+     "layout": 1481000,
+     "style": 225000,
+     "construct": 93000,
+     "update_layout_tree": 365000,
+     "n_layouts": 1,
+     "root": "158.7x82.6",
+     "total_objects": 105,
+     "construct+layout": 1574000,
+     "style+layout": 1846000
+    },
+    {
+     "layout": 1461000,
+     "style": 216000,
+     "construct": 86000,
+     "update_layout_tree": 358000,
+     "n_layouts": 1,
+     "root": "158.7x82.6",
+     "total_objects": 105,
+     "construct+layout": 1547000,
+     "style+layout": 1819000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 920000,
+     "layout": 326760000,
+     "style+layout": 327680000,
+     "root": "158.7x82.6"
+    },
+    {
+     "style": 880000,
+     "layout": 324860000,
+     "style+layout": 325740000,
+     "root": "158.7x82.6"
+    },
+    {
+     "style": 880000,
+     "layout": 324460000,
+     "style+layout": 325340000,
+     "root": "158.7x82.6"
+    },
+    {
+     "style": 1000000,
+     "layout": 335120000,
+     "style+layout": 336120000,
+     "root": "158.7x82.6"
+    },
+    {
+     "style": 940000,
+     "layout": 376500000,
+     "style+layout": 377440000,
+     "root": "158.7x82.6"
+    },
+    {
+     "style": 1140000,
+     "layout": 334760000,
+     "style+layout": 335900000,
+     "root": "158.7x82.6"
+    },
+    {
+     "style": 960000,
+     "layout": 322460000,
+     "style+layout": 323420000,
+     "root": "158.7x82.6"
+    },
+    {
+     "style": 940000,
+     "layout": 328140000,
+     "style+layout": 329080000,
+     "root": "158.7x82.6"
+    },
+    {
+     "style": 960000,
+     "layout": 331140000,
+     "style+layout": 332100000,
+     "root": "158.7x82.6"
+    }
+   ]
+  }
+ },
+ "pangui/expand_with_max_constraint": {
+  "nodes": 3001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 3634000,
+     "style": 4529000,
+     "construct": 1207000,
+     "update_layout_tree": 5793000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4841000,
+     "style+layout": 9427000
+    },
+    {
+     "layout": 3655000,
+     "style": 4500000,
+     "construct": 1183000,
+     "update_layout_tree": 5762000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4838000,
+     "style+layout": 9417000
+    },
+    {
+     "layout": 3645000,
+     "style": 4534000,
+     "construct": 1175000,
+     "update_layout_tree": 5766000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4820000,
+     "style+layout": 9411000
+    },
+    {
+     "layout": 8130000,
+     "style": 6139000,
+     "construct": 1541000,
+     "update_layout_tree": 7759000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 9671000,
+     "style+layout": 15889000
+    },
+    {
+     "layout": 4556000,
+     "style": 4954000,
+     "construct": 1452000,
+     "update_layout_tree": 6467000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 6008000,
+     "style+layout": 11023000
+    },
+    {
+     "layout": 4524000,
+     "style": 5220000,
+     "construct": 1820000,
+     "update_layout_tree": 7105000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 6344000,
+     "style+layout": 11629000
+    },
+    {
+     "layout": 3580000,
+     "style": 4505000,
+     "construct": 1141000,
+     "update_layout_tree": 5712000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4721000,
+     "style+layout": 9292000
+    },
+    {
+     "layout": 3629000,
+     "style": 4612000,
+     "construct": 1173000,
+     "update_layout_tree": 5843000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4802000,
+     "style+layout": 9472000
+    },
+    {
+     "layout": 3832000,
+     "style": 4946000,
+     "construct": 1317000,
+     "update_layout_tree": 6326000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 5149000,
+     "style+layout": 10158000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 9700000,
+     "layout": 6920000,
+     "style+layout": 16620000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 9740000,
+     "layout": 6980000,
+     "style+layout": 16720000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 9580000,
+     "layout": 6860000,
+     "style+layout": 16440000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 12220000,
+     "layout": 7980000,
+     "style+layout": 20200000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 21860000,
+     "layout": 16440000,
+     "style+layout": 38300000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 12220000,
+     "layout": 9020000,
+     "style+layout": 21240000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 10700000,
+     "layout": 7920000,
+     "style+layout": 18620000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 10960000,
+     "layout": 7260000,
+     "style+layout": 18220000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 10420000,
+     "layout": 7720000,
+     "style+layout": 18140000,
+     "root": "100.0x10.0"
+    }
+   ]
+  }
+ },
+ "pangui/expand_with_min_constraint": {
+  "nodes": 3001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 3607000,
+     "style": 4566000,
+     "construct": 1191000,
+     "update_layout_tree": 5816000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4798000,
+     "style+layout": 9423000
+    },
+    {
+     "layout": 3482000,
+     "style": 4435000,
+     "construct": 1121000,
+     "update_layout_tree": 5612000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4603000,
+     "style+layout": 9094000
+    },
+    {
+     "layout": 3514000,
+     "style": 4405000,
+     "construct": 1182000,
+     "update_layout_tree": 5642000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4696000,
+     "style+layout": 9156000
+    },
+    {
+     "layout": 3613000,
+     "style": 4487000,
+     "construct": 1169000,
+     "update_layout_tree": 5714000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4782000,
+     "style+layout": 9327000
+    },
+    {
+     "layout": 3585000,
+     "style": 4471000,
+     "construct": 1171000,
+     "update_layout_tree": 5695000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4756000,
+     "style+layout": 9280000
+    },
+    {
+     "layout": 3775000,
+     "style": 4519000,
+     "construct": 1213000,
+     "update_layout_tree": 5785000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4988000,
+     "style+layout": 9560000
+    },
+    {
+     "layout": 3575000,
+     "style": 4428000,
+     "construct": 1162000,
+     "update_layout_tree": 5646000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4737000,
+     "style+layout": 9221000
+    },
+    {
+     "layout": 3549000,
+     "style": 4456000,
+     "construct": 1141000,
+     "update_layout_tree": 5650000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4690000,
+     "style+layout": 9199000
+    },
+    {
+     "layout": 3763000,
+     "style": 4655000,
+     "construct": 1209000,
+     "update_layout_tree": 5917000,
+     "n_layouts": 1,
+     "root": "100.0x10.0",
+     "total_objects": 3005,
+     "construct+layout": 4972000,
+     "style+layout": 9680000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 10720000,
+     "layout": 7240000,
+     "style+layout": 17960000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 11100000,
+     "layout": 7480000,
+     "style+layout": 18580000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 10500000,
+     "layout": 7380000,
+     "style+layout": 17880000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 10860000,
+     "layout": 7880000,
+     "style+layout": 18740000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 10700000,
+     "layout": 7680000,
+     "style+layout": 18380000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 9440000,
+     "layout": 6820000,
+     "style+layout": 16260000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 9920000,
+     "layout": 6920000,
+     "style+layout": 16840000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 9440000,
+     "layout": 6840000,
+     "style+layout": 16280000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 9820000,
+     "layout": 6960000,
+     "style+layout": 16780000,
+     "root": "100.0x10.0"
+    }
+   ]
+  }
+ },
+ "pangui/fit_nesting": {
+  "nodes": 101111,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 122134000,
+     "style": 232808000,
+     "construct": 37543000,
+     "update_layout_tree": 270381000,
+     "n_layouts": 2,
+     "root": "1000.0x1010.0",
+     "total_objects": 101115,
+     "construct+layout": 159677000,
+     "style+layout": 392515000
+    },
+    {
+     "layout": 155011000,
+     "style": 234040000,
+     "construct": 38308000,
+     "update_layout_tree": 272381000,
+     "n_layouts": 2,
+     "root": "1000.0x1010.0",
+     "total_objects": 101115,
+     "construct+layout": 193319000,
+     "style+layout": 427392000
+    },
+    {
+     "layout": 122428000,
+     "style": 240426000,
+     "construct": 37376000,
+     "update_layout_tree": 277831000,
+     "n_layouts": 2,
+     "root": "1000.0x1010.0",
+     "total_objects": 101115,
+     "construct+layout": 159804000,
+     "style+layout": 400259000
+    },
+    {
+     "layout": 136513000,
+     "style": 260549000,
+     "construct": 41409000,
+     "update_layout_tree": 301991000,
+     "n_layouts": 2,
+     "root": "1000.0x1010.0",
+     "total_objects": 101115,
+     "construct+layout": 177922000,
+     "style+layout": 438504000
+    },
+    {
+     "layout": 122952000,
+     "style": 234826000,
+     "construct": 36889000,
+     "update_layout_tree": 271749000,
+     "n_layouts": 2,
+     "root": "1000.0x1010.0",
+     "total_objects": 101115,
+     "construct+layout": 159841000,
+     "style+layout": 394701000
+    },
+    {
+     "layout": 123481000,
+     "style": 240197000,
+     "construct": 38150000,
+     "update_layout_tree": 278377000,
+     "n_layouts": 2,
+     "root": "1000.0x1010.0",
+     "total_objects": 101115,
+     "construct+layout": 161631000,
+     "style+layout": 401858000
+    },
+    {
+     "layout": 121226000,
+     "style": 242731000,
+     "construct": 37878000,
+     "update_layout_tree": 280639000,
+     "n_layouts": 2,
+     "root": "1000.0x1010.0",
+     "total_objects": 101115,
+     "construct+layout": 159104000,
+     "style+layout": 401865000
+    },
+    {
+     "layout": 121272000,
+     "style": 233950000,
+     "construct": 37583000,
+     "update_layout_tree": 271566000,
+     "n_layouts": 2,
+     "root": "1000.0x1010.0",
+     "total_objects": 101115,
+     "construct+layout": 158855000,
+     "style+layout": 392838000
+    },
+    {
+     "layout": 120790000,
+     "style": 234507000,
+     "construct": 37178000,
+     "update_layout_tree": 271738000,
+     "n_layouts": 2,
+     "root": "1000.0x1010.0",
+     "total_objects": 101115,
+     "construct+layout": 157968000,
+     "style+layout": 392528000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 373180000,
+     "layout": 189420000,
+     "style+layout": 562600000,
+     "root": "1000.0x1010.0"
+    },
+    {
+     "style": 443280000,
+     "layout": 207800000,
+     "style+layout": 651080000,
+     "root": "1000.0x1010.0"
+    },
+    {
+     "style": 381280000,
+     "layout": 188620000,
+     "style+layout": 569900000,
+     "root": "1000.0x1010.0"
+    },
+    {
+     "style": 372960000,
+     "layout": 187980000,
+     "style+layout": 560940000,
+     "root": "1000.0x1010.0"
+    },
+    {
+     "style": 380260000,
+     "layout": 193300000,
+     "style+layout": 573560000,
+     "root": "1000.0x1010.0"
+    },
+    {
+     "style": 385440000,
+     "layout": 210980000,
+     "style+layout": 596420000,
+     "root": "1000.0x1010.0"
+    },
+    {
+     "style": 418280000,
+     "layout": 199020000,
+     "style+layout": 617300000,
+     "root": "1000.0x1010.0"
+    },
+    {
+     "style": 375580000,
+     "layout": 191000000,
+     "style+layout": 566580000,
+     "root": "1000.0x1010.0"
+    },
+    {
+     "style": 372220000,
+     "layout": 189500000,
+     "style+layout": 561720000,
+     "root": "1000.0x1010.0"
+    }
+   ]
+  }
+ },
+ "pangui/flex_expand_equal_weights": {
+  "nodes": 15001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 11977000,
+     "style": 29567000,
+     "construct": 6708000,
+     "update_layout_tree": 36299000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 18685000,
+     "style+layout": 48276000
+    },
+    {
+     "layout": 12347000,
+     "style": 30058000,
+     "construct": 5541000,
+     "update_layout_tree": 35620000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 17888000,
+     "style+layout": 47967000
+    },
+    {
+     "layout": 12246000,
+     "style": 29914000,
+     "construct": 5744000,
+     "update_layout_tree": 35679000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 17990000,
+     "style+layout": 47925000
+    },
+    {
+     "layout": 11877000,
+     "style": 29346000,
+     "construct": 5709000,
+     "update_layout_tree": 35103000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 17586000,
+     "style+layout": 46980000
+    },
+    {
+     "layout": 11666000,
+     "style": 29819000,
+     "construct": 5508000,
+     "update_layout_tree": 35349000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 17174000,
+     "style+layout": 47015000
+    },
+    {
+     "layout": 12040000,
+     "style": 29767000,
+     "construct": 6376000,
+     "update_layout_tree": 36165000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 18416000,
+     "style+layout": 48205000
+    },
+    {
+     "layout": 11404000,
+     "style": 30788000,
+     "construct": 5681000,
+     "update_layout_tree": 36490000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 17085000,
+     "style+layout": 47894000
+    },
+    {
+     "layout": 11811000,
+     "style": 30228000,
+     "construct": 5752000,
+     "update_layout_tree": 36028000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 17563000,
+     "style+layout": 47839000
+    },
+    {
+     "layout": 11199000,
+     "style": 28708000,
+     "construct": 5044000,
+     "update_layout_tree": 33772000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 16243000,
+     "style+layout": 44971000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 53540000,
+     "layout": 43040000,
+     "style+layout": 96580000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 53180000,
+     "layout": 42380000,
+     "style+layout": 95560000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 53920000,
+     "layout": 43520000,
+     "style+layout": 97440000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 53640000,
+     "layout": 43540000,
+     "style+layout": 97180000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 52160000,
+     "layout": 43560000,
+     "style+layout": 95720000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 54240000,
+     "layout": 43220000,
+     "style+layout": 97460000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 53500000,
+     "layout": 42840000,
+     "style+layout": 96340000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 53680000,
+     "layout": 43380000,
+     "style+layout": 97060000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 56920000,
+     "layout": 44040000,
+     "style+layout": 100960000,
+     "root": "10000.0x100.0"
+    }
+   ]
+  }
+ },
+ "pangui/flex_expand_weights": {
+  "nodes": 15001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 11025000,
+     "style": 21789000,
+     "construct": 5770000,
+     "update_layout_tree": 27580000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 16795000,
+     "style+layout": 38605000
+    },
+    {
+     "layout": 11106000,
+     "style": 21973000,
+     "construct": 5980000,
+     "update_layout_tree": 27975000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 17086000,
+     "style+layout": 39081000
+    },
+    {
+     "layout": 10276000,
+     "style": 21282000,
+     "construct": 5184000,
+     "update_layout_tree": 26487000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 15460000,
+     "style+layout": 36763000
+    },
+    {
+     "layout": 13485000,
+     "style": 21905000,
+     "construct": 7705000,
+     "update_layout_tree": 29639000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 21190000,
+     "style+layout": 43124000
+    },
+    {
+     "layout": 10644000,
+     "style": 21785000,
+     "construct": 5325000,
+     "update_layout_tree": 27132000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 15969000,
+     "style+layout": 37776000
+    },
+    {
+     "layout": 11440000,
+     "style": 23417000,
+     "construct": 6159000,
+     "update_layout_tree": 29607000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 17599000,
+     "style+layout": 41047000
+    },
+    {
+     "layout": 11246000,
+     "style": 24004000,
+     "construct": 6273000,
+     "update_layout_tree": 30306000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 17519000,
+     "style+layout": 41552000
+    },
+    {
+     "layout": 11722000,
+     "style": 23806000,
+     "construct": 6403000,
+     "update_layout_tree": 30232000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 18125000,
+     "style+layout": 41954000
+    },
+    {
+     "layout": 12156000,
+     "style": 24079000,
+     "construct": 6633000,
+     "update_layout_tree": 30734000,
+     "n_layouts": 2,
+     "root": "10000.0x100.0",
+     "total_objects": 15005,
+     "construct+layout": 18789000,
+     "style+layout": 42890000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 49880000,
+     "layout": 48840000,
+     "style+layout": 98720000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 51360000,
+     "layout": 46680000,
+     "style+layout": 98040000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 48160000,
+     "layout": 48240000,
+     "style+layout": 96400000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 52920000,
+     "layout": 47180000,
+     "style+layout": 100100000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 49700000,
+     "layout": 48980000,
+     "style+layout": 98680000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 51360000,
+     "layout": 46120000,
+     "style+layout": 97480000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 47060000,
+     "layout": 44180000,
+     "style+layout": 91240000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 50920000,
+     "layout": 47060000,
+     "style+layout": 97980000,
+     "root": "10000.0x100.0"
+    },
+    {
+     "style": 46020000,
+     "layout": 43880000,
+     "style+layout": 89900000,
+     "root": "10000.0x100.0"
+    }
+   ]
+  }
+ },
+ "pangui/nested_vertical_stack": {
+  "nodes": 10001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 7417000,
+     "style": 21001000,
+     "construct": 3769000,
+     "update_layout_tree": 24793000,
+     "n_layouts": 2,
+     "root": "200.0x60015.0",
+     "total_objects": 10005,
+     "construct+layout": 11186000,
+     "style+layout": 32210000
+    },
+    {
+     "layout": 7655000,
+     "style": 20948000,
+     "construct": 4096000,
+     "update_layout_tree": 25066000,
+     "n_layouts": 2,
+     "root": "200.0x60015.0",
+     "total_objects": 10005,
+     "construct+layout": 11751000,
+     "style+layout": 32721000
+    },
+    {
+     "layout": 7709000,
+     "style": 19429000,
+     "construct": 3808000,
+     "update_layout_tree": 23264000,
+     "n_layouts": 2,
+     "root": "200.0x60015.0",
+     "total_objects": 10005,
+     "construct+layout": 11517000,
+     "style+layout": 30973000
+    },
+    {
+     "layout": 7602000,
+     "style": 19544000,
+     "construct": 3697000,
+     "update_layout_tree": 23277000,
+     "n_layouts": 2,
+     "root": "200.0x60015.0",
+     "total_objects": 10005,
+     "construct+layout": 11299000,
+     "style+layout": 30879000
+    },
+    {
+     "layout": 7801000,
+     "style": 19670000,
+     "construct": 3958000,
+     "update_layout_tree": 23657000,
+     "n_layouts": 2,
+     "root": "200.0x60015.0",
+     "total_objects": 10005,
+     "construct+layout": 11759000,
+     "style+layout": 31458000
+    },
+    {
+     "layout": 7537000,
+     "style": 19358000,
+     "construct": 3683000,
+     "update_layout_tree": 23062000,
+     "n_layouts": 2,
+     "root": "200.0x60015.0",
+     "total_objects": 10005,
+     "construct+layout": 11220000,
+     "style+layout": 30599000
+    },
+    {
+     "layout": 7499000,
+     "style": 19500000,
+     "construct": 3596000,
+     "update_layout_tree": 23126000,
+     "n_layouts": 2,
+     "root": "200.0x60015.0",
+     "total_objects": 10005,
+     "construct+layout": 11095000,
+     "style+layout": 30625000
+    },
+    {
+     "layout": 7756000,
+     "style": 19358000,
+     "construct": 3707000,
+     "update_layout_tree": 23099000,
+     "n_layouts": 2,
+     "root": "200.0x60015.0",
+     "total_objects": 10005,
+     "construct+layout": 11463000,
+     "style+layout": 30855000
+    },
+    {
+     "layout": 7797000,
+     "style": 19292000,
+     "construct": 4046000,
+     "update_layout_tree": 23366000,
+     "n_layouts": 2,
+     "root": "200.0x60015.0",
+     "total_objects": 10005,
+     "construct+layout": 11843000,
+     "style+layout": 31163000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 36600000,
+     "layout": 28740000,
+     "style+layout": 65340000,
+     "root": "200.0x60015.0"
+    },
+    {
+     "style": 36200000,
+     "layout": 28460000,
+     "style+layout": 64660000,
+     "root": "200.0x60015.0"
+    },
+    {
+     "style": 35580000,
+     "layout": 28960000,
+     "style+layout": 64540000,
+     "root": "200.0x60015.0"
+    },
+    {
+     "style": 35800000,
+     "layout": 27660000,
+     "style+layout": 63460000,
+     "root": "200.0x60015.0"
+    },
+    {
+     "style": 35840000,
+     "layout": 27800000,
+     "style+layout": 63640000,
+     "root": "200.0x60015.0"
+    },
+    {
+     "style": 35680000,
+     "layout": 27600000,
+     "style+layout": 63280000,
+     "root": "200.0x60015.0"
+    },
+    {
+     "style": 40060000,
+     "layout": 28560000,
+     "style+layout": 68620000,
+     "root": "200.0x60015.0"
+    },
+    {
+     "style": 36820000,
+     "layout": 28080000,
+     "style+layout": 64900000,
+     "root": "200.0x60015.0"
+    },
+    {
+     "style": 36200000,
+     "layout": 27460000,
+     "style+layout": 63660000,
+     "root": "200.0x60015.0"
+    }
+   ]
+  }
+ },
+ "pangui/padding_and_margin": {
+  "nodes": 101,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 162000,
+     "style": 281000,
+     "construct": 57000,
+     "update_layout_tree": 390000,
+     "n_layouts": 1,
+     "root": "1000.0x3430.0",
+     "total_objects": 105,
+     "construct+layout": 219000,
+     "style+layout": 552000
+    },
+    {
+     "layout": 135000,
+     "style": 279000,
+     "construct": 52000,
+     "update_layout_tree": 381000,
+     "n_layouts": 1,
+     "root": "1000.0x3430.0",
+     "total_objects": 105,
+     "construct+layout": 187000,
+     "style+layout": 516000
+    },
+    {
+     "layout": 132000,
+     "style": 288000,
+     "construct": 55000,
+     "update_layout_tree": 389000,
+     "n_layouts": 1,
+     "root": "1000.0x3430.0",
+     "total_objects": 105,
+     "construct+layout": 187000,
+     "style+layout": 521000
+    },
+    {
+     "layout": 151000,
+     "style": 296000,
+     "construct": 57000,
+     "update_layout_tree": 402000,
+     "n_layouts": 1,
+     "root": "1000.0x3430.0",
+     "total_objects": 105,
+     "construct+layout": 208000,
+     "style+layout": 553000
+    },
+    {
+     "layout": 142000,
+     "style": 288000,
+     "construct": 53000,
+     "update_layout_tree": 388000,
+     "n_layouts": 1,
+     "root": "1000.0x3430.0",
+     "total_objects": 105,
+     "construct+layout": 195000,
+     "style+layout": 530000
+    },
+    {
+     "layout": 128000,
+     "style": 275000,
+     "construct": 53000,
+     "update_layout_tree": 375000,
+     "n_layouts": 1,
+     "root": "1000.0x3430.0",
+     "total_objects": 105,
+     "construct+layout": 181000,
+     "style+layout": 503000
+    },
+    {
+     "layout": 153000,
+     "style": 297000,
+     "construct": 60000,
+     "update_layout_tree": 408000,
+     "n_layouts": 1,
+     "root": "1000.0x3430.0",
+     "total_objects": 105,
+     "construct+layout": 213000,
+     "style+layout": 561000
+    },
+    {
+     "layout": 142000,
+     "style": 291000,
+     "construct": 56000,
+     "update_layout_tree": 394000,
+     "n_layouts": 1,
+     "root": "1000.0x3430.0",
+     "total_objects": 105,
+     "construct+layout": 198000,
+     "style+layout": 536000
+    },
+    {
+     "layout": 140000,
+     "style": 293000,
+     "construct": 53000,
+     "update_layout_tree": 393000,
+     "n_layouts": 1,
+     "root": "1000.0x3430.0",
+     "total_objects": 105,
+     "construct+layout": 193000,
+     "style+layout": 533000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 580000,
+     "layout": 400000,
+     "style+layout": 980000,
+     "root": "1000.0x3430.0"
+    },
+    {
+     "style": 580000,
+     "layout": 400000,
+     "style+layout": 980000,
+     "root": "1000.0x3430.0"
+    },
+    {
+     "style": 560000,
+     "layout": 420000,
+     "style+layout": 980000,
+     "root": "1000.0x3430.0"
+    },
+    {
+     "style": 560000,
+     "layout": 420000,
+     "style+layout": 980000,
+     "root": "1000.0x3430.0"
+    },
+    {
+     "style": 560000,
+     "layout": 380000,
+     "style+layout": 940000,
+     "root": "1000.0x3430.0"
+    },
+    {
+     "style": 560000,
+     "layout": 380000,
+     "style+layout": 940000,
+     "root": "1000.0x3430.0"
+    },
+    {
+     "style": 600000,
+     "layout": 400000,
+     "style+layout": 1000000,
+     "root": "1000.0x3430.0"
+    },
+    {
+     "style": 560000,
+     "layout": 400000,
+     "style+layout": 960000,
+     "root": "1000.0x3430.0"
+    },
+    {
+     "style": 580000,
+     "layout": 380000,
+     "style+layout": 960000,
+     "root": "1000.0x3430.0"
+    }
+   ]
+  }
+ },
+ "pangui/percentage_and_ratio": {
+  "nodes": 10001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 13969000,
+     "style": 21606000,
+     "construct": 4252000,
+     "update_layout_tree": 25879000,
+     "n_layouts": 2,
+     "root": "1000.0x1000.0",
+     "total_objects": 10005,
+     "construct+layout": 18221000,
+     "style+layout": 39848000
+    },
+    {
+     "layout": 13888000,
+     "style": 21762000,
+     "construct": 4144000,
+     "update_layout_tree": 25928000,
+     "n_layouts": 2,
+     "root": "1000.0x1000.0",
+     "total_objects": 10005,
+     "construct+layout": 18032000,
+     "style+layout": 39816000
+    },
+    {
+     "layout": 13692000,
+     "style": 21732000,
+     "construct": 4320000,
+     "update_layout_tree": 26073000,
+     "n_layouts": 2,
+     "root": "1000.0x1000.0",
+     "total_objects": 10005,
+     "construct+layout": 18012000,
+     "style+layout": 39765000
+    },
+    {
+     "layout": 15402000,
+     "style": 22399000,
+     "construct": 4886000,
+     "update_layout_tree": 27308000,
+     "n_layouts": 2,
+     "root": "1000.0x1000.0",
+     "total_objects": 10005,
+     "construct+layout": 20288000,
+     "style+layout": 42710000
+    },
+    {
+     "layout": 14883000,
+     "style": 21998000,
+     "construct": 4349000,
+     "update_layout_tree": 26368000,
+     "n_layouts": 2,
+     "root": "1000.0x1000.0",
+     "total_objects": 10005,
+     "construct+layout": 19232000,
+     "style+layout": 41251000
+    },
+    {
+     "layout": 14895000,
+     "style": 22639000,
+     "construct": 4851000,
+     "update_layout_tree": 27511000,
+     "n_layouts": 2,
+     "root": "1000.0x1000.0",
+     "total_objects": 10005,
+     "construct+layout": 19746000,
+     "style+layout": 42406000
+    },
+    {
+     "layout": 13759000,
+     "style": 21878000,
+     "construct": 4356000,
+     "update_layout_tree": 26283000,
+     "n_layouts": 2,
+     "root": "1000.0x1000.0",
+     "total_objects": 10005,
+     "construct+layout": 18115000,
+     "style+layout": 40042000
+    },
+    {
+     "layout": 13945000,
+     "style": 23702000,
+     "construct": 4323000,
+     "update_layout_tree": 28046000,
+     "n_layouts": 2,
+     "root": "1000.0x1000.0",
+     "total_objects": 10005,
+     "construct+layout": 18268000,
+     "style+layout": 41991000
+    },
+    {
+     "layout": 14911000,
+     "style": 25067000,
+     "construct": 4181000,
+     "update_layout_tree": 29271000,
+     "n_layouts": 2,
+     "root": "1000.0x1000.0",
+     "total_objects": 10005,
+     "construct+layout": 19092000,
+     "style+layout": 44182000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 36040000,
+     "layout": 25920000,
+     "style+layout": 61960000,
+     "root": "1000.0x1000.0"
+    },
+    {
+     "style": 35520000,
+     "layout": 25140000,
+     "style+layout": 60660000,
+     "root": "1000.0x1000.0"
+    },
+    {
+     "style": 41580000,
+     "layout": 28740000,
+     "style+layout": 70320000,
+     "root": "1000.0x1000.0"
+    },
+    {
+     "style": 35860000,
+     "layout": 26520000,
+     "style+layout": 62380000,
+     "root": "1000.0x1000.0"
+    },
+    {
+     "style": 35720000,
+     "layout": 26800000,
+     "style+layout": 62520000,
+     "root": "1000.0x1000.0"
+    },
+    {
+     "style": 43220000,
+     "layout": 25920000,
+     "style+layout": 69140000,
+     "root": "1000.0x1000.0"
+    },
+    {
+     "style": 38160000,
+     "layout": 25960000,
+     "style+layout": 64120000,
+     "root": "1000.0x1000.0"
+    },
+    {
+     "style": 40120000,
+     "layout": 28000000,
+     "style+layout": 68120000,
+     "root": "1000.0x1000.0"
+    },
+    {
+     "style": 35680000,
+     "layout": 25840000,
+     "style+layout": 61520000,
+     "root": "1000.0x1000.0"
+    }
+   ]
+  }
+ },
+ "pangui/perpendicular_expand_with_wrap": {
+  "nodes": 12001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 14731000,
+     "style": 27527000,
+     "construct": 5246000,
+     "update_layout_tree": 32805000,
+     "n_layouts": 2,
+     "root": "100.0x149990.0",
+     "total_objects": 12005,
+     "construct+layout": 19977000,
+     "style+layout": 47536000
+    },
+    {
+     "layout": 15557000,
+     "style": 27239000,
+     "construct": 5456000,
+     "update_layout_tree": 32717000,
+     "n_layouts": 2,
+     "root": "100.0x149990.0",
+     "total_objects": 12005,
+     "construct+layout": 21013000,
+     "style+layout": 48274000
+    },
+    {
+     "layout": 15131000,
+     "style": 27789000,
+     "construct": 5334000,
+     "update_layout_tree": 33158000,
+     "n_layouts": 2,
+     "root": "100.0x149990.0",
+     "total_objects": 12005,
+     "construct+layout": 20465000,
+     "style+layout": 48289000
+    },
+    {
+     "layout": 13929000,
+     "style": 24418000,
+     "construct": 4606000,
+     "update_layout_tree": 29047000,
+     "n_layouts": 2,
+     "root": "100.0x149990.0",
+     "total_objects": 12005,
+     "construct+layout": 18535000,
+     "style+layout": 42976000
+    },
+    {
+     "layout": 14038000,
+     "style": 23848000,
+     "construct": 4624000,
+     "update_layout_tree": 28493000,
+     "n_layouts": 2,
+     "root": "100.0x149990.0",
+     "total_objects": 12005,
+     "construct+layout": 18662000,
+     "style+layout": 42531000
+    },
+    {
+     "layout": 13209000,
+     "style": 24169000,
+     "construct": 4801000,
+     "update_layout_tree": 28993000,
+     "n_layouts": 2,
+     "root": "100.0x149990.0",
+     "total_objects": 12005,
+     "construct+layout": 18010000,
+     "style+layout": 42202000
+    },
+    {
+     "layout": 13786000,
+     "style": 24179000,
+     "construct": 4697000,
+     "update_layout_tree": 28899000,
+     "n_layouts": 2,
+     "root": "100.0x149990.0",
+     "total_objects": 12005,
+     "construct+layout": 18483000,
+     "style+layout": 42685000
+    },
+    {
+     "layout": 13334000,
+     "style": 23744000,
+     "construct": 4460000,
+     "update_layout_tree": 28226000,
+     "n_layouts": 2,
+     "root": "100.0x149990.0",
+     "total_objects": 12005,
+     "construct+layout": 17794000,
+     "style+layout": 41560000
+    },
+    {
+     "layout": 12745000,
+     "style": 22518000,
+     "construct": 3954000,
+     "update_layout_tree": 26500000,
+     "n_layouts": 2,
+     "root": "100.0x149990.0",
+     "total_objects": 12005,
+     "construct+layout": 16699000,
+     "style+layout": 39245000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 43900000,
+     "layout": 30760000,
+     "style+layout": 74660000,
+     "root": "100.0x149990.0"
+    },
+    {
+     "style": 42180000,
+     "layout": 30300000,
+     "style+layout": 72480000,
+     "root": "100.0x149990.0"
+    },
+    {
+     "style": 44020000,
+     "layout": 30380000,
+     "style+layout": 74400000,
+     "root": "100.0x149990.0"
+    },
+    {
+     "style": 42740000,
+     "layout": 31040000,
+     "style+layout": 73780000,
+     "root": "100.0x149990.0"
+    },
+    {
+     "style": 42860000,
+     "layout": 30380000,
+     "style+layout": 73240000,
+     "root": "100.0x149990.0"
+    },
+    {
+     "style": 41680000,
+     "layout": 31220000,
+     "style+layout": 72900000,
+     "root": "100.0x149990.0"
+    },
+    {
+     "style": 43480000,
+     "layout": 30440000,
+     "style+layout": 73920000,
+     "root": "100.0x149990.0"
+    },
+    {
+     "style": 43320000,
+     "layout": 30200000,
+     "style+layout": 73520000,
+     "root": "100.0x149990.0"
+    },
+    {
+     "style": 43860000,
+     "layout": 31920000,
+     "style+layout": 75780000,
+     "root": "100.0x149990.0"
+    }
+   ]
+  }
+ },
+ "pangui/pixels_with_min_expand_constraint": {
+  "nodes": 30001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 36655000,
+     "style": 47396000,
+     "construct": 11926000,
+     "update_layout_tree": 59344000,
+     "n_layouts": 2,
+     "root": "100.0x10.0",
+     "total_objects": 30005,
+     "construct+layout": 48581000,
+     "style+layout": 95999000
+    },
+    {
+     "layout": 36161000,
+     "style": 44759000,
+     "construct": 12671000,
+     "update_layout_tree": 57454000,
+     "n_layouts": 2,
+     "root": "100.0x10.0",
+     "total_objects": 30005,
+     "construct+layout": 48832000,
+     "style+layout": 93615000
+    },
+    {
+     "layout": 37771000,
+     "style": 44537000,
+     "construct": 12357000,
+     "update_layout_tree": 56945000,
+     "n_layouts": 2,
+     "root": "100.0x10.0",
+     "total_objects": 30005,
+     "construct+layout": 50128000,
+     "style+layout": 94716000
+    },
+    {
+     "layout": 35636000,
+     "style": 44127000,
+     "construct": 11186000,
+     "update_layout_tree": 55336000,
+     "n_layouts": 2,
+     "root": "100.0x10.0",
+     "total_objects": 30005,
+     "construct+layout": 46822000,
+     "style+layout": 90972000
+    },
+    {
+     "layout": 34955000,
+     "style": 43463000,
+     "construct": 10389000,
+     "update_layout_tree": 53874000,
+     "n_layouts": 2,
+     "root": "100.0x10.0",
+     "total_objects": 30005,
+     "construct+layout": 45344000,
+     "style+layout": 88829000
+    },
+    {
+     "layout": 63842000,
+     "style": 43965000,
+     "construct": 11391000,
+     "update_layout_tree": 55386000,
+     "n_layouts": 2,
+     "root": "100.0x10.0",
+     "total_objects": 30005,
+     "construct+layout": 75233000,
+     "style+layout": 119228000
+    },
+    {
+     "layout": 34990000,
+     "style": 43776000,
+     "construct": 10832000,
+     "update_layout_tree": 54630000,
+     "n_layouts": 2,
+     "root": "100.0x10.0",
+     "total_objects": 30005,
+     "construct+layout": 45822000,
+     "style+layout": 89620000
+    },
+    {
+     "layout": 34999000,
+     "style": 43132000,
+     "construct": 10860000,
+     "update_layout_tree": 54022000,
+     "n_layouts": 2,
+     "root": "100.0x10.0",
+     "total_objects": 30005,
+     "construct+layout": 45859000,
+     "style+layout": 89021000
+    },
+    {
+     "layout": 35935000,
+     "style": 44077000,
+     "construct": 11316000,
+     "update_layout_tree": 55435000,
+     "n_layouts": 2,
+     "root": "100.0x10.0",
+     "total_objects": 30005,
+     "construct+layout": 47251000,
+     "style+layout": 91370000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 94820000,
+     "layout": 70820000,
+     "style+layout": 165640000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 97560000,
+     "layout": 73020000,
+     "style+layout": 170580000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 111060000,
+     "layout": 91440000,
+     "style+layout": 202500000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 94780000,
+     "layout": 70640000,
+     "style+layout": 165420000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 95040000,
+     "layout": 71400000,
+     "style+layout": 166440000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 94280000,
+     "layout": 70060000,
+     "style+layout": 164340000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 99680000,
+     "layout": 70880000,
+     "style+layout": 170560000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 94360000,
+     "layout": 70040000,
+     "style+layout": 164400000,
+     "root": "100.0x10.0"
+    },
+    {
+     "style": 100520000,
+     "layout": 74640000,
+     "style+layout": 175160000,
+     "root": "100.0x10.0"
+    }
+   ]
+  }
+ },
+ "pangui/wide_no_wrap_simple_few": {
+  "nodes": 1001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 817000,
+     "style": 2110000,
+     "construct": 364000,
+     "update_layout_tree": 2536000,
+     "n_layouts": 1,
+     "root": "100.0x100.0",
+     "total_objects": 1005,
+     "construct+layout": 1181000,
+     "style+layout": 3353000
+    },
+    {
+     "layout": 850000,
+     "style": 2048000,
+     "construct": 363000,
+     "update_layout_tree": 2472000,
+     "n_layouts": 1,
+     "root": "100.0x100.0",
+     "total_objects": 1005,
+     "construct+layout": 1213000,
+     "style+layout": 3322000
+    },
+    {
+     "layout": 800000,
+     "style": 2022000,
+     "construct": 418000,
+     "update_layout_tree": 2497000,
+     "n_layouts": 1,
+     "root": "100.0x100.0",
+     "total_objects": 1005,
+     "construct+layout": 1218000,
+     "style+layout": 3297000
+    },
+    {
+     "layout": 829000,
+     "style": 2295000,
+     "construct": 411000,
+     "update_layout_tree": 2771000,
+     "n_layouts": 1,
+     "root": "100.0x100.0",
+     "total_objects": 1005,
+     "construct+layout": 1240000,
+     "style+layout": 3600000
+    },
+    {
+     "layout": 859000,
+     "style": 2318000,
+     "construct": 424000,
+     "update_layout_tree": 2808000,
+     "n_layouts": 1,
+     "root": "100.0x100.0",
+     "total_objects": 1005,
+     "construct+layout": 1283000,
+     "style+layout": 3667000
+    },
+    {
+     "layout": 873000,
+     "style": 2348000,
+     "construct": 452000,
+     "update_layout_tree": 2866000,
+     "n_layouts": 1,
+     "root": "100.0x100.0",
+     "total_objects": 1005,
+     "construct+layout": 1325000,
+     "style+layout": 3739000
+    },
+    {
+     "layout": 874000,
+     "style": 2300000,
+     "construct": 405000,
+     "update_layout_tree": 2764000,
+     "n_layouts": 1,
+     "root": "100.0x100.0",
+     "total_objects": 1005,
+     "construct+layout": 1279000,
+     "style+layout": 3638000
+    },
+    {
+     "layout": 852000,
+     "style": 2206000,
+     "construct": 395000,
+     "update_layout_tree": 2657000,
+     "n_layouts": 1,
+     "root": "100.0x100.0",
+     "total_objects": 1005,
+     "construct+layout": 1247000,
+     "style+layout": 3509000
+    },
+    {
+     "layout": 819000,
+     "style": 2184000,
+     "construct": 396000,
+     "update_layout_tree": 2642000,
+     "n_layouts": 1,
+     "root": "100.0x100.0",
+     "total_objects": 1005,
+     "construct+layout": 1215000,
+     "style+layout": 3461000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 4040000,
+     "layout": 2280000,
+     "style+layout": 6320000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 4320000,
+     "layout": 2300000,
+     "style+layout": 6620000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 4240000,
+     "layout": 2100000,
+     "style+layout": 6340000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 4160000,
+     "layout": 2200000,
+     "style+layout": 6360000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 4120000,
+     "layout": 2260000,
+     "style+layout": 6380000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 4260000,
+     "layout": 2200000,
+     "style+layout": 6460000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 4080000,
+     "layout": 2240000,
+     "style+layout": 6320000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 3840000,
+     "layout": 2000000,
+     "style+layout": 5840000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 3700000,
+     "layout": 1980000,
+     "style+layout": 5680000,
+     "root": "100.0x100.0"
+    }
+   ]
+  }
+ },
+ "pangui/wide_no_wrap_simple_many": {
+  "nodes": 100001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 90592000,
+     "style": 282663000,
+     "construct": 46727000,
+     "update_layout_tree": 329463000,
+     "n_layouts": 2,
+     "root": "100.0x100.0",
+     "total_objects": 100005,
+     "construct+layout": 137319000,
+     "style+layout": 420055000
+    },
+    {
+     "layout": 90702000,
+     "style": 253136000,
+     "construct": 39300000,
+     "update_layout_tree": 292493000,
+     "n_layouts": 2,
+     "root": "100.0x100.0",
+     "total_objects": 100005,
+     "construct+layout": 130002000,
+     "style+layout": 383195000
+    },
+    {
+     "layout": 79876000,
+     "style": 230325000,
+     "construct": 35400000,
+     "update_layout_tree": 265757000,
+     "n_layouts": 2,
+     "root": "100.0x100.0",
+     "total_objects": 100005,
+     "construct+layout": 115276000,
+     "style+layout": 345633000
+    },
+    {
+     "layout": 84532000,
+     "style": 232456000,
+     "construct": 39206000,
+     "update_layout_tree": 271701000,
+     "n_layouts": 2,
+     "root": "100.0x100.0",
+     "total_objects": 100005,
+     "construct+layout": 123738000,
+     "style+layout": 356233000
+    },
+    {
+     "layout": 86778000,
+     "style": 248957000,
+     "construct": 41185000,
+     "update_layout_tree": 290175000,
+     "n_layouts": 2,
+     "root": "100.0x100.0",
+     "total_objects": 100005,
+     "construct+layout": 127963000,
+     "style+layout": 376953000
+    },
+    {
+     "layout": 81009000,
+     "style": 229966000,
+     "construct": 36850000,
+     "update_layout_tree": 266843000,
+     "n_layouts": 2,
+     "root": "100.0x100.0",
+     "total_objects": 100005,
+     "construct+layout": 117859000,
+     "style+layout": 347852000
+    },
+    {
+     "layout": 83165000,
+     "style": 230529000,
+     "construct": 35190000,
+     "update_layout_tree": 265746000,
+     "n_layouts": 2,
+     "root": "100.0x100.0",
+     "total_objects": 100005,
+     "construct+layout": 118355000,
+     "style+layout": 348911000
+    },
+    {
+     "layout": 80303000,
+     "style": 228400000,
+     "construct": 36960000,
+     "update_layout_tree": 265397000,
+     "n_layouts": 2,
+     "root": "100.0x100.0",
+     "total_objects": 100005,
+     "construct+layout": 117263000,
+     "style+layout": 345700000
+    },
+    {
+     "layout": 82320000,
+     "style": 233006000,
+     "construct": 36473000,
+     "update_layout_tree": 269508000,
+     "n_layouts": 2,
+     "root": "100.0x100.0",
+     "total_objects": 100005,
+     "construct+layout": 118793000,
+     "style+layout": 351828000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 372780000,
+     "layout": 223780000,
+     "style+layout": 596560000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 381140000,
+     "layout": 214360000,
+     "style+layout": 595500000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 402860000,
+     "layout": 241300000,
+     "style+layout": 644160000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 375400000,
+     "layout": 209620000,
+     "style+layout": 585020000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 368520000,
+     "layout": 207720000,
+     "style+layout": 576240000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 376080000,
+     "layout": 208680000,
+     "style+layout": 584760000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 367160000,
+     "layout": 230640000,
+     "style+layout": 597800000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 408460000,
+     "layout": 236840000,
+     "style+layout": 645300000,
+     "root": "100.0x100.0"
+    },
+    {
+     "style": 373960000,
+     "layout": 209160000,
+     "style+layout": 583120000,
+     "root": "100.0x100.0"
+    }
+   ]
+  }
+ },
+ "pangui/wide_wrapping": {
+  "nodes": 10001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 9269000,
+     "style": 19805000,
+     "construct": 3700000,
+     "update_layout_tree": 23525000,
+     "n_layouts": 2,
+     "root": "100.0x10000.0",
+     "total_objects": 10005,
+     "construct+layout": 12969000,
+     "style+layout": 32794000
+    },
+    {
+     "layout": 9868000,
+     "style": 19808000,
+     "construct": 4043000,
+     "update_layout_tree": 23871000,
+     "n_layouts": 2,
+     "root": "100.0x10000.0",
+     "total_objects": 10005,
+     "construct+layout": 13911000,
+     "style+layout": 33739000
+    },
+    {
+     "layout": 8783000,
+     "style": 19284000,
+     "construct": 3548000,
+     "update_layout_tree": 22853000,
+     "n_layouts": 2,
+     "root": "100.0x10000.0",
+     "total_objects": 10005,
+     "construct+layout": 12331000,
+     "style+layout": 31636000
+    },
+    {
+     "layout": 9150000,
+     "style": 19702000,
+     "construct": 3699000,
+     "update_layout_tree": 23423000,
+     "n_layouts": 2,
+     "root": "100.0x10000.0",
+     "total_objects": 10005,
+     "construct+layout": 12849000,
+     "style+layout": 32573000
+    },
+    {
+     "layout": 9050000,
+     "style": 19867000,
+     "construct": 4071000,
+     "update_layout_tree": 23959000,
+     "n_layouts": 2,
+     "root": "100.0x10000.0",
+     "total_objects": 10005,
+     "construct+layout": 13121000,
+     "style+layout": 33009000
+    },
+    {
+     "layout": 8882000,
+     "style": 22203000,
+     "construct": 4010000,
+     "update_layout_tree": 26235000,
+     "n_layouts": 2,
+     "root": "100.0x10000.0",
+     "total_objects": 10005,
+     "construct+layout": 12892000,
+     "style+layout": 35117000
+    },
+    {
+     "layout": 8839000,
+     "style": 19897000,
+     "construct": 3935000,
+     "update_layout_tree": 23857000,
+     "n_layouts": 2,
+     "root": "100.0x10000.0",
+     "total_objects": 10005,
+     "construct+layout": 12774000,
+     "style+layout": 32696000
+    },
+    {
+     "layout": 9903000,
+     "style": 19762000,
+     "construct": 3807000,
+     "update_layout_tree": 23589000,
+     "n_layouts": 2,
+     "root": "100.0x10000.0",
+     "total_objects": 10005,
+     "construct+layout": 13710000,
+     "style+layout": 33492000
+    },
+    {
+     "layout": 9294000,
+     "style": 20103000,
+     "construct": 3989000,
+     "update_layout_tree": 24113000,
+     "n_layouts": 2,
+     "root": "100.0x10000.0",
+     "total_objects": 10005,
+     "construct+layout": 13283000,
+     "style+layout": 33407000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 36860000,
+     "layout": 20120000,
+     "style+layout": 56980000,
+     "root": "100.0x10000.0"
+    },
+    {
+     "style": 39020000,
+     "layout": 20080000,
+     "style+layout": 59100000,
+     "root": "100.0x10000.0"
+    },
+    {
+     "style": 36460000,
+     "layout": 19860000,
+     "style+layout": 56320000,
+     "root": "100.0x10000.0"
+    },
+    {
+     "style": 36420000,
+     "layout": 19860000,
+     "style+layout": 56280000,
+     "root": "100.0x10000.0"
+    },
+    {
+     "style": 35800000,
+     "layout": 19620000,
+     "style+layout": 55420000,
+     "root": "100.0x10000.0"
+    },
+    {
+     "style": 35980000,
+     "layout": 19880000,
+     "style+layout": 55860000,
+     "root": "100.0x10000.0"
+    },
+    {
+     "style": 36200000,
+     "layout": 19760000,
+     "style+layout": 55960000,
+     "root": "100.0x10000.0"
+    },
+    {
+     "style": 35540000,
+     "layout": 19560000,
+     "style+layout": 55100000,
+     "root": "100.0x10000.0"
+    },
+    {
+     "style": 35780000,
+     "layout": 19620000,
+     "style+layout": 55400000,
+     "root": "100.0x10000.0"
+    }
+   ]
+  }
+ },
+ "text/paragraphs/100": {
+  "nodes": 101,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 5523000,
+     "style": 207000,
+     "construct": 75000,
+     "update_layout_tree": 302000,
+     "n_layouts": 2,
+     "root": "960.0x12832.0",
+     "total_objects": 205,
+     "construct+layout": 5598000,
+     "style+layout": 5825000
+    },
+    {
+     "layout": 5435000,
+     "style": 216000,
+     "construct": 72000,
+     "update_layout_tree": 302000,
+     "n_layouts": 2,
+     "root": "960.0x12832.0",
+     "total_objects": 205,
+     "construct+layout": 5507000,
+     "style+layout": 5737000
+    },
+    {
+     "layout": 5454000,
+     "style": 196000,
+     "construct": 69000,
+     "update_layout_tree": 279000,
+     "n_layouts": 2,
+     "root": "960.0x12832.0",
+     "total_objects": 205,
+     "construct+layout": 5523000,
+     "style+layout": 5733000
+    },
+    {
+     "layout": 5477000,
+     "style": 212000,
+     "construct": 77000,
+     "update_layout_tree": 308000,
+     "n_layouts": 2,
+     "root": "960.0x12832.0",
+     "total_objects": 205,
+     "construct+layout": 5554000,
+     "style+layout": 5785000
+    },
+    {
+     "layout": 5525000,
+     "style": 208000,
+     "construct": 79000,
+     "update_layout_tree": 302000,
+     "n_layouts": 2,
+     "root": "960.0x12832.0",
+     "total_objects": 205,
+     "construct+layout": 5604000,
+     "style+layout": 5827000
+    },
+    {
+     "layout": 5413000,
+     "style": 216000,
+     "construct": 76000,
+     "update_layout_tree": 305000,
+     "n_layouts": 2,
+     "root": "960.0x12832.0",
+     "total_objects": 205,
+     "construct+layout": 5489000,
+     "style+layout": 5718000
+    },
+    {
+     "layout": 5468000,
+     "style": 211000,
+     "construct": 81000,
+     "update_layout_tree": 307000,
+     "n_layouts": 2,
+     "root": "960.0x12832.0",
+     "total_objects": 205,
+     "construct+layout": 5549000,
+     "style+layout": 5775000
+    },
+    {
+     "layout": 5452000,
+     "style": 212000,
+     "construct": 74000,
+     "update_layout_tree": 299000,
+     "n_layouts": 2,
+     "root": "960.0x12832.0",
+     "total_objects": 205,
+     "construct+layout": 5526000,
+     "style+layout": 5751000
+    },
+    {
+     "layout": 5400000,
+     "style": 204000,
+     "construct": 74000,
+     "update_layout_tree": 292000,
+     "n_layouts": 2,
+     "root": "960.0x12832.0",
+     "total_objects": 205,
+     "construct+layout": 5474000,
+     "style+layout": 5692000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 680000,
+     "layout": 7040000,
+     "style+layout": 7720000,
+     "root": "960.0x12832.0"
+    },
+    {
+     "style": 680000,
+     "layout": 6220000,
+     "style+layout": 6900000,
+     "root": "960.0x12832.0"
+    },
+    {
+     "style": 660000,
+     "layout": 6160000,
+     "style+layout": 6820000,
+     "root": "960.0x12832.0"
+    },
+    {
+     "style": 680000,
+     "layout": 6220000,
+     "style+layout": 6900000,
+     "root": "960.0x12832.0"
+    },
+    {
+     "style": 660000,
+     "layout": 6240000,
+     "style+layout": 6900000,
+     "root": "960.0x12832.0"
+    },
+    {
+     "style": 660000,
+     "layout": 6160000,
+     "style+layout": 6820000,
+     "root": "960.0x12832.0"
+    },
+    {
+     "style": 680000,
+     "layout": 6220000,
+     "style+layout": 6900000,
+     "root": "960.0x12832.0"
+    },
+    {
+     "style": 660000,
+     "layout": 6420000,
+     "style+layout": 7080000,
+     "root": "960.0x12832.0"
+    },
+    {
+     "style": 660000,
+     "layout": 6180000,
+     "style+layout": 6840000,
+     "root": "960.0x12832.0"
+    }
+   ]
+  }
+ },
+ "text/flex_cards/100": {
+  "nodes": 301,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 4081000,
+     "style": 399000,
+     "construct": 175000,
+     "update_layout_tree": 590000,
+     "n_layouts": 2,
+     "root": "960.0x6716.0",
+     "total_objects": 505,
+     "construct+layout": 4256000,
+     "style+layout": 4671000
+    },
+    {
+     "layout": 3668000,
+     "style": 339000,
+     "construct": 174000,
+     "update_layout_tree": 527000,
+     "n_layouts": 2,
+     "root": "960.0x6716.0",
+     "total_objects": 505,
+     "construct+layout": 3842000,
+     "style+layout": 4195000
+    },
+    {
+     "layout": 3583000,
+     "style": 322000,
+     "construct": 173000,
+     "update_layout_tree": 510000,
+     "n_layouts": 2,
+     "root": "960.0x6716.0",
+     "total_objects": 505,
+     "construct+layout": 3756000,
+     "style+layout": 4093000
+    },
+    {
+     "layout": 3884000,
+     "style": 335000,
+     "construct": 166000,
+     "update_layout_tree": 515000,
+     "n_layouts": 2,
+     "root": "960.0x6716.0",
+     "total_objects": 505,
+     "construct+layout": 4050000,
+     "style+layout": 4399000
+    },
+    {
+     "layout": 3776000,
+     "style": 329000,
+     "construct": 167000,
+     "update_layout_tree": 510000,
+     "n_layouts": 2,
+     "root": "960.0x6716.0",
+     "total_objects": 505,
+     "construct+layout": 3943000,
+     "style+layout": 4286000
+    },
+    {
+     "layout": 4072000,
+     "style": 376000,
+     "construct": 199000,
+     "update_layout_tree": 594000,
+     "n_layouts": 2,
+     "root": "960.0x6716.0",
+     "total_objects": 505,
+     "construct+layout": 4271000,
+     "style+layout": 4666000
+    },
+    {
+     "layout": 3672000,
+     "style": 346000,
+     "construct": 172000,
+     "update_layout_tree": 539000,
+     "n_layouts": 2,
+     "root": "960.0x6716.0",
+     "total_objects": 505,
+     "construct+layout": 3844000,
+     "style+layout": 4211000
+    },
+    {
+     "layout": 4313000,
+     "style": 385000,
+     "construct": 189000,
+     "update_layout_tree": 589000,
+     "n_layouts": 2,
+     "root": "960.0x6716.0",
+     "total_objects": 505,
+     "construct+layout": 4502000,
+     "style+layout": 4902000
+    },
+    {
+     "layout": 3699000,
+     "style": 367000,
+     "construct": 174000,
+     "update_layout_tree": 719000,
+     "n_layouts": 2,
+     "root": "960.0x6716.0",
+     "total_objects": 505,
+     "construct+layout": 3873000,
+     "style+layout": 4418000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 1200000,
+     "layout": 6340000,
+     "style+layout": 7540000,
+     "root": "960.0x6716.0"
+    },
+    {
+     "style": 1200000,
+     "layout": 6200000,
+     "style+layout": 7400000,
+     "root": "960.0x6716.0"
+    },
+    {
+     "style": 1480000,
+     "layout": 7360000,
+     "style+layout": 8840000,
+     "root": "960.0x6716.0"
+    },
+    {
+     "style": 1200000,
+     "layout": 6480000,
+     "style+layout": 7680000,
+     "root": "960.0x6716.0"
+    },
+    {
+     "style": 1420000,
+     "layout": 7320000,
+     "style+layout": 8740000,
+     "root": "960.0x6716.0"
+    },
+    {
+     "style": 1320000,
+     "layout": 6820000,
+     "style+layout": 8140000,
+     "root": "960.0x6716.0"
+    },
+    {
+     "style": 1360000,
+     "layout": 7700000,
+     "style+layout": 9060000,
+     "root": "960.0x6716.0"
+    },
+    {
+     "style": 1180000,
+     "layout": 6320000,
+     "style+layout": 7500000,
+     "root": "960.0x6716.0"
+    },
+    {
+     "style": 1180000,
+     "layout": 6360000,
+     "style+layout": 7540000,
+     "root": "960.0x6716.0"
+    }
+   ]
+  }
+ },
+ "text/inline_mixed/100": {
+  "nodes": 1599,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 10645000,
+     "style": 967000,
+     "construct": 1193000,
+     "update_layout_tree": 2178000,
+     "n_layouts": 2,
+     "root": "960.0x13492.0",
+     "total_objects": 4035,
+     "construct+layout": 11838000,
+     "style+layout": 12823000
+    },
+    {
+     "layout": 10292000,
+     "style": 979000,
+     "construct": 1133000,
+     "update_layout_tree": 2129000,
+     "n_layouts": 2,
+     "root": "960.0x13492.0",
+     "total_objects": 4035,
+     "construct+layout": 11425000,
+     "style+layout": 12421000
+    },
+    {
+     "layout": 9922000,
+     "style": 895000,
+     "construct": 1126000,
+     "update_layout_tree": 2037000,
+     "n_layouts": 2,
+     "root": "960.0x13492.0",
+     "total_objects": 4035,
+     "construct+layout": 11048000,
+     "style+layout": 11959000
+    },
+    {
+     "layout": 9310000,
+     "style": 801000,
+     "construct": 975000,
+     "update_layout_tree": 1793000,
+     "n_layouts": 2,
+     "root": "960.0x13492.0",
+     "total_objects": 4035,
+     "construct+layout": 10285000,
+     "style+layout": 11103000
+    },
+    {
+     "layout": 9193000,
+     "style": 791000,
+     "construct": 975000,
+     "update_layout_tree": 1782000,
+     "n_layouts": 2,
+     "root": "960.0x13492.0",
+     "total_objects": 4035,
+     "construct+layout": 10168000,
+     "style+layout": 10975000
+    },
+    {
+     "layout": 9064000,
+     "style": 799000,
+     "construct": 956000,
+     "update_layout_tree": 1770000,
+     "n_layouts": 2,
+     "root": "960.0x13492.0",
+     "total_objects": 4035,
+     "construct+layout": 10020000,
+     "style+layout": 10834000
+    },
+    {
+     "layout": 9227000,
+     "style": 804000,
+     "construct": 991000,
+     "update_layout_tree": 1811000,
+     "n_layouts": 2,
+     "root": "960.0x13492.0",
+     "total_objects": 4035,
+     "construct+layout": 10218000,
+     "style+layout": 11038000
+    },
+    {
+     "layout": 9225000,
+     "style": 800000,
+     "construct": 994000,
+     "update_layout_tree": 1811000,
+     "n_layouts": 2,
+     "root": "960.0x13492.0",
+     "total_objects": 4035,
+     "construct+layout": 10219000,
+     "style+layout": 11036000
+    },
+    {
+     "layout": 9118000,
+     "style": 833000,
+     "construct": 979000,
+     "update_layout_tree": 1832000,
+     "n_layouts": 2,
+     "root": "960.0x13492.0",
+     "total_objects": 4035,
+     "construct+layout": 10097000,
+     "style+layout": 10950000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 5160000,
+     "layout": 18200000,
+     "style+layout": 23360000,
+     "root": "960.0x13492.0"
+    },
+    {
+     "style": 4740000,
+     "layout": 17560000,
+     "style+layout": 22300000,
+     "root": "960.0x13492.0"
+    },
+    {
+     "style": 4820000,
+     "layout": 17640000,
+     "style+layout": 22460000,
+     "root": "960.0x13492.0"
+    },
+    {
+     "style": 4860000,
+     "layout": 17620000,
+     "style+layout": 22480000,
+     "root": "960.0x13492.0"
+    },
+    {
+     "style": 4780000,
+     "layout": 17900000,
+     "style+layout": 22680000,
+     "root": "960.0x13492.0"
+    },
+    {
+     "style": 4900000,
+     "layout": 17900000,
+     "style+layout": 22800000,
+     "root": "960.0x13492.0"
+    },
+    {
+     "style": 4860000,
+     "layout": 17820000,
+     "style+layout": 22680000,
+     "root": "960.0x13492.0"
+    },
+    {
+     "style": 4780000,
+     "layout": 17420000,
+     "style+layout": 22200000,
+     "root": "960.0x13492.0"
+    },
+    {
+     "style": 4780000,
+     "layout": 17780000,
+     "style+layout": 22560000,
+     "root": "960.0x13492.0"
+    }
+   ]
+  }
+ },
+ "text/paragraphs/1000": {
+  "nodes": 1001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 51423000,
+     "style": 1732000,
+     "construct": 612000,
+     "update_layout_tree": 2361000,
+     "n_layouts": 2,
+     "root": "960.0x128012.0",
+     "total_objects": 2005,
+     "construct+layout": 52035000,
+     "style+layout": 53784000
+    },
+    {
+     "layout": 51196000,
+     "style": 1726000,
+     "construct": 560000,
+     "update_layout_tree": 2301000,
+     "n_layouts": 2,
+     "root": "960.0x128012.0",
+     "total_objects": 2005,
+     "construct+layout": 51756000,
+     "style+layout": 53497000
+    },
+    {
+     "layout": 51688000,
+     "style": 1705000,
+     "construct": 584000,
+     "update_layout_tree": 2307000,
+     "n_layouts": 2,
+     "root": "960.0x128012.0",
+     "total_objects": 2005,
+     "construct+layout": 52272000,
+     "style+layout": 53995000
+    },
+    {
+     "layout": 51732000,
+     "style": 1709000,
+     "construct": 566000,
+     "update_layout_tree": 2290000,
+     "n_layouts": 2,
+     "root": "960.0x128012.0",
+     "total_objects": 2005,
+     "construct+layout": 52298000,
+     "style+layout": 54022000
+    },
+    {
+     "layout": 52654000,
+     "style": 1699000,
+     "construct": 567000,
+     "update_layout_tree": 2283000,
+     "n_layouts": 2,
+     "root": "960.0x128012.0",
+     "total_objects": 2005,
+     "construct+layout": 53221000,
+     "style+layout": 54937000
+    },
+    {
+     "layout": 52327000,
+     "style": 1718000,
+     "construct": 572000,
+     "update_layout_tree": 2307000,
+     "n_layouts": 2,
+     "root": "960.0x128012.0",
+     "total_objects": 2005,
+     "construct+layout": 52899000,
+     "style+layout": 54634000
+    },
+    {
+     "layout": 51937000,
+     "style": 1702000,
+     "construct": 549000,
+     "update_layout_tree": 2267000,
+     "n_layouts": 2,
+     "root": "960.0x128012.0",
+     "total_objects": 2005,
+     "construct+layout": 52486000,
+     "style+layout": 54204000
+    },
+    {
+     "layout": 51607000,
+     "style": 1713000,
+     "construct": 578000,
+     "update_layout_tree": 2308000,
+     "n_layouts": 2,
+     "root": "960.0x128012.0",
+     "total_objects": 2005,
+     "construct+layout": 52185000,
+     "style+layout": 53915000
+    },
+    {
+     "layout": 51600000,
+     "style": 4070000,
+     "construct": 575000,
+     "update_layout_tree": 4664000,
+     "n_layouts": 2,
+     "root": "960.0x128012.0",
+     "total_objects": 2005,
+     "construct+layout": 52175000,
+     "style+layout": 56264000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 6140000,
+     "layout": 37800000,
+     "style+layout": 43940000,
+     "root": "960.0x128012.0"
+    },
+    {
+     "style": 5640000,
+     "layout": 38700000,
+     "style+layout": 44340000,
+     "root": "960.0x128012.0"
+    },
+    {
+     "style": 5640000,
+     "layout": 37900000,
+     "style+layout": 43540000,
+     "root": "960.0x128012.0"
+    },
+    {
+     "style": 5760000,
+     "layout": 37720000,
+     "style+layout": 43480000,
+     "root": "960.0x128012.0"
+    },
+    {
+     "style": 5700000,
+     "layout": 38220000,
+     "style+layout": 43920000,
+     "root": "960.0x128012.0"
+    },
+    {
+     "style": 5820000,
+     "layout": 37680000,
+     "style+layout": 43500000,
+     "root": "960.0x128012.0"
+    },
+    {
+     "style": 5720000,
+     "layout": 37920000,
+     "style+layout": 43640000,
+     "root": "960.0x128012.0"
+    },
+    {
+     "style": 6000000,
+     "layout": 38040000,
+     "style+layout": 44040000,
+     "root": "960.0x128012.0"
+    },
+    {
+     "style": 5680000,
+     "layout": 37320000,
+     "style+layout": 43000000,
+     "root": "960.0x128012.0"
+    }
+   ]
+  }
+ },
+ "text/flex_cards/1000": {
+  "nodes": 3001,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 33338000,
+     "style": 2836000,
+     "construct": 1486000,
+     "update_layout_tree": 4341000,
+     "n_layouts": 2,
+     "root": "960.0x68560.0",
+     "total_objects": 5005,
+     "construct+layout": 34824000,
+     "style+layout": 37679000
+    },
+    {
+     "layout": 32996000,
+     "style": 2840000,
+     "construct": 1457000,
+     "update_layout_tree": 4315000,
+     "n_layouts": 2,
+     "root": "960.0x68560.0",
+     "total_objects": 5005,
+     "construct+layout": 34453000,
+     "style+layout": 37311000
+    },
+    {
+     "layout": 35424000,
+     "style": 2812000,
+     "construct": 1466000,
+     "update_layout_tree": 4297000,
+     "n_layouts": 2,
+     "root": "960.0x68560.0",
+     "total_objects": 5005,
+     "construct+layout": 36890000,
+     "style+layout": 39721000
+    },
+    {
+     "layout": 34039000,
+     "style": 2811000,
+     "construct": 1469000,
+     "update_layout_tree": 4300000,
+     "n_layouts": 2,
+     "root": "960.0x68560.0",
+     "total_objects": 5005,
+     "construct+layout": 35508000,
+     "style+layout": 38339000
+    },
+    {
+     "layout": 32888000,
+     "style": 2919000,
+     "construct": 1461000,
+     "update_layout_tree": 4400000,
+     "n_layouts": 2,
+     "root": "960.0x68560.0",
+     "total_objects": 5005,
+     "construct+layout": 34349000,
+     "style+layout": 37288000
+    },
+    {
+     "layout": 34892000,
+     "style": 3222000,
+     "construct": 1707000,
+     "update_layout_tree": 4949000,
+     "n_layouts": 2,
+     "root": "960.0x68560.0",
+     "total_objects": 5005,
+     "construct+layout": 36599000,
+     "style+layout": 39841000
+    },
+    {
+     "layout": 33509000,
+     "style": 2808000,
+     "construct": 1451000,
+     "update_layout_tree": 4277000,
+     "n_layouts": 2,
+     "root": "960.0x68560.0",
+     "total_objects": 5005,
+     "construct+layout": 34960000,
+     "style+layout": 37786000
+    },
+    {
+     "layout": 32669000,
+     "style": 2789000,
+     "construct": 1437000,
+     "update_layout_tree": 4251000,
+     "n_layouts": 2,
+     "root": "960.0x68560.0",
+     "total_objects": 5005,
+     "construct+layout": 34106000,
+     "style+layout": 36920000
+    },
+    {
+     "layout": 34840000,
+     "style": 2877000,
+     "construct": 1525000,
+     "update_layout_tree": 4424000,
+     "n_layouts": 2,
+     "root": "960.0x68560.0",
+     "total_objects": 5005,
+     "construct+layout": 36365000,
+     "style+layout": 39264000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 9560000,
+     "layout": 36140000,
+     "style+layout": 45700000,
+     "root": "960.0x68560.0"
+    },
+    {
+     "style": 9560000,
+     "layout": 35800000,
+     "style+layout": 45360000,
+     "root": "960.0x68560.0"
+    },
+    {
+     "style": 9480000,
+     "layout": 36280000,
+     "style+layout": 45760000,
+     "root": "960.0x68560.0"
+    },
+    {
+     "style": 9580000,
+     "layout": 36800000,
+     "style+layout": 46380000,
+     "root": "960.0x68560.0"
+    },
+    {
+     "style": 9560000,
+     "layout": 36000000,
+     "style+layout": 45560000,
+     "root": "960.0x68560.0"
+    },
+    {
+     "style": 9700000,
+     "layout": 36700000,
+     "style+layout": 46400000,
+     "root": "960.0x68560.0"
+    },
+    {
+     "style": 9540000,
+     "layout": 36460000,
+     "style+layout": 46000000,
+     "root": "960.0x68560.0"
+    },
+    {
+     "style": 10400000,
+     "layout": 39220000,
+     "style+layout": 49620000,
+     "root": "960.0x68560.0"
+    },
+    {
+     "style": 9540000,
+     "layout": 45960000,
+     "style+layout": 55500000,
+     "root": "960.0x68560.0"
+    }
+   ]
+  }
+ },
+ "text/inline_mixed/1000": {
+  "nodes": 16361,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 83743000,
+     "style": 7669000,
+     "construct": 10192000,
+     "update_layout_tree": 17891000,
+     "n_layouts": 2,
+     "root": "960.0x134272.0",
+     "total_objects": 41181,
+     "construct+layout": 93935000,
+     "style+layout": 101634000
+    },
+    {
+     "layout": 85112000,
+     "style": 7768000,
+     "construct": 10746000,
+     "update_layout_tree": 18536000,
+     "n_layouts": 2,
+     "root": "960.0x134272.0",
+     "total_objects": 41181,
+     "construct+layout": 95858000,
+     "style+layout": 103648000
+    },
+    {
+     "layout": 90551000,
+     "style": 7961000,
+     "construct": 10394000,
+     "update_layout_tree": 18380000,
+     "n_layouts": 2,
+     "root": "960.0x134272.0",
+     "total_objects": 41181,
+     "construct+layout": 100945000,
+     "style+layout": 108931000
+    },
+    {
+     "layout": 84685000,
+     "style": 7800000,
+     "construct": 10440000,
+     "update_layout_tree": 18268000,
+     "n_layouts": 2,
+     "root": "960.0x134272.0",
+     "total_objects": 41181,
+     "construct+layout": 95125000,
+     "style+layout": 102953000
+    },
+    {
+     "layout": 83327000,
+     "style": 7698000,
+     "construct": 10129000,
+     "update_layout_tree": 17847000,
+     "n_layouts": 2,
+     "root": "960.0x134272.0",
+     "total_objects": 41181,
+     "construct+layout": 93456000,
+     "style+layout": 101174000
+    },
+    {
+     "layout": 84404000,
+     "style": 7681000,
+     "construct": 10254000,
+     "update_layout_tree": 17954000,
+     "n_layouts": 2,
+     "root": "960.0x134272.0",
+     "total_objects": 41181,
+     "construct+layout": 94658000,
+     "style+layout": 102358000
+    },
+    {
+     "layout": 92494000,
+     "style": 8766000,
+     "construct": 11016000,
+     "update_layout_tree": 19803000,
+     "n_layouts": 2,
+     "root": "960.0x134272.0",
+     "total_objects": 41181,
+     "construct+layout": 103510000,
+     "style+layout": 112297000
+    },
+    {
+     "layout": 108258000,
+     "style": 12530000,
+     "construct": 22174000,
+     "update_layout_tree": 34735000,
+     "n_layouts": 2,
+     "root": "960.0x134272.0",
+     "total_objects": 41181,
+     "construct+layout": 130432000,
+     "style+layout": 142993000
+    },
+    {
+     "layout": 93229000,
+     "style": 8429000,
+     "construct": 11184000,
+     "update_layout_tree": 19632000,
+     "n_layouts": 2,
+     "root": "960.0x134272.0",
+     "total_objects": 41181,
+     "construct+layout": 104413000,
+     "style+layout": 112861000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 47040000,
+     "layout": 116040000,
+     "style+layout": 163080000,
+     "root": "960.0x134272.0"
+    },
+    {
+     "style": 47760000,
+     "layout": 110600000,
+     "style+layout": 158360000,
+     "root": "960.0x134272.0"
+    },
+    {
+     "style": 44560000,
+     "layout": 101520000,
+     "style+layout": 146080000,
+     "root": "960.0x134272.0"
+    },
+    {
+     "style": 50680000,
+     "layout": 109640000,
+     "style+layout": 160320000,
+     "root": "960.0x134272.0"
+    },
+    {
+     "style": 49260000,
+     "layout": 109220000,
+     "style+layout": 158480000,
+     "root": "960.0x134272.0"
+    },
+    {
+     "style": 45340000,
+     "layout": 103500000,
+     "style+layout": 148840000,
+     "root": "960.0x134272.0"
+    },
+    {
+     "style": 44780000,
+     "layout": 102240000,
+     "style+layout": 147020000,
+     "root": "960.0x134272.0"
+    },
+    {
+     "style": 44780000,
+     "layout": 105940000,
+     "style+layout": 150720000,
+     "root": "960.0x134272.0"
+    },
+    {
+     "style": 45240000,
+     "layout": 102580000,
+     "style+layout": 147820000,
+     "root": "960.0x134272.0"
+    }
+   ]
+  }
+ },
+ "real/wikipedia": {
+  "nodes": 21889,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 191262000,
+     "style": 47206000,
+     "construct": 20009000,
+     "update_layout_tree": 68736000,
+     "n_layouts": 2,
+     "root": "1280.0x85068.0",
+     "total_objects": 47637,
+     "construct+layout": 211271000,
+     "style+layout": 259998000
+    },
+    {
+     "layout": 155948000,
+     "style": 46722000,
+     "construct": 19420000,
+     "update_layout_tree": 67639000,
+     "n_layouts": 2,
+     "root": "1280.0x85068.0",
+     "total_objects": 47637,
+     "construct+layout": 175368000,
+     "style+layout": 223587000
+    },
+    {
+     "layout": 158126000,
+     "style": 45648000,
+     "construct": 19796000,
+     "update_layout_tree": 66982000,
+     "n_layouts": 2,
+     "root": "1280.0x85068.0",
+     "total_objects": 47637,
+     "construct+layout": 177922000,
+     "style+layout": 225108000
+    },
+    {
+     "layout": 163754000,
+     "style": 47071000,
+     "construct": 19661000,
+     "update_layout_tree": 68259000,
+     "n_layouts": 2,
+     "root": "1280.0x85068.0",
+     "total_objects": 47637,
+     "construct+layout": 183415000,
+     "style+layout": 232013000
+    },
+    {
+     "layout": 157645000,
+     "style": 46412000,
+     "construct": 20012000,
+     "update_layout_tree": 67939000,
+     "n_layouts": 2,
+     "root": "1280.0x85068.0",
+     "total_objects": 47637,
+     "construct+layout": 177657000,
+     "style+layout": 225584000
+    },
+    {
+     "layout": 149939000,
+     "style": 51622000,
+     "construct": 22052000,
+     "update_layout_tree": 75414000,
+     "n_layouts": 2,
+     "root": "1280.0x85068.0",
+     "total_objects": 47637,
+     "construct+layout": 171991000,
+     "style+layout": 225353000
+    },
+    {
+     "layout": 175691000,
+     "style": 45698000,
+     "construct": 19954000,
+     "update_layout_tree": 67181000,
+     "n_layouts": 2,
+     "root": "1280.0x85068.0",
+     "total_objects": 47637,
+     "construct+layout": 195645000,
+     "style+layout": 242872000
+    },
+    {
+     "layout": 150246000,
+     "style": 45714000,
+     "construct": 20037000,
+     "update_layout_tree": 67284000,
+     "n_layouts": 2,
+     "root": "1280.0x85068.0",
+     "total_objects": 47637,
+     "construct+layout": 170283000,
+     "style+layout": 217530000
+    },
+    {
+     "layout": 175621000,
+     "style": 46435000,
+     "construct": 19458000,
+     "update_layout_tree": 67346000,
+     "n_layouts": 2,
+     "root": "1280.0x85068.0",
+     "total_objects": 47637,
+     "construct+layout": 195079000,
+     "style+layout": 242967000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 182340000,
+     "layout": 277260000,
+     "style+layout": 459600000,
+     "root": "1280.0x84997.0"
+    },
+    {
+     "style": 177640000,
+     "layout": 271520000,
+     "style+layout": 449160000,
+     "root": "1280.0x84997.0"
+    },
+    {
+     "style": 181900000,
+     "layout": 272560000,
+     "style+layout": 454460000,
+     "root": "1280.0x84997.0"
+    },
+    {
+     "style": 177560000,
+     "layout": 270960000,
+     "style+layout": 448520000,
+     "root": "1280.0x84997.0"
+    },
+    {
+     "style": 180560000,
+     "layout": 271180000,
+     "style+layout": 451740000,
+     "root": "1280.0x84997.0"
+    },
+    {
+     "style": 177800000,
+     "layout": 272100000,
+     "style+layout": 449900000,
+     "root": "1280.0x84997.0"
+    },
+    {
+     "style": 183120000,
+     "layout": 269580000,
+     "style+layout": 452700000,
+     "root": "1280.0x84997.0"
+    },
+    {
+     "style": 180320000,
+     "layout": 304140000,
+     "style+layout": 484460000,
+     "root": "1280.0x84997.0"
+    },
+    {
+     "style": 196540000,
+     "layout": 294060000,
+     "style+layout": 490600000,
+     "root": "1280.0x84997.0"
+    }
+   ]
+  }
+ },
+ "real/mdn": {
+  "nodes": 2212,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 12586000,
+     "style": 5970000,
+     "construct": 1445000,
+     "update_layout_tree": 7580000,
+     "n_layouts": 2,
+     "root": "1280.0x19760.0",
+     "total_objects": 3595,
+     "construct+layout": 14031000,
+     "style+layout": 20166000
+    },
+    {
+     "layout": 12072000,
+     "style": 6555000,
+     "construct": 1603000,
+     "update_layout_tree": 8331000,
+     "n_layouts": 2,
+     "root": "1280.0x19760.0",
+     "total_objects": 3595,
+     "construct+layout": 13675000,
+     "style+layout": 20403000
+    },
+    {
+     "layout": 12112000,
+     "style": 6524000,
+     "construct": 1589000,
+     "update_layout_tree": 8296000,
+     "n_layouts": 2,
+     "root": "1280.0x19760.0",
+     "total_objects": 3595,
+     "construct+layout": 13701000,
+     "style+layout": 20408000
+    },
+    {
+     "layout": 11457000,
+     "style": 6068000,
+     "construct": 1440000,
+     "update_layout_tree": 7674000,
+     "n_layouts": 2,
+     "root": "1280.0x19760.0",
+     "total_objects": 3595,
+     "construct+layout": 12897000,
+     "style+layout": 19131000
+    },
+    {
+     "layout": 11395000,
+     "style": 5969000,
+     "construct": 1384000,
+     "update_layout_tree": 7514000,
+     "n_layouts": 2,
+     "root": "1280.0x19760.0",
+     "total_objects": 3595,
+     "construct+layout": 12779000,
+     "style+layout": 18909000
+    },
+    {
+     "layout": 10910000,
+     "style": 5784000,
+     "construct": 1408000,
+     "update_layout_tree": 7376000,
+     "n_layouts": 2,
+     "root": "1280.0x19760.0",
+     "total_objects": 3595,
+     "construct+layout": 12318000,
+     "style+layout": 18286000
+    },
+    {
+     "layout": 13642000,
+     "style": 6271000,
+     "construct": 1523000,
+     "update_layout_tree": 7961000,
+     "n_layouts": 2,
+     "root": "1280.0x19760.0",
+     "total_objects": 3595,
+     "construct+layout": 15165000,
+     "style+layout": 21603000
+    },
+    {
+     "layout": 11089000,
+     "style": 5890000,
+     "construct": 1440000,
+     "update_layout_tree": 7486000,
+     "n_layouts": 2,
+     "root": "1280.0x19760.0",
+     "total_objects": 3595,
+     "construct+layout": 12529000,
+     "style+layout": 18575000
+    },
+    {
+     "layout": 11072000,
+     "style": 5755000,
+     "construct": 1404000,
+     "update_layout_tree": 7314000,
+     "n_layouts": 2,
+     "root": "1280.0x19760.0",
+     "total_objects": 3595,
+     "construct+layout": 12476000,
+     "style+layout": 18386000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 17200000,
+     "layout": 21140000,
+     "style+layout": 38340000,
+     "root": "1280.0x19788.0"
+    },
+    {
+     "style": 16880000,
+     "layout": 18800000,
+     "style+layout": 35680000,
+     "root": "1280.0x19788.0"
+    },
+    {
+     "style": 16420000,
+     "layout": 18760000,
+     "style+layout": 35180000,
+     "root": "1280.0x19788.0"
+    },
+    {
+     "style": 17480000,
+     "layout": 20520000,
+     "style+layout": 38000000,
+     "root": "1280.0x19788.0"
+    },
+    {
+     "style": 16380000,
+     "layout": 18880000,
+     "style+layout": 35260000,
+     "root": "1280.0x19788.0"
+    },
+    {
+     "style": 15860000,
+     "layout": 18120000,
+     "style+layout": 33980000,
+     "root": "1280.0x19788.0"
+    },
+    {
+     "style": 16060000,
+     "layout": 18680000,
+     "style+layout": 34740000,
+     "root": "1280.0x19788.0"
+    },
+    {
+     "style": 15840000,
+     "layout": 18460000,
+     "style+layout": 34300000,
+     "root": "1280.0x19788.0"
+    },
+    {
+     "style": 15960000,
+     "layout": 18120000,
+     "style+layout": 34080000,
+     "root": "1280.0x19788.0"
+    }
+   ]
+  }
+ },
+ "real/rustdoc": {
+  "nodes": 15947,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 91481000,
+     "style": 19778000,
+     "construct": 12532000,
+     "update_layout_tree": 33302000,
+     "n_layouts": 3,
+     "root": "1280.0x155326.0",
+     "total_objects": 38099,
+     "construct+layout": 104013000,
+     "style+layout": 124783000
+    },
+    {
+     "layout": 86845000,
+     "style": 20141000,
+     "construct": 12212000,
+     "update_layout_tree": 33804000,
+     "n_layouts": 3,
+     "root": "1280.0x155326.0",
+     "total_objects": 38099,
+     "construct+layout": 99057000,
+     "style+layout": 120649000
+    },
+    {
+     "layout": 89345000,
+     "style": 19767000,
+     "construct": 12372000,
+     "update_layout_tree": 32963000,
+     "n_layouts": 3,
+     "root": "1280.0x155326.0",
+     "total_objects": 38099,
+     "construct+layout": 101717000,
+     "style+layout": 122308000
+    },
+    {
+     "layout": 90943000,
+     "style": 20343000,
+     "construct": 12635000,
+     "update_layout_tree": 34041000,
+     "n_layouts": 3,
+     "root": "1280.0x155326.0",
+     "total_objects": 38099,
+     "construct+layout": 103578000,
+     "style+layout": 124984000
+    },
+    {
+     "layout": 90040000,
+     "style": 19644000,
+     "construct": 12590000,
+     "update_layout_tree": 33233000,
+     "n_layouts": 3,
+     "root": "1280.0x155326.0",
+     "total_objects": 38099,
+     "construct+layout": 102630000,
+     "style+layout": 123273000
+    },
+    {
+     "layout": 90607000,
+     "style": 19519000,
+     "construct": 12331000,
+     "update_layout_tree": 32748000,
+     "n_layouts": 3,
+     "root": "1280.0x155326.0",
+     "total_objects": 38099,
+     "construct+layout": 102938000,
+     "style+layout": 123355000
+    },
+    {
+     "layout": 99388000,
+     "style": 20343000,
+     "construct": 12545000,
+     "update_layout_tree": 33877000,
+     "n_layouts": 3,
+     "root": "1280.0x155326.0",
+     "total_objects": 38099,
+     "construct+layout": 111933000,
+     "style+layout": 133265000
+    },
+    {
+     "layout": 87561000,
+     "style": 19749000,
+     "construct": 12445000,
+     "update_layout_tree": 33170000,
+     "n_layouts": 3,
+     "root": "1280.0x155326.0",
+     "total_objects": 38099,
+     "construct+layout": 100006000,
+     "style+layout": 120731000
+    },
+    {
+     "layout": 84856000,
+     "style": 19499000,
+     "construct": 12198000,
+     "update_layout_tree": 32503000,
+     "n_layouts": 3,
+     "root": "1280.0x155326.0",
+     "total_objects": 38099,
+     "construct+layout": 97054000,
+     "style+layout": 117359000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 62100000,
+     "layout": 144740000,
+     "style+layout": 206840000,
+     "root": "1280.0x155326.0"
+    },
+    {
+     "style": 61080000,
+     "layout": 146500000,
+     "style+layout": 207580000,
+     "root": "1280.0x155326.0"
+    },
+    {
+     "style": 60380000,
+     "layout": 142720000,
+     "style+layout": 203100000,
+     "root": "1280.0x155326.0"
+    },
+    {
+     "style": 61460000,
+     "layout": 144780000,
+     "style+layout": 206240000,
+     "root": "1280.0x155326.0"
+    },
+    {
+     "style": 61300000,
+     "layout": 144740000,
+     "style+layout": 206040000,
+     "root": "1280.0x155326.0"
+    },
+    {
+     "style": 60620000,
+     "layout": 146240000,
+     "style+layout": 206860000,
+     "root": "1280.0x155326.0"
+    },
+    {
+     "style": 61400000,
+     "layout": 144440000,
+     "style+layout": 205840000,
+     "root": "1280.0x155326.0"
+    },
+    {
+     "style": 60140000,
+     "layout": 144560000,
+     "style+layout": 204700000,
+     "root": "1280.0x155326.0"
+    },
+    {
+     "style": 60020000,
+     "layout": 143260000,
+     "style+layout": 203280000,
+     "root": "1280.0x155326.0"
+    }
+   ]
+  }
+ },
+ "real/css-flexbox-1": {
+  "nodes": 15890,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 92988000,
+     "style": 18248000,
+     "construct": 10893000,
+     "update_layout_tree": 30122000,
+     "n_layouts": 2,
+     "root": "1280.0x90168.0",
+     "total_objects": 33088,
+     "construct+layout": 103881000,
+     "style+layout": 123110000
+    },
+    {
+     "layout": 86078000,
+     "style": 18222000,
+     "construct": 10762000,
+     "update_layout_tree": 29954000,
+     "n_layouts": 2,
+     "root": "1280.0x90168.0",
+     "total_objects": 33088,
+     "construct+layout": 96840000,
+     "style+layout": 116032000
+    },
+    {
+     "layout": 86961000,
+     "style": 18349000,
+     "construct": 10810000,
+     "update_layout_tree": 30125000,
+     "n_layouts": 2,
+     "root": "1280.0x90168.0",
+     "total_objects": 33088,
+     "construct+layout": 97771000,
+     "style+layout": 117086000
+    },
+    {
+     "layout": 88267000,
+     "style": 18311000,
+     "construct": 11025000,
+     "update_layout_tree": 30390000,
+     "n_layouts": 2,
+     "root": "1280.0x90168.0",
+     "total_objects": 33088,
+     "construct+layout": 99292000,
+     "style+layout": 118657000
+    },
+    {
+     "layout": 86975000,
+     "style": 18358000,
+     "construct": 10677000,
+     "update_layout_tree": 29983000,
+     "n_layouts": 2,
+     "root": "1280.0x90168.0",
+     "total_objects": 33088,
+     "construct+layout": 97652000,
+     "style+layout": 116958000
+    },
+    {
+     "layout": 86614000,
+     "style": 18191000,
+     "construct": 10632000,
+     "update_layout_tree": 29781000,
+     "n_layouts": 2,
+     "root": "1280.0x90168.0",
+     "total_objects": 33088,
+     "construct+layout": 97246000,
+     "style+layout": 116395000
+    },
+    {
+     "layout": 93510000,
+     "style": 18315000,
+     "construct": 10698000,
+     "update_layout_tree": 29948000,
+     "n_layouts": 2,
+     "root": "1280.0x90168.0",
+     "total_objects": 33088,
+     "construct+layout": 104208000,
+     "style+layout": 123458000
+    },
+    {
+     "layout": 94284000,
+     "style": 18407000,
+     "construct": 11448000,
+     "update_layout_tree": 30934000,
+     "n_layouts": 2,
+     "root": "1280.0x90168.0",
+     "total_objects": 33088,
+     "construct+layout": 105732000,
+     "style+layout": 125218000
+    },
+    {
+     "layout": 100894000,
+     "style": 23690000,
+     "construct": 12613000,
+     "update_layout_tree": 37366000,
+     "n_layouts": 2,
+     "root": "1280.0x90168.0",
+     "total_objects": 33088,
+     "construct+layout": 113507000,
+     "style+layout": 138260000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 72420000,
+     "layout": 211840000,
+     "style+layout": 284260000,
+     "root": "1280.0x90170.0"
+    },
+    {
+     "style": 76420000,
+     "layout": 215960000,
+     "style+layout": 292380000,
+     "root": "1280.0x90170.0"
+    },
+    {
+     "style": 65020000,
+     "layout": 192540000,
+     "style+layout": 257560000,
+     "root": "1280.0x90170.0"
+    },
+    {
+     "style": 65780000,
+     "layout": 206600000,
+     "style+layout": 272380000,
+     "root": "1280.0x90170.0"
+    },
+    {
+     "style": 71660000,
+     "layout": 212420000,
+     "style+layout": 284080000,
+     "root": "1280.0x90170.0"
+    },
+    {
+     "style": 73020000,
+     "layout": 217160000,
+     "style+layout": 290180000,
+     "root": "1280.0x90170.0"
+    },
+    {
+     "style": 64920000,
+     "layout": 193760000,
+     "style+layout": 258680000,
+     "root": "1280.0x90170.0"
+    },
+    {
+     "style": 65580000,
+     "layout": 196780000,
+     "style+layout": 262360000,
+     "root": "1280.0x90170.0"
+    },
+    {
+     "style": 65020000,
+     "layout": 193920000,
+     "style+layout": 258940000,
+     "root": "1280.0x90170.0"
+    }
+   ]
+  }
+ },
+ "real/servo-org": {
+  "nodes": 226,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 2251000,
+     "style": 790000,
+     "construct": 221000,
+     "update_layout_tree": 1047000,
+     "n_layouts": 2,
+     "root": "1280.0x5445.0",
+     "total_objects": 383,
+     "construct+layout": 2472000,
+     "style+layout": 3298000
+    },
+    {
+     "layout": 2165000,
+     "style": 754000,
+     "construct": 205000,
+     "update_layout_tree": 981000,
+     "n_layouts": 2,
+     "root": "1280.0x5445.0",
+     "total_objects": 383,
+     "construct+layout": 2370000,
+     "style+layout": 3146000
+    },
+    {
+     "layout": 2078000,
+     "style": 724000,
+     "construct": 219000,
+     "update_layout_tree": 967000,
+     "n_layouts": 2,
+     "root": "1280.0x5445.0",
+     "total_objects": 383,
+     "construct+layout": 2297000,
+     "style+layout": 3045000
+    },
+    {
+     "layout": 2206000,
+     "style": 781000,
+     "construct": 219000,
+     "update_layout_tree": 1022000,
+     "n_layouts": 2,
+     "root": "1280.0x5445.0",
+     "total_objects": 383,
+     "construct+layout": 2425000,
+     "style+layout": 3228000
+    },
+    {
+     "layout": 2080000,
+     "style": 719000,
+     "construct": 216000,
+     "update_layout_tree": 958000,
+     "n_layouts": 2,
+     "root": "1280.0x5445.0",
+     "total_objects": 383,
+     "construct+layout": 2296000,
+     "style+layout": 3038000
+    },
+    {
+     "layout": 2088000,
+     "style": 719000,
+     "construct": 204000,
+     "update_layout_tree": 947000,
+     "n_layouts": 2,
+     "root": "1280.0x5445.0",
+     "total_objects": 383,
+     "construct+layout": 2292000,
+     "style+layout": 3035000
+    },
+    {
+     "layout": 2193000,
+     "style": 760000,
+     "construct": 231000,
+     "update_layout_tree": 1015000,
+     "n_layouts": 2,
+     "root": "1280.0x5445.0",
+     "total_objects": 383,
+     "construct+layout": 2424000,
+     "style+layout": 3208000
+    },
+    {
+     "layout": 2154000,
+     "style": 746000,
+     "construct": 213000,
+     "update_layout_tree": 982000,
+     "n_layouts": 2,
+     "root": "1280.0x5445.0",
+     "total_objects": 383,
+     "construct+layout": 2367000,
+     "style+layout": 3136000
+    },
+    {
+     "layout": 2063000,
+     "style": 731000,
+     "construct": 206000,
+     "update_layout_tree": 967000,
+     "n_layouts": 2,
+     "root": "1280.0x5445.0",
+     "total_objects": 383,
+     "construct+layout": 2269000,
+     "style+layout": 3030000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 3200000,
+     "layout": 4160000,
+     "style+layout": 7360000,
+     "root": "1280.0x5444.0"
+    },
+    {
+     "style": 2960000,
+     "layout": 3960000,
+     "style+layout": 6920000,
+     "root": "1280.0x5444.0"
+    },
+    {
+     "style": 3380000,
+     "layout": 4240000,
+     "style+layout": 7620000,
+     "root": "1280.0x5444.0"
+    },
+    {
+     "style": 3040000,
+     "layout": 4020000,
+     "style+layout": 7060000,
+     "root": "1280.0x5444.0"
+    },
+    {
+     "style": 3140000,
+     "layout": 4360000,
+     "style+layout": 7500000,
+     "root": "1280.0x5444.0"
+    },
+    {
+     "style": 2960000,
+     "layout": 4020000,
+     "style+layout": 6980000,
+     "root": "1280.0x5444.0"
+    },
+    {
+     "style": 3160000,
+     "layout": 4120000,
+     "style+layout": 7280000,
+     "root": "1280.0x5444.0"
+    },
+    {
+     "style": 3040000,
+     "layout": 4000000,
+     "style+layout": 7040000,
+     "root": "1280.0x5444.0"
+    },
+    {
+     "style": 3060000,
+     "layout": 4040000,
+     "style+layout": 7100000,
+     "root": "1280.0x5444.0"
+    }
+   ]
+  }
+ },
+ "real/dioxuslabs-com": {
+  "nodes": 158,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 4274000,
+     "style": 1027000,
+     "construct": 175000,
+     "update_layout_tree": 1220000,
+     "n_layouts": 2,
+     "root": "1280.0x1232.0",
+     "total_objects": 201,
+     "construct+layout": 4449000,
+     "style+layout": 5494000
+    },
+    {
+     "layout": 3506000,
+     "style": 984000,
+     "construct": 166000,
+     "update_layout_tree": 1165000,
+     "n_layouts": 2,
+     "root": "1280.0x1232.0",
+     "total_objects": 201,
+     "construct+layout": 3672000,
+     "style+layout": 4671000
+    },
+    {
+     "layout": 2818000,
+     "style": 992000,
+     "construct": 536000,
+     "update_layout_tree": 1544000,
+     "n_layouts": 2,
+     "root": "1280.0x1232.0",
+     "total_objects": 201,
+     "construct+layout": 3354000,
+     "style+layout": 4362000
+    },
+    {
+     "layout": 4051000,
+     "style": 1052000,
+     "construct": 165000,
+     "update_layout_tree": 1240000,
+     "n_layouts": 2,
+     "root": "1280.0x1232.0",
+     "total_objects": 201,
+     "construct+layout": 4216000,
+     "style+layout": 5291000
+    },
+    {
+     "layout": 2816000,
+     "style": 1014000,
+     "construct": 167000,
+     "update_layout_tree": 1196000,
+     "n_layouts": 2,
+     "root": "1280.0x1232.0",
+     "total_objects": 201,
+     "construct+layout": 2983000,
+     "style+layout": 4012000
+    },
+    {
+     "layout": 3389000,
+     "style": 988000,
+     "construct": 181000,
+     "update_layout_tree": 1186000,
+     "n_layouts": 2,
+     "root": "1280.0x1232.0",
+     "total_objects": 201,
+     "construct+layout": 3570000,
+     "style+layout": 4575000
+    },
+    {
+     "layout": 5023000,
+     "style": 1059000,
+     "construct": 176000,
+     "update_layout_tree": 1252000,
+     "n_layouts": 2,
+     "root": "1280.0x1232.0",
+     "total_objects": 201,
+     "construct+layout": 5199000,
+     "style+layout": 6275000
+    },
+    {
+     "layout": 3789000,
+     "style": 1011000,
+     "construct": 158000,
+     "update_layout_tree": 1184000,
+     "n_layouts": 2,
+     "root": "1280.0x1232.0",
+     "total_objects": 201,
+     "construct+layout": 3947000,
+     "style+layout": 4973000
+    },
+    {
+     "layout": 3711000,
+     "style": 998000,
+     "construct": 157000,
+     "update_layout_tree": 1171000,
+     "n_layouts": 2,
+     "root": "1280.0x1232.0",
+     "total_objects": 201,
+     "construct+layout": 3868000,
+     "style+layout": 4882000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 6520000,
+     "layout": 3020000,
+     "style+layout": 9540000,
+     "root": "1280.0x1232.0"
+    },
+    {
+     "style": 6500000,
+     "layout": 2880000,
+     "style+layout": 9380000,
+     "root": "1280.0x1232.0"
+    },
+    {
+     "style": 6380000,
+     "layout": 2880000,
+     "style+layout": 9260000,
+     "root": "1280.0x1232.0"
+    },
+    {
+     "style": 6780000,
+     "layout": 2960000,
+     "style+layout": 9740000,
+     "root": "1280.0x1232.0"
+    },
+    {
+     "style": 6660000,
+     "layout": 2860000,
+     "style+layout": 9520000,
+     "root": "1280.0x1232.0"
+    },
+    {
+     "style": 6640000,
+     "layout": 2980000,
+     "style+layout": 9620000,
+     "root": "1280.0x1232.0"
+    },
+    {
+     "style": 6860000,
+     "layout": 2960000,
+     "style+layout": 9820000,
+     "root": "1280.0x1232.0"
+    },
+    {
+     "style": 6620000,
+     "layout": 2800000,
+     "style+layout": 9420000,
+     "root": "1280.0x1232.0"
+    },
+    {
+     "style": 6440000,
+     "layout": 2860000,
+     "style+layout": 9300000,
+     "root": "1280.0x1232.0"
+    }
+   ]
+  }
+ },
+ "real/bootstrap-dashboard": {
+  "nodes": 199,
+  "engines": {
+   "chrome": [
+    {
+     "layout": 1721000,
+     "style": 819000,
+     "construct": 201000,
+     "update_layout_tree": 1042000,
+     "n_layouts": 2,
+     "root": "1280.0x1136.0",
+     "total_objects": 300,
+     "construct+layout": 1922000,
+     "style+layout": 2763000
+    },
+    {
+     "layout": 1672000,
+     "style": 813000,
+     "construct": 184000,
+     "update_layout_tree": 1020000,
+     "n_layouts": 2,
+     "root": "1280.0x1136.0",
+     "total_objects": 300,
+     "construct+layout": 1856000,
+     "style+layout": 2692000
+    },
+    {
+     "layout": 1617000,
+     "style": 767000,
+     "construct": 184000,
+     "update_layout_tree": 980000,
+     "n_layouts": 2,
+     "root": "1280.0x1136.0",
+     "total_objects": 300,
+     "construct+layout": 1801000,
+     "style+layout": 2597000
+    },
+    {
+     "layout": 1942000,
+     "style": 958000,
+     "construct": 228000,
+     "update_layout_tree": 1213000,
+     "n_layouts": 2,
+     "root": "1280.0x1136.0",
+     "total_objects": 300,
+     "construct+layout": 2170000,
+     "style+layout": 3155000
+    },
+    {
+     "layout": 1731000,
+     "style": 834000,
+     "construct": 200000,
+     "update_layout_tree": 1057000,
+     "n_layouts": 2,
+     "root": "1280.0x1136.0",
+     "total_objects": 300,
+     "construct+layout": 1931000,
+     "style+layout": 2788000
+    },
+    {
+     "layout": 1716000,
+     "style": 900000,
+     "construct": 197000,
+     "update_layout_tree": 1122000,
+     "n_layouts": 2,
+     "root": "1280.0x1136.0",
+     "total_objects": 300,
+     "construct+layout": 1913000,
+     "style+layout": 2838000
+    },
+    {
+     "layout": 1967000,
+     "style": 944000,
+     "construct": 226000,
+     "update_layout_tree": 1196000,
+     "n_layouts": 2,
+     "root": "1280.0x1136.0",
+     "total_objects": 300,
+     "construct+layout": 2193000,
+     "style+layout": 3163000
+    },
+    {
+     "layout": 1756000,
+     "style": 875000,
+     "construct": 195000,
+     "update_layout_tree": 1107000,
+     "n_layouts": 2,
+     "root": "1280.0x1136.0",
+     "total_objects": 300,
+     "construct+layout": 1951000,
+     "style+layout": 2863000
+    },
+    {
+     "layout": 1672000,
+     "style": 781000,
+     "construct": 180000,
+     "update_layout_tree": 985000,
+     "n_layouts": 2,
+     "root": "1280.0x1136.0",
+     "total_objects": 300,
+     "construct+layout": 1852000,
+     "style+layout": 2657000
+    }
+   ],
+   "webkit": [
+    {
+     "style": 2760000,
+     "layout": 2580000,
+     "style+layout": 5340000,
+     "root": "1280.0x1136.0"
+    },
+    {
+     "style": 3040000,
+     "layout": 2740000,
+     "style+layout": 5780000,
+     "root": "1280.0x1136.0"
+    },
+    {
+     "style": 2640000,
+     "layout": 3100000,
+     "style+layout": 5740000,
+     "root": "1280.0x1136.0"
+    },
+    {
+     "style": 3080000,
+     "layout": 2540000,
+     "style+layout": 5620000,
+     "root": "1280.0x1136.0"
+    },
+    {
+     "style": 2960000,
+     "layout": 2600000,
+     "style+layout": 5560000,
+     "root": "1280.0x1136.0"
+    },
+    {
+     "style": 2880000,
+     "layout": 2500000,
+     "style+layout": 5380000,
+     "root": "1280.0x1136.0"
+    },
+    {
+     "style": 3080000,
+     "layout": 2700000,
+     "style+layout": 5780000,
+     "root": "1280.0x1136.0"
+    },
+    {
+     "style": 2980000,
+     "layout": 2620000,
+     "style+layout": 5600000,
+     "root": "1280.0x1136.0"
+    },
+    {
+     "style": 2860000,
+     "layout": 2440000,
+     "style+layout": 5300000,
+     "root": "1280.0x1136.0"
+    }
+   ]
+  }
+ }
+}

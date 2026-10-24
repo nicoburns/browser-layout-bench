@@ -295,6 +295,13 @@ Blitz columns on 2026-10-23 and folded them in via `run.py normalize`). Against 
 window is a uniform ~11% slower for every engine (per-case minimum new/old median 1.08–1.14, Chrome
 `style+layout` 1.115, p10 1.09, p90 1.17), so the absolute times rose but the cross-engine ratios did not.
 
+The WebKit column was measured on 2026-10-24 (`out/runs/2026-10-24-webkit-chrome.json`, 3×3 interleaved with
+Chrome) and folded in by `run.py normalize`: the VM was ~13% faster that day (Chrome `style+layout` minimum
+new/old median 0.87, p10 0.83, p90 0.91), so every WebKit duration is multiplied by its case's stored/new
+Chrome ratio (kept in each sample as `chrome_norm`). The factor carries Chrome's own 1–3% sample noise and
+the drift is not necessarily engine-neutral, so differences under ~10% between WebKit and the other columns
+are within the normalisation's uncertainty.
+
 Known artefact of this run: `servo1` is pinned as a whole process to one CPU, and in this window its thread
 handoffs between the style, box and fragment spans paid a scheduler slice of ~3 ms on a share of samples, so
 the Servo(1) `restyle_and_build` ("Whole pipeline") column is 3–5 ms high on cases under ~20 ms (e.g.
