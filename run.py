@@ -176,8 +176,9 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
                 style=phases["style"], damage=phases.get("damage", 0), construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
                 resolve=int(kv["resolve"]))
         elif line.startswith("CHECK"):
-            # --check: the incremental layout vs a forced full restyle (`full`) and vs a fresh
-            # layout of the serialised document (`fresh`), each "ok" or "mismatch"
+            # --check: the incremental layout and resolved styles (elements and ::before/::after)
+            # vs a forced full restyle (`full`) and vs a fresh layout of the serialised document
+            # (`fresh`), each "ok" or "mismatch"
             kv = dict(re.findall(r"(\w+)=(\w+)", line))
             check = {k: kv[k] for k in ("full", "fresh")}
             if any(v != "ok" for v in check.values()):
