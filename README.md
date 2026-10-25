@@ -220,6 +220,36 @@ flush is one `Styles` + one `Reflow`; the page also records a few sub-0.1 ms ref
 the sum of all reflows relative to the longest. The `Styles` marker's `elementsTraversed` is the
 styled-element count (`styled=` in `verify`, nodes + `html`/`body`/`#cb`).
 
+## Relayout scenarios
+
+Every case is also measured in five incremental-layout scenarios, in the same document load as the first layout
+(one load per iteration = first layout, then the scenarios in a fixed order, each mutation batched, forced to a single
+layout, then reverted — the revert's layout is discarded):
+
+| key | mutation | measures |
+|---|---|---|
+| `root_width` | the case root's `width` set to 0.8× its laid-out width | warm full relayout (the headless stand-in for a viewport resize) |
+| `leaf_1` | one deepest leaf's `width` +1 px | invalidation along one path |
+| `leaf_10pct` | every 10th leaf's `width` +1 px | many dirty subtrees with overlapping ancestor paths |
+| `leaf_all` | every leaf's `width` +1 px | incremental machinery vs. a full relayout |
+| `append` | the last 10 % of the root's children cloned and appended | DOM mutation + construction + layout |
+
+Leaves are the elements under `#cb` with no element children; the widths are all read before any is written, so the
+preparation itself does not flush N layouts. The same script (`relayout.js`, driven as `window.__lb.relayout(step,
+'apply'|'revert')`) runs in Chrome, WebKit, Firefox (Playwright `evaluate`) and Servo, Ladybird (WebDriver Execute
+Script); the Blitz runner applies the identical mutations natively through `DocumentMutator` with
+`incremental: true` and times one `resolve()` per step. Step *k* runs with caches warmed by the first layout and
+steps 1..k−1 — the same for every engine, and stated here rather than avoided.
+
+Per step the sample carries `relayout/<step>/<metric>`: `layout` (Chrome `Layout`, WebKit forced-layout timer,
+Firefox `Reflow`, Ladybird layout, Blitz `layout`) and a whole-pipeline figure (Chrome `UpdateLayoutTree`+`Layout`,
+WebKit style+layout, Firefox `Styles`+`Reflow`, Ladybird `update_layout()`, Servo `restyle_and_build_trees`, Blitz
+`resolve()`), reported as the "Relayout (…)" tables and the Scenario selector on the results site. Servo's incremental
+reflows take the box/fragment repair path, whose spans are empty, so only its whole-pipeline figure exists. Chrome's
+events are selected between `performance.mark` user-timing marks around the forced layout (`blink.user_timing`
+category), Firefox's from the same marks in the profile, Servo's and Ladybird's by the order of the window's reflows
+after the reveal.
+
 ## Running
 
 Prerequisites (Linux only: the runners pin with `taskset` and Servo/Ladybird run headless with

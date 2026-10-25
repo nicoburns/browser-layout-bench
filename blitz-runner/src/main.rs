@@ -7,7 +7,7 @@ use std::time::Instant;
 
 use anyrender::render_to_buffer;
 use anyrender_vello_cpu::VelloCpuImageRenderer;
-use blitz_dom::{BaseDocument, DocumentConfig, StyleThreading};
+use blitz_dom::{BaseDocument, DocumentConfig, NodeId, StyleThreading};
 use blitz_html::{HtmlDocument, HtmlProvider};
 use blitz_paint::paint_scene;
 use blitz_traits::net::{Bytes, NetHandler, NetProvider, Request};
@@ -191,7 +191,6 @@ fn main() {
 /// The relayout scenarios of `relayout.js`, applied natively: each step mutates the tree in one batch, times one
 /// incremental `resolve()` (printed as `RELAYOUT step=<name> resolve=<ns>` after that resolve's `PHASES` line) and
 /// is reverted, the revert's `resolve()` discarded, before the next step.
-use blitz_dom::NodeId;
 
 fn relayout_steps(doc: &mut BaseDocument) {
     let style_attr = || blitz_dom::QualName::new(None, blitz_dom::ns!(), blitz_dom::local_name!("style"));

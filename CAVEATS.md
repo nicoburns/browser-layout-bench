@@ -169,6 +169,17 @@ tree walk with no shaping, so the amount is small relative to layout on text-hea
 `grid/` and most `pangui/` cases have no text, so there the two tables differ only by genuine
 construction cost and "Layout only" is comparable across all engines.
 
+## 7. Relayout scenarios measure invalidation strategy, with warm caches
+
+The relayout steps run after the first layout in the same document, in a fixed order, each on the reverted tree, so
+every step sees the allocator, font and layout caches left by the previous ones (identical across engines, but not a
+cold relayout, and the revert's layout is not measured). The numbers compare how much work each engine's invalidation
+lets through as much as how fast it lays out: Blitz currently restyles the whole subtree on any inline-style change
+(`set_attribute` → `RestyleHint::restyle_subtree()` + full damage), so its whole-pipeline relayout figures are
+dominated by style even when `layout` is small; Servo's repair path reports no box/fragment spans, so only
+`restyle_and_build_trees` is available. Small incremental relayouts (tens of µs in Chrome) sit at the trace clocks'
+resolution — prefer the median there. Post-mutation geometry is not yet part of `verify`.
+
 ## How to interpret the results
 
 - Treat large differences on geometry-validated, text-free cases as useful leads
