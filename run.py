@@ -71,9 +71,10 @@ def chrome_relayout(events):
         if a is None or b is None:
             continue
         within = lambda name: sum(e["dur"] for e in xs if e["name"] == name and a <= e["ts"] <= b) * 1000
-        r = dict(style=within("Document::recalcStyle"), construct=within("Document::rebuildLayoutTree"), layout=within("Layout"),
-                 n_layouts=sum(1 for e in xs if e["name"] == "Layout" and a <= e["ts"] <= b))
+        r = dict(style=within("Document::recalcStyle"), construct=within("Document::rebuildLayoutTree"), layout=within("Layout"))
         r["style+layout"] = within("UpdateLayoutTree") + r["layout"]
+        if (n := sum(1 for e in xs if e["name"] == "Layout" and a <= e["ts"] <= b)) != 1:
+            print(f"warning: {n} Layout events in relayout step {step}", file=sys.stderr)
         out[step] = r
     return out
 
@@ -637,6 +638,26 @@ COLUMNS = [
         ("blitz-par-pcon-pl", "resolve", "Blitz resolve() (parallel style+construct+layout)")]),
 ]
 
+# Relayout scenarios (see RELAYOUT_STEPS): the same engines' layout and whole-pipeline phases for the step's
+# incremental layout. Servo's incremental reflows run no box/fragment spans, so only its whole pipeline is listed.
+RELAYOUT_LABELS = {"root_width": "root width 0.8x", "leaf_1": "1 leaf +1px", "leaf_10pct": "10% of leaves +1px",
+                   "leaf_all": "all leaves +1px", "append": "append 10% more children"}
+for _step, _label in RELAYOUT_LABELS.items():
+    _k = f"relayout/{_step}/"
+    COLUMNS += [
+        (f"Relayout ({_label}): layout", [
+            ("chrome", _k + "layout", "Chrome Layout"), ("webkit", _k + "layout", "WebKit Layout"),
+            ("firefox", _k + "layout", "Firefox Reflow"), ("ladybird", _k + "layout", "Ladybird layout"),
+            ("blitz", _k + "layout", "Blitz `layout`"), ("blitz-par-pcon", _k + "layout", "Blitz `layout` (parallel style+construct)"),
+            ("blitz-par-pcon-pl", _k + "layout", "Blitz `layout` (#1034 build, parallel)")]),
+        (f"Relayout ({_label}): whole pipeline", [
+            ("chrome", _k + "style+layout", "Chrome UpdateLayoutTree+Layout"), ("webkit", _k + "style+layout", "WebKit RecalculateStyles+Layout"),
+            ("firefox", _k + "style+layout", "Firefox Styles+Reflow"), ("ladybird", _k + "total", "Ladybird update_layout()"),
+            ("servo1", _k + "restyle_and_build", "Servo(1) restyle_and_build_trees"), ("servo", _k + "restyle_and_build", "Servo(3) restyle_and_build_trees"),
+            ("blitz", _k + "resolve", "Blitz resolve()"), ("blitz-par-pcon", _k + "resolve", "Blitz resolve() (parallel style+construct)"),
+            ("blitz-par-pcon-pl", _k + "resolve", "Blitz resolve() (parallel style+construct+layout)")]),
+    ]
+
 
 def fmt_cell(ns, ref, best=False):
     """`ms` and, on a second line, the multiple of the Chrome value of the same row (omitted when Chrome has
@@ -746,6 +767,9 @@ def cmd_bench(args):
         order = [c["name"] for c in read_manifest()]
         results = dict(sorted(results.items(), key=lambda kv: order.index(kv[0]) if kv[0] in order else len(order)))
     def record(r, name, e, samples):
+        for s in samples:  # `relayout/<step>/<metric>` keys: plain metrics for the tables, pages and normalize
+            for step, metrics in s.pop("relayout", {}).items():
+                s.update({f"relayout/{step}/{m}": v for m, v in metrics.items()})
         results[name]["engines"][e] += samples
         best = agg([list(s.values())[0] for s in samples], "min")
         print(f"round {r} {name:24s} {e:10s} {len(samples)} samples, min first metric {fmt_ms(best)} ms", flush=True)
@@ -806,7 +830,7 @@ def cmd_compare(args):
 
 
 # Sample keys that are counts or identities, not durations; everything else in a sample is ns.
-COUNT_KEYS = {"n_reflows", "n_layouts", "n_boxes", "total_objects", "root", "hash", "boxes", "chrome_norm", "relayout"}
+COUNT_KEYS = {"n_reflows", "n_layouts", "n_boxes", "total_objects", "root", "hash", "boxes", "chrome_norm"}
 
 
 def cmd_normalize(args):
