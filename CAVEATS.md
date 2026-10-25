@@ -113,8 +113,10 @@ and [documented protocol](README.md#versions-and-methodology).
   phase on the 100k-node cases).
 - **Chrome:** fresh pages within one browser launch.
 - **Servo/Firefox:** one process per round, a fresh window/tab per iteration after a
-  discarded warm-up load of the case (Servo over WebDriver, Firefox via Playwright).
-- **Ladybird:** fresh process per iteration.
+  discarded warm-up load of the case (Servo over WebDriver, Firefox via Playwright; all Firefox tabs
+  in one content process).
+- **Ladybird:** one `WebDriver --headless` browser per round, a fresh window (and WebContent process)
+  per iteration, the UI process's font service warm, a warm-up load only for the real pages.
 
 Excluding startup time does not eliminate differences in allocator, font,
 thread-pool, and other process-local caches. This is neither a consistently cold

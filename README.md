@@ -86,7 +86,7 @@ handling and nothing is referenced with `%3F`.
 
 Equal-work check (`./run.py verify --engines chrome,blitz,firefox1,servo1,ladybird --filter real/`,
 2026-10-20; page height = `document.documentElement.scrollHeight`, Blitz: the `<html>` box's scrollable
-overflow, Ladybird: the `<body>` box in the layout-tree dump; Servo reports neither boxes nor a root):
+overflow, Ladybird: `getBoundingClientRect()` like Chrome; Servo reports neither boxes nor a root):
 
 | case | nodes | px differing: Blitz / Firefox / Servo / Ladybird vs Chrome | Blitz vs Chrome boxes (`div`/`p`/`h3`) | page height Chrome / Firefox / Blitz / Ladybird |
 |---|---:|---|---|---|
@@ -161,7 +161,7 @@ them is the heights and box counts above, which pin each remaining difference to
 | `chrome` | Playwright chromium-headless-shell, CDP `Tracing` with `devtools.timeline` + `blink_style` | `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (= both), `Layout` |
 | `webkit` | Playwright WebKit (WPE MiniBrowser), driven directly over its `--inspector-pipe` protocol by `engines_webkit.py` (Playwright exposes no raw session for WebKit); new page per iteration, corpus served over localhost HTTP with COOP/COEP headers (a cross-origin-isolated page gets a 20 µs `performance.now()` instead of 1 ms); phases timed by a bootstrap script's `performance.now()` around the reveal's forced style update (`getComputedStyle`) and forced layout (`offsetHeight`); the Inspector `Timeline` domain is used by `verify` only, to count layouts (recording it doubles the style time, see [Versions and methodology](#versions-and-methodology)) | `style` (style resolution, includes render-tree construction), `layout` (includes text shaping / line layout), `style+layout` |
 | `firefox` | Playwright Firefox, one process per round for all of the round's cases (launch retried on the occasional startup segfault), per case a discarded warm-up tab then a fresh tab per iteration, all in one content process kept alive by a blank `file://` page (a process's first load gets an extra full reflow and cold font caches; a cold process is 10–20% slower on text-heavy pages, and a case's first load in a warm process is still 10–100% slower on text/real pages, hence the warm-up per case), Gecko profiler started at launch (`MOZ_PROFILER_STARTUP`, markers only) and written at shutdown (`MOZ_PROFILER_SHUTDOWN`); default `layout.css.stylo-threads` (6 on this VM) | `Styles` (style traversal + frame construction), `Reflow`, `DoFlushPendingNotifications` (the flush containing both), `DisplayList` |
-| `ladybird` | `Ladybird --headless=layout-tree`, one process per iteration, built with `patches/ladybird-phase-timing.patch` which prints `LADYBIRD_PHASE style=<ns> construct=<ns> layout=<ns> total=<ns> full_layouts=<n>` to stderr for every `Document::update_layout()` round (see [Ladybird](#ladybird)) | `style` (`Document::update_style()`), `construct` (layout tree build, `LayoutRoundJob::build`), `layout` (`lay_out_root` / `lay_out_boundary`, the layout pass including the `LayoutState` commit), `total` (the whole round) |
+| `ladybird` | `Ladybird` driven over its `WebDriver` server (headless), one browser per round and a fresh window (= WebContent process) per iteration, built with `patches/ladybird-phase-timing.patch` which prints `LADYBIRD_UPDATE pid=<pid> url=<url> reason=<reason>` and `LADYBIRD_PHASE pid=<pid> style=<ns> construct=<ns> layout=<ns> total=<ns> full_layouts=<n>` to stderr for every `Document::update_layout()` round (see [Ladybird](#ladybird)) | `style` (`Document::update_style()`), `construct` (layout tree build, `LayoutRoundJob::build`), `layout` (`lay_out_root` / `lay_out_boundary`, the layout pass including the `LayoutState` commit), `total` (the whole round) |
 
 Phase mapping used in the report:
 
@@ -235,7 +235,7 @@ Linux-specific flags):
   (`SERVOSHELL=/path/to/servoshell` if not at `~/repos/servo/target/release/servoshell`; skipped
   with a message if missing).
 - Optionally Ladybird `07fac502` with `patches/ladybird-phase-timing.patch`, built as described in
-  [Ladybird](#ladybird) (`LADYBIRD_BIN`; skipped if missing).
+  [Ladybird](#ladybird) (`LADYBIRD_BIN`, with the `WebDriver` binary next to it; skipped if missing).
 - Only for re-saving real pages (`real/freeze.py`): `wget` and `pip install beautifulsoup4`.
 
 ```sh
@@ -254,13 +254,13 @@ real/freeze.py fetch wikipedia && real/freeze.py freeze wikipedia       # re-sav
 ```
 
 `bench` runs every engine on every case in each round, alternating engine order between rounds,
-and reports the minimum (or `--agg median`) over all samples. The Firefox and Servo columns
+and reports the minimum (or `--agg median`) over all samples. The Firefox, Servo and Ladybird columns
 (`BATCH_ENGINES`) take a whole round at once — one browser for all of the round's cases, run before
 or after the per-case engines according to their place in the round's engine order — so each round
 costs one launch and one profile/trace decode instead of one per case (Servo: per iteration).
 `--cpus` pins the single-threaded runners (`taffy`, `blitz`, `servo1`) with `taskset`; give `servo1`
-two CPUs (`--cpus 2,3`), see the note below the WebKit paragraph; `blitz-par`, `servo`, `chrome` and
-`firefox` run unpinned.
+two CPUs (`--cpus 2,3`), see the note below the WebKit paragraph; `blitz-par`, `servo`, `chrome`,
+`firefox` and `ladybird` run unpinned.
 
 `verify` is the equal-work check: before trusting a timing, confirm the engines agree on the layout
 (pixel diff of the 1280×800 viewport, Chrome's `totalObjects` layout-object count, Servo's reflow
@@ -289,7 +289,10 @@ Playwright 1.64.0; the raw run is `out/runs/2026-10-23-full.json`. WebKit was ad
 that run yet (its column appears once it is measured here with `bench --merge`; the branch's smoke run is in
 `out/webkit.md`). Every number in `out/` comes from this machine; children
 sessions that add engines or cases only verify equal work and run a one-round smoke test, the
-measurement is redone here with `bench --merge`.
+measurement is redone here with `bench --merge`. The Ladybird column of that run was measured with
+the previous runner (one `--headless=layout-tree` process per iteration); the WebDriver runner
+(one browser per round, warm font service, see the table) lowers `layout` on the real pages by
+13–16 % and is what `bench --merge --engines ladybird` measures from now on.
 
 Earlier epochs: the 2026-10-20 run (`out/runs/2026-10-23-blitz-servo-chrome.json` re-measured its Servo and
 Blitz columns on 2026-10-23 and folded them in via `run.py normalize`). Against that epoch the 2026-10-23
@@ -316,6 +319,7 @@ Servo's style and layout single-threaded, so `servo1` is now run with two CPUs (
 | Chrome | Chromium 156.0.8078.4 (Playwright `chromium_headless_shell-1248`, headless shell, `--no-sandbox`) | New page per iteration, 1280×800, `file://` reveal page, `load` + wait for the reveal; CDP `Tracing` with categories `devtools.timeline`, `disabled-by-default-devtools.timeline`, `blink`, `blink_style`; longest `X` event of each name: `Document::recalcStyle` (style), `Document::rebuildLayoutTree` (LayoutObject construction), `UpdateLayoutTree` (both), `Layout` (fragment-tree layout). `totalObjects` from the `Layout` event is the equal-work count. Not pinned (multi-process). |
 | WebKit | WebKit 27.2 (Playwright `webkit-2370`, the WPE MiniBrowser bundle Playwright 1.64.0 installs; `browser.version` = `27.2`, user agent `AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15`; the bundle names no upstream WebKit revision) | New page per iteration at the case's viewport, corpus served over localhost HTTP with `Cross-Origin-Opener-Policy: same-origin` + `Cross-Origin-Embedder-Policy: require-corp` (the reveal page is otherwise unchanged; WebKit swaps the page into a fresh web process on the navigation, so every sample is a cold process), `load` + wait for the reveal. Driven directly over the binary's `--inspector-pipe` protocol (`engines_webkit.py`). Phase times come from a `Page.setBootstrapScript` that wraps `HTMLElement.prototype.offsetHeight`: on the reveal script's `cb.offsetHeight` it takes `performance.now()`, forces style with `getComputedStyle(cb).display` (`style`: style resolution and render-tree construction of the revealed tree), then the original getter (`layout`: the box layout, including line layout and shaping). Cross-origin isolation turns `performance.now()` from 1 ms to 20 µs resolution (`Performance::allowHighPrecisionTime`). The Web Inspector `Timeline` domain would give the same intervals as `RecalculateStyles`/`Layout` records (agreement within 0.3 ms when both are on) but recording emits an `InvalidateLayout` record with a captured JS stack for every renderer that gets dirtied (one per box, 101k on `pangui/fit_nesting`), which makes the style phase 2–2.5× slower, so it is only turned on by `verify` to count layouts (`n_layouts`; one `Layout` of the revealed tree per sample, preceded only by the ≤1 ms layout of the hidden page on cases whose reveal awaits `document.fonts`). Not pinned (multi-process). |
 | Firefox | Firefox 157.0 (Playwright `firefox-1555`) | One browser launch per round for all of the round's cases; per case a discarded warm-up tab (`?warmup`) then a fresh tab per iteration (`?i=N`, the profile is filtered by page URL), all tabs of the round in one content process (a blank `file://` page is kept open: each Playwright `new_page()` is a new context and the file content process exits with its last tab, so otherwise every sample would run in a fresh cold process, 10–20% slower on text-heavy pages): a Firefox process's first page load does a second full reflow ~200 ms after the first with nothing restyled (105 ms on Wikipedia, 64 ms on rustdoc; absent on a second load of the same page) that Chrome, Servo and Ladybird have no counterpart to, and its first reflow runs 5–15 % slower on cold font/text caches; in a warm process a case's own first load is still 10–100% slower on text/real pages (rustdoc, paragraphs: cold shaped-word/font caches), so the warm-up is per case. Gecko profiler on from startup (`MOZ_PROFILER_STARTUP=1`, features `nostacksampling,nomarkerstacks`, filter `GeckoMain`), profile written by `MOZ_PROFILER_SHUTDOWN`; the content process whose page is the case is read for the `Styles` interval marker (style, includes frame construction), `Reflow` start/end pairs (layout; the longest one is reported, the sum is within 1% of it) and `DisplayList`. Default `layout.css.stylo-threads` (5 style workers here), unpinned. |
+| Ladybird | `07fac502` (2026-10-20) + `patches/ladybird-phase-timing.patch`, Release build, Qt 6.10.3 | One `WebDriver --headless` browser per round for all of the round's cases; for the real pages a discarded warm-up window (`?warmup`; the first load of a page in a fresh browser is 14–18 % slower in `layout` on `real/wikipedia`/`real/rustdoc`, within 2 % on the synthetic pages), then a fresh window per iteration (`?i=N`) at the case's viewport, `file://` reveal page, navigation + wait for the reveal. Every window is a new WebContent process (default site isolation), so each sample is a cold content process's first layout; the UI process's font service is warm. Phase times from the patch's `LADYBIRD_PHASE` stderr lines, attributed to the window by pid + URL, the round with reason `HTMLElementOffsetHeight` (the reveal script's forced layout): `style` (`update_style()`), `construct` (layout tree build), `layout` (layout passes incl. shaping), `total`. Protocol change from the 2026-10-23 run (one `--headless=layout-tree` process per iteration, cold font service): `layout` of `real/wikipedia`/`real/rustdoc` is 13–16 % lower (min), other stages and the synthetic cases within 3 %. Not pinned (multi-process). |
 | Servo | servoshell 0.7.0-981beee7c8 (built 2026-10-23 from servo/servo `981beee7c`, `./mach build --release --features tracing-perfetto`; Stylo `633f43ad`) | One headless process per round for all of the round's cases (`-z --webdriver`, started on `about:blank`, which stays open so the process never has zero windows), driven over WebDriver by `engines_servo.py` (stdlib `urllib`): per case a discarded warm-up window (`?warmup`), then per iteration `New Window` → `Set Window Rect` to the case's viewport (really resizes the headless webview) → navigate to `?i=N` → `Execute Script` polled until `#cb` is shown → `Close Window`. Page served over localhost HTTP (its fetch rejects `file://` fonts); `SERVO_TRACING=layout::layout_impl=trace,layout::flow::root=trace` (phase spans only; per-item spans would add >10×), the round's `servo.pftrace` decoded directly from the protobuf with the `perfetto` package's generated classes (its TraceProcessor costs ~1 s per trace). The spans carry no pipeline/webview attribute, so a window's page is its own `Script#N` thread (the one whose first span lies between the window's navigation and its close) and its sample is the `restyle_and_build_trees` of that thread before the observed reveal that built the tree (the earlier, `display:none` reflows construct nothing): `Styling`, `Box Tree Construction`, `Fragment Tree Construction`, `Stacking Context Tree Construction`, `Display List Construction`, `handle_reflow`, summed by time containment in the reflow (in a warm process with `layout_threads` > 1 the box and fragment passes run on a `StyleThread#N` rayon worker, nested under nothing). Protocol change from the stored run (one `-z -x` process per iteration): a warm process. `servo1` (`--pref layout_threads=1`, pinned to two CPUs) is 5–35 % faster per stage than a cold process (style 15–47 %, box 7–37 %, fragment 0–35 %, `restyle_and_build` 6–34 % on the seven validation cases) with the same spread; within the warm process a case's own first load is slower still (style ≤ 1.17×, box ≤ 1.40× on `flex/wide/10000`, ≤ 1.08× on the real pages), hence the per-case warm-up. `servo` (default 3 layout threads, Stylo pool shared by style and box construction, unpinned) does not gain: its mins on the text/real pages came out 7–26 % higher than cold processes with a wider spread (bimodal samples, all phases slow together, the layout threads themselves consuming the extra CPU time; not pinned down, see the PR write-up). |
 | Blitz | DioxusLabs/blitz `main` `1c5265a8` (2026-10-23; blitz-dom with Taffy `main` `802e497b`, Stylo 0.22 at `DioxusLabs/stylo` `d6502e00`, Parley 0.12.0, harfrust 0.12.0, skrifa 0.44.0); the `*-pl` engines: [blitz#1034](https://github.com/DioxusLabs/blitz/pull/1034) rebased on that `main` (`fac9b358`, with [taffy#1230](https://github.com/DioxusLabs/taffy/pull/1230) rebased on Taffy `main`, `a2b0f009`) | `blitz-runner` (this repo): fresh `HtmlDocument` per iteration from the plain `corpus/*.html`, `incremental=false`, one `resolve()`; phase times from Blitz's own `log-phase-times` timer via a vendored `debug_timer` printing ns: `style`, `construct` (+ `pconstruct`, the deferred Parley layout builds = shaping), `layout` (Taffy + Parley line breaking), `paint_tree`, `resolve`. Built with blitz-dom's opt-in `floats` and `writing-mode` features (as `apps/browser` does for floats; neither is in blitz-dom's defaults). Global allocator mimalloc (`blitz-runner/src/main.rs`): with glibc malloc the `layout` phase of `pangui/wide_no_wrap_simple_many` is 233 ms instead of 147 ms (per-node `LayoutData` boxes and Taffy's item vectors, re-faulted every iteration because the heap top is trimmed when the previous document is dropped). `blitz` = sequential style, pinned; `blitz-par` = `StyleThreading::Parallel`; `blitz-pcon` / `blitz-par-pcon` = second build with `--features parallel-construct` (deferred construction on the rayon pool). Equal work: hash of every element's final box, `--boxes` dump. |
 | Taffy | DioxusLabs/taffy `4e59968` (`taffy_benchmarks` for the tree shapes and PanGUI templates) | `gen bench`: the same tree built directly in a `TaffyTree`, all nodes dirtied, `compute_layout` timed with `Instant`; pinned. `--wrapped` lays it out as the page does (abspos child of a viewport-sized box, ~10% more work). Blitz's Taffy is `main` `802e497b` (this one plus everything merged since, taffy#1343 included). |
@@ -380,7 +384,8 @@ unset BASH_ENV   # the build script runs `bash -c` snippets; a BASH_ENV that ret
 The build took 36 min wall-clock on 8 cores (≈11 min of vcpkg dependencies — ICU, ffmpeg, Skia
 and friends are compiled from source when the binary cache has no entry for the toolchain — and
 ≈25 min for Ladybird itself). Applying the patch to an existing build and rebuilding takes
-~1 min: it only touches the Rust layout crate, one LibWeb file, LibWebView and WebContent.
+~1 min: it only touches the Rust layout crate and one LibWeb file. The `WebDriver` binary is not
+part of the `ladybird` target: `ninja -C Build/release WebDriver` (8 s) puts it next to `Ladybird`.
 
 The patch instruments `Libraries/LibWeb/Rust/src/layout/update_layout.rs`, where LibWeb's layout
 update now lives (`Document::update_layout()` in `Libraries/LibWeb/Layout/UpdateLayout.cpp` calls
@@ -388,27 +393,28 @@ update now lives (`Document::update_layout()` in `Libraries/LibWeb/Layout/Update
 or image that was already available). Per round it prints the time spent in the style callback
 (`Document::update_style()`), in the layout tree build (`construct`), in the layout pass(es)
 (`layout`, which commits the `LayoutState` as it goes) and in the round as a whole (`total`), plus
-how many full (root) layout passes ran. The runner takes the round with the longest `layout` of
-the process, i.e. the reveal layout (the `display:none` document's round builds and lays out a
-handful of boxes), and reports the number of rounds with a full layout as `layouts=N`. `verify`
-uses `--headless=layout-tree` for the box positions (the dump's `at [x,y]` is the content box; the
-runner adds padding and border to get the border boxes it compares with Chrome's
-`getBoundingClientRect()`) and a second `--headless=screenshot` process for the 1280×800 image.
-The patch also makes both headless modes wait `--screenshot-delay` seconds *after the load event*
-(upstream dumps the layout tree at the load event and counts the screenshot delay from the start
-of the load): the font pages reveal from a `document.fonts` promise that resolves after the load
-event, and the screenshot has to wait for the reveal to be painted. For the layout-tree dump the
-patch replaces the timer with a positive signal: WebContent answers the dump request only once
-the document's `FontFaceSet` is no longer `loading` (the reveal runs in the promise reaction that
-marks it loaded), so the bench runs with `--screenshot-delay=0` and the dump describes the first
-full layout of the revealed tree, never a later relayout. `LADYBIRD_SETTLE_SECONDS` (default 0)
-still adds a fixed delay to both modes; the screenshot (`verify` only) always waits ≥2 s. Two
-smaller process-start costs are avoided too: the runner keeps fontconfig's cache in
-`out/ladybird-cache` (a fresh `XDG_CACHE_HOME` per process made fontconfig rescan the ~2000
-system font files in the UI process, ~0.02 s of wall-clock), and the patch stops headless runs
-from prewarming the spare WebContent process Ladybird keeps for the next tab. A Ladybird
-iteration now costs ~0.25 s of wall-clock beyond the measured spans (was ~2.3 s); the phase
-timings are unchanged (validated old vs new on 7 cases).
+how many full (root) layout passes ran; the `LADYBIRD_UPDATE` line printed before it names the
+process, the document's URL and the `UpdateLayoutReason` that triggered the round (the WebContent
+processes of a browser share one stderr, so a `PHASE` line belongs to the last `UPDATE` line of the
+same pid). The runner (`engines_ladybird.py`) drives Ladybird over WebDriver: one `WebDriver
+--headless` server and browser per round for all of the round's cases, the session's about:blank
+window kept open, for the real pages a discarded warm-up load (`?warmup`), then a fresh window per
+iteration (`?i=N`, sized with Set Window Rect before the navigation, closed afterwards). With Ladybird's
+default site isolation every window gets its own WebContent process, so each sample is the first
+layout of a cold content process, as before, while the browser's UI process — and its font service,
+which hands WebContent the system fonts — is warm: the first load of a page in a fresh browser
+lays out 14–18 % slower on `real/wikipedia` and `real/rustdoc` (shaping, cold font service), hence
+their warm-up; the synthetic pages (one font) do not change (within 2 %), so they have none. The sample is the round with reason
+`HTMLElementOffsetHeight` and a full layout pass: the `cb.offsetHeight` the reveal script reads
+right after showing `#cb`, i.e. the first layout of the revealed tree (the `display:none`
+document's rounds come before it; later rounds are relayouts); `layouts=N` is the number of the
+document's rounds with a full layout pass. `verify` reads `root`, the `div`/`p`/`h3` boxes and
+`document.fonts` with Execute Script, exactly as `run_chrome` does, and takes the 1280×800
+screenshot with Take Screenshot. The runner keeps fontconfig's cache in `out/ladybird-cache`
+(a fresh `XDG_CACHE_HOME` per browser made fontconfig rescan the system fonts). One round of the
+suite (43 cases × 3 iterations) takes 131 s against 152 s with the previous one-process-per-iteration
+runner: 82 s of measured spans plus 0.38 s per iteration of window creation, WebContent start and
+page parse (0.53 s before), 0.1 s of browser start per round and the 7 real-page warm-up loads.
 
 ### Ladybird vs Chrome
 
@@ -442,7 +448,8 @@ made `style` ~5 % slower on flex/wide/10000 and left `layout` unchanged, so the 
 for it. A build moved from another machine needs the Qt Positioning module next to Qt and
 `QT_QPA_PLATFORM=offscreen` (set by the runner).
 
-`layouts=2` on every page (the `display:none` document, then the reveal); the font pages add one
+`layouts=1` or `2` on every page (the reveal, preceded by a round for the `display:none` document
+when a rendering update ran before the parser reached the reveal script); the font pages add one
 round per web font that finishes loading before the reveal.
 
 ## Servo tracing filter

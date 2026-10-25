@@ -1,5 +1,5 @@
 diff --git a/Libraries/LibWeb/Layout/UpdateLayout.cpp b/Libraries/LibWeb/Layout/UpdateLayout.cpp
-index 2124b7ac..d65bd132 100644
+index 2124b7ac..70a5c0c7 100644
 --- a/Libraries/LibWeb/Layout/UpdateLayout.cpp
 +++ b/Libraries/LibWeb/Layout/UpdateLayout.cpp
 @@ -4,6 +4,7 @@
@@ -10,17 +10,26 @@ index 2124b7ac..d65bd132 100644
  #include <AK/ScopeGuard.h>
  #include <LibGfx/FontCascadeList.h>
  #include <LibWeb/CSS/StyleComputer.h>
-@@ -255,6 +256,8 @@ void Document::update_style_and_layout_once(Layout::BegunRead const& read, Updat
+@@ -19,6 +20,7 @@
+ #include <LibWeb/Layout/Viewport.h>
+ #include <LibWeb/Page/Page.h>
+ #include <LibWeb/Painting/DocumentPaintState.h>
++#include <unistd.h>
+ 
+ namespace Web::DOM {
+ 
+@@ -255,6 +257,9 @@ void Document::update_style_and_layout_once(Layout::BegunRead const& read, Updat
          .reason_is_inspect_devtools_layout_data = reason == UpdateLayoutReason::InspectDevToolsLayoutData,
          .is_template_contents_document = m_created_for_appropriate_template_contents,
      };
-+    // Layout benchmark harness (local patch): names the document the LADYBIRD_PHASE line that follows belongs to.
-+    warnln("LADYBIRD_UPDATE url={}", url());
++    // Layout benchmark harness (local patch): names the process, document and trigger of the LADYBIRD_PHASE line
++    // that this process prints next (other WebContent processes share the stderr, so lines interleave by process).
++    warnln("LADYBIRD_UPDATE pid={} url={} reason={}", ::getpid(), url(), to_string(reason));
      Layout::RustFFI::render_state_update_layout(arena.host(), &read, &inputs);
  
      // A pass that reached a web face still waiting on its load cannot start the fetch itself: the fetch, the
 diff --git a/Libraries/LibWeb/Rust/src/layout/update_layout.rs b/Libraries/LibWeb/Rust/src/layout/update_layout.rs
-index 482b6090..899c22b4 100644
+index 482b6090..4cce9bd7 100644
 --- a/Libraries/LibWeb/Rust/src/layout/update_layout.rs
 +++ b/Libraries/LibWeb/Rust/src/layout/update_layout.rs
 @@ -26,6 +26,20 @@ use crate::painting::recording_slot::FlightLicense;
@@ -94,7 +103,7 @@ index 482b6090..899c22b4 100644
          answer.commits.push(commit);
          state.arena().note_full_layout();
          answer
-@@ -989,6 +1012,29 @@ unsafe fn update_layout(
+@@ -989,6 +1012,30 @@ unsafe fn update_layout(
      document_host: &DocumentHost,
      read: &BegunRead,
      inputs: &FfiLayoutUpdateInputs,
@@ -106,7 +115,8 @@ index 482b6090..899c22b4 100644
 +    unsafe { update_layout_timed(main_thread, document_host, read, inputs) };
 +    // One write: stderr is shared with the other WebContent processes, whose records must not interleave.
 +    let record = format!(
-+        "LADYBIRD_PHASE style={} construct={} layout={} total={} full_layouts={}\n",
++        "LADYBIRD_PHASE pid={} style={} construct={} layout={} total={} full_layouts={}\n",
++        std::process::id(),
 +        PHASE_STYLE_NS.load(Ordering::Relaxed),
 +        PHASE_CONSTRUCT_NS.load(Ordering::Relaxed),
 +        PHASE_LAYOUT_NS.load(Ordering::Relaxed),
@@ -124,7 +134,7 @@ index 482b6090..899c22b4 100644
  ) {
      let host = layout_update_host(document_host);
      let layout_host = FfiLayoutHostCallbacks::of(main_thread);
-@@ -1016,7 +1062,9 @@ unsafe fn update_layout(
+@@ -1016,7 +1063,9 @@ unsafe fn update_layout(
      {
          layout_pass += 1;
  
@@ -134,164 +144,3 @@ index 482b6090..899c22b4 100644
          // A round that flew in the frame the update took in is the update's first, which the host pays before
          // anything else of the update reads the layout.
          document_host.take_frame_in_with(read);
-diff --git a/Libraries/LibWebView/Application.cpp b/Libraries/LibWebView/Application.cpp
-index 716e7002..c56ee29c 100644
---- a/Libraries/LibWebView/Application.cpp
-+++ b/Libraries/LibWebView/Application.cpp
-@@ -1560,6 +1560,9 @@ void Application::launch_spare_web_content_process()
-     // Disable spare processes when profiling WebContent. This reduces callgrind logging we are not interested in.
-     if (browser_options().profile_helper_process == ProcessType::WebContent)
-         return;
-+    // Layout benchmark harness (local patch): a headless run loads one page, so a spare is never used.
-+    if (browser_options().headless_mode.has_value())
-+        return;
- 
-     if (m_spare_web_content_process || m_has_queued_task_to_launch_spare_web_content_process)
-         return;
-@@ -2013,7 +2016,9 @@ static NonnullRefPtr<Core::Timer> load_page_for_screenshot_and_exit(Core::EventL
-     auto timer = Core::Timer::create_single_shot(
-         AK::Duration::from_seconds(screenshot_timeout),
-         [&]() {
--            view.take_screenshot(ViewImplementation::ScreenshotType::Full)
-+            // Layout benchmark harness (local patch): the viewport as painted, not the whole document (the pages
-+            // are 1,000,000px square), like the other engines' screenshots.
-+            view.take_screenshot(ViewImplementation::ScreenshotType::Visible)
-                 ->when_resolved([&event_loop](auto const& path) {
-                     outln("Saved screenshot to: {}", path);
-                     event_loop.quit(0);
-@@ -2024,30 +2029,45 @@ static NonnullRefPtr<Core::Timer> load_page_for_screenshot_and_exit(Core::EventL
-                 });
-         });
- 
-+    // Layout benchmark harness (local patch): count the delay from the load event, so the screenshot does not
-+    // depend on how long the page takes to load and lay out.
-+    view.on_load_finish = [&timer = *timer, url](auto const& loaded_url) {
-+        if (url.equals(loaded_url, URL::ExcludeFragment::Yes))
-+            timer.start();
-+    };
-+
-     view.load(url);
--    timer->start();
- 
-     return timer;
- }
- 
--static void load_page_for_info_and_exit(Core::EventLoop& event_loop, HeadlessWebView& view, URL::URL const& url, WebView::PageInfoType type)
-+static NonnullRefPtr<Core::Timer> load_page_for_info_and_exit(Core::EventLoop& event_loop, HeadlessWebView& view, URL::URL const& url, WebView::PageInfoType type, u32 delay_seconds)
- {
--    view.on_load_finish = [&view, &event_loop, url, type](auto const& loaded_url) {
--        if (!url.equals(loaded_url, URL::ExcludeFragment::Yes))
--            return;
-+    // Layout benchmark harness (local patch): dump `--screenshot-delay` seconds after the load event rather than
-+    // at the load event, so that scripts which run after it (the font pages reveal after `document.fonts`
-+    // loads) have taken effect.
-+    auto timer = Core::Timer::create_single_shot(
-+        AK::Duration::from_seconds(delay_seconds),
-+        [&view, &event_loop, type]() {
-+            view.request_internal_page_info(type)
-+                ->when_resolved([&event_loop](auto const& text) {
-+                    outln("{}", text);
-+                    event_loop.quit(0);
-+                })
-+                .when_rejected([&event_loop](auto const& error) {
-+                    warnln("Unable to get page info: {}", error);
-+                    event_loop.quit(1);
-+                });
-+        });
- 
--        view.request_internal_page_info(type)
--            ->when_resolved([&event_loop](auto const& text) {
--                outln("{}", text);
--                event_loop.quit(0);
--            })
--            .when_rejected([&event_loop](auto const& error) {
--                warnln("Unable to get page info: {}", error);
--                event_loop.quit(1);
--            });
-+    view.on_load_finish = [&timer = *timer, url](auto const& loaded_url) {
-+        if (url.equals(loaded_url, URL::ExcludeFragment::Yes))
-+            timer.start();
-     };
- 
-     view.load(url);
-+
-+    return timer;
- }
- 
- static void load_page_and_exit_on_close(Core::EventLoop& event_loop, HeadlessWebView& view, URL::URL const& url)
-@@ -2079,10 +2099,10 @@ ErrorOr<int> Application::execute()
-                 screenshot_timer = load_page_for_screenshot_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), m_browser_options.screenshot_delay);
-                 break;
-             case HeadlessMode::LayoutTree:
--                load_page_for_info_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), WebView::PageInfoType::LayoutTree);
-+                screenshot_timer = load_page_for_info_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), WebView::PageInfoType::LayoutTree, m_browser_options.screenshot_delay);
-                 break;
-             case HeadlessMode::Text:
--                load_page_for_info_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), WebView::PageInfoType::Text);
-+                screenshot_timer = load_page_for_info_and_exit(*m_event_loop, *view, m_browser_options.urls.first(), WebView::PageInfoType::Text, m_browser_options.screenshot_delay);
-                 break;
-             case HeadlessMode::Manual:
-                 load_page_and_exit_on_close(*m_event_loop, *view, m_browser_options.urls.first());
-diff --git a/Services/WebContent/ConnectionFromClient.cpp b/Services/WebContent/ConnectionFromClient.cpp
-index c7a29b40..e287c3f8 100644
---- a/Services/WebContent/ConnectionFromClient.cpp
-+++ b/Services/WebContent/ConnectionFromClient.cpp
-@@ -20,6 +20,7 @@
- #include <AK/Utf16StringBuilder.h>
- #include <LibCompositing/FontServiceClient.h>
- #include <LibCore/EventLoop.h>
-+#include <LibCore/Timer.h>
- #include <LibCore/Process.h>
- #include <LibDevTools/IndexedDBSerialization.h>
- #include <LibGC/Heap.h>
-@@ -36,6 +37,7 @@
- #include <LibWeb/ARIA/RoleType.h>
- #include <LibWeb/Bindings/MainThreadVM.h>
- #include <LibWeb/CSS/CustomPropertyData.h>
-+#include <LibWeb/CSS/FontFaceSet.h>
- #include <LibWeb/CSS/Parser/ErrorReporter.h>
- #include <LibWeb/CSS/StyleComputer.h>
- #include <LibWeb/CSS/StyleScope.h>
-@@ -2578,6 +2580,22 @@ void ConnectionFromClient::request_internal_page_info(Web::PageId page_id, WebVi
-         return;
-     }
- 
-+    // Layout benchmark harness (local patch): the layout tree and text dumps describe the settled page. Scripts that
-+    // wait on `document.fonts` run after the load event, so while the document's fonts are still loading, retry
-+    // once they have loaded (the FontFaceSet becomes "loaded" in the task that resolves the last font's promise,
-+    // so its reactions have run by the time this fires again).
-+    if (has_flag(type, WebView::PageInfoType::LayoutTree) || has_flag(type, WebView::PageInfoType::Text)) {
-+        auto* navigable = as_if<Web::HTML::LocalNavigable>(page->page().top_level_traversable().ptr());
-+        if (auto document = navigable ? navigable->active_document() : nullptr;
-+            document && document->fonts()->status() == Web::CSS::FontFaceSetLoadStatus::Loading) {
-+            m_page_info_retry_timer = Core::Timer::create_single_shot(AK::Duration::from_milliseconds(1), [this, page_id, type] {
-+                request_internal_page_info(page_id, type);
-+            });
-+            m_page_info_retry_timer->start();
-+            return;
-+        }
-+    }
-+
-     StringBuilder builder;
- 
-     if (has_flag(type, WebView::PageInfoType::Text)) {
-diff --git a/Services/WebContent/ConnectionFromClient.h b/Services/WebContent/ConnectionFromClient.h
-index bb2c0d5e..64d3c39e 100644
---- a/Services/WebContent/ConnectionFromClient.h
-+++ b/Services/WebContent/ConnectionFromClient.h
-@@ -16,6 +16,7 @@
- #include <AK/SourceLocation.h>
- #include <LibCompositing/Types.h>
- #include <LibCore/AnonymousBuffer.h>
-+#include <LibCore/Forward.h>
- #include <LibGC/Root.h>
- #include <LibIPC/ConnectionFromClient.h>
- #include <LibJS/Forward.h>
-@@ -350,6 +351,7 @@ private:
-     RefPtr<TestConnection> m_test_connection;
-     RefPtr<Web::Compositor::CompositorConnection> m_compositor_connection;
-     NonnullOwnPtr<PageHost> m_page_host;
-+    RefPtr<Core::Timer> m_page_info_retry_timer;
-     OwnPtr<DevToolsDebugger> m_devtools_debugger;
- 
-     bool m_did_notify_started_using_gamepads { false };

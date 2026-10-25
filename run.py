@@ -441,9 +441,9 @@ def run_firefox_round(cases, iters, screenshot=None):
     return results
 
 # Engines measured one process per round for all of the round's cases (`run_engine_round`) instead of one
-# process per case: Firefox's launch, warm-up, profile dump and decode, and servoshell's launch, warm-up
-# and trace decode, are then paid once per round.
-BATCH_ENGINES = {"firefox", "servo1", "servo"}
+# process per case: Firefox's launch, warm-up, profile dump and decode, servoshell's launch, warm-up and trace
+# decode, and Ladybird's WebDriver server and UI process start are then paid once per round.
+BATCH_ENGINES = {"firefox", "servo1", "servo", "ladybird"}
 
 
 def run_engine_round(engine, cases, iters, cpus):
@@ -453,6 +453,8 @@ def run_engine_round(engine, cases, iters, cpus):
         return run_servo_round(cases, iters, cpus, 1)
     if engine == "servo":
         return run_servo_round(cases, iters, None, 3)
+    if engine == "ladybird":
+        return engines_ladybird.run_ladybird_round(cases, iters, REVEAL, ROOT_RECT_JS)
     raise ValueError(engine)
 
 
@@ -486,7 +488,7 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
     if engine == "firefox":
         return run_firefox(case, iters, screenshot=screenshot)
     if engine == "ladybird":
-        return engines_ladybird.run_ladybird(case, iters, None, REVEAL, case["width"], case["height"], screenshot=screenshot)
+        return engines_ladybird.run_ladybird(case, iters, REVEAL, ROOT_RECT_JS, screenshot=screenshot)
     raise ValueError(engine)
 
 
