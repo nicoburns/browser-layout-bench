@@ -46,6 +46,7 @@ FIREFOX_PROFILER_ENV = dict(MOZ_PROFILER_STARTUP="1", MOZ_PROFILER_STARTUP_FEATU
 
 # Relayout scenarios: after the first layout, `relayout.js` applies each mutation as one batch, forces one layout
 # (bracketed by `performance.mark`s `lb:<step>:start`/`end`) and reverts it (layout discarded) before the next step.
+CHECK = False  # pass --check to blitz-runner, see run_blitz
 RELAYOUT_STEPS = ["root_width", "leaf_1", "leaf_10pct", "leaf_all", "append"]
 RELAYOUT_JS = (ROOT / "relayout.js").read_text()
 RELAYOUT_METRICS = ["style", "construct", "layout", "style+layout"]
@@ -158,6 +159,8 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
     if not binary.exists():
         raise FileNotFoundError(f"{binary.relative_to(ROOT)} not built, see README")
     cmd = [str(binary), str(CORPUS / case["file"]), "--width", str(case["width"]), "--height", str(case["height"]), "--iters", str(iters), "--hash", "--relayout"]
+    if CHECK:
+        cmd.append("--check")
     if parallel:
         cmd.append("--parallel")
     if screenshot:
@@ -170,13 +173,22 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
         elif line.startswith("RELAYOUT "):
             kv = dict(re.findall(r"(\w+)=(\w+)", line))
             samples[-1].setdefault("relayout", {})[kv["step"]] = dict(
-                style=phases["style"], construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
+                style=phases["style"], damage=phases.get("damage", 0), construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
                 resolve=int(kv["resolve"]))
+        elif line.startswith("CHECK"):
+            # --check: the incremental layout vs a forced full restyle (`full`) and vs a fresh
+            # layout of the serialised document (`fresh`), each "ok" or "mismatch"
+            kv = dict(re.findall(r"(\w+)=(\w+)", line))
+            check = {k: kv[k] for k in ("full", "fresh")}
+            if any(v != "ok" for v in check.values()):
+                print(f"  CHECK {kv['step']}: {line.strip()[:300]}", file=sys.stderr)
+            if kv["step"] != "initial":
+                samples[-1].setdefault("relayout", {}).setdefault(kv["step"], {})["check"] = check
         elif line.startswith("BLITZ"):
             kv = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", line)}
             # pconstruct = the deferred tasks that run between box construction and layout, where
             # Blitz builds the Parley layouts, i.e. shapes the text; it belongs with construction
-            s = dict(style=phases["style"], construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
+            s = dict(style=phases["style"], damage=phases.get("damage", 0), construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
                      paint_tree=phases["paint_tree"], resolve=kv["resolve"], parse=kv["parse"])
             s["construct+layout"] = s["construct"] + s["layout"]
             samples.append(s)
@@ -815,6 +827,8 @@ def cmd_report(args):
 
 
 def cmd_bench(args):
+    global CHECK
+    CHECK = args.check
     cases = [c for c in read_manifest() if args.filter in c["name"]]
     engines = available_engines(args.engines.split(","))
     results = {c["name"]: dict(nodes=c["nodes"], engines={e: [] for e in engines}) for c in cases}
@@ -1035,6 +1049,7 @@ def main():
                         "browser per round for all of the round's cases")
     b.add_argument("--rounds", type=int, default=3)
     b.add_argument("--iters", type=int, default=3)
+    b.add_argument("--check", action="store_true", help="Blitz: compare each relayout step with a full restyle and a fresh layout")
     b.add_argument("--filter", default="")
     b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1)")
     b.add_argument("--agg", default="min", choices=["min", "median"])
