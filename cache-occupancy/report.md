@@ -293,6 +293,33 @@ Histogram of populated measure slots 0..9 by node kind (`inline_root` = block-le
 (The 374 `display:none` and 94 inline owners on the real pages have a `LayoutData` with only the final entry: hidden elements get a
 `PerformLayout` of `LayoutOutput::HIDDEN` stored, inline boxes are re-measured through `compute_child_layout` by the inline layout.)
 
+## Which nodes have 0 entries (initial layout)
+
+Owners with no entry at all: 25 in the whole corpus, all anonymous block boxes (24 on `css-flexbox-1`, 1 on `rustdoc`) — a `LayoutData`
+is allocated but nothing stored (inferred: the inline layout wrote to them before Taffy visited them; not traced).
+
+Owners with the final entry but 0 measure entries, by kind (count / owners of that kind, summed per suite):
+
+| kind | real | pangui | flex | grid | text |
+|---|---:|---:|---:|---:|---:|
+| `display:none` | 374 / 374 (100%) | 13 / 13 | 12 / 12 | 5 / 5 | 6 / 6 |
+| block | 1,505 / 4,977 (30%) | 26 / 26 | 24 / 24 | 10 / 10 | 22 / 1,122 (2%) |
+| anon_block | 1,299 / 1,887 (69%) | | | | |
+| inline_root | 1,554 / 11,875 (13%) | | | | 2,200 / 4,400 (50%) |
+| inline (owning a cache) | 80 / 94 (85%) | | | | |
+| flex (container or item) | 16 / 825 (2%) | 115,018 / 310,236 (37%) | 6,045 / 50,410 (12%) | 7,866 / 18,552 (42%) | 2 / 2 |
+| grid container | 78 / 89 (88%) | | | 43 / 1,263 (3%) | |
+| table / table_internal | 52 / 104 (50%) / 0 / 1,100 (0%) | | | | |
+| replaced | 10 / 138 (7%) | | | | |
+
+The synthetic flex/grid final-only nodes are all on a few pages whose parent lays the children out without measuring them:
+`pangui/fit_nesting` 100,001 of 101,112 flex nodes, `pangui/flex_expand_equal_weights` 15,002 / 15,002, `grid/deep/*` items 100%
+(7,587 / 7,587), `flex/absolute` 55%. On every other pangui/flex/grid page the final-only count is 1–2 (the roots): every flex item is
+measured at least once before it is laid out. On the real pages the final-only nodes are the block containers, anonymous blocks (mostly
+rustdoc), the inline roots of `css-flexbox-1` (1,226 of 5,558), hidden elements, and the grid containers; table cells, rows and real flex
+items are always measured. In the text control the paragraphs are final-only (Parley measures the text, Taffy only stores the block's
+layout); the `flex_cards` inline roots are all measured.
+
 ## Appendix
 
 - `histograms.md`: per page, counts of owners by populated measure slots (0..9) for the initial layout and the peak relayout snapshot.
