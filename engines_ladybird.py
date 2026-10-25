@@ -142,7 +142,7 @@ def run_ladybird(case, iters, reveal_dir, root_rect_js, screenshot=None):
     return run_ladybird_round([case], iters, reveal_dir, root_rect_js, screenshot=screenshot)[case["name"]]
 
 
-def run_ladybird_round(cases, iters, reveal_dir, root_rect_js, screenshot=None):
+def run_ladybird_round(cases, iters, reveal_dir, root_rect_js, screenshot=None, relayout=None, steps=()):
     """One browser per call (= per round, for every case of the round), a fresh window (and WebContent
     process) per iteration; the real pages get a discarded warm-up load first (`?warmup`), the measured
     windows load `?i=N`. Per-iteration dicts like the other engines': `style`, `construct`, `layout`,
@@ -162,6 +162,8 @@ def run_ladybird_round(cases, iters, reveal_dir, root_rect_js, screenshot=None):
                     session.load(f"{url}?i={i}", case["width"], case["height"])
                     session.execute("return document.body.offsetHeight")
                     e = extra[f"{url}?i={i}"] = {"root": session.execute("return " + root_rect_js)}
+                    if relayout:
+                        relayout(lambda js: session.execute("return " + js if js.startswith("window.") else js))
                     if screenshot and i == iters - 1:
                         Path(screenshot).write_bytes(base64.b64decode(session.request("GET", f"/session/{session.id}/screenshot")))
                         e["boxes"] = [tuple(b) for b in session.execute(BOXES_JS)]
@@ -181,6 +183,11 @@ def run_ladybird_round(cases, iters, reveal_dir, root_rect_js, screenshot=None):
             s = dict(style=main["style"], construct=main["construct"], layout=main["layout"], total=main["total"],
                      n_layouts=sum(1 for u in page if u["full_layouts"] > 0))
             s["construct+layout"] = s["construct"] + s["layout"]
+            if steps:
+                # after the reveal, every `offsetHeight`-forced update is a scenario step's layout or its revert's
+                forced = [u for u in page[page.index(main) + 1:] if u["reason"] == "HTMLElementOffsetHeight"]
+                s["relayout"] = {step: dict(style=u["style"], construct=u["construct"], layout=u["layout"], total=u["total"])
+                                 for step, u in zip(steps, forced[::2])}
             s.update(extra[f"{url}?i={i}"])
             samples.append(s)
     return results

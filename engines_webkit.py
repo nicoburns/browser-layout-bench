@@ -191,7 +191,7 @@ def records(events):
     return out
 
 
-def run_webkit(case, iters, corpus_dir, width, height, root_rect_js, screenshot=None):
+def run_webkit(case, iters, corpus_dir, width, height, root_rect_js, screenshot=None, relayout=None):
     """Samples like `run_chrome`'s: `style` and `layout` are the bootstrap script's timings of the reveal's
     forced style update and layout. With `screenshot` the last iteration also records the Timeline and
     reports its number of `Layout` records as `n_layouts`."""
@@ -211,6 +211,10 @@ def run_webkit(case, iters, corpus_dir, width, height, root_rect_js, screenshot=
             t = browser.evaluate("window.__lb", proxy, target)
             s = {"style": round(t["style"] * 1e6), "layout": round(t["layout"] * 1e6), "style+layout": round(t["total"] * 1e6),
                  "root": browser.evaluate(root_rect_js, proxy, target)}
+            if relayout:
+                relayout(lambda js: browser.evaluate(js, proxy, target))
+                s["relayout"] = {k: {"style": round(v["style"] * 1e6), "layout": round(v["layout"] * 1e6), "style+layout": round(v["total"] * 1e6)}
+                                 for k, v in browser.evaluate("window.__lb.steps", proxy, target).items()}
             if verify:
                 browser.send("Timeline.stop", page_proxy=proxy, target=target)
                 s["n_layouts"] = sum(r["type"] == "Layout" for r in records(browser.events))

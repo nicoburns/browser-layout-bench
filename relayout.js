@@ -16,8 +16,16 @@ window.__lb = window.__lb || {};
     append: () => { const n = Math.max(1, root.children.length / 10 | 0); const clones = [...root.children].slice(-n).map(c => c.cloneNode(true)); clones.forEach(c => root.appendChild(c)); return () => clones.forEach(c => c.remove()); },
   };
   let undo = null;
+  const now = performance.now.bind(performance);
+  window.__lb.steps = {};
   window.__lb.relayout = (name, phase) => {
-    if (phase === 'apply') { performance.mark('lb:' + name + ':prepare'); undo = steps[name](); performance.mark('lb:' + name + ':start'); document.body.offsetHeight; performance.mark('lb:' + name + ':end'); }
+    if (phase === 'apply') {
+      performance.mark('lb:' + name + ':prepare'); undo = steps[name](); performance.mark('lb:' + name + ':start');
+      // in-page timing for engines without a usable trace (WebKit): style flush, then layout
+      const t0 = now(); getComputedStyle(root).display; const t1 = now(); document.body.offsetHeight; const t2 = now();
+      performance.mark('lb:' + name + ':end');
+      window.__lb.steps[name] = { style: t1 - t0, layout: t2 - t1, total: t2 - t0 };
+    }
     else { undo(); undo = null; document.body.offsetHeight; }
     return { leaves: leaves.length, depth: maxDepth };
   };

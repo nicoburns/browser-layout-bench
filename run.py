@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Driver: generates the corpus, runs each engine on every page in interleaved rounds, and
 writes results.json + a Markdown report. See README.md for the measurement model."""
-import argparse, functools, http.server, json, os, re, shutil, statistics, subprocess, sys, tempfile, threading
+import argparse, functools, http.server, json, os, re, shutil, statistics, subprocess, sys, tempfile, threading, time
 from pathlib import Path
 
 import engines_ladybird
@@ -229,6 +229,19 @@ def servo_sample(rows, main, n_reflows):
     return s
 
 
+def servo_relayout_steps(browser):
+    """Runs the scenario steps in the current window; returns {step: (t0, t1)} wall-clock intervals (the trace
+    clock) of each step's apply call, so its reflow can be found among the window's later reflows."""
+    browser.js(RELAYOUT_JS)
+    steps = {}
+    for step in RELAYOUT_STEPS:
+        t0 = time.time_ns()
+        browser.js(f"return window.__lb.relayout({step!r}, 'apply')")
+        steps[step] = (t0, time.time_ns())
+        browser.js(f"return window.__lb.relayout({step!r}, 'revert')")
+    return steps
+
+
 def servo_window_sample(rows, window):
     """The reveal reflow of one WebDriver window (see engines_servo). The page runs on a script thread
     of its own, the `Script#N` thread whose first span lies between the window's navigation and its
@@ -252,7 +265,14 @@ def servo_window_sample(rows, window):
                 and r["ts"] <= window["revealed"] and r["parent_id"] is not None]
     if not restyles:
         raise RuntimeError(f"{window['url']}: no reflow before the reveal")
-    return max((servo_sample(rows, r, len(restyles)) for r in restyles), key=lambda s: s["box+fragment"])
+    sample = max((servo_sample(rows, r, len(restyles)) for r in restyles), key=lambda s: s["box+fragment"])
+    sample["relayout"] = {}
+    for step, (t0, t1) in window.get("steps", {}).items():
+        spans = [r for r in rows if r["track"] == tracks[0] and r["name"] == "restyle_and_build_trees"
+                 and t0 <= r["ts"] <= t1 and r["parent_id"] is not None]
+        if spans:
+            sample["relayout"][step] = servo_sample(rows, max(spans, key=lambda r: r["dur"]), len(spans))
+    return sample
 
 
 def corpus_server():
@@ -283,6 +303,7 @@ def run_servo_round(cases, iters, cpus, threads, screenshot=None, warmup=True):
                 for i in range(iters):
                     w = browser.load(f"{url}?i={i}", case["width"], case["height"])
                     w["root"] = browser.js("return " + ROOT_RECT_JS)
+                    w["steps"] = servo_relayout_steps(browser)
                     if screenshot and i == iters - 1:
                         browser.screenshot(screenshot)
                         w["boxes"] = [tuple(b) for b in browser.js(
@@ -366,7 +387,7 @@ def parse_firefox_profile(profile, url):
     thread = next(t for t in proc["threads"] if t["name"] == "GeckoMain")
     strings = thread["stringTable"]
     schema = thread["markers"]["schema"]
-    intervals, open_starts = {}, {}
+    intervals, open_starts, marks = {}, {}, {}
     for row in thread["markers"]["data"]:
         name, start, end, phase = (row[schema[k]] for k in ("name", "startTime", "endTime", "phase"))
         name = strings[name]
@@ -374,6 +395,9 @@ def parse_firefox_profile(profile, url):
         if name.startswith("Reflow"):
             name = "Reflow"
         if data and "innerWindowID" in data and data["innerWindowID"] not in window_ids:
+            continue
+        if name == "UserTiming" and data and data.get("entryType") == "mark":
+            marks[data["name"]] = start
             continue
         if phase == 1:
             intervals.setdefault(name, []).append((end - start, data, start))
@@ -404,6 +428,15 @@ def parse_firefox_profile(profile, url):
              display_list=ms(longest("DisplayList")[0]), layout_sum=ms(sum(reflows)), n_reflows=len(reflows),
              styled=style_data["elementsTraversed"] if style_data else None)
     s["style+layout"] = s["style"] + s["layout"]
+    def within(name, a, b):
+        return sum(d for d, _, st in intervals.get(name, []) if a <= st <= b)
+    s["relayout"] = {}
+    for step in RELAYOUT_STEPS:
+        a, b = marks.get(f"lb:{step}:start"), marks.get(f"lb:{step}:end")
+        if a is not None and b is not None:
+            r = dict(style=ms(within("Styles", a, b)), layout=ms(within("Reflow", a, b)))
+            r["style+layout"] = r["style"] + r["layout"]
+            s["relayout"][step] = r
     return s
 
 
@@ -462,6 +495,7 @@ def run_firefox_round(cases, iters, screenshot=None):
                 page = load(case, f"{url}?i={i}")
                 page.evaluate("document.body.offsetHeight")
                 roots[case["name"]].append(page.evaluate(ROOT_RECT_JS))
+                run_relayout_steps(page.evaluate)
                 if screenshot and i == iters - 1:
                     page.screenshot(path=str(screenshot))
                 page.close()
@@ -490,7 +524,7 @@ def run_engine_round(engine, cases, iters, cpus):
     if engine == "servo":
         return run_servo_round(cases, iters, None, 3)
     if engine == "ladybird":
-        return engines_ladybird.run_ladybird_round(cases, iters, REVEAL, ROOT_RECT_JS)
+        return engines_ladybird.run_ladybird_round(cases, iters, REVEAL, ROOT_RECT_JS, relayout=run_relayout_steps, steps=RELAYOUT_STEPS)
     raise ValueError(engine)
 
 
@@ -520,7 +554,8 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
     if engine == "chrome":
         return run_chrome(case, iters, None, screenshot=screenshot)
     if engine == "webkit":
-        return engines_webkit.run_webkit(case, iters, CORPUS, case["width"], case["height"], ROOT_RECT_JS, screenshot=screenshot)
+        return engines_webkit.run_webkit(case, iters, CORPUS, case["width"], case["height"], ROOT_RECT_JS, screenshot=screenshot,
+                                         relayout=run_relayout_steps)
     if engine == "firefox":
         return run_firefox(case, iters, screenshot=screenshot)
     if engine == "ladybird":
