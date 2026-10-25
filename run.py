@@ -651,6 +651,7 @@ for _step, _label in RELAYOUT_LABELS.items():
     _k = f"relayout/{_step}/"
     COLUMNS += [
         (f"Relayout ({_label}): layout", [
+            ("taffy", _k + "layout", "Taffy compute_layout"),
             ("chrome", _k + "layout", "Chrome Layout"), ("webkit", _k + "layout", "WebKit Layout"),
             ("firefox", _k + "layout", "Firefox Reflow"), ("ladybird", _k + "layout", "Ladybird layout"),
             ("blitz", _k + "layout", "Blitz `layout`"), ("blitz-par-pcon", _k + "layout", "Blitz `layout` (parallel style+construct)"),
