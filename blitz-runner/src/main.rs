@@ -43,10 +43,11 @@ struct Args {
     boxes: bool,
     dump: bool,
     relayout: bool,
+    check: bool,
 }
 
 fn parse_args() -> Args {
-    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false, dump: false, relayout: false };
+    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false, dump: false, relayout: false, check: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -59,10 +60,11 @@ fn parse_args() -> Args {
             "--boxes" => args.boxes = true,
             "--relayout" => args.relayout = true,
             "--dump" => args.dump = true,
+            "--check" => args.check = true,
             _ => args.file = a,
         }
     }
-    assert!(!args.file.is_empty(), "usage: blitz-runner <file.html> [--width W] [--height H] [--iters N] [--parallel] [--hash] [--boxes] [--screenshot out.png]");
+    assert!(!args.file.is_empty(), "usage: blitz-runner <file.html> [--width W] [--height H] [--iters N] [--parallel] [--hash] [--boxes] [--relayout] [--check] [--screenshot out.png]");
     args
 }
 
@@ -142,7 +144,25 @@ fn main() {
         let resolve = t.elapsed().as_nanos();
         println!("BLITZ parse={parse} resolve={resolve}");
         if args.relayout {
-            relayout_steps(doc.as_mut());
+            // --check: after every step, lay out the mutated document from scratch
+            // (serialised and re-parsed, non-incremental) and compare element geometry
+            let fresh = |html: &str| {
+                let config = DocumentConfig {
+                    viewport: Some(Viewport::new(args.width, args.height, 1.0, ColorScheme::Light)),
+                    base_url: Some(base_url.clone()),
+                    html_parser_provider: Some(Arc::new(HtmlProvider)),
+                    net_provider: Some(Arc::new(FileNetProvider)),
+                    style_threading,
+                    incremental: Some(false),
+                    ..Default::default()
+                };
+                let mut fresh = HtmlDocument::from_html(html, config);
+                fresh.as_mut().handle_messages();
+                fresh.as_mut().resolve(0.0);
+                element_layouts(fresh.as_mut())
+            };
+            let fresh: &dyn Fn(&str) -> Vec<ElementLayout> = &fresh;
+            relayout_steps(doc.as_mut(), args.check.then_some(fresh));
         }
 
         if i + 1 == args.iters {
@@ -192,7 +212,103 @@ fn main() {
 /// incremental `resolve()` (printed as `RELAYOUT step=<name> resolve=<ns>` after that resolve's `PHASES` line) and
 /// is reverted, the revert's `resolve()` discarded, before the next step.
 
-fn relayout_steps(doc: &mut BaseDocument) {
+type ElementLayout = (String, [f32; 4]);
+
+/// Tag and final layout of every element, in tree order
+fn element_layouts(doc: &BaseDocument) -> Vec<ElementLayout> {
+    let mut out = Vec::new();
+    let mut stack = vec![doc.root_node().id];
+    while let Some(id) = stack.pop() {
+        let node = &doc.tree()[id];
+        if let Some(el) = node.element_data() {
+            let l = node.final_layout();
+            out.push((el.name.local.to_string(), [l.location.x, l.location.y, l.size.width, l.size.height]));
+        }
+        stack.extend(node.children.iter().rev());
+    }
+    out
+}
+
+/// Blitz serialises empty elements as `<div />`, which the HTML parser reads as an open tag;
+/// expand them to `<div></div>` (void elements are left as they are)
+fn expand_self_closing_tags(html: &str) -> String {
+    const VOID: [&str; 14] = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+    let mut out = String::with_capacity(html.len());
+    let mut rest = html;
+    while let Some(i) = rest.find(" />") {
+        let (before, after) = rest.split_at(i);
+        let start = before.rfind('<').unwrap();
+        let tag: String = before[start + 1..].chars().take_while(|c| c.is_ascii_alphanumeric()).collect();
+        out.push_str(before);
+        if VOID.contains(&tag.as_str()) {
+            out.push_str(" />");
+        } else {
+            out.push_str("></");
+            out.push_str(&tag);
+            out.push('>');
+        }
+        rest = &after[3..];
+    }
+    out.push_str(rest);
+    out
+}
+
+fn element_ids(doc: &BaseDocument) -> Vec<NodeId> {
+    let mut out = Vec::new();
+    let mut stack = vec![doc.root_node().id];
+    while let Some(id) = stack.pop() {
+        let node = &doc.tree()[id];
+        if node.is_element() {
+            out.push(id);
+        }
+        stack.extend(node.children.iter().rev());
+    }
+    out
+}
+
+fn relayout_steps(doc: &mut BaseDocument, check: Option<&dyn Fn(&str) -> Vec<ElementLayout>>) {
+    // Two references for the incremental layout: the same document after a forced restyle of
+    // every element (`full`: were the right elements restyled?), and a fresh document parsed
+    // from the serialised DOM (`fresh`: does it match a from-scratch layout?)
+    let verify = |doc: &mut BaseDocument, step: &str| {
+        let Some(fresh) = check else { return };
+        let incremental = element_layouts(doc);
+        let root = doc.root_element().id;
+        doc.get_node_mut(root).unwrap().set_restyle_hint(blitz_dom::RestyleHint::restyle_subtree());
+        doc.resolve(0.0);
+        let full = element_layouts(doc);
+        let fresh = fresh(&expand_self_closing_tags(&doc.root_element().outer_html()));
+        let mut line = format!("CHECK step={step} elements={}", incremental.len());
+        for (name, reference) in [("full", &full), ("fresh", &fresh)] {
+            if incremental == *reference {
+                line.push_str(&format!(" {name}=ok"));
+            } else {
+                let diffs: Vec<usize> = (0..incremental.len().max(reference.len())).filter(|&i| incremental.get(i) != reference.get(i)).collect();
+                // elements whose size differs are the likely culprits; position-only differences follow from them
+                let sized: Vec<usize> = diffs.iter().copied().filter(|&i| match (incremental.get(i), reference.get(i)) {
+                    (Some((_, a)), Some((_, b))) => a[2..] != b[2..],
+                    _ => true,
+                }).collect();
+                let last_sized = sized.last().copied().unwrap_or(diffs[0]);
+                if std::env::var_os("BLB_CHECK_VERBOSE").is_some() {
+                    let ids = element_ids(doc);
+                    let html = doc.tree()[ids[last_sized]].outer_html();
+                    eprintln!("CHECK {step} {name} last_size_diff html: {}", &html[..html.len().min(1500)]);
+                    for &i in sized.iter().take(20) {
+                        let html = doc.tree()[ids[i]].outer_html();
+                        eprintln!("  {i} incremental={:?} {name}={:?} {}", incremental.get(i), reference.get(i), html.chars().take(100).collect::<String>());
+                    }
+                }
+                line.push_str(&format!(
+                    " {name}=mismatch({}_elements={} differing={} size_differing={} first={} incremental={:?} {name}={:?} last_size_diff={} incremental={:?} {name}={:?})",
+                    name, reference.len(), diffs.len(), sized.len(), diffs[0], incremental.get(diffs[0]), reference.get(diffs[0]),
+                    last_sized, incremental.get(last_sized), reference.get(last_sized)
+                ));
+            }
+        }
+        println!("{line}");
+    };
+    verify(doc, "initial");
     let style_attr = || blitz_dom::QualName::new(None, blitz_dom::ns!(), blitz_dom::local_name!("style"));
     let (root, leaves, deepest) = {
         let tree = doc.tree();
@@ -258,6 +374,7 @@ fn relayout_steps(doc: &mut BaseDocument) {
         let t = Instant::now();
         doc.resolve(0.0);
         println!("RELAYOUT step={step} resolve={}", t.elapsed().as_nanos());
+        verify(doc, step);
     };
     // root_width: 0.8x the root's current width
     let saved = {
