@@ -143,9 +143,14 @@ def run_taffy(case, iters, cpus):
     out = sh([str(GEN), "bench", case["name"], "--iters", str(iters)], cpus)
     samples = []
     for line in out.splitlines():
-        eng, name, ns = line.split("\t")
-        if name == case["name"]:
-            samples.append({"layout": int(ns)})
+        eng, name, *rest = line.split("\t")
+        if name != case["name"]:
+            continue
+        if eng == "taffy":
+            samples.append({"layout": int(rest[0])})
+        else:  # taffy-relayout <case> <step> <ns>, after the iteration's `taffy` line
+            step, ns = rest
+            samples[-1][f"relayout/{step}/layout"] = int(ns)
     return samples
 
 
