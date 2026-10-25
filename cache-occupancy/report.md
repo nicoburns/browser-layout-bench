@@ -21,8 +21,10 @@ flex and grid layout measure nearly every item at least once before laying it ou
 `flex_expand_weights`, `huge_nested`), so the array gets allocated for 95–100% of nodes and B saves nothing on 25 of 43 pages (−2% from the
 pointer). It only wins where nodes are final-only (`fit_nesting`, `flex_expand_equal_weights`, `grid/deep`, `flex/absolute`, text paragraphs).
 Boxing the whole `Cache` (A) is worse still: every owner has the final-layout entry, 0–24 empty caches per page. What the histograms support is
-keeping the final entry inline plus one (or two) inline measure slots and spilling to a heap array only above that (C1/C2): 46%/44% of cache
-bytes across the corpus, positive on every synthetic page except the deep flex trees, and 13–36% on real pages. An exactly sized heap array (D)
+keeping the final entry inline plus one or two inline measure slots and spilling to a heap array only above that (C1/C2): 46%/44% of cache
+bytes across the corpus. C2 is positive on every page except the trees where most nodes hold 4–8 entries (`flex/deep_auto`, `flex/superdeep`,
+`text/flex_cards`: −16 to −18%); C1 additionally loses ~10% on the pages where every node holds exactly 2 (`nested_vertical_stack`,
+`percentage_and_ratio`). On the real pages C1/C2 save 2–40% of cache bytes. An exactly sized heap array (D)
 is the ceiling at 59%. Nine slots is almost never binding: evictions are 0 in the initial layout on 40 pages, and over the relayout steps they
 are 0.9% of measure stores on Wikipedia, 2% on `grid/wide/100x100`, ~9% on `mdn` and `dioxuslabs-com` (small pages with tables/grids); the
 nodes that hit 9 are table cells, grid items and real-page flex items.
