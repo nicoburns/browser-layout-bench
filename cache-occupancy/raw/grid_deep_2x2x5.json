@@ -1,0 +1,525 @@
+{
+ "sizes": {
+  "cache": 408,
+  "final_entry": 112,
+  "measure_entry": 32,
+  "key": 24,
+  "layout_output": 88,
+  "measure_slots": 9,
+  "node": 192,
+  "layout_data": 648,
+  "element_data": 256,
+  "layout": 92
+ },
+ "steps": {
+  "initial": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 1025,
+     "m": {
+      "0": 1025
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 341,
+     "m": {
+      "0": 18,
+      "1": 39,
+      "2": 60,
+      "3": 38,
+      "4": 95,
+      "5": 81,
+      "6": 4,
+      "7": 4,
+      "8": 2
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 0,
+    "layout_misses": 1369,
+    "measure_hits": 1677,
+    "measure_misses": 1126,
+    "mode_misses": 0,
+    "layout_stores": 1369,
+    "measure_stores": 1126,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 0
+   },
+   "nodes": 1379
+  },
+  "root_width": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 1025,
+     "m": {
+      "0": 1025
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 341,
+     "m": {
+      "0": 18,
+      "1": 39,
+      "2": 60,
+      "3": 38,
+      "4": 95,
+      "5": 81,
+      "6": 4,
+      "7": 4,
+      "8": 2
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 5,
+    "layout_misses": 4,
+    "measure_hits": 26,
+    "measure_misses": 1,
+    "mode_misses": 0,
+    "layout_stores": 4,
+    "measure_stores": 1,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 4
+   },
+   "nodes": 1379
+  },
+  "leaf_1": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 1025,
+     "m": {
+      "0": 1025
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 341,
+     "m": {
+      "0": 18,
+      "1": 39,
+      "2": 60,
+      "3": 38,
+      "4": 95,
+      "5": 81,
+      "6": 4,
+      "7": 4,
+      "8": 2
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 16,
+    "layout_misses": 9,
+    "measure_hits": 205,
+    "measure_misses": 20,
+    "mode_misses": 0,
+    "layout_stores": 9,
+    "measure_stores": 20,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 9
+   },
+   "nodes": 1379
+  },
+  "leaf_10pct": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 1025,
+     "m": {
+      "0": 1025
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 341,
+     "m": {
+      "0": 18,
+      "1": 39,
+      "2": 60,
+      "3": 36,
+      "4": 89,
+      "5": 76,
+      "6": 8,
+      "7": 11,
+      "8": 3,
+      "9": 1
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 386,
+    "layout_misses": 475,
+    "measure_hits": 2177,
+    "measure_misses": 626,
+    "mode_misses": 0,
+    "layout_stores": 475,
+    "measure_stores": 622,
+    "measure_updates": 0,
+    "measure_evictions": 4,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 294
+   },
+   "nodes": 1379
+  },
+  "leaf_all": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 1025,
+     "m": {
+      "0": 1025
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 341,
+     "m": {
+      "0": 18,
+      "1": 39,
+      "2": 60,
+      "3": 38,
+      "4": 95,
+      "5": 81,
+      "6": 4,
+      "7": 4,
+      "8": 2
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 1,
+    "layout_misses": 1368,
+    "measure_hits": 1677,
+    "measure_misses": 1126,
+    "mode_misses": 0,
+    "layout_stores": 1368,
+    "measure_stores": 1126,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 1368
+   },
+   "nodes": 1379
+  },
+  "append": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 1281,
+     "m": {
+      "0": 1281
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 426,
+     "m": {
+      "0": 30,
+      "1": 50,
+      "2": 77,
+      "3": 49,
+      "4": 118,
+      "5": 91,
+      "6": 5,
+      "7": 4,
+      "8": 2
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 5,
+    "layout_misses": 345,
+    "measure_hits": 243,
+    "measure_misses": 227,
+    "mode_misses": 0,
+    "layout_stores": 345,
+    "measure_stores": 227,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 4
+   },
+   "nodes": 1720
+  }
+ },
+ "hash": "f1090d4f426dae55",
+ "root": "1754x2466",
+ "case": {
+  "name": "grid/deep/2x2x5",
+  "file": "grid_deep_2x2x5.html",
+  "nodes": 1365,
+  "width": 1280,
+  "height": 800
+ },
+ "wall_s": 0.06
+}

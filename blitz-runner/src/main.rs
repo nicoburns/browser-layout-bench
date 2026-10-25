@@ -44,10 +44,12 @@ struct Args {
     dump: bool,
     relayout: bool,
     check: bool,
+    #[cfg_attr(not(feature = "cache-stats"), allow(dead_code))]
+    cache_stats: bool,
 }
 
 fn parse_args() -> Args {
-    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false, dump: false, relayout: false, check: false };
+    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false, dump: false, relayout: false, check: false, cache_stats: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -61,10 +63,12 @@ fn parse_args() -> Args {
             "--relayout" => args.relayout = true,
             "--dump" => args.dump = true,
             "--check" => args.check = true,
+            #[cfg(feature = "cache-stats")]
+            "--cache-stats" => args.cache_stats = true,
             _ => args.file = a,
         }
     }
-    assert!(!args.file.is_empty(), "usage: blitz-runner <file.html> [--width W] [--height H] [--iters N] [--parallel] [--hash] [--boxes] [--relayout] [--check] [--screenshot out.png]");
+    assert!(!args.file.is_empty(), "usage: blitz-runner <file.html> [--width W] [--height H] [--iters N] [--parallel] [--hash] [--boxes] [--relayout] [--check] [--cache-stats] [--screenshot out.png]");
     args
 }
 
@@ -139,10 +143,19 @@ fn main() {
         let mut doc = HtmlDocument::from_html(&html, config);
         doc.as_mut().handle_messages();
         let parse = t.elapsed().as_nanos();
+        #[cfg(feature = "cache-stats")]
+        if args.cache_stats {
+            taffy::reset_cache_counters();
+        }
         let t = Instant::now();
         doc.as_mut().resolve(0.0);
         let resolve = t.elapsed().as_nanos();
         println!("BLITZ parse={parse} resolve={resolve}");
+        #[cfg(feature = "cache-stats")]
+        if args.cache_stats && i == 0 {
+            cache_stats::print_sizes();
+            cache_stats::print_stats(doc.as_ref(), "initial");
+        }
         if args.relayout {
             // --check: after every step, lay out the mutated document from scratch
             // (serialised and re-parsed, non-incremental) and compare element geometry
@@ -162,7 +175,7 @@ fn main() {
                 element_layouts(fresh.as_mut())
             };
             let fresh: &dyn Fn(&str) -> Vec<ElementLayout> = &fresh;
-            relayout_steps(doc.as_mut(), args.check.then_some(fresh));
+            relayout_steps(doc.as_mut(), args.check.then_some(fresh), args.cache_stats && i == 0);
         }
 
         if i + 1 == args.iters {
@@ -266,7 +279,8 @@ fn element_ids(doc: &BaseDocument) -> Vec<NodeId> {
     out
 }
 
-fn relayout_steps(doc: &mut BaseDocument, check: Option<&dyn Fn(&str) -> Vec<ElementLayout>>) {
+#[cfg_attr(not(feature = "cache-stats"), allow(unused_variables))]
+fn relayout_steps(doc: &mut BaseDocument, check: Option<&dyn Fn(&str) -> Vec<ElementLayout>>, cache_stats: bool) {
     // Two references for the incremental layout: the same document after a forced restyle of
     // every element (`full`: were the right elements restyled?), and a fresh document parsed
     // from the serialised DOM (`fresh`: does it match a from-scratch layout?)
@@ -371,9 +385,17 @@ fn relayout_steps(doc: &mut BaseDocument, check: Option<&dyn Fn(&str) -> Vec<Ele
         }
     };
     let timed = |doc: &mut BaseDocument, step: &str| {
+        #[cfg(feature = "cache-stats")]
+        if cache_stats {
+            taffy::reset_cache_counters();
+        }
         let t = Instant::now();
         doc.resolve(0.0);
         println!("RELAYOUT step={step} resolve={}", t.elapsed().as_nanos());
+        #[cfg(feature = "cache-stats")]
+        if cache_stats {
+            cache_stats::print_stats(doc, step);
+        }
         verify(doc, step);
     };
     // root_width: 0.8x the root's current width
@@ -412,4 +434,110 @@ fn relayout_steps(doc: &mut BaseDocument, check: Option<&dyn Fn(&str) -> Vec<Ele
         }
     }
     doc.resolve(0.0);
+}
+
+
+/// `--cache-stats` (feature `cache-stats`): needs Taffy patched with `patches/taffy-cache-occupancy.patch`,
+/// see `cache-occupancy/README.md`.
+#[cfg(feature = "cache-stats")]
+mod cache_stats {
+    use super::BaseDocument;
+    use blitz_dom::CopyStyleGetters;
+    use std::collections::BTreeMap;
+
+    /// `--cache-stats`: occupancy of every node's Taffy layout cache after a `resolve()`, by node kind.
+    /// `CACHESIZES` gives the `size_of` of the structs involved (once); `CACHECTR step=<s>` the Taffy
+    /// cache counters accumulated during that resolve; `CACHEHIST step=<s> kind=<k> final=<0|1> n=<nodes>
+    /// m=<populated measure slots>:<count>,...` the joint distribution for nodes of that kind that have
+    /// a `LayoutData` (nodes without one have no cache at all and are reported as `CACHEHIST ... final=-`).
+    pub fn print_sizes() {
+        let sizes = taffy::Cache::sizes();
+        println!(
+            "CACHESIZES cache={} final_entry={} measure_entry={} key={} layout_output={} measure_slots={} node={} layout_data={} element_data={} layout={}",
+            sizes.cache, sizes.final_entry, sizes.measure_entry, sizes.key, sizes.layout_output, sizes.measure_slots,
+            std::mem::size_of::<blitz_dom::Node>(), std::mem::size_of::<blitz_dom::node::LayoutData>(),
+            std::mem::size_of::<blitz_dom::ElementData>(), std::mem::size_of::<taffy::Layout>(),
+        );
+    }
+
+    /// Cheap classification of what laid the node out: `text`/`comment`/`document`; `anon_block`
+    /// (anonymous block box wrapping inline content); for elements, by computed `display`:
+    /// `none`, `contents`, `inline` (inline-level flow content laid out by Parley inside an inline
+    /// root), `inline_root` (block-level box whose content is inline, laid out by Parley),
+    /// `table`, `table_internal`, `replaced`, `block`, `flex`, `grid`.
+    fn node_kind(node: &blitz_dom::Node) -> String {
+        match &node.data {
+            blitz_dom::NodeData::Document(_) => return "document".into(),
+            blitz_dom::NodeData::Text(_) => return "text".into(),
+            blitz_dom::NodeData::Comment { .. } => return "comment".into(),
+            blitz_dom::NodeData::AnonymousBlock(_) => return "anon_block".into(),
+            blitz_dom::NodeData::Element(_) => {}
+        }
+        let Some(styles) = node.primary_styles() else { return "unstyled".into() };
+        let display = (**styles).clone_display();
+        if display.is_none() {
+            return "none".into();
+        }
+        if display.is_contents() {
+            return "contents".into();
+        }
+        if node.flags.is_table_root() {
+            return "table".into();
+        }
+        let inside = format!("{:?}", display.inside());
+        if inside.starts_with("Table") {
+            return "table_internal".into();
+        }
+        let name = &node.element_data().unwrap().name.local;
+        if matches!(&**name, "img" | "input" | "textarea" | "select" | "button" | "canvas" | "video" | "svg" | "iframe") {
+            return "replaced".into();
+        }
+        if node.flags.is_inline_root() {
+            return "inline_root".into();
+        }
+        if display.is_inline_flow() {
+            return "inline".into();
+        }
+        match node.taffy_display() {
+            taffy::Display::Flex => "flex".into(),
+            taffy::Display::Grid => "grid".into(),
+            taffy::Display::Block | taffy::Display::FlowRoot => "block".into(),
+            taffy::Display::None => "none".into(),
+        }
+    }
+
+    pub fn print_stats(doc: &BaseDocument, step: &str) {
+            let c = taffy::cache_counters();
+        println!(
+            "CACHECTR step={step} layout_hits={} layout_misses={} measure_hits={} measure_misses={} mode_misses={} layout_stores={} measure_stores={} measure_updates={} measure_evictions={} measure_uncacheable={} mode_change_clears={} clears={}",
+            c.layout_hits, c.layout_misses, c.measure_hits, c.measure_misses, c.mode_misses, c.layout_stores, c.measure_stores, c.measure_updates, c.measure_evictions, c.measure_uncacheable, c.mode_change_clears, c.clears
+        );
+        // (kind, final: 0/1, or 2 = no LayoutData) -> histogram over populated measure slots
+        let mut hist: BTreeMap<(String, u8), [u64; 10]> = BTreeMap::new();
+        let mut nodes = 0u64;
+        for (_, node) in doc.tree().iter() {
+            nodes += 1;
+            let kind = node_kind(node);
+            let layout_data = match &node.data {
+                blitz_dom::NodeData::Element(e) | blitz_dom::NodeData::AnonymousBlock(e) => e.layout_data.as_deref(),
+                blitz_dom::NodeData::Document(d) => d.layout_data.as_deref(),
+                _ => None,
+            };
+            let (fin, m) = match layout_data {
+                Some(ld) => {
+                    let occ = ld.cache.occupancy();
+                    (occ.final_populated as u8, occ.measure_populated as usize)
+                }
+                None => (2, 0),
+            };
+            hist.entry((kind, fin)).or_insert([0; 10])[m] += 1;
+        }
+        println!("CACHENODES step={step} nodes={nodes}");
+        for ((kind, fin), counts) in hist {
+            let fin = match fin { 0 => "0", 1 => "1", _ => "-" };
+            let n: u64 = counts.iter().sum();
+            let m: Vec<String> = counts.iter().enumerate().filter(|(_, c)| **c > 0).map(|(i, c)| format!("{i}:{c}")).collect();
+            println!("CACHEHIST step={step} kind={kind} final={fin} n={n} m={}", m.join(","));
+        }
+    }
 }

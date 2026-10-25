@@ -15,8 +15,13 @@ parallel-construct = ["blitz-dom/parallel-construct"]
 # The measured builds enable both; the real pages use floats.
 floats = ["blitz-dom/floats"]
 writing-mode = ["blitz-dom/writing-mode"]
+# `--cache-stats`: per-node Taffy cache occupancy and hit/miss/eviction counters after each layout.
+# Needs Taffy patched with `patches/taffy-cache-occupancy.patch` (see cache-occupancy/README.md).
+cache-stats = []
 
 [dependencies]
+# Blitz's own Taffy (the `Cache` type behind `Node::cache()`), for `--cache-stats`
+taffy = { git = "https://github.com/DioxusLabs/taffy", rev = "802e497b69689e1c93be2d16e9d53a973971bcb2", default-features = false }
 blitz-dom = { workspace = true, features = ["log-phase-times"] }
 blitz-html = { workspace = true }
 blitz-paint = { workspace = true }

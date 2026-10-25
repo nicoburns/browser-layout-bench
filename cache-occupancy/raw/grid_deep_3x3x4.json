@@ -1,0 +1,528 @@
+{
+ "sizes": {
+  "cache": 408,
+  "final_entry": 112,
+  "measure_entry": 32,
+  "key": 24,
+  "layout_output": 88,
+  "measure_slots": 9,
+  "node": 192,
+  "layout_data": 648,
+  "element_data": 256,
+  "layout": 92
+ },
+ "steps": {
+  "initial": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 6562,
+     "m": {
+      "0": 6562
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 820,
+     "m": {
+      "0": 20,
+      "1": 83,
+      "2": 152,
+      "3": 74,
+      "4": 205,
+      "5": 193,
+      "6": 45,
+      "7": 37,
+      "8": 11
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 0,
+    "layout_misses": 7385,
+    "measure_hits": 5273,
+    "measure_misses": 3011,
+    "mode_misses": 0,
+    "layout_stores": 7385,
+    "measure_stores": 3011,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 0
+   },
+   "nodes": 7395
+  },
+  "root_width": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 6562,
+     "m": {
+      "0": 6562
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 820,
+     "m": {
+      "0": 20,
+      "1": 83,
+      "2": 152,
+      "3": 67,
+      "4": 196,
+      "5": 177,
+      "6": 44,
+      "7": 62,
+      "8": 17,
+      "9": 2
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 628,
+    "layout_misses": 466,
+    "measure_hits": 1168,
+    "measure_misses": 102,
+    "mode_misses": 0,
+    "layout_stores": 466,
+    "measure_stores": 99,
+    "measure_updates": 0,
+    "measure_evictions": 3,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 4
+   },
+   "nodes": 7395
+  },
+  "leaf_1": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 6562,
+     "m": {
+      "0": 6562
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 820,
+     "m": {
+      "0": 20,
+      "1": 83,
+      "2": 152,
+      "3": 67,
+      "4": 196,
+      "5": 177,
+      "6": 44,
+      "7": 62,
+      "8": 17,
+      "9": 2
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 28,
+    "layout_misses": 13,
+    "measure_hits": 212,
+    "measure_misses": 14,
+    "mode_misses": 0,
+    "layout_stores": 13,
+    "measure_stores": 14,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 8
+   },
+   "nodes": 7395
+  },
+  "leaf_10pct": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 6562,
+     "m": {
+      "0": 6562
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 820,
+     "m": {
+      "0": 20,
+      "1": 82,
+      "2": 154,
+      "3": 71,
+      "4": 198,
+      "5": 189,
+      "6": 51,
+      "7": 36,
+      "8": 13,
+      "9": 6
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 3648,
+    "layout_misses": 3359,
+    "measure_hits": 5491,
+    "measure_misses": 2793,
+    "mode_misses": 0,
+    "layout_stores": 3359,
+    "measure_stores": 2783,
+    "measure_updates": 0,
+    "measure_evictions": 10,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 1408
+   },
+   "nodes": 7395
+  },
+  "leaf_all": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 6562,
+     "m": {
+      "0": 6562
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 820,
+     "m": {
+      "0": 20,
+      "1": 82,
+      "2": 152,
+      "3": 73,
+      "4": 206,
+      "5": 196,
+      "6": 44,
+      "7": 36,
+      "8": 11
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 1,
+    "layout_misses": 7384,
+    "measure_hits": 5271,
+    "measure_misses": 3013,
+    "mode_misses": 0,
+    "layout_stores": 7384,
+    "measure_stores": 3013,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 7384
+   },
+   "nodes": 7395
+  },
+  "append": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 7291,
+     "m": {
+      "0": 7291
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 911,
+     "m": {
+      "0": 21,
+      "1": 94,
+      "2": 164,
+      "3": 80,
+      "4": 177,
+      "5": 187,
+      "6": 76,
+      "7": 52,
+      "8": 37,
+      "9": 23
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 1299,
+    "layout_misses": 1857,
+    "measure_hits": 3092,
+    "measure_misses": 635,
+    "mode_misses": 0,
+    "layout_stores": 1857,
+    "measure_stores": 618,
+    "measure_updates": 0,
+    "measure_evictions": 17,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 4
+   },
+   "nodes": 8215
+  }
+ },
+ "hash": "1ac932ea23b4bc4c",
+ "root": "7930x7869",
+ "case": {
+  "name": "grid/deep/3x3x4",
+  "file": "grid_deep_3x3x4.html",
+  "nodes": 7381,
+  "width": 1280,
+  "height": 800
+ },
+ "wall_s": 0.28
+}

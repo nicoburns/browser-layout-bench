@@ -1,0 +1,519 @@
+{
+ "sizes": {
+  "cache": 408,
+  "final_entry": 112,
+  "measure_entry": 32,
+  "key": 24,
+  "layout_output": 88,
+  "measure_slots": 9,
+  "node": 192,
+  "layout_data": 648,
+  "element_data": 256,
+  "layout": 92
+ },
+ "steps": {
+  "initial": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 10001,
+     "m": {
+      "0": 248,
+      "1": 773,
+      "2": 1996,
+      "3": 644,
+      "4": 2393,
+      "5": 2625,
+      "6": 930,
+      "7": 392
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "1": 1
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 0,
+    "layout_misses": 10005,
+    "measure_hits": 18482,
+    "measure_misses": 37719,
+    "mode_misses": 0,
+    "layout_stores": 10005,
+    "measure_stores": 37719,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 0
+   },
+   "nodes": 10015
+  },
+  "root_width": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 10001,
+     "m": {
+      "0": 248,
+      "1": 773,
+      "2": 1960,
+      "3": 573,
+      "4": 2043,
+      "5": 2704,
+      "6": 517,
+      "7": 987,
+      "8": 196
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "1": 1
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 9301,
+    "layout_misses": 704,
+    "measure_hits": 50935,
+    "measure_misses": 1966,
+    "mode_misses": 0,
+    "layout_stores": 704,
+    "measure_stores": 1966,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 4
+   },
+   "nodes": 10015
+  },
+  "leaf_1": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 10001,
+     "m": {
+      "0": 248,
+      "1": 774,
+      "2": 1960,
+      "3": 573,
+      "4": 2016,
+      "5": 2555,
+      "6": 632,
+      "7": 889,
+      "8": 158,
+      "9": 196
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "1": 1
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 9201,
+    "layout_misses": 804,
+    "measure_hits": 55383,
+    "measure_misses": 813,
+    "mode_misses": 0,
+    "layout_stores": 804,
+    "measure_stores": 617,
+    "measure_updates": 0,
+    "measure_evictions": 196,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 5
+   },
+   "nodes": 10015
+  },
+  "leaf_10pct": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 10001,
+     "m": {
+      "0": 352,
+      "1": 901,
+      "2": 2326,
+      "3": 507,
+      "4": 779,
+      "5": 1590,
+      "6": 2357,
+      "7": 846,
+      "9": 343
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "1": 1
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 8301,
+    "layout_misses": 1704,
+    "measure_hits": 58487,
+    "measure_misses": 5214,
+    "mode_misses": 0,
+    "layout_stores": 1704,
+    "measure_stores": 4822,
+    "measure_updates": 0,
+    "measure_evictions": 392,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 1004
+   },
+   "nodes": 10015
+  },
+  "leaf_all": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 10001,
+     "m": {
+      "0": 1301,
+      "1": 2232,
+      "2": 5194,
+      "3": 546,
+      "4": 728
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "1": 1
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 1,
+    "layout_misses": 10004,
+    "measure_hits": 13730,
+    "measure_misses": 17171,
+    "mode_misses": 0,
+    "layout_stores": 10004,
+    "measure_stores": 17171,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 10004
+   },
+   "nodes": 10015
+  },
+  "append": {
+   "hist": [
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 11001,
+     "m": {
+      "0": 248,
+      "1": 773,
+      "2": 2186,
+      "3": 654,
+      "4": 2543,
+      "5": 3065,
+      "6": 1000,
+      "7": 532
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "1": 1
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 6,
+     "m": {
+      "0": 6
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 3,
+     "m": {
+      "0": 3
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 10001,
+    "layout_misses": 1004,
+    "measure_hits": 58790,
+    "measure_misses": 4611,
+    "mode_misses": 0,
+    "layout_stores": 1004,
+    "measure_stores": 4611,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 4
+   },
+   "nodes": 11015
+  }
+ },
+ "hash": "9f8462976f6526f5",
+ "root": "4304x4729",
+ "case": {
+  "name": "grid/wide/100x100",
+  "file": "grid_wide_100x100.html",
+  "nodes": 10001,
+  "width": 1280,
+  "height": 800
+ },
+ "wall_s": 0.47
+}

@@ -1,0 +1,1071 @@
+{
+ "sizes": {
+  "cache": 408,
+  "final_entry": 112,
+  "measure_entry": 32,
+  "key": 24,
+  "layout_output": 88,
+  "measure_slots": 9,
+  "node": 192,
+  "layout_data": 648,
+  "element_data": 256,
+  "layout": 92
+ },
+ "steps": {
+  "initial": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 190,
+     "m": {
+      "0": 27,
+      "1": 158,
+      "9": 5
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 368,
+     "m": {
+      "0": 102,
+      "1": 247,
+      "2": 3,
+      "3": 2,
+      "4": 3,
+      "5": 9,
+      "9": 2
+     }
+    },
+    {
+     "kind": "contents",
+     "final": "-",
+     "n": 16,
+     "m": {
+      "0": 16
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 141,
+     "m": {
+      "1": 121,
+      "2": 4,
+      "3": 2,
+      "4": 2,
+      "6": 12
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 10,
+     "m": {
+      "0": 1,
+      "1": 4,
+      "3": 1,
+      "4": 4
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 686,
+     "m": {
+      "0": 686
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 671,
+     "m": {
+      "0": 1,
+      "1": 480,
+      "2": 7,
+      "3": 115,
+      "4": 2,
+      "5": 52,
+      "6": 5,
+      "9": 9
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 26,
+     "m": {
+      "0": 26
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "1": 5,
+      "3": 8
+     }
+    },
+    {
+     "kind": "table",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "1": 2
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "5": 13
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 2363,
+     "m": {
+      "0": 2363
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 292,
+     "m": {
+      "0": 292
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 171,
+    "layout_misses": 1434,
+    "measure_hits": 1644,
+    "measure_misses": 2282,
+    "mode_misses": 0,
+    "layout_stores": 1434,
+    "measure_stores": 2089,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 193,
+    "mode_change_clears": 0,
+    "clears": 0
+   },
+   "nodes": 4804
+  },
+  "root_width": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 190,
+     "m": {
+      "0": 27,
+      "1": 126,
+      "2": 32,
+      "9": 5
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 368,
+     "m": {
+      "0": 102,
+      "1": 231,
+      "2": 17,
+      "3": 1,
+      "4": 5,
+      "5": 8,
+      "6": 1,
+      "7": 1,
+      "9": 2
+     }
+    },
+    {
+     "kind": "contents",
+     "final": "-",
+     "n": 16,
+     "m": {
+      "0": 16
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 141,
+     "m": {
+      "1": 104,
+      "2": 20,
+      "3": 1,
+      "4": 2,
+      "6": 13,
+      "7": 1
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 10,
+     "m": {
+      "0": 1,
+      "2": 4,
+      "3": 1,
+      "7": 4
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 686,
+     "m": {
+      "0": 686
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 671,
+     "m": {
+      "0": 1,
+      "1": 285,
+      "2": 195,
+      "3": 112,
+      "4": 11,
+      "5": 31,
+      "6": 5,
+      "7": 2,
+      "9": 29
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 26,
+     "m": {
+      "0": 26
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "1": 3,
+      "2": 2,
+      "3": 8
+     }
+    },
+    {
+     "kind": "table",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "2": 2
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "7": 9,
+      "8": 4
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 2363,
+     "m": {
+      "0": 2363
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 292,
+     "m": {
+      "0": 292
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 71,
+    "layout_misses": 440,
+    "measure_hits": 813,
+    "measure_misses": 661,
+    "mode_misses": 0,
+    "layout_stores": 440,
+    "measure_stores": 429,
+    "measure_updates": 0,
+    "measure_evictions": 41,
+    "measure_uncacheable": 191,
+    "mode_change_clears": 0,
+    "clears": 2
+   },
+   "nodes": 4804
+  },
+  "leaf_1": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 190,
+     "m": {
+      "0": 27,
+      "1": 126,
+      "2": 32,
+      "9": 5
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 368,
+     "m": {
+      "0": 102,
+      "1": 231,
+      "2": 18,
+      "3": 1,
+      "4": 4,
+      "5": 8,
+      "6": 1,
+      "7": 1,
+      "9": 2
+     }
+    },
+    {
+     "kind": "contents",
+     "final": "-",
+     "n": 16,
+     "m": {
+      "0": 16
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 141,
+     "m": {
+      "1": 104,
+      "2": 20,
+      "3": 1,
+      "4": 2,
+      "6": 13,
+      "7": 1
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 10,
+     "m": {
+      "0": 1,
+      "1": 1,
+      "2": 3,
+      "3": 1,
+      "7": 4
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 686,
+     "m": {
+      "0": 686
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 671,
+     "m": {
+      "0": 1,
+      "1": 285,
+      "2": 196,
+      "3": 111,
+      "4": 11,
+      "5": 31,
+      "6": 5,
+      "7": 2,
+      "9": 29
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 26,
+     "m": {
+      "0": 26
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "1": 3,
+      "2": 2,
+      "3": 8
+     }
+    },
+    {
+     "kind": "table",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "2": 2
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "7": 9,
+      "8": 4
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 2363,
+     "m": {
+      "0": 2363
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 292,
+     "m": {
+      "0": 292
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 276,
+    "layout_misses": 15,
+    "measure_hits": 288,
+    "measure_misses": 16,
+    "mode_misses": 0,
+    "layout_stores": 15,
+    "measure_stores": 16,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 15
+   },
+   "nodes": 4804
+  },
+  "leaf_10pct": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 190,
+     "m": {
+      "0": 27,
+      "1": 133,
+      "2": 25,
+      "9": 5
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 368,
+     "m": {
+      "0": 102,
+      "1": 241,
+      "2": 9,
+      "3": 2,
+      "4": 4,
+      "6": 7,
+      "9": 3
+     }
+    },
+    {
+     "kind": "contents",
+     "final": "-",
+     "n": 16,
+     "m": {
+      "0": 16
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 141,
+     "m": {
+      "1": 107,
+      "2": 17,
+      "3": 2,
+      "4": 1,
+      "6": 12,
+      "8": 1,
+      "9": 1
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 10,
+     "m": {
+      "0": 1,
+      "1": 4,
+      "3": 1,
+      "4": 2,
+      "9": 2
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 686,
+     "m": {
+      "0": 686
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 671,
+     "m": {
+      "0": 1,
+      "1": 306,
+      "2": 186,
+      "3": 103,
+      "4": 11,
+      "5": 29,
+      "6": 6,
+      "7": 1,
+      "9": 28
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 26,
+     "m": {
+      "0": 26
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "1": 3,
+      "2": 2,
+      "3": 7,
+      "4": 1
+     }
+    },
+    {
+     "kind": "table",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "1": 1,
+      "2": 1
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "5": 1,
+      "7": 3,
+      "9": 9
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 2363,
+     "m": {
+      "0": 2363
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 292,
+     "m": {
+      "0": 292
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 503,
+    "layout_misses": 252,
+    "measure_hits": 1320,
+    "measure_misses": 615,
+    "mode_misses": 0,
+    "layout_stores": 252,
+    "measure_stores": 236,
+    "measure_updates": 0,
+    "measure_evictions": 187,
+    "measure_uncacheable": 192,
+    "mode_change_clears": 0,
+    "clears": 185
+   },
+   "nodes": 4804
+  },
+  "leaf_all": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 190,
+     "m": {
+      "0": 27,
+      "1": 158,
+      "9": 5
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 368,
+     "m": {
+      "0": 102,
+      "1": 247,
+      "2": 4,
+      "3": 9,
+      "4": 3,
+      "5": 1,
+      "6": 1,
+      "9": 1
+     }
+    },
+    {
+     "kind": "contents",
+     "final": "-",
+     "n": 16,
+     "m": {
+      "0": 16
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 141,
+     "m": {
+      "1": 123,
+      "2": 2,
+      "3": 2,
+      "4": 6,
+      "6": 8
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 10,
+     "m": {
+      "0": 1,
+      "1": 4,
+      "3": 1,
+      "4": 4
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 686,
+     "m": {
+      "0": 686
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 671,
+     "m": {
+      "0": 1,
+      "1": 488,
+      "2": 137,
+      "3": 9,
+      "4": 5,
+      "5": 22,
+      "6": 9
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 26,
+     "m": {
+      "0": 26
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "1": 5,
+      "2": 8
+     }
+    },
+    {
+     "kind": "table",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "1": 2
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "2": 13
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 2363,
+     "m": {
+      "0": 2363
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 292,
+     "m": {
+      "0": 292
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 305,
+    "layout_misses": 1300,
+    "measure_hits": 1321,
+    "measure_misses": 1809,
+    "mode_misses": 0,
+    "layout_stores": 1300,
+    "measure_stores": 1596,
+    "measure_updates": 0,
+    "measure_evictions": 20,
+    "measure_uncacheable": 193,
+    "mode_change_clears": 0,
+    "clears": 1268
+   },
+   "nodes": 4804
+  },
+  "append": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 205,
+     "m": {
+      "0": 36,
+      "1": 159,
+      "9": 10
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 372,
+     "m": {
+      "0": 102,
+      "1": 248,
+      "2": 4,
+      "3": 2,
+      "4": 4,
+      "5": 10,
+      "9": 2
+     }
+    },
+    {
+     "kind": "contents",
+     "final": "-",
+     "n": 22,
+     "m": {
+      "0": 22
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 143,
+     "m": {
+      "1": 121,
+      "2": 4,
+      "3": 2,
+      "4": 4,
+      "6": 12
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 16,
+     "m": {
+      "0": 1,
+      "1": 6,
+      "3": 1,
+      "4": 8
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 714,
+     "m": {
+      "0": 714
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 702,
+     "m": {
+      "0": 1,
+      "1": 480,
+      "2": 7,
+      "3": 115,
+      "4": 3,
+      "5": 73,
+      "6": 5,
+      "9": 18
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 26,
+     "m": {
+      "0": 26
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 15,
+     "m": {
+      "1": 7,
+      "3": 8
+     }
+    },
+    {
+     "kind": "table",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "1": 2
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "1",
+     "n": 13,
+     "m": {
+      "5": 13
+     }
+    },
+    {
+     "kind": "table_internal",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 2522,
+     "m": {
+      "0": 2522
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 292,
+     "m": {
+      "0": 292
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 38,
+    "layout_misses": 62,
+    "measure_hits": 375,
+    "measure_misses": 276,
+    "mode_misses": 0,
+    "layout_stores": 62,
+    "measure_stores": 276,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 0,
+    "mode_change_clears": 0,
+    "clears": 2
+   },
+   "nodes": 5057
+  }
+ },
+ "hash": "4557bb8a4560037e",
+ "root": "1280x19976",
+ "case": {
+  "name": "real/mdn",
+  "file": "real/mdn/index.html",
+  "nodes": 2212,
+  "width": 1280,
+  "height": 800
+ },
+ "wall_s": 0.08
+}

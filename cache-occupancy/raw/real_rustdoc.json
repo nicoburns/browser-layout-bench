@@ -1,0 +1,960 @@
+{
+ "sizes": {
+  "cache": 408,
+  "final_entry": 112,
+  "measure_entry": 32,
+  "key": 24,
+  "layout_output": 88,
+  "measure_slots": 9,
+  "node": 192,
+  "layout_data": 648,
+  "element_data": 256,
+  "layout": 92
+ },
+ "steps": {
+  "initial": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "0",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 1004,
+     "m": {
+      "0": 785,
+      "1": 3,
+      "2": 166,
+      "3": 50
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2612,
+     "m": {
+      "0": 309,
+      "1": 780,
+      "2": 1245,
+      "3": 278
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 283,
+     "m": {
+      "0": 3,
+      "2": 278,
+      "3": 1,
+      "6": 1
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "2": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "2": 1,
+      "3": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 8648,
+     "m": {
+      "0": 8648
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 3874,
+     "m": {
+      "0": 298,
+      "1": 402,
+      "2": 3123,
+      "3": 50,
+      "4": 1
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 202,
+     "m": {
+      "0": 202
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 324,
+     "m": {
+      "0": 324
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "2": 1,
+      "3": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 22978,
+     "m": {
+      "0": 22978
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 1604,
+    "layout_misses": 7980,
+    "measure_hits": 2112,
+    "measure_misses": 12475,
+    "mode_misses": 0,
+    "layout_stores": 7980,
+    "measure_stores": 11968,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 507,
+    "mode_change_clears": 0,
+    "clears": 0
+   },
+   "nodes": 39944
+  },
+  "root_width": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "0",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 1004,
+     "m": {
+      "0": 785,
+      "1": 3,
+      "3": 167,
+      "4": 49
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2612,
+     "m": {
+      "0": 309,
+      "1": 506,
+      "2": 274,
+      "3": 1246,
+      "4": 277
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 283,
+     "m": {
+      "0": 3,
+      "3": 278,
+      "4": 1,
+      "6": 1
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "3": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "3": 1,
+      "4": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 8648,
+     "m": {
+      "0": 8648
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 3874,
+     "m": {
+      "0": 298,
+      "1": 393,
+      "2": 9,
+      "3": 3126,
+      "4": 1,
+      "5": 47
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 202,
+     "m": {
+      "0": 202
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 324,
+     "m": {
+      "0": 324
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "3": 2
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 22978,
+     "m": {
+      "0": 22978
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 1860,
+    "layout_misses": 7109,
+    "measure_hits": 2162,
+    "measure_misses": 6027,
+    "mode_misses": 0,
+    "layout_stores": 7109,
+    "measure_stores": 5520,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 507,
+    "mode_change_clears": 0,
+    "clears": 2
+   },
+   "nodes": 39944
+  },
+  "leaf_1": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "0",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 1004,
+     "m": {
+      "0": 785,
+      "1": 3,
+      "3": 167,
+      "4": 49
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2612,
+     "m": {
+      "0": 309,
+      "1": 506,
+      "2": 280,
+      "3": 1241,
+      "4": 276
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 283,
+     "m": {
+      "0": 3,
+      "2": 1,
+      "3": 277,
+      "4": 1,
+      "6": 1
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "3": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "3": 1,
+      "4": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 8648,
+     "m": {
+      "0": 8648
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 3874,
+     "m": {
+      "0": 298,
+      "1": 394,
+      "2": 9,
+      "3": 3125,
+      "4": 1,
+      "5": 47
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 202,
+     "m": {
+      "0": 202
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 324,
+     "m": {
+      "0": 324
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "3": 2
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 22978,
+     "m": {
+      "0": 22978
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 83,
+    "layout_misses": 13,
+    "measure_hits": 242,
+    "measure_misses": 117,
+    "mode_misses": 0,
+    "layout_stores": 13,
+    "measure_stores": 20,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 97,
+    "mode_change_clears": 0,
+    "clears": 13
+   },
+   "nodes": 39944
+  },
+  "leaf_10pct": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "0",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 1004,
+     "m": {
+      "0": 785,
+      "1": 9,
+      "2": 12,
+      "3": 155,
+      "4": 42,
+      "5": 1
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2612,
+     "m": {
+      "0": 340,
+      "1": 506,
+      "2": 657,
+      "3": 861,
+      "4": 248
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 283,
+     "m": {
+      "0": 3,
+      "2": 59,
+      "3": 219,
+      "4": 1,
+      "6": 1
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "3": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "3": 1,
+      "5": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 8648,
+     "m": {
+      "0": 8648
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 3874,
+     "m": {
+      "0": 343,
+      "1": 487,
+      "2": 258,
+      "3": 2742,
+      "5": 44
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 202,
+     "m": {
+      "0": 202
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 324,
+     "m": {
+      "0": 324
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "3": 2
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 22978,
+     "m": {
+      "0": 22978
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 3021,
+    "layout_misses": 1422,
+    "measure_hits": 4163,
+    "measure_misses": 2471,
+    "mode_misses": 0,
+    "layout_stores": 1422,
+    "measure_stores": 1987,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 484,
+    "mode_change_clears": 0,
+    "clears": 1406
+   },
+   "nodes": 39944
+  },
+  "leaf_all": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "0",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 1004,
+     "m": {
+      "0": 785,
+      "1": 53,
+      "2": 165,
+      "3": 1
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 2612,
+     "m": {
+      "0": 584,
+      "1": 506,
+      "2": 1244,
+      "3": 278
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 283,
+     "m": {
+      "0": 3,
+      "1": 1,
+      "2": 279
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 1,
+     "m": {
+      "2": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "1": 2
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 8648,
+     "m": {
+      "0": 8648
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 3874,
+     "m": {
+      "0": 691,
+      "1": 1704,
+      "2": 1479
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 202,
+     "m": {
+      "0": 202
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 324,
+     "m": {
+      "0": 324
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "2": 1,
+      "4": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 22978,
+     "m": {
+      "0": 22978
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 2198,
+    "layout_misses": 7386,
+    "measure_hits": 1780,
+    "measure_misses": 9946,
+    "mode_misses": 0,
+    "layout_stores": 7386,
+    "measure_stores": 9439,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 507,
+    "mode_change_clears": 0,
+    "clears": 7213
+   },
+   "nodes": 39944
+  },
+  "append": {
+   "hist": [
+    {
+     "kind": "anon_block",
+     "final": "0",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "1",
+     "n": 2006,
+     "m": {
+      "0": 1570,
+      "1": 3,
+      "2": 167,
+      "3": 217,
+      "4": 9,
+      "5": 40
+     }
+    },
+    {
+     "kind": "anon_block",
+     "final": "-",
+     "n": 2,
+     "m": {
+      "0": 2
+     }
+    },
+    {
+     "kind": "block",
+     "final": "1",
+     "n": 4914,
+     "m": {
+      "0": 309,
+      "1": 1286,
+      "2": 1519,
+      "3": 1523,
+      "4": 277
+     }
+    },
+    {
+     "kind": "document",
+     "final": "-",
+     "n": 1,
+     "m": {
+      "0": 1
+     }
+    },
+    {
+     "kind": "flex",
+     "final": "1",
+     "n": 563,
+     "m": {
+      "0": 3,
+      "2": 278,
+      "3": 279,
+      "4": 1,
+      "6": 2
+     }
+    },
+    {
+     "kind": "grid",
+     "final": "1",
+     "n": 2,
+     "m": {
+      "2": 1,
+      "3": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "1",
+     "n": 4,
+     "m": {
+      "2": 1,
+      "3": 2,
+      "4": 1
+     }
+    },
+    {
+     "kind": "inline",
+     "final": "-",
+     "n": 17293,
+     "m": {
+      "0": 17293
+     }
+    },
+    {
+     "kind": "inline_root",
+     "final": "1",
+     "n": 7446,
+     "m": {
+      "0": 298,
+      "1": 794,
+      "2": 3132,
+      "3": 3173,
+      "4": 2,
+      "5": 47
+     }
+    },
+    {
+     "kind": "none",
+     "final": "1",
+     "n": 402,
+     "m": {
+      "0": 402
+     }
+    },
+    {
+     "kind": "none",
+     "final": "-",
+     "n": 648,
+     "m": {
+      "0": 648
+     }
+    },
+    {
+     "kind": "replaced",
+     "final": "1",
+     "n": 3,
+     "m": {
+      "2": 1,
+      "3": 1,
+      "4": 1
+     }
+    },
+    {
+     "kind": "text",
+     "final": "-",
+     "n": 45645,
+     "m": {
+      "0": 45645
+     }
+    },
+    {
+     "kind": "unstyled",
+     "final": "-",
+     "n": 11,
+     "m": {
+      "0": 11
+     }
+    }
+   ],
+   "counters": {
+    "layout_hits": 3421,
+    "layout_misses": 14508,
+    "measure_hits": 4233,
+    "measure_misses": 18524,
+    "mode_misses": 0,
+    "layout_stores": 14508,
+    "measure_stores": 17510,
+    "measure_updates": 0,
+    "measure_evictions": 0,
+    "measure_uncacheable": 1014,
+    "mode_change_clears": 0,
+    "clears": 2
+   },
+   "nodes": 78942
+  }
+ },
+ "hash": "ab0a807ee9c6ab1c",
+ "root": "1280x155421",
+ "case": {
+  "name": "real/rustdoc",
+  "file": "real/rustdoc/index.html",
+  "nodes": 15947,
+  "width": 1280,
+  "height": 800
+ },
+ "wall_s": 0.72
+}

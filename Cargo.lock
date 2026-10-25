@@ -1072,6 +1072,7 @@ dependencies = [
  "image",
  "mimalloc",
  "png",
+ "taffy 0.15.0 (git+https://github.com/DioxusLabs/taffy?rev=802e497b69689e1c93be2d16e9d53a973971bcb2)",
 ]
 
 [[package]]

@@ -1,0 +1,266 @@
+diff --git a/src/compute/mod.rs b/src/compute/mod.rs
+index 840fa1ae..0f8df136 100644
+--- a/src/compute/mod.rs
++++ b/src/compute/mod.rs
+@@ -342,6 +342,7 @@ where
+ 
+     // First we check if we have a cached result for the given input
+     let cache_entry = tree.cache_get(node, &inputs);
++    crate::tree::cache_hit_or_miss(inputs.run_mode, cache_entry.is_some());
+     if let Some(cached_size_and_baselines) = cache_entry {
+         debug_log_node!(inputs);
+         debug_log!("RESULT (CACHED)", dbg:cached_size_and_baselines.size);
+diff --git a/src/tree/cache.rs b/src/tree/cache.rs
+index 6b6e3e37..d1eedfc8 100644
+--- a/src/tree/cache.rs
++++ b/src/tree/cache.rs
+@@ -198,6 +198,144 @@ pub fn cache_mode_change_evictions() -> usize {
+     MODE_CHANGE_EVICTIONS.with(|count| count.get())
+ }
+ 
++
++/// Instrumentation (browser-layout-bench cache-occupancy study): process-wide counters of cache
++/// traffic, read with [`cache_counters`] and zeroed with [`reset_cache_counters`].
++pub mod stats {
++    use core::sync::atomic::{AtomicU64, Ordering::Relaxed};
++
++    pub(super) static LAYOUT_HITS: AtomicU64 = AtomicU64::new(0);
++    pub(super) static LAYOUT_MISSES: AtomicU64 = AtomicU64::new(0);
++    pub(super) static MEASURE_HITS: AtomicU64 = AtomicU64::new(0);
++    pub(super) static MEASURE_MISSES: AtomicU64 = AtomicU64::new(0);
++    pub(super) static MODE_MISSES: AtomicU64 = AtomicU64::new(0);
++    pub(super) static LAYOUT_STORES: AtomicU64 = AtomicU64::new(0);
++    pub(super) static MEASURE_STORES: AtomicU64 = AtomicU64::new(0);
++    pub(super) static MEASURE_UPDATES: AtomicU64 = AtomicU64::new(0);
++    pub(super) static MEASURE_EVICTIONS: AtomicU64 = AtomicU64::new(0);
++    pub(super) static MEASURE_UNCACHEABLE: AtomicU64 = AtomicU64::new(0);
++    pub(super) static MODE_CHANGE_CLEARS: AtomicU64 = AtomicU64::new(0);
++    pub(super) static CLEARS: AtomicU64 = AtomicU64::new(0);
++
++    #[inline(always)]
++    pub(super) fn bump(counter: &AtomicU64) {
++        counter.fetch_add(1, Relaxed);
++    }
++
++    /// Snapshot of the counters
++    #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
++    pub struct CacheCounters {
++        /// `PerformLayout` requests answered from `final_layout_entry`
++        pub layout_hits: u64,
++        /// `PerformLayout` requests that had to compute (includes requests whose cache mode differed)
++        pub layout_misses: u64,
++        /// `ComputeSize` requests answered from a measure entry
++        pub measure_hits: u64,
++        /// `ComputeSize` requests that had to compute (includes requests whose cache mode differed)
++        pub measure_misses: u64,
++        /// Requests (either mode) rejected because the cache's `CacheMode` differed from the input's
++        pub mode_misses: u64,
++        /// `PerformLayout` results stored
++        pub layout_stores: u64,
++        /// `ComputeSize` results stored into a free (or freshly cleared) slot
++        pub measure_stores: u64,
++        /// `ComputeSize` results that replaced an existing entry with the same key in place
++        pub measure_updates: u64,
++        /// `ComputeSize` results that overwrote a populated slot holding a different key (clock-hand replacement)
++        pub measure_evictions: u64,
++        /// `ComputeSize` results not stored because they carry margin-collapse metadata
++        pub measure_uncacheable: u64,
++        /// Stores into a non-empty cache whose entries were computed with a different `CacheMode` (cache cleared first)
++        pub mode_change_clears: u64,
++        /// `Cache::clear` calls that found entries to clear
++        pub clears: u64,
++    }
++
++    /// Record the outcome of a `compute_cached_layout` lookup (counted at the tree level so that
++    /// nodes without an allocated cache count as misses too)
++    #[inline(always)]
++    pub fn cache_hit_or_miss(run_mode: crate::tree::RunMode, hit: bool) {
++        use crate::tree::RunMode;
++        match (run_mode, hit) {
++            (RunMode::PerformLayout, true) => bump(&LAYOUT_HITS),
++            (RunMode::PerformLayout, false) => bump(&LAYOUT_MISSES),
++            (RunMode::ComputeSize, true) => bump(&MEASURE_HITS),
++            (RunMode::ComputeSize, false) => bump(&MEASURE_MISSES),
++            (RunMode::PerformHiddenLayout, _) => {}
++        }
++    }
++
++    /// Snapshot of the process-wide counters
++    pub fn cache_counters() -> CacheCounters {
++        CacheCounters {
++            layout_hits: LAYOUT_HITS.load(Relaxed),
++            layout_misses: LAYOUT_MISSES.load(Relaxed),
++            measure_hits: MEASURE_HITS.load(Relaxed),
++            measure_misses: MEASURE_MISSES.load(Relaxed),
++            mode_misses: MODE_MISSES.load(Relaxed),
++            layout_stores: LAYOUT_STORES.load(Relaxed),
++            measure_stores: MEASURE_STORES.load(Relaxed),
++            measure_updates: MEASURE_UPDATES.load(Relaxed),
++            measure_evictions: MEASURE_EVICTIONS.load(Relaxed),
++            measure_uncacheable: MEASURE_UNCACHEABLE.load(Relaxed),
++            mode_change_clears: MODE_CHANGE_CLEARS.load(Relaxed),
++            clears: CLEARS.load(Relaxed),
++        }
++    }
++
++    /// Zero the process-wide counters
++    pub fn reset_cache_counters() {
++        for counter in [
++            &LAYOUT_HITS,
++            &LAYOUT_MISSES,
++            &MEASURE_HITS,
++            &MEASURE_MISSES,
++            &MODE_MISSES,
++            &LAYOUT_STORES,
++            &MEASURE_STORES,
++            &MEASURE_UPDATES,
++            &MEASURE_EVICTIONS,
++            &MEASURE_UNCACHEABLE,
++            &MODE_CHANGE_CLEARS,
++            &CLEARS,
++        ] {
++            counter.store(0, Relaxed);
++        }
++    }
++
++    /// Which slots of a [`super::Cache`] hold an entry
++    #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
++    pub struct CacheOccupancy {
++        /// Whether `final_layout_entry` is populated
++        pub final_populated: bool,
++        /// Number of populated `measure_entries` (0..=CACHE_SIZE)
++        pub measure_populated: u8,
++        /// Bitmask of the measure slots marked recently used
++        pub recently_used: u16,
++        /// The clock hand
++        pub next_measure_entry: u8,
++    }
++
++    /// `size_of` the cache and its parts
++    #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
++    pub struct CacheSizes {
++        /// `size_of::<Cache>()`
++        pub cache: usize,
++        /// `size_of::<Option<CacheEntry<LayoutOutput>>>()`
++        pub final_entry: usize,
++        /// `size_of::<Option<CacheEntry<Size<f32>>>>()`
++        pub measure_entry: usize,
++        /// `size_of::<CacheKey>()`
++        pub key: usize,
++        /// `size_of::<LayoutOutput>()`
++        pub layout_output: usize,
++        /// Number of measure slots (`CACHE_SIZE`)
++        pub measure_slots: usize,
++    }
++}
++
++pub use stats::{cache_counters, cache_hit_or_miss, reset_cache_counters, CacheCounters, CacheOccupancy, CacheSizes};
++
+ /// Cached intermediate layout results
+ #[derive(Debug, Clone, PartialEq)]
+ #[cfg_attr(feature = "serde", derive(Serialize))]
+@@ -253,6 +391,9 @@ impl Cache {
+     #[inline]
+     pub fn get(&mut self, input: &LayoutInput) -> Option<LayoutOutput> {
+         if self.mode != CacheMode::from(input) {
++            if input.run_mode != RunMode::PerformHiddenLayout && !self.is_empty {
++                stats::bump(&stats::MODE_MISSES);
++            }
+             return None;
+         }
+         let key = CacheKey::from(input);
+@@ -290,12 +431,16 @@ impl Cache {
+             if !self.is_empty {
+                 MODE_CHANGE_EVICTIONS.with(|count| count.set(count.get() + 1));
+             }
++            if !self.is_empty {
++                stats::bump(&stats::MODE_CHANGE_CLEARS);
++            }
+             self.clear();
+             self.mode = mode;
+         }
+         let key = CacheKey::from(input);
+         match input.run_mode {
+             RunMode::PerformLayout => {
++                stats::bump(&stats::LAYOUT_STORES);
+                 self.is_empty = false;
+                 self.final_layout_entry = Some(CacheEntry { key, content: layout_output })
+             }
+@@ -308,6 +453,7 @@ impl Cache {
+                     || layout_output.top_margin != CollapsibleMarginSet::ZERO
+                     || layout_output.bottom_margin != CollapsibleMarginSet::ZERO
+                 {
++                    stats::bump(&stats::MEASURE_UNCACHEABLE);
+                     return;
+                 }
+                 self.is_empty = false;
+@@ -316,6 +462,7 @@ impl Cache {
+                 {
+                     self.measure_entries[index].as_mut().unwrap().content = layout_output.size;
+                     self.recently_used_entries |= 1 << index;
++                    stats::bump(&stats::MEASURE_UPDATES);
+                     return;
+                 }
+                 while self.recently_used_entries & (1 << self.next_measure_entry) != 0 {
+@@ -326,6 +473,11 @@ impl Cache {
+                     }
+                 }
+                 let entry_index = self.next_measure_entry as usize;
++                if self.measure_entries[entry_index].is_some() {
++                    stats::bump(&stats::MEASURE_EVICTIONS);
++                } else {
++                    stats::bump(&stats::MEASURE_STORES);
++                }
+                 self.measure_entries[entry_index] = Some(CacheEntry { key, content: layout_output.size });
+                 self.recently_used_entries |= 1 << entry_index;
+                 self.next_measure_entry += 1;
+@@ -342,6 +494,7 @@ impl Cache {
+         if self.is_empty {
+             return ClearState::AlreadyEmpty;
+         }
++        stats::bump(&stats::CLEARS);
+         self.is_empty = true;
+         self.final_layout_entry = None;
+         /// Workaround for `Option<CacheEntry<_>>` not being `Copy` (required for array repeat expressions)
+@@ -356,6 +509,28 @@ impl Cache {
+     pub fn is_empty(&self) -> bool {
+         self.final_layout_entry.is_none() && !self.measure_entries.iter().any(|entry| entry.is_some())
+     }
++
++    /// Which slots are populated (instrumentation, read-only)
++    pub fn occupancy(&self) -> CacheOccupancy {
++        CacheOccupancy {
++            final_populated: self.final_layout_entry.is_some(),
++            measure_populated: self.measure_entries.iter().filter(|entry| entry.is_some()).count() as u8,
++            recently_used: self.recently_used_entries,
++            next_measure_entry: self.next_measure_entry,
++        }
++    }
++
++    /// `size_of` the cache and its parts (instrumentation)
++    pub fn sizes() -> CacheSizes {
++        CacheSizes {
++            cache: core::mem::size_of::<Cache>(),
++            final_entry: core::mem::size_of::<Option<CacheEntry<LayoutOutput>>>(),
++            measure_entry: core::mem::size_of::<Option<CacheEntry<Size<f32>>>>(),
++            key: core::mem::size_of::<CacheKey>(),
++            layout_output: core::mem::size_of::<LayoutOutput>(),
++            measure_slots: CACHE_SIZE,
++        }
++    }
+ }
+ 
+ /// Clear operation outcome. See [`Cache::clear`]
+diff --git a/src/tree/mod.rs b/src/tree/mod.rs
+index 1d704199..15df3e7e 100644
+--- a/src/tree/mod.rs
++++ b/src/tree/mod.rs
+@@ -12,7 +12,7 @@ pub mod traits;
+ #[doc(hidden)]
+ #[cfg(all(debug_assertions, feature = "std"))]
+ pub use cache::cache_mode_change_evictions;
+-pub use cache::{Cache, ClearState};
++pub use cache::{cache_counters, cache_hit_or_miss, reset_cache_counters, Cache, CacheCounters, CacheOccupancy, CacheSizes, ClearState};
+ pub use layout::{
+     AxisStaticAlign, AxisStaticEdge, AxisStaticPosition, Baselines, CollapsibleMarginSet, Layout, LayoutInput,
+     LayoutOutput, OofCandidate, OofCandidates, OofPositioningArea, RequestedAxis, RunMode, SizingMode,
