@@ -163,7 +163,7 @@ def run_ladybird_round(cases, iters, reveal_dir, root_rect_js, screenshot=None, 
                     session.execute("return document.body.offsetHeight")
                     e = extra[f"{url}?i={i}"] = {"root": session.execute("return " + root_rect_js)}
                     if relayout:
-                        relayout(lambda js: session.execute("return " + js if js.startswith("window.__lb.relayout(") else js))
+                        relayout(lambda js: session.execute("return " + js if js.startswith("window.__lb.") else js))
                     if screenshot and i == iters - 1:
                         Path(screenshot).write_bytes(base64.b64decode(session.request("GET", f"/session/{session.id}/screenshot")))
                         e["boxes"] = [tuple(b) for b in session.execute(BOXES_JS)]

@@ -237,7 +237,10 @@ layout, then reverted — the revert's layout is discarded):
 Leaves are the innermost block-level elements under `#cb`: elements with a box (`getClientRects()` non-empty) that
 are not `display: inline` and have no such child (`width` changes no geometry on a non-replaced inline, and Blitz
 has no node layout for it to mutate); `append` clones the root's boxed children. The widths are all read before any is written, so the
-preparation itself does not flush N layouts. The same script (`relayout.js`, driven as `window.__lb.relayout(step,
+preparation itself does not flush N layouts. Finding the leaves costs two layout queries per element (in Servo a
+reflow each: 4.4 s per document on `pangui/fit_nesting`), so each engine computes them in the first document it
+opens of a page and later documents are handed the result as indices into `#cb`'s elements (the same set, the
+parse being deterministic; the harness checked old and new selection equal on every case). The same script (`relayout.js`, driven as `window.__lb.relayout(step,
 'apply'|'revert')`) runs in Chrome, WebKit, Firefox (Playwright `evaluate`) and Servo, Ladybird (WebDriver Execute
 Script); the Blitz runner applies the identical mutations natively through `DocumentMutator` with
 `incremental: true` and times one `resolve()` per step. Step *k* runs with caches warmed by the first layout and
