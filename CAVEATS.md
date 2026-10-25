@@ -178,9 +178,13 @@ lets through as much as how fast it lays out: Blitz currently restyles the whole
 (`set_attribute` → `RestyleHint::restyle_subtree()` + full damage), so its whole-pipeline relayout figures are
 dominated by style even when `layout` is small; Servo's repair path reports no box/fragment spans, so only
 `restyle_and_build_trees` is available. Small incremental relayouts (tens of µs in Chrome) sit at the trace clocks'
-resolution — prefer the median there. Only rendered elements take part (leaves with a box, rendered root children
-for `append`), so on the real pages `append` clones top-level sections rather than list items and can cost as much
-as a full layout (rustdoc). Post-mutation geometry is not yet part of `verify`.
+resolution — prefer the median there. Only elements with a box take part (`getClientRects()` non-empty; Blitz:
+not `display: none`/`contents` or inside one), and leaves are block-level only (`display: inline` excluded, since
+`width` on a non-replaced inline changes no geometry and Blitz gives inline elements no node layout to mutate); the
+root children cloned by `append` are the boxed ones, so on the real pages it clones top-level sections rather than
+list items and can cost as much as a full layout (rustdoc). The browsers' and Blitz's selections were compared on
+the smoke cases (same leaf/root-child counts, same deepest leaf); Taffy's direct trees have no inline or hidden
+nodes. Post-mutation geometry is not yet part of `verify`.
 
 ## How to interpret the results
 

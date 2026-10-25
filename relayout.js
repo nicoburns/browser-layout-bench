@@ -2,9 +2,13 @@ window.__lb = window.__lb || {};
 (() => {
   const cb = document.getElementById('cb');
   const root = cb.tagName === 'BODY' ? cb : cb.firstElementChild;
-  // only rendered elements (a box): real pages have display:none subtrees and <script>s whose mutation lays out nothing
-  const rendered = e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
-  const leaves = [...cb.querySelectorAll('*')].filter(e => !e.firstElementChild && rendered(e));
+  // only elements with a box take part (real pages have display:none subtrees and <script>s whose mutation lays out
+  // nothing), and for leaves only block-level ones: `width` on a non-replaced inline changes no geometry, and Blitz
+  // gives inline elements no node layout to mutate
+  const rendered = e => e.getClientRects().length > 0;
+  const leaves = [...cb.querySelectorAll('*')]
+    .filter(e => !e.firstElementChild && rendered(e) && getComputedStyle(e).display !== 'inline');
+
   const depth = e => { let d = 0; for (let p = e; p && p !== cb; p = p.parentElement) d++; return d; };
   const maxDepth = Math.max(...leaves.map(depth));
   const deepest = leaves.filter(e => depth(e) === maxDepth);

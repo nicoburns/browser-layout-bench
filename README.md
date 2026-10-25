@@ -234,7 +234,9 @@ layout, then reverted — the revert's layout is discarded):
 | `leaf_all` | every leaf's `width` +1 px | incremental machinery vs. a full relayout |
 | `append` | the last 10 % of the root's children cloned and appended | DOM mutation + construction + layout |
 
-Leaves are the elements under `#cb` with no element children; the widths are all read before any is written, so the
+Leaves are the elements under `#cb` with no element children that have a box (`getClientRects()` non-empty) and
+are not `display: inline` (`width` changes no geometry on a non-replaced inline, and Blitz has no node layout for it
+to mutate); `append` clones the root's boxed children. The widths are all read before any is written, so the
 preparation itself does not flush N layouts. The same script (`relayout.js`, driven as `window.__lb.relayout(step,
 'apply'|'revert')`) runs in Chrome, WebKit, Firefox (Playwright `evaluate`) and Servo, Ladybird (WebDriver Execute
 Script); the Blitz runner applies the identical mutations natively through `DocumentMutator` with

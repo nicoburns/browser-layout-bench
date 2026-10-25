@@ -7,7 +7,7 @@ use std::time::Instant;
 
 use anyrender::render_to_buffer;
 use anyrender_vello_cpu::VelloCpuImageRenderer;
-use blitz_dom::{BaseDocument, DocumentConfig, NodeId, StyleThreading};
+use blitz_dom::{BaseDocument, CopyStyleGetters, DocumentConfig, NodeId, StyleThreading};
 use blitz_html::{HtmlDocument, HtmlProvider};
 use blitz_paint::paint_scene;
 use blitz_traits::net::{Bytes, NetHandler, NetProvider, Request};
@@ -196,25 +196,28 @@ fn relayout_steps(doc: &mut BaseDocument) {
     let style_attr = || blitz_dom::QualName::new(None, blitz_dom::ns!(), blitz_dom::local_name!("style"));
     let (root, leaves, deepest) = {
         let tree = doc.tree();
-        let cb = tree.iter().find(|(_, n)| n.attr(blitz_dom::local_name!("id")) == Some("cb")).map(|(id, _)| id).expect("#cb");
+        let cb = doc.query_selector("#cb").expect("selector").expect("#cb");
         let is_body = tree[cb].element_data().is_some_and(|e| e.name.local == blitz_dom::local_name!("body"));
         let root = if is_body { cb } else { *tree[cb].children.iter().find(|c| tree[**c].is_element()).expect("root") };
+        // as relayout.js: elements with a box (not display:none/contents, nor inside one), leaves not inline-level
+        let boxed = |id: NodeId| tree[id].has_boxes();
+        let inline = |id: NodeId| tree[id].primary_styles().is_some_and(|s| (**s).clone_display().is_inline_flow());
         let mut leaves = Vec::new();
-        let mut stack: Vec<(NodeId, usize)> = tree[cb].children.iter().map(|c| (*c, 1)).collect();
+        let mut stack: Vec<(NodeId, usize)> = tree[cb].children.iter().rev().map(|c| (*c, 1)).collect();
         while let Some((id, depth)) = stack.pop() {
-            if !tree[id].is_element() {
+            if !tree[id].is_element() || !boxed(id) {
                 continue;
             }
             let kids: Vec<NodeId> = tree[id].children.iter().copied().filter(|c| tree[*c].is_element()).collect();
-            let size = tree[id].final_layout().size;
-            if kids.is_empty() && size.width > 0.0 && size.height > 0.0 {
-                leaves.push((id, depth)); // rendered leaves only, as relayout.js
+            if kids.is_empty() && !inline(id) {
+                leaves.push((id, depth));
             }
-            stack.extend(kids.into_iter().map(|c| (c, depth + 1)));
+            stack.extend(kids.into_iter().rev().map(|c| (c, depth + 1)));
         }
-        leaves.reverse(); // document order
         let max_depth = leaves.iter().map(|l| l.1).max().unwrap_or(0);
         let deepest: Vec<NodeId> = leaves.iter().filter(|l| l.1 == max_depth).map(|l| l.0).collect();
+        let kids = tree[root].children.iter().filter(|c| tree[**c].is_element() && boxed(**c)).count();
+        println!("RELAYOUT_INFO leaves={} deepest={} kids={}", leaves.len(), deepest.len(), kids);
         (root, leaves.into_iter().map(|l| l.0).collect::<Vec<NodeId>>(), deepest)
     };
     let widen = |doc: &mut BaseDocument, ids: &[NodeId]| -> Vec<(NodeId, Option<String>)> {
@@ -261,7 +264,7 @@ fn relayout_steps(doc: &mut BaseDocument) {
     }
     // append: clones of the last 10% of the root's children
     let kids: Vec<NodeId> = doc.tree()[root].children.iter().copied()
-        .filter(|c| { let n = &doc.tree()[*c]; n.is_element() && n.final_layout().size.width > 0.0 && n.final_layout().size.height > 0.0 }).collect();
+        .filter(|c| { let n = &doc.tree()[*c]; n.is_element() && n.has_boxes() }).collect();
     let n = (kids.len() / 10).max(1);
     let clones: Vec<NodeId> = {
         let mut m = doc.mutate();
