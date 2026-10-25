@@ -324,7 +324,9 @@ window are those of the first within noise (new/old median 0.998, p10 0.97, p90 
 the five relayout steps of all 43 cases), so the Servo columns are merged in as measured, unscaled. Every sample
 is the relayout protocol's (one load, the initial layout, then the five mutation steps), so the initial-layout
 numbers come from the same documents and processes as the relayout ones. No runner was pinned in this run
-(`--cpus` not given): `servo1` differs from `servo` only by `layout_threads=1`. Every number in `out/` comes
+(`--cpus` not given): `servo1` differs from `servo` only by `layout_threads=1`, which sizes the style pool
+(styling, full box-tree build and layout) and, at 1, disables Servo's block-level layout cache; the relayout
+steps' incremental `try_layout` runs on rayon's global pool (8 threads) in `servo` and sequentially in `servo1`. Every number in `out/` comes
 from this machine; children sessions that add engines or cases only verify equal work and run a one-round
 smoke test, the measurement is redone here with `bench --merge`.
 

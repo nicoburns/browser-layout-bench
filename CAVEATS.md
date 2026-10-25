@@ -126,7 +126,13 @@ report cold and warmed cases separately.
 CPU placement is a configuration choice: the 2026-10-23 dataset pinned the
 single-threaded runners (`--cpus`) while the current one runs everything
 unpinned on 8 vCPUs, so Servo(1) vs Servo(3) is a thread-count comparison and
-Blitz vs `blitz-par` a 1-thread vs pool comparison on the same cores. Those are
+Blitz vs `blitz-par` a 1-thread vs pool comparison on the same cores. Servo's
+`layout_threads` sizes only the style pool used for styling and the full
+box-tree build and layout; the incremental `try_layout` pass of the relayout
+steps runs its `par_iter`s on rayon's global pool (all 8 vCPUs here) in
+Servo(3), and `layout_threads=1` also disables Servo's block-level layout cache
+(`SequentialLayoutState`), so Servo(1) relayout is a different code path, not
+just fewer threads. Those are
 valid **configuration comparisons**, but not controlled equal-resource
 comparisons. Separate single-threaded layout/style and default-parallelism
 results, with affinity and worker counts stated explicitly.
