@@ -3,11 +3,12 @@ window.__lb = window.__lb || {};
   const cb = document.getElementById('cb');
   const root = cb.tagName === 'BODY' ? cb : cb.firstElementChild;
   // only elements with a box take part (real pages have display:none subtrees and <script>s whose mutation lays out
-  // nothing), and for leaves only block-level ones: `width` on a non-replaced inline changes no geometry, and Blitz
-  // gives inline elements no node layout to mutate
+  // nothing), and leaves are the innermost block-level elements (no block-level element child): `width` on a
+  // non-replaced inline changes no geometry, and Blitz gives inline elements no node layout to mutate
   const rendered = e => e.getClientRects().length > 0;
+  const blockLevel = e => rendered(e) && getComputedStyle(e).display !== 'inline';
   const leaves = [...cb.querySelectorAll('*')]
-    .filter(e => !e.firstElementChild && rendered(e) && getComputedStyle(e).display !== 'inline');
+    .filter(e => blockLevel(e) && ![...e.children].some(blockLevel));
 
   const depth = e => { let d = 0; for (let p = e; p && p !== cb; p = p.parentElement) d++; return d; };
   const maxDepth = Math.max(...leaves.map(depth));

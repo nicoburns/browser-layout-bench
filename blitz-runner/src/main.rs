@@ -199,25 +199,40 @@ fn relayout_steps(doc: &mut BaseDocument) {
         let cb = doc.query_selector("#cb").expect("selector").expect("#cb");
         let is_body = tree[cb].element_data().is_some_and(|e| e.name.local == blitz_dom::local_name!("body"));
         let root = if is_body { cb } else { *tree[cb].children.iter().find(|c| tree[**c].is_element()).expect("root") };
-        // as relayout.js: elements with a box (not display:none/contents, nor inside one), leaves not inline-level
-        let boxed = |id: NodeId| tree[id].has_boxes();
-        let inline = |id: NodeId| tree[id].primary_styles().is_some_and(|s| (**s).clone_display().is_inline_flow());
+        // as relayout.js: elements with a box (not display:none/contents, nor inside display:none; the children of a
+        // display:contents element do take part); leaves are the innermost block-level elements
+        let display = |id: NodeId| tree[id].primary_styles().map(|s| (**s).clone_display());
+        let block_level = |id: NodeId| tree[id].has_boxes() && display(id).is_some_and(|d| !d.is_inline_flow());
         let mut leaves = Vec::new();
         let mut stack: Vec<(NodeId, usize)> = tree[cb].children.iter().rev().map(|c| (*c, 1)).collect();
         while let Some((id, depth)) = stack.pop() {
-            if !tree[id].is_element() || !boxed(id) {
+            if !tree[id].is_element() || display(id).is_none_or(|d| d.is_none()) {
                 continue;
             }
             let kids: Vec<NodeId> = tree[id].children.iter().copied().filter(|c| tree[*c].is_element()).collect();
-            if kids.is_empty() && !inline(id) {
+            if block_level(id) && !kids.iter().any(|c| block_level(*c)) {
                 leaves.push((id, depth));
             }
             stack.extend(kids.into_iter().rev().map(|c| (c, depth + 1)));
         }
         let max_depth = leaves.iter().map(|l| l.1).max().unwrap_or(0);
         let deepest: Vec<NodeId> = leaves.iter().filter(|l| l.1 == max_depth).map(|l| l.0).collect();
-        let kids = tree[root].children.iter().filter(|c| tree[**c].is_element() && boxed(**c)).count();
+        let kids = tree[root].children.iter().filter(|c| tree[**c].is_element() && tree[**c].has_boxes()).count();
         println!("RELAYOUT_INFO leaves={} deepest={} kids={}", leaves.len(), deepest.len(), kids);
+        if std::env::var_os("LB_LEAF_DUMP").is_some() {
+            for (id, _) in &leaves {
+                let mut path = Vec::new();
+                let mut cur = *id;
+                while cur != cb {
+                    let parent = tree[cur].parent.expect("parent");
+                    let idx = tree[parent].children.iter().filter(|c| tree[**c].is_element()).position(|c| *c == cur).unwrap();
+                    path.push(format!("{}:{idx}", tree[cur].element_data().unwrap().name.local));
+                    cur = parent;
+                }
+                path.reverse();
+                println!("LEAF {}", path.join("/"));
+            }
+        }
         (root, leaves.into_iter().map(|l| l.0).collect::<Vec<NodeId>>(), deepest)
     };
     let widen = |doc: &mut BaseDocument, ids: &[NodeId]| -> Vec<(NodeId, Option<String>)> {
