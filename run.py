@@ -151,7 +151,7 @@ def run_taffy(case, iters, cpus):
 def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, env=None):
     if not binary.exists():
         raise FileNotFoundError(f"{binary.relative_to(ROOT)} not built, see README")
-    cmd = [str(binary), str(CORPUS / case["file"]), "--width", str(case["width"]), "--height", str(case["height"]), "--iters", str(iters), "--hash"]
+    cmd = [str(binary), str(CORPUS / case["file"]), "--width", str(case["width"]), "--height", str(case["height"]), "--iters", str(iters), "--hash", "--relayout"]
     if parallel:
         cmd.append("--parallel")
     if screenshot:
@@ -161,6 +161,11 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
     for line in out.splitlines():
         if line.startswith("PHASES"):
             phases = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", line.split("|", 1)[1])}
+        elif line.startswith("RELAYOUT"):
+            kv = dict(re.findall(r"(\w+)=(\w+)", line))
+            samples[-1].setdefault("relayout", {})[kv["step"]] = dict(
+                style=phases["style"], construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
+                resolve=int(kv["resolve"]))
         elif line.startswith("BLITZ"):
             kv = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", line)}
             # pconstruct = the deferred tasks that run between box construction and layout, where

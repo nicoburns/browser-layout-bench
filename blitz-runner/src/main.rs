@@ -42,10 +42,11 @@ struct Args {
     hash: bool,
     boxes: bool,
     dump: bool,
+    relayout: bool,
 }
 
 fn parse_args() -> Args {
-    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false, dump: false };
+    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false, dump: false, relayout: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -56,6 +57,7 @@ fn parse_args() -> Args {
             "--screenshot" => args.screenshot = it.next(),
             "--hash" => args.hash = true,
             "--boxes" => args.boxes = true,
+            "--relayout" => args.relayout = true,
             "--dump" => args.dump = true,
             _ => args.file = a,
         }
@@ -128,7 +130,7 @@ fn main() {
             html_parser_provider: Some(Arc::new(HtmlProvider)),
             net_provider: Some(Arc::new(FileNetProvider)),
             style_threading,
-            incremental: Some(false),
+            incremental: Some(args.relayout),
             ..Default::default()
         };
         let t = Instant::now();
@@ -139,6 +141,9 @@ fn main() {
         doc.as_mut().resolve(0.0);
         let resolve = t.elapsed().as_nanos();
         println!("BLITZ parse={parse} resolve={resolve}");
+        if args.relayout {
+            relayout_steps(doc.as_mut());
+        }
 
         if i + 1 == args.iters {
             if args.dump {
@@ -180,4 +185,95 @@ fn main() {
             }
         }
     }
+}
+
+
+/// The relayout scenarios of `relayout.js`, applied natively: each step mutates the tree in one batch, times one
+/// incremental `resolve()` (printed as `RELAYOUT step=<name> resolve=<ns>` after that resolve's `PHASES` line) and
+/// is reverted, the revert's `resolve()` discarded, before the next step.
+use blitz_dom::NodeId;
+
+fn relayout_steps(doc: &mut BaseDocument) {
+    let style_attr = || blitz_dom::QualName::new(None, blitz_dom::ns!(), blitz_dom::local_name!("style"));
+    let (root, leaves, deepest) = {
+        let tree = doc.tree();
+        let cb = tree.iter().find(|(_, n)| n.attr(blitz_dom::local_name!("id")) == Some("cb")).map(|(id, _)| id).expect("#cb");
+        let is_body = tree[cb].element_data().is_some_and(|e| e.name.local == blitz_dom::local_name!("body"));
+        let root = if is_body { cb } else { *tree[cb].children.iter().find(|c| tree[**c].is_element()).expect("root") };
+        let mut leaves = Vec::new();
+        let mut stack: Vec<(NodeId, usize)> = tree[cb].children.iter().map(|c| (*c, 1)).collect();
+        while let Some((id, depth)) = stack.pop() {
+            if !tree[id].is_element() {
+                continue;
+            }
+            let kids: Vec<NodeId> = tree[id].children.iter().copied().filter(|c| tree[*c].is_element()).collect();
+            if kids.is_empty() {
+                leaves.push((id, depth));
+            }
+            stack.extend(kids.into_iter().map(|c| (c, depth + 1)));
+        }
+        leaves.reverse(); // document order
+        let max_depth = leaves.iter().map(|l| l.1).max().unwrap_or(0);
+        let deepest: Vec<NodeId> = leaves.iter().filter(|l| l.1 == max_depth).map(|l| l.0).collect();
+        (root, leaves.into_iter().map(|l| l.0).collect::<Vec<NodeId>>(), deepest)
+    };
+    let widen = |doc: &mut BaseDocument, ids: &[NodeId]| -> Vec<(NodeId, Option<String>)> {
+        let saved: Vec<(NodeId, Option<String>, f32)> = {
+            let tree = doc.tree();
+            ids.iter().map(|&id| (id, tree[id].attr(blitz_dom::local_name!("style")).map(str::to_string), tree[id].final_layout().size.width)).collect()
+        };
+        let mut m = doc.mutate();
+        for (id, style, w) in &saved {
+            let base = style.clone().unwrap_or_default();
+            m.set_attribute(*id, style_attr(), &format!("{base};width:{}px", w + 1.0));
+        }
+        drop(m);
+        saved.into_iter().map(|(id, style, _)| (id, style)).collect()
+    };
+    let restore = |doc: &mut BaseDocument, saved: Vec<(NodeId, Option<String>)>| {
+        let mut m = doc.mutate();
+        for (id, style) in saved {
+            m.set_attribute(id, style_attr(), style.as_deref().unwrap_or(""));
+        }
+    };
+    let timed = |doc: &mut BaseDocument, step: &str| {
+        let t = Instant::now();
+        doc.resolve(0.0);
+        println!("RELAYOUT step={step} resolve={}", t.elapsed().as_nanos());
+    };
+    // root_width: 0.8x the root's current width
+    let saved = {
+        let (style, w) = { let n = &doc.tree()[root]; (n.attr(blitz_dom::local_name!("style")).map(str::to_string), n.final_layout().size.width) };
+        let base = style.clone().unwrap_or_default();
+        doc.mutate().set_attribute(root, style_attr(), &format!("{base};width:{}px", (w * 0.8).round()));
+        vec![(root, style)]
+    };
+    timed(doc, "root_width");
+    restore(doc, saved);
+    doc.resolve(0.0);
+    let one = vec![deepest[deepest.len() / 2]];
+    let tenth: Vec<NodeId> = leaves.iter().copied().step_by(10).collect();
+    for (name, ids) in [("leaf_1", &one), ("leaf_10pct", &tenth), ("leaf_all", &leaves)] {
+        let saved = widen(doc, ids);
+        timed(doc, name);
+        restore(doc, saved);
+        doc.resolve(0.0);
+    }
+    // append: clones of the last 10% of the root's children
+    let kids: Vec<NodeId> = doc.tree()[root].children.iter().copied().filter(|c| doc.tree()[*c].is_element()).collect();
+    let n = (kids.len() / 10).max(1);
+    let clones: Vec<NodeId> = {
+        let mut m = doc.mutate();
+        let clones: Vec<NodeId> = kids[kids.len() - n..].iter().map(|&c| m.deep_clone_node(c)).collect();
+        m.append_children(root, &clones);
+        clones
+    };
+    timed(doc, "append");
+    {
+        let mut m = doc.mutate();
+        for c in clones {
+            m.remove_node(c);
+        }
+    }
+    doc.resolve(0.0);
 }
