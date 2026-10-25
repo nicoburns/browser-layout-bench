@@ -6,6 +6,12 @@
   const SVGNS = "http://www.w3.org/2000/svg";
   const DEFAULTS = { v: "table", g: "", t: D.tables.findIndex(t => t.title.startsWith("Box construction")), s: "min", off: [], on: [] };
   const caseId = name => name.replace(/[^\w]+/g, "-");
+  // The table of `scenario` with the kind of table `t` (layout, whole pipeline...), else its first table.
+  function tableFor(scenario, t) {
+    const kind = D.tables[t] ? D.tables[t].kind : "";
+    const i = D.tables.findIndex(x => x.scenario === scenario && x.kind === kind);
+    return i >= 0 ? i : Math.max(0, D.tables.findIndex(x => x.scenario === scenario));
+  }
   const unequal = new Map(D.unequal.map(u => [u.case + "|" + u.engine, u.note]));
 
   // ---- state ----
@@ -15,6 +21,9 @@
     const h = new URLSearchParams(location.hash.includes("=") ? location.hash.slice(1) : "");
     if (h.has("t")) st.t = +h.get("t");
     for (const k of ["v", "g", "s"]) if (h.has(k)) st[k] = h.get(k);
+    if (!(st.t >= 0 && st.t < D.tables.length)) st.t = DEFAULTS.t;
+    // the scenario is the selected table's; a `sc` in the hash picks that scenario's table of the same kind
+    if (h.has("sc")) st.t = tableFor(h.get("sc"), st.t);
     const anchored = D.cases.find(c => "#" + caseId(c.name) === location.hash);
     if (anchored) Object.assign(st, { g: anchored.suite, v: "charts" });
     if (st.v !== "charts") st.v = "table";
@@ -28,7 +37,7 @@
   function saveState(toHash) {
     localStorage.setItem("layout-bench", JSON.stringify(state));
     if (!toHash) return;
-    const h = new URLSearchParams({ v: state.v, g: state.g, t: state.t, s: state.s });
+    const h = new URLSearchParams({ v: state.v, g: state.g, t: state.t, s: state.s, sc: D.tables[state.t].scenario });
     for (const k of ["off", "on"]) if (state[k].length) h.set(k, state[k].join(","));
     history.replaceState(null, "", "#" + h.toString());
   }
@@ -140,8 +149,11 @@
         state.off = on ? state.off.concat(e) : state.off.filter(x => x !== e);
         state.on = on ? state.on.filter(x => x !== e) : state.on.concat(e); update(); } } }, el("i"), info.name);
     });
+    const scenario = D.tables[state.t].scenario;
+    const scenarioSel = el("select", { on: { change: ev => { state.t = tableFor(ev.target.value, state.t); update(); } } },
+      (D.scenarios || [""]).map(sc => el("option", { value: sc, selected: sc === scenario ? "" : null }, sc ? "Relayout: " + sc : "Initial layout")));
     const tableSel = el("select", { on: { change: ev => { state.t = +ev.target.value; update(); } } },
-      D.tables.map((t, i) => el("option", { value: i, selected: i === state.t ? "" : null }, t.title)));
+      D.tables.map((t, i) => t.scenario === scenario ? el("option", { value: i, selected: i === state.t ? "" : null }, t.kind) : null).filter(Boolean));
     const suiteSel = el("select", { on: { change: ev => { state.g = ev.target.value; update(); } } },
       el("option", { value: "", selected: state.g === "" ? "" : null }, `All suites (${D.cases.length} cases)`),
       D.suites.map(s => el("option", { value: s.name, selected: s.name === state.g ? "" : null },
@@ -150,6 +162,7 @@
       el("button", { type: "button", role: "tab", "aria-selected": String(state.v === v), on: { click: () => { state.v = v; update(); } } }, label)));
     box.replaceChildren(tabs,
       el("label", {}, "Suite", suiteSel),
+      el("label", {}, "Scenario", scenarioSel),
       el("label", {}, "Comparison", tableSel),
       el("label", {}, "Statistic", seg("s", { min: "min", median: "median" })),
       el("span", { class: "engines" }, chips,

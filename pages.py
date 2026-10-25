@@ -160,9 +160,12 @@ def export(results, columns, count_keys):
     for title, cols in columns:
         cols = [{"engine": e, "metric": m, "label": label} for e, m, label in cols
                 if title == "Style" or SINGLE_STYLE_THREAD.get(e) not in {c[0] for c in cols}]
-        tables.append({"title": title, "columns": cols, "hidden": [c["engine"] for c in cols if c["engine"] in HIDDEN_BY_DEFAULT]})
+        m = re.fullmatch(r"Relayout \((.*)\): (.*)", title)
+        tables.append({"title": title, "columns": cols, "hidden": [c["engine"] for c in cols if c["engine"] in HIDDEN_BY_DEFAULT],
+                       "scenario": m.group(1) if m else "", "kind": m.group(2) if m else title})
     engines = [e for e in ENGINE_NAMES if any(e in c["engines"] for c in cases)]
-    return {"cases": cases, "tables": tables, "stages": plot.STAGES,
+    scenarios = [""] + list(dict.fromkeys(t["scenario"] for t in tables if t["scenario"]))
+    return {"cases": cases, "tables": tables, "stages": plot.STAGES, "scenarios": scenarios,
             "engines": {e: {"name": engine_name(e), "browser": ENGINE_NAMES[e][0], "variant": ENGINE_NAMES[e][1],
                             "colour": COLOURS[e]} for e in engines},
             "unequal": [{"case": c, "engine": e, "note": note} for (c, e), note in UNEQUAL.items()],
