@@ -17,6 +17,7 @@ REAL = ROOT / "real"
 OUT = ROOT / "out"
 GEN = ROOT / "target/release/gen"
 BLITZ = ROOT / "target/release/blitz-runner"
+SERVO_TRACE = ROOT / "target/release/servo-trace"  # `cargo build --release -p servo-trace`
 # `cargo build --release -p layout-bench-blitz --features floats,writing-mode,parallel-construct --target-dir target-pcon`
 BLITZ_PCON = ROOT / "target-pcon/release/blitz-runner"
 # `cargo build --release --manifest-path blitz-runner-pl/Cargo.toml --target-dir target-pl` (see blitz-runner-pl/Cargo.toml)
@@ -221,6 +222,25 @@ SERVO_SPANS = {"handle_reflow", "prepare_stylist_for_reflow", "restyle_and_build
 
 
 def servo_trace_rows(path):
+    """Spans of servoshell's perfetto trace: the rows `servo-trace` (Rust, prost) prints, or the same
+    rows decoded here if it is not built; nested by time per track (a span's parent is the innermost
+    span enclosing it; spans ending at ts do not enclose one beginning at ts, as in the trace processor)."""
+    if SERVO_TRACE.exists():
+        out = subprocess.run([str(SERVO_TRACE), str(path)], capture_output=True, text=True, check=True).stdout
+        rows = [json.loads(line) for line in out.splitlines()]
+    else:
+        rows = servo_trace_rows_py(path)
+    rows.sort(key=lambda r: (r["track"], r["ts"], -r["dur"]))
+    stack = []
+    for i, row in enumerate(rows):
+        while stack and (stack[-1]["track"] != row["track"] or stack[-1]["ts"] + stack[-1]["dur"] <= row["ts"]):
+            stack.pop()
+        row["id"], row["parent_id"] = i, stack[-1]["id"] if stack else None
+        stack.append(row)
+    return rows
+
+
+def servo_trace_rows_py(path):
     """Spans of servoshell's perfetto trace, decoded packet by packet straight from the protobuf: a
     round's trace runs to GBs (every layout query a page script makes - `getClientRects`,
     `getComputedStyle`, 10^5 per relayout step on the large pages - is a `handle_reflow` span of its
@@ -249,15 +269,6 @@ def servo_trace_rows(path):
             last_kept[event.track_uuid] = begin
             rows.append(dict(name=name, ts=begin, dur=ts - begin, track=event.track_uuid,
                              thread=threads.get(event.track_uuid, ""), webview=webview))
-    # Nest per track: a span's parent is the innermost span enclosing it (spans ending at ts do not
-    # enclose one beginning at ts, as in the trace processor).
-    rows.sort(key=lambda r: (r["track"], r["ts"], -r["dur"]))
-    stack = []
-    for i, row in enumerate(rows):
-        while stack and (stack[-1]["track"] != row["track"] or stack[-1]["ts"] + stack[-1]["dur"] <= row["ts"]):
-            stack.pop()
-        row["id"], row["parent_id"] = i, stack[-1]["id"] if stack else None
-        stack.append(row)
     return rows
 
 

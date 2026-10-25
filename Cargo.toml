@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["gen", "blitz-runner"]
+members = ["gen", "blitz-runner", "servo-trace"]
 
 [workspace.dependencies]
 taffy = { git = "https://github.com/DioxusLabs/taffy", rev = "4e59968eda29ceeb0bbaeb3993c8cd38baa3d0a6", default-features = false, features = ["std", "taffy_tree", "flexbox", "grid", "block_layout", "content_size"] }
