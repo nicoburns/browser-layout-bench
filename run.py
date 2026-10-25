@@ -356,9 +356,14 @@ def run_chrome(case, iters, cpus, screenshot=None):
             cdp.send("Tracing.end")
             while not done:
                 page.wait_for_timeout(50)
+            # the first layout's metrics come from the events before the first relayout mark: a step's
+            # recalcStyle/Layout can outlast the reveal's (e.g. `leaf_all` on real pages)
+            cut = min((e["ts"] for e in events if e.get("cat") == "blink.user_timing" and e.get("name", "").startswith("lb:")),
+                      default=float("inf"))
+            initial = [e for e in events if e.get("ph") == "X" and e.get("ts", 0) < cut]
             def longest(name):
-                return max(e["dur"] for e in events if e.get("name") == name and e.get("ph") == "X") * 1000
-            layouts = [e for e in events if e.get("name") == "Layout" and e.get("ph") == "X"]
+                return max(e["dur"] for e in initial if e.get("name") == name) * 1000
+            layouts = [e for e in initial if e.get("name") == "Layout"]
             main = max(layouts, key=lambda e: e["dur"])
             # `UpdateLayoutTree` = `Document::recalcStyle` (style) + `Document::rebuildLayoutTree`
             # (LayoutObject construction); `Layout` is fragment-tree work only.
@@ -418,9 +423,14 @@ def parse_firefox_profile(profile, url):
             start = open_starts[name].pop()
             intervals.setdefault(name, []).append((end - start, data, start))
 
+    # the first layout's metrics come from the intervals before the first relayout mark (a step's
+    # Reflow/Styles can outlast the reveal's); the steps are read from the full set below
+    cut = min(marks.values(), default=float("inf"))
+    initial = {k: [i for i in v if i[2] < cut] for k, v in intervals.items()}
+
     def longest(name, within=None):
-        """Longest interval of `name`, restricted to those inside `within` = (dur, data, start) if given."""
-        cands = intervals.get(name, [])
+        """Longest interval of `name` before the relayout steps, inside `within` = (dur, data, start) if given."""
+        cands = initial.get(name, [])
         if within:
             cands = [i for i in cands if i[2] >= within[2] and i[2] + i[0] <= within[2] + within[0]]
         return max(cands, key=lambda i: i[0], default=(None, None, None))
@@ -429,11 +439,11 @@ def parse_firefox_profile(profile, url):
     # (the one the reveal triggers), not the longest anywhere: Firefox restyles the page again after
     # load (`:visited`, image state) and on a warm process that restyle can outlast the main traversal.
     reflow = longest("Reflow")
-    flush = min((i for i in intervals.get("DoFlushPendingNotifications", [])
+    flush = min((i for i in initial.get("DoFlushPendingNotifications", [])
                  if reflow[2] is not None and i[2] <= reflow[2] and i[2] + i[0] >= reflow[2] + reflow[0]),
                 key=lambda i: i[0], default=None)
     style, style_data, _ = longest("Styles", flush) if flush else longest("Styles")
-    reflows = [d for d, _, _ in intervals.get("Reflow", [])]
+    reflows = [d for d, _, _ in initial.get("Reflow", [])]
     ms = lambda v: None if v is None else int(v * 1e6)
     s = dict(layout=ms(reflow[0]), style=ms(style), flush=ms(flush[0] if flush else longest("DoFlushPendingNotifications")[0]),
              display_list=ms(longest("DisplayList")[0]), layout_sum=ms(sum(reflows)), n_reflows=len(reflows),

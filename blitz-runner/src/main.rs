@@ -206,8 +206,9 @@ fn relayout_steps(doc: &mut BaseDocument) {
                 continue;
             }
             let kids: Vec<NodeId> = tree[id].children.iter().copied().filter(|c| tree[*c].is_element()).collect();
-            if kids.is_empty() {
-                leaves.push((id, depth));
+            let size = tree[id].final_layout().size;
+            if kids.is_empty() && size.width > 0.0 && size.height > 0.0 {
+                leaves.push((id, depth)); // rendered leaves only, as relayout.js
             }
             stack.extend(kids.into_iter().map(|c| (c, depth + 1)));
         }
@@ -259,7 +260,8 @@ fn relayout_steps(doc: &mut BaseDocument) {
         doc.resolve(0.0);
     }
     // append: clones of the last 10% of the root's children
-    let kids: Vec<NodeId> = doc.tree()[root].children.iter().copied().filter(|c| doc.tree()[*c].is_element()).collect();
+    let kids: Vec<NodeId> = doc.tree()[root].children.iter().copied()
+        .filter(|c| { let n = &doc.tree()[*c]; n.is_element() && n.final_layout().size.width > 0.0 && n.final_layout().size.height > 0.0 }).collect();
     let n = (kids.len() / 10).max(1);
     let clones: Vec<NodeId> = {
         let mut m = doc.mutate();
