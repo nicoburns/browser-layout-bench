@@ -119,8 +119,8 @@ def main():
     pages = load(sys.argv[1:])
     rows, hist_rows, mem_rows = [], [], []
     md = []
-    md.append("| page | DOM nodes | cache owners | owners with ≥1 entry (initial / steady) | final only | measure slots mean / median / p90 / max (steady) | evictions (initial / Σ relayout) | cache bytes today | lazy: box measures | lazy: exact | saving vs today | saving vs node mem |")
-    md.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+    md.append("| page | DOM nodes | cache owners | owners with ≥1 entry (initial / peak) | final only (initial) | measure slots mean / median / p90 / max (initial) | same (peak relayout) | evictions (initial / Σ relayout) | cache bytes today | lazy: box measures | lazy: 2 inline + spill | lazy: exact | saving (2 inline) vs today | vs node mem |")
+    md.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
     for d in pages:
         name = d["case"]["name"]
         sums = {step: step_summary(d, step) for step in STEPS if step in d["steps"]}
@@ -134,15 +134,19 @@ def main():
             for kind, k in sorted(s["by_kind"].items()):
                 hist_rows.append(dict(page=name, step=step, kind=kind, nodes=k["nodes"], cache_owners=k["owners"], any_entry=k["any"],
                                       final_populated=k["final"], **{f"m{i}": c for i, c in enumerate(k["slots"])}))
-        # steady state: the most-populated snapshot of the original node set (lazy allocations never shrink)
+        # memory models are taken after the initial layout (entries added by relayouts under another width are dead once
+        # the width is reverted); the peak over the original node set's snapshots is kept as an upper bound for a lazy
+        # array that is never freed
         steady = max((sums[s] for s in STEADY_STEPS if s in sums), key=lambda s: (s["owners_any"], s["slots_total"]))
         init = sums["initial"]
-        peak_mem = {k: max(memory_models(sums[s])[k] for s in STEADY_STEPS if s in sums) for k in memory_models(init)}
-        mem_rows.append(dict(page=name, nodes=init["nodes"], cache_owners=init["owners"], node_memory=node_memory(init), **peak_mem))
+        init_mem = memory_models(init)
+        peak_mem = {k: max(memory_models(sums[s])[k] for s in STEADY_STEPS if s in sums) for k in init_mem}
+        mem_rows.append(dict(page=name, nodes=init["nodes"], cache_owners=init["owners"], node_memory=node_memory(init), **init_mem,
+                             **{f"peak_{k}": v for k, v in peak_mem.items()}))
         ev_init = init["counters"]["measure_evictions"]
         ev_relayout = sum(sums[s]["counters"]["measure_evictions"] for s in STEPS[1:] if s in sums)
-        saving = peak_mem["eager"] - peak_mem["lazy_box_measures"]
-        md.append(f"| {name} | {init['nodes']} | {init['owners']} ({init['owners'] / init['nodes']:.0%}) | {init['owners_any']} / {steady['owners_any']} ({steady['owners_any'] / max(init['owners'], 1):.0%} of owners) | {steady['final_only']} | {steady['slots_mean']:.2f} / {steady['slots_median']:.0f} / {steady['slots_p90']} / {steady['slots_max']} | {ev_init} / {ev_relayout} | {fmt_bytes(peak_mem['eager'])} | {fmt_bytes(peak_mem['lazy_box_measures'])} | {fmt_bytes(peak_mem['lazy_exact'])} | {fmt_bytes(saving)} ({saving / max(peak_mem['eager'], 1):.0%}) | {saving / node_memory(init):.1%} |")
+        saving = init_mem["eager"] - init_mem["lazy_small2"]
+        md.append(f"| {name} | {init['nodes']} | {init['owners']} ({init['owners'] / init['nodes']:.0%}) | {init['owners_any']} / {steady['owners_any']} | {init['final_only']} ({init['final_only'] / max(init['owners'], 1):.0%}) | {init['slots_mean']:.2f} / {init['slots_median']:.0f} / {init['slots_p90']} / {init['slots_max']} | {steady['slots_mean']:.2f} / {steady['slots_median']:.0f} / {steady['slots_p90']} / {steady['slots_max']} | {ev_init} / {ev_relayout} | {fmt_bytes(init_mem['eager'])} | {fmt_bytes(init_mem['lazy_box_measures'])} | {fmt_bytes(init_mem['lazy_small2'])} | {fmt_bytes(init_mem['lazy_exact'])} | {fmt_bytes(saving)} ({saving / max(init_mem['eager'], 1):.0%}) | {saving / node_memory(init):.1%} |")
     with open(HERE / "occupancy.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
         w.writeheader(); w.writerows(rows)

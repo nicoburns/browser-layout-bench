@@ -9,25 +9,25 @@ Branch: `devin/blitz-cache-occupancy` (`cache-occupancy/` has the collector, sum
 
 The saving is real but it is a synthetic-benchmark saving, not a real-page one, and it does not come from the scheme the question
 assumed. On the flex/grid/pangui trees every node is an element that gets laid out, so caches are 37% of the node memory we can account
-for (`Node` + `ElementData` + `LayoutData`), and because almost every node ends up with 0–2 measure entries a lazy cache cuts that by
-35–65%: 24 MB on `pangui/fit_nesting`, 23 MB on `pangui/wide_no_wrap_simple_many`, 1.4–1.8 MB on the 10k-node flex and grid pages, i.e.
-13–23% of node memory. On the real pages the caches are already small: 70–92% of DOM nodes are text or inline elements that never get a
-`LayoutData` (Blitz boxes `LayoutData`, and the `Cache` inside it, lazily per node), so caches are 9–25% of node memory and the practical
-lazy schemes save 4–40% of that, 0.3–3% of node memory (Wikipedia: 200–400 KB of 17 MB). Deep flex trees (`flex/deep_auto`, `flex/superdeep`)
-and wide grids fill 6–9 slots on most nodes and lose a little under every lazy scheme.
+for (`Node` + `ElementData` + `LayoutData`), and because almost every node ends up with 0–2 measure entries after the initial layout a lazy
+cache with two inline slots cuts that by about half: 20.8 MB on `pangui/fit_nesting`, 20.6 MB on `pangui/wide_no_wrap_simple_many`,
+1.4–1.9 MB on the 10k-node flex and grid pages, i.e. 15–20% of node memory. On the real pages the caches are already small: 70–92% of DOM
+nodes are text or inline elements that never get a `LayoutData` (Blitz boxes `LayoutData`, and the `Cache` inside it, lazily per node), so
+caches are 9–32% of node memory and the lazy schemes save 0–50% of that, 0.3–11% of node memory (Wikipedia: 405 KB of 17 MB; rustdoc 1.5 MB
+of 16 MB; bootstrap-dashboard nothing). Deep flex trees (`flex/deep_auto`, `flex/superdeep`) fill 4–8 slots on most nodes and lose 15–18%
+under every inline-slot scheme; wide grids break even.
 
 The data does not support the obvious design, `Option<Box<[measure; 9]>>` allocated on the first measure store (B in the memory table):
 flex and grid layout measure nearly every item at least once before laying it out (initial-layout measure hit rate 0% on `wide_no_wrap`,
 `flex_expand_weights`, `huge_nested`), so the array gets allocated for 95–100% of nodes and B saves nothing on 25 of 43 pages (−2% from the
 pointer). It only wins where nodes are final-only (`fit_nesting`, `flex_expand_equal_weights`, `grid/deep`, `flex/absolute`, text paragraphs).
 Boxing the whole `Cache` (A) is worse still: every owner has the final-layout entry, 0–24 empty caches per page. What the histograms support is
-keeping the final entry inline plus one or two inline measure slots and spilling to a heap array only above that (C1/C2): 46%/44% of cache
-bytes across the corpus. C2 is positive on every page except the trees where most nodes hold 4–8 entries (`flex/deep_auto`, `flex/superdeep`,
-`text/flex_cards`: −16 to −18%); C1 additionally loses ~10% on the pages where every node holds exactly 2 (`nested_vertical_stack`,
-`percentage_and_ratio`). On the real pages C1/C2 save 2–40% of cache bytes. An exactly sized heap array (D)
-is the ceiling at 59%. Nine slots is almost never binding: evictions are 0 in the initial layout on 40 pages, and over the relayout steps they
-are 0.9% of measure stores on Wikipedia, 2% on `grid/wide/100x100`, ~9% on `mdn` and `dioxuslabs-com` (small pages with tables/grids); the
-nodes that hit 9 are table cells, grid items and real-page flex items.
+keeping the final entry inline plus one or two inline measure slots and spilling to a heap array only above that: C1 saves 50% and C2 45% of
+cache bytes across the corpus after the initial layout (46%/44% at the relayout peak). C2 is positive on every page except the deep flex trees
+and `bootstrap-dashboard` (−1%); C1 saves more on the 1-entry flex pages but also loses on the 2-entry pages (`flex/wide`, `text/flex_cards`,
+`grid/wide`). An exactly sized heap array (D) is the ceiling at 60%. Nine slots is almost never binding: evictions are 0 in the initial layout
+on 40 pages (6 on Wikipedia, 42 on `dioxuslabs-com`, 5 on `bootstrap-dashboard`, all table cells and flex items), and the evictions during the
+relayout steps come from old-width and new-width entries coexisting — entries that are dead once the width is reverted.
 
 ## Sizes (measured)
 
@@ -53,56 +53,53 @@ owners × 408 B, where an owner is a node with a `LayoutData`.
 
 ## Per-page summary
 
-Steady = the most-populated snapshot of the original node set (initial or one of `root_width`, `leaf_1`, `leaf_10pct`, `leaf_all`; `append`
-adds clones that are removed again). Lazy bytes are the peak over those snapshots, since a lazily grown cache never shrinks.
-"Lazy: box measures" is scheme B, "lazy: exact" is scheme D (see the memory table). Node memory = nodes × 192 + elements × 256 + owners × 648
-(strings, attributes, computed styles and Parley layouts are not included, so the percentages overstate the share).
+All memory figures are taken after the initial layout: the extra entries a relayout adds are measurements under the other root width (or re-measurements after a restyle) and are dead once the mutation is reverted, so they do not describe a lazy cache's working set — they do bound what a lazily grown array that is never freed would hold, which is the "peak" column in the memory table. "Peak relayout" occupancy stats are the most-populated snapshot of the original node set (`append` adds clones that are removed again). "Lazy: box measures" is scheme B, "2 inline + spill" is C2, "exact" is D (see the memory table). Node memory = nodes × 192 + elements × 256 + owners × 648 (strings, attributes, computed styles and Parley layouts are not included, so the percentages overstate the share).
 
-| page | DOM nodes | cache owners | owners with ≥1 entry (initial / steady) | final only | measure slots mean / median / p90 / max (steady) | evictions (initial / Σ relayout) | cache bytes today | lazy: box measures | lazy: exact | saving vs today | saving vs node mem |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| real/bootstrap-dashboard | 608 | 178 (29%) | 178 / 178 (100% of owners) | 14 | 6.42 / 9 / 9 / 9 | 5 / 30 | 71 KB | 68 KB | 58 KB | 3 KB (4%) | 0.9% |
-| real/css-flexbox-1 | 38735 | 7564 (20%) | 7540 / 7540 (100% of owners) | 2668 | 4.61 / 8 / 8 / 9 | 0 / 115 | 3014 KB | 2316 KB | 2036 KB | 698 KB (23%) | 4.2% |
-| real/dioxuslabs-com | 232 | 145 (62%) | 145 / 145 (100% of owners) | 22 | 3.21 / 3 / 9 / 9 | 42 / 80 | 58 KB | 53 KB | 33 KB | 5 KB (9%) | 2.8% |
-| real/mdn | 4804 | 1434 (30%) | 1434 / 1434 (100% of owners) | 157 | 1.76 / 1 / 3 / 9 | 0 / 248 | 571 KB | 538 KB | 258 KB | 33 KB (6%) | 1.4% |
-| real/rustdoc | 39944 | 7981 (20%) | 7980 / 7980 (100% of owners) | 1597 | 2.19 / 3 / 3 / 6 | 0 / 0 | 3180 KB | 2793 KB | 1544 KB | 387 KB (12%) | 2.3% |
-| real/servo-org | 673 | 187 (28%) | 187 / 187 (100% of owners) | 15 | 2.10 / 2 / 3 / 9 | 0 / 0 | 75 KB | 72 KB | 36 KB | 3 KB (4%) | 0.9% |
-| real/wikipedia | 47065 | 3974 (8%) | 3974 / 3974 (100% of owners) | 501 | 2.88 / 2 / 7 / 9 | 6 / 170 | 1583 KB | 1475 KB | 855 KB | 108 KB (7%) | 0.6% |
-| pangui/expand_with_max_constraint | 3015 | 3005 (100%) | 3005 / 3005 (100% of owners) | 4 | 2.00 / 1 / 4 / 4 | 0 / 0 | 1197 KB | 1220 KB | 563 KB | -22 KB (-2%) | -0.7% |
-| pangui/expand_with_min_constraint | 3015 | 3005 (100%) | 3005 / 3005 (100% of owners) | 4 | 2.00 / 1 / 4 / 4 | 0 / 0 | 1197 KB | 1220 KB | 563 KB | -22 KB (-2%) | -0.7% |
-| pangui/fit_nesting | 101125 | 101115 (100%) | 101115 / 101115 (100% of owners) | 100004 | 0.04 / 0 / 0 / 4 | 0 / 0 | 39.3 MB | 12.6 MB | 12.5 MB | 26.7 MB (68%) | 25.3% |
-| pangui/flex_expand_equal_weights | 15015 | 15005 (100%) | 15005 / 15005 (100% of owners) | 15005 | 0.00 / 0 / 0 / 0 | 0 / 0 | 5979 KB | 1876 KB | 1876 KB | 4103 KB (69%) | 25.5% |
-| pangui/flex_expand_weights | 15015 | 15005 (100%) | 15005 / 15005 (100% of owners) | 5 | 1.00 / 1 / 1 / 1 | 0 / 0 | 5979 KB | 6094 KB | 2344 KB | -116 KB (-2%) | -0.7% |
-| pangui/nested_vertical_stack | 10015 | 10005 (100%) | 10005 / 10005 (100% of owners) | 4 | 2.00 / 2 / 2 / 2 | 0 / 0 | 3986 KB | 4063 KB | 1876 KB | -77 KB (-2%) | -0.7% |
-| pangui/padding_and_margin | 115 | 105 (91%) | 105 / 105 (100% of owners) | 4 | 1.91 / 2 / 2 / 2 | 0 / 0 | 42 KB | 42 KB | 19 KB | 0 KB (1%) | 0.3% |
-| pangui/percentage_and_ratio | 10015 | 10005 (100%) | 10005 / 10005 (100% of owners) | 5 | 2.00 / 2 / 2 / 2 | 0 / 0 | 3986 KB | 4063 KB | 1876 KB | -77 KB (-2%) | -0.7% |
-| pangui/perpendicular_expand_with_wrap | 12015 | 12005 (100%) | 12005 / 12005 (100% of owners) | 4 | 4.00 / 1 / 7 / 7 | 0 / 0 | 4783 KB | 4876 KB | 3001 KB | -93 KB (-2%) | -0.7% |
-| pangui/pixels_with_min_expand_constraint | 30015 | 30005 (100%) | 30005 / 30005 (100% of owners) | 4 | 2.00 / 1 / 4 / 4 | 0 / 0 | 11.7 MB | 11.9 MB | 5626 KB | -233 KB (-2%) | -0.7% |
-| pangui/wide_no_wrap_simple_few | 1015 | 1005 (99%) | 1005 / 1005 (100% of owners) | 5 | 1.00 / 1 / 1 / 1 | 0 / 0 | 400 KB | 407 KB | 157 KB | -6 KB (-2%) | -0.6% |
-| pangui/wide_no_wrap_simple_many | 100015 | 100005 (100%) | 100005 / 100005 (100% of owners) | 5 | 1.00 / 1 / 1 / 1 | 0 / 0 | 38.9 MB | 39.7 MB | 15.3 MB | -780 KB (-2%) | -0.7% |
-| pangui/wide_wrapping | 10015 | 10005 (100%) | 10005 / 10005 (100% of owners) | 4 | 1.00 / 1 / 1 / 1 | 0 / 0 | 3986 KB | 4063 KB | 1563 KB | -77 KB (-2%) | -0.7% |
-| flex/absolute/1000 | 1017 | 1007 (99%) | 1007 / 1007 (100% of owners) | 556 | 0.84 / 0 / 2 / 6 | 0 / 0 | 401 KB | 253 KB | 152 KB | 149 KB (37%) | 13.7% |
-| flex/absolute/10000 | 10018 | 10008 (100%) | 10008 / 10008 (100% of owners) | 5485 | 0.89 / 0 / 2 / 6 | 0 / 0 | 3988 KB | 2523 KB | 1529 KB | 1464 KB (37%) | 13.7% |
-| flex/deep_auto/1000 | 781 | 771 (99%) | 771 / 771 (100% of owners) | 4 | 5.96 / 6 / 6 / 6 | 0 / 0 | 307 KB | 312 KB | 240 KB | -5 KB (-2%) | -0.6% |
-| flex/deep_auto/10000 | 8205 | 8195 (100%) | 8195 / 8195 (100% of owners) | 4 | 6.00 / 6 / 6 / 6 | 0 / 0 | 3265 KB | 3328 KB | 2560 KB | -63 KB (-2%) | -0.7% |
-| flex/deep_random/1000 | 781 | 771 (99%) | 771 / 771 (100% of owners) | 4 | 1.26 / 1 / 2 / 2 | 0 / 0 | 307 KB | 312 KB | 127 KB | -5 KB (-2%) | -0.6% |
-| flex/deep_random/10000 | 8205 | 8195 (100%) | 8195 / 8195 (100% of owners) | 4 | 1.26 / 1 / 2 / 2 | 0 / 0 | 3265 KB | 3328 KB | 1348 KB | -63 KB (-2%) | -0.7% |
-| flex/huge_nested/1000 | 925 | 915 (99%) | 915 / 915 (100% of owners) | 4 | 1.00 / 1 / 1 / 1 | 0 / 0 | 365 KB | 371 KB | 143 KB | -6 KB (-2%) | -0.6% |
-| flex/huge_nested/10000 | 9125 | 9115 (100%) | 9115 / 9115 (100% of owners) | 4 | 1.00 / 1 / 1 / 1 | 0 / 0 | 3632 KB | 3702 KB | 1424 KB | -70 KB (-2%) | -0.7% |
-| flex/superdeep/100 | 315 | 305 (97%) | 305 / 305 (100% of owners) | 4 | 6.52 / 8 / 8 / 8 | 0 / 0 | 122 KB | 123 KB | 100 KB | -1 KB (-1%) | -0.4% |
-| flex/superdeep/50 | 165 | 155 (94%) | 155 / 155 (100% of owners) | 4 | 6.39 / 8 / 8 / 8 | 0 / 0 | 62 KB | 62 KB | 50 KB | -0 KB (-0%) | -0.1% |
-| flex/wide/1000 | 1014 | 1004 (99%) | 1004 / 1004 (100% of owners) | 4 | 1.56 / 1 / 2 / 7 | 0 / 0 | 400 KB | 407 KB | 174 KB | -7 KB (-2%) | -0.6% |
-| flex/wide/10000 | 10015 | 10005 (100%) | 10005 / 10005 (100% of owners) | 4 | 1.60 / 1 / 2 / 7 | 0 / 0 | 3986 KB | 4063 KB | 1751 KB | -77 KB (-2%) | -0.7% |
-| grid/deep/2x2x5 | 1379 | 1369 (99%) | 1369 / 1369 (100% of owners) | 1046 | 0.85 / 0 / 4 / 9 | 0 / 4 | 545 KB | 262 KB | 207 KB | 283 KB (52%) | 19.3% |
-| grid/deep/3x3x4 | 7395 | 7385 (100%) | 7385 / 7385 (100% of owners) | 6585 | 0.42 / 0 / 1 / 9 | 0 / 30 | 2942 KB | 1148 KB | 1020 KB | 1794 KB (61%) | 22.7% |
-| grid/superdeep/100 | 115 | 105 (91%) | 105 / 105 (100% of owners) | 10 | 3.13 / 4 / 5 / 7 | 0 / 0 | 42 KB | 40 KB | 23 KB | 2 KB (5%) | 1.7% |
-| grid/wide/100x100 | 10015 | 10005 (100%) | 10005 / 10005 (100% of owners) | 355 | 4.13 / 5 / 7 / 9 | 0 / 588 | 3986 KB | 3994 KB | 2541 KB | -8 KB (-0%) | -0.1% |
-| grid/wide/31x31 | 976 | 966 (99%) | 966 / 966 (100% of owners) | 42 | 4.95 / 6 / 8 / 9 | 0 / 180 | 385 KB | 383 KB | 270 KB | 1 KB (0%) | 0.1% |
-| text/flex_cards/100 | 516 | 305 (59%) | 305 / 305 (100% of owners) | 5 | 3.21 / 3 / 4 / 4 | 0 / 0 | 122 KB | 122 KB | 69 KB | -1 KB (-1%) | -0.3% |
-| text/flex_cards/1000 | 5016 | 3005 (60%) | 3005 / 3005 (100% of owners) | 5 | 3.26 / 3 / 4 / 4 | 0 / 0 | 1197 KB | 1219 KB | 682 KB | -22 KB (-2%) | -0.6% |
-| text/inline_mixed/100 | 4046 | 105 (3%) | 105 / 105 (100% of owners) | 105 | 0.00 / 0 / 0 / 0 | 0 / 0 | 42 KB | 13 KB | 13 KB | 29 KB (69%) | 2.3% |
-| text/inline_mixed/1000 | 41192 | 1005 (2%) | 1005 / 1005 (100% of owners) | 1005 | 0.00 / 0 / 0 / 0 | 0 / 0 | 400 KB | 126 KB | 126 KB | 275 KB (69%) | 2.2% |
-| text/paragraphs/100 | 216 | 105 (49%) | 105 / 105 (100% of owners) | 105 | 0.00 / 0 / 0 / 0 | 0 / 0 | 42 KB | 13 KB | 13 KB | 29 KB (69%) | 21.4% |
-| text/paragraphs/1000 | 2016 | 1005 (50%) | 1005 / 1005 (100% of owners) | 1005 | 0.00 / 0 / 0 / 0 | 0 / 0 | 400 KB | 126 KB | 126 KB | 275 KB (69%) | 21.7% |
+| page | DOM nodes | cache owners | owners with ≥1 entry (initial / peak) | final only (initial) | measure slots mean / median / p90 / max (initial) | same (peak relayout) | evictions (initial / Σ relayout) | cache bytes today | lazy: box measures | lazy: 2 inline + spill | lazy: exact | saving (2 inline) vs today | vs node mem |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| real/bootstrap-dashboard | 608 | 178 (29%) | 178 / 178 | 14 (8%) | 4.24 / 5 / 6 / 9 | 6.42 / 9 / 9 / 9 | 5 / 30 | 71 KB | 68 KB | 72 KB | 46 KB | -1 KB (-1%) | -0.3% |
+| real/css-flexbox-1 | 38735 | 7564 (20%) | 7540 / 7540 | 2667 (35%) | 3.00 / 4 / 5 / 5 | 4.61 / 8 / 8 / 9 | 0 / 115 | 3014 KB | 2316 KB | 2776 KB | 1655 KB | 238 KB (8%) | 1.4% |
+| real/dioxuslabs-com | 232 | 145 (62%) | 145 / 145 | 22 (15%) | 3.06 / 2 / 9 / 9 | 3.21 / 3 / 9 / 9 | 42 / 80 | 58 KB | 53 KB | 47 KB | 32 KB | 10 KB (18%) | 5.7% |
+| real/mdn | 4804 | 1434 (30%) | 1434 / 1434 | 157 (11%) | 1.46 / 1 / 3 / 9 | 1.76 / 1 / 3 / 9 | 0 / 248 | 571 KB | 538 KB | 338 KB | 245 KB | 233 KB (41%) | 9.6% |
+| real/rustdoc | 39944 | 7981 (20%) | 7980 / 7980 | 1597 (20%) | 1.50 / 2 / 2 / 6 | 2.19 / 3 / 3 / 6 | 0 / 0 | 3180 KB | 2793 KB | 1604 KB | 1372 KB | 1576 KB (50%) | 9.4% |
+| real/servo-org | 673 | 187 (28%) | 187 / 187 | 15 (8%) | 1.56 / 1 / 2 / 6 | 2.10 / 2 / 3 / 9 | 0 / 0 | 75 KB | 72 KB | 40 KB | 32 KB | 35 KB (47%) | 11.3% |
+| real/wikipedia | 47065 | 3974 (8%) | 3974 / 3974 | 496 (12%) | 2.14 / 1 / 5 / 9 | 2.88 / 2 / 7 / 9 | 6 / 170 | 1583 KB | 1475 KB | 1179 KB | 763 KB | 405 KB (26%) | 2.3% |
+| pangui/expand_with_max_constraint | 3015 | 3005 (100%) | 3005 / 3005 | 4 (0%) | 1.66 / 1 / 3 / 3 | 2.00 / 1 / 4 / 4 | 0 / 0 | 1197 KB | 1220 KB | 845 KB | 532 KB | 353 KB (29%) | 11.0% |
+| pangui/expand_with_min_constraint | 3015 | 3005 (100%) | 3005 / 3005 | 4 (0%) | 1.66 / 1 / 3 / 3 | 2.00 / 1 / 4 / 4 | 0 / 0 | 1197 KB | 1220 KB | 845 KB | 532 KB | 353 KB (29%) | 11.0% |
+| pangui/fit_nesting | 101125 | 101115 (100%) | 101115 / 101115 | 100004 (99%) | 0.02 / 0 / 0 / 2 | 0.04 / 0 / 0 / 4 | 0 / 0 | 39.3 MB | 12.6 MB | 18.5 MB | 12.4 MB | 20.8 MB (53%) | 19.7% |
+| pangui/flex_expand_equal_weights | 15015 | 15005 (100%) | 15005 / 15005 | 15005 (100%) | 0.00 / 0 / 0 / 0 | 0.00 / 0 / 0 / 0 | 0 / 0 | 5979 KB | 1876 KB | 2813 KB | 1876 KB | 3165 KB (53%) | 19.7% |
+| pangui/flex_expand_weights | 15015 | 15005 (100%) | 15005 / 15005 | 5 (0%) | 1.00 / 1 / 1 / 1 | 1.00 / 1 / 1 / 1 | 0 / 0 | 5979 KB | 6094 KB | 2813 KB | 2344 KB | 3165 KB (53%) | 19.7% |
+| pangui/nested_vertical_stack | 10015 | 10005 (100%) | 10005 / 10005 | 4 (0%) | 1.00 / 1 / 1 / 1 | 2.00 / 2 / 2 / 2 | 0 / 0 | 3986 KB | 4063 KB | 1876 KB | 1563 KB | 2110 KB (53%) | 19.7% |
+| pangui/padding_and_margin | 115 | 105 (91%) | 105 / 105 | 4 (4%) | 0.96 / 1 / 1 / 1 | 1.91 / 2 / 2 / 2 | 0 / 0 | 42 KB | 42 KB | 20 KB | 16 KB | 22 KB (53%) | 19.3% |
+| pangui/percentage_and_ratio | 10015 | 10005 (100%) | 10005 / 10005 | 5 (0%) | 1.00 / 1 / 1 / 1 | 2.00 / 2 / 2 / 2 | 0 / 0 | 3986 KB | 4063 KB | 1876 KB | 1563 KB | 2110 KB (53%) | 19.7% |
+| pangui/perpendicular_expand_with_wrap | 12015 | 12005 (100%) | 12005 / 12005 | 4 (0%) | 2.50 / 1 / 4 / 4 | 4.00 / 1 / 7 / 7 | 0 / 0 | 4783 KB | 4876 KB | 3938 KB | 2438 KB | 845 KB (18%) | 6.6% |
+| pangui/pixels_with_min_expand_constraint | 30015 | 30005 (100%) | 30005 / 30005 | 4 (0%) | 1.67 / 1 / 3 / 3 | 2.00 / 1 / 4 / 4 | 0 / 0 | 11.7 MB | 11.9 MB | 8438 KB | 5313 KB | 3517 KB (29%) | 10.9% |
+| pangui/wide_no_wrap_simple_few | 1015 | 1005 (99%) | 1005 / 1005 | 5 (0%) | 1.00 / 1 / 1 / 1 | 1.00 / 1 / 1 / 1 | 0 / 0 | 400 KB | 407 KB | 188 KB | 157 KB | 212 KB (53%) | 19.7% |
+| pangui/wide_no_wrap_simple_many | 100015 | 100005 (100%) | 100005 / 100005 | 5 (0%) | 1.00 / 1 / 1 / 1 | 1.00 / 1 / 1 / 1 | 0 / 0 | 38.9 MB | 39.7 MB | 18.3 MB | 15.3 MB | 20.6 MB (53%) | 19.7% |
+| pangui/wide_wrapping | 10015 | 10005 (100%) | 10005 / 10005 | 4 (0%) | 1.00 / 1 / 1 / 1 | 1.00 / 1 / 1 / 1 | 0 / 0 | 3986 KB | 4063 KB | 1876 KB | 1563 KB | 2110 KB (53%) | 19.7% |
+| flex/absolute/1000 | 1017 | 1007 (99%) | 1007 / 1007 | 556 (55%) | 0.67 / 0 / 2 / 5 | 0.84 / 0 / 2 / 6 | 0 / 0 | 401 KB | 253 KB | 202 KB | 147 KB | 199 KB (50%) | 18.4% |
+| flex/absolute/10000 | 10018 | 10008 (100%) | 10008 / 10008 | 5485 (55%) | 0.70 / 0 / 2 / 5 | 0.89 / 0 / 2 / 6 | 0 / 0 | 3988 KB | 2523 KB | 2039 KB | 1469 KB | 1948 KB (49%) | 18.2% |
+| flex/deep_auto/1000 | 781 | 771 (99%) | 771 / 771 | 4 (1%) | 4.97 / 5 / 5 / 5 | 5.96 / 6 / 6 / 6 | 0 / 0 | 307 KB | 312 KB | 360 KB | 216 KB | -53 KB (-17%) | -6.4% |
+| flex/deep_auto/10000 | 8205 | 8195 (100%) | 8195 / 8195 | 4 (0%) | 5.00 / 5 / 5 / 5 | 6.00 / 6 / 6 / 6 | 0 / 0 | 3265 KB | 3328 KB | 3840 KB | 2304 KB | -575 KB (-18%) | -6.6% |
+| flex/deep_random/1000 | 781 | 771 (99%) | 771 / 771 | 4 (1%) | 1.26 / 1 / 2 / 2 | 1.26 / 1 / 2 / 2 | 0 / 0 | 307 KB | 312 KB | 145 KB | 127 KB | 163 KB (53%) | 19.6% |
+| flex/deep_random/10000 | 8205 | 8195 (100%) | 8195 / 8195 | 4 (0%) | 1.26 / 1 / 2 / 2 | 1.26 / 1 / 2 / 2 | 0 / 0 | 3265 KB | 3328 KB | 1537 KB | 1348 KB | 1729 KB (53%) | 19.7% |
+| flex/huge_nested/1000 | 925 | 915 (99%) | 915 / 915 | 4 (0%) | 1.00 / 1 / 1 / 1 | 1.00 / 1 / 1 / 1 | 0 / 0 | 365 KB | 371 KB | 172 KB | 143 KB | 193 KB (53%) | 19.7% |
+| flex/huge_nested/10000 | 9125 | 9115 (100%) | 9115 / 9115 | 4 (0%) | 1.00 / 1 / 1 / 1 | 1.00 / 1 / 1 / 1 | 0 / 0 | 3632 KB | 3702 KB | 1709 KB | 1424 KB | 1923 KB (53%) | 19.7% |
+| flex/superdeep/100 | 315 | 305 (97%) | 305 / 305 | 4 (1%) | 4.92 / 5 / 5 / 5 | 6.52 / 8 / 8 / 8 | 0 / 0 | 122 KB | 123 KB | 142 KB | 85 KB | -20 KB (-16%) | -6.1% |
+| flex/superdeep/50 | 165 | 155 (94%) | 155 / 155 | 4 (3%) | 4.85 / 5 / 5 / 5 | 6.39 / 8 / 8 / 8 | 0 / 0 | 62 KB | 62 KB | 71 KB | 43 KB | -9 KB (-15%) | -5.6% |
+| flex/wide/1000 | 1014 | 1004 (99%) | 1004 / 1004 | 4 (0%) | 1.49 / 1 / 2 / 5 | 1.56 / 1 / 2 / 7 | 0 / 0 | 400 KB | 407 KB | 209 KB | 172 KB | 191 KB (48%) | 17.8% |
+| flex/wide/10000 | 10015 | 10005 (100%) | 10005 / 10005 | 4 (0%) | 1.51 / 1 / 2 / 5 | 1.60 / 1 / 2 / 7 | 0 / 0 | 3986 KB | 4063 KB | 2128 KB | 1724 KB | 1858 KB (47%) | 17.3% |
+| grid/deep/2x2x5 | 1379 | 1369 (99%) | 1369 / 1369 | 1046 (76%) | 0.82 / 0 / 4 / 8 | 0.85 / 0 / 4 / 9 | 0 / 4 | 545 KB | 262 KB | 320 KB | 206 KB | 226 KB (41%) | 15.4% |
+| grid/deep/3x3x4 | 7395 | 7385 (100%) | 7385 / 7385 | 6585 (89%) | 0.41 / 0 / 1 / 8 | 0.42 / 0 / 1 / 9 | 0 / 30 | 2942 KB | 1148 KB | 1544 KB | 1017 KB | 1399 KB (48%) | 17.7% |
+| grid/superdeep/100 | 115 | 105 (91%) | 105 / 105 | 10 (10%) | 3.10 / 4 / 5 / 6 | 3.13 / 4 / 5 / 7 | 0 / 0 | 42 KB | 40 KB | 38 KB | 23 KB | 4 KB (9%) | 3.4% |
+| grid/wide/100x100 | 10015 | 10005 (100%) | 10005 / 10005 | 251 (3%) | 3.77 / 4 / 6 / 7 | 4.13 / 5 / 7 / 9 | 0 / 588 | 3986 KB | 3994 KB | 3840 KB | 2429 KB | 146 KB (4%) | 1.4% |
+| grid/wide/31x31 | 976 | 966 (99%) | 966 / 966 | 32 (3%) | 3.73 / 4 / 6 / 7 | 4.95 / 6 / 8 / 9 | 0 / 180 | 385 KB | 383 KB | 363 KB | 233 KB | 22 KB (6%) | 2.1% |
+| text/flex_cards/100 | 516 | 305 (59%) | 305 / 305 | 5 (2%) | 1.97 / 2 / 2 / 2 | 3.21 / 3 / 4 / 4 | 0 / 0 | 122 KB | 122 KB | 57 KB | 57 KB | 64 KB (53%) | 17.5% |
+| text/flex_cards/1000 | 5016 | 3005 (60%) | 3005 / 3005 | 5 (0%) | 2.00 / 2 / 2 / 2 | 3.26 / 3 / 4 / 4 | 0 / 0 | 1197 KB | 1219 KB | 563 KB | 563 KB | 634 KB (53%) | 17.6% |
+| text/inline_mixed/100 | 4046 | 105 (3%) | 105 / 105 | 105 (100%) | 0.00 / 0 / 0 / 0 | 0.00 / 0 / 0 / 0 | 0 / 0 | 42 KB | 13 KB | 20 KB | 13 KB | 22 KB (53%) | 1.8% |
+| text/inline_mixed/1000 | 41192 | 1005 (2%) | 1005 / 1005 | 1005 (100%) | 0.00 / 0 / 0 / 0 | 0.00 / 0 / 0 / 0 | 0 / 0 | 400 KB | 126 KB | 188 KB | 126 KB | 212 KB (53%) | 1.7% |
+| text/paragraphs/100 | 216 | 105 (49%) | 105 / 105 | 105 (100%) | 0.00 / 0 / 0 / 0 | 0.00 / 0 / 0 / 0 | 0 / 0 | 42 KB | 13 KB | 20 KB | 13 KB | 22 KB (53%) | 16.5% |
+| text/paragraphs/1000 | 2016 | 1005 (50%) | 1005 / 1005 | 1005 (100%) | 0.00 / 0 / 0 / 0 | 0.00 / 0 / 0 / 0 | 0 / 0 | 400 KB | 126 KB | 188 KB | 126 KB | 212 KB (53%) | 16.7% |
 
 ### Denominators (initial layout)
 
@@ -154,7 +151,7 @@ adds clones that are removed again). Lazy bytes are the peak over those snapshot
 
 ## Memory under each cache layout
 
-Bytes per page at the peak snapshot. Inline part of every lazy layout = 112 B final entry + 8 B pointer/len + 8 B bookkeeping = 128 B
+Bytes per page after the initial layout (last column: C2 at the peak relayout snapshot). Inline part of every lazy layout = 112 B final entry + 8 B pointer/len + 8 B bookkeeping = 128 B
 (the final entry stays inline because every owner has one). Heap arrays are 9 × 32 = 288 B; D counts exactly the populated entries.
 Not modelled: mimalloc rounds 288 B to its 320 B class and 648 B `LayoutData` to 768 B, so shrinking `LayoutData` by 280–288 B (B/C1) drops it
 into the 384 B class — the real saving per owner is then ~384 B rather than the 280 B modelled here, which favours the lazy schemes slightly.
@@ -164,52 +161,52 @@ into the 384 B class — the real saving per owner is then ~384 B rather than th
 - C*n* final entry inline, *n* inline measure slots, spill to a boxed 9-slot array when an (*n*+1)th distinct key is stored.
 - D final entry inline, heap array exactly as large as the populated entries (lower bound; ignores growth and allocator overhead).
 
-| page | cache owners | today (eager) | A: box whole `Cache` | B: final inline + boxed 9-slot array | C1: 1 inline slot + spill | C2: 2 inline + spill | C3: 3 inline + spill | D: exact | cache share of node memory today |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| real/bootstrap-dashboard | 178 | 71 KB | 72 KB (-2%) | 68 KB (+4%) | 70 KB (+2%) | 75 KB (-6%) | 77 KB (-9%) | 58 KB (+18%) | 25% |
-| real/css-flexbox-1 | 7564 | 3014 KB | 3063 KB (-2%) | 2316 KB (+23%) | 2546 KB (+16%) | 2776 KB (+8%) | 3008 KB (+0%) | 2036 KB (+32%) | 18% |
-| real/dioxuslabs-com | 145 | 58 KB | 59 KB (-2%) | 53 KB (+9%) | 50 KB (+13%) | 49 KB (+14%) | 45 KB (+22%) | 33 KB (+43%) | 32% |
-| real/mdn | 1434 | 571 KB | 583 KB (-2%) | 538 KB (+6%) | 373 KB (+35%) | 341 KB (+40%) | 351 KB (+39%) | 258 KB (+55%) | 24% |
-| real/rustdoc | 7981 | 3180 KB | 3242 KB (-2%) | 2793 KB (+12%) | 2789 KB (+12%) | 2958 KB (+7%) | 1852 KB (+42%) | 1544 KB (+51%) | 19% |
-| real/servo-org | 187 | 75 KB | 76 KB (-2%) | 72 KB (+4%) | 72 KB (+4%) | 48 KB (+36%) | 46 KB (+38%) | 36 KB (+52%) | 24% |
-| real/wikipedia | 3974 | 1583 KB | 1614 KB (-2%) | 1475 KB (+7%) | 1376 KB (+13%) | 1179 KB (+26%) | 1264 KB (+20%) | 855 KB (+46%) | 9% |
-| pangui/expand_with_max_constraint | 3005 | 1197 KB | 1221 KB (-2%) | 1220 KB (-2%) | 751 KB (+37%) | 845 KB (+29%) | 939 KB (+22%) | 563 KB (+53%) | 37% |
-| pangui/expand_with_min_constraint | 3005 | 1197 KB | 1221 KB (-2%) | 1220 KB (-2%) | 751 KB (+37%) | 845 KB (+29%) | 939 KB (+22%) | 563 KB (+53%) | 37% |
-| pangui/fit_nesting | 101115 | 39.3 MB | 40.1 MB (-2%) | 12.6 MB (+68%) | 15.7 MB (+60%) | 18.8 MB (+52%) | 21.9 MB (+44%) | 12.5 MB (+68%) | 37% |
-| pangui/flex_expand_equal_weights | 15005 | 5979 KB | 6096 KB (-2%) | 1876 KB (+69%) | 2345 KB (+61%) | 2813 KB (+53%) | 3282 KB (+45%) | 1876 KB (+69%) | 37% |
-| pangui/flex_expand_weights | 15005 | 5979 KB | 6096 KB (-2%) | 6094 KB (-2%) | 2345 KB (+61%) | 2813 KB (+53%) | 3282 KB (+45%) | 2344 KB (+61%) | 37% |
-| pangui/nested_vertical_stack | 10005 | 3986 KB | 4065 KB (-2%) | 4063 KB (-2%) | 4376 KB (-10%) | 1876 KB (+53%) | 2189 KB (+45%) | 1876 KB (+53%) | 37% |
-| pangui/padding_and_margin | 105 | 42 KB | 43 KB (-2%) | 42 KB (+1%) | 45 KB (-6%) | 20 KB (+53%) | 23 KB (+45%) | 19 KB (+54%) | 36% |
-| pangui/percentage_and_ratio | 10005 | 3986 KB | 4065 KB (-2%) | 4063 KB (-2%) | 4376 KB (-10%) | 1876 KB (+53%) | 2189 KB (+45%) | 1876 KB (+53%) | 37% |
-| pangui/perpendicular_expand_with_wrap | 12005 | 4783 KB | 4877 KB (-2%) | 4876 KB (-2%) | 3563 KB (+26%) | 3938 KB (+18%) | 4314 KB (+10%) | 3001 KB (+37%) | 37% |
-| pangui/pixels_with_min_expand_constraint | 30005 | 11.7 MB | 11.9 MB (-2%) | 11.9 MB (-2%) | 7501 KB (+37%) | 8438 KB (+29%) | 9376 KB (+22%) | 5626 KB (+53%) | 37% |
-| pangui/wide_no_wrap_simple_few | 1005 | 400 KB | 408 KB (-2%) | 407 KB (-2%) | 157 KB (+61%) | 188 KB (+53%) | 220 KB (+45%) | 157 KB (+61%) | 37% |
-| pangui/wide_no_wrap_simple_many | 100005 | 38.9 MB | 39.7 MB (-2%) | 39.7 MB (-2%) | 15.3 MB (+61%) | 18.3 MB (+53%) | 21.4 MB (+45%) | 15.3 MB (+61%) | 37% |
-| pangui/wide_wrapping | 10005 | 3986 KB | 4065 KB (-2%) | 4063 KB (-2%) | 1563 KB (+61%) | 1876 KB (+53%) | 2189 KB (+45%) | 1563 KB (+61%) | 37% |
-| flex/absolute/1000 | 1007 | 401 KB | 409 KB (-2%) | 253 KB (+37%) | 234 KB (+42%) | 202 KB (+50%) | 234 KB (+42%) | 152 KB (+62%) | 37% |
-| flex/absolute/10000 | 10008 | 3988 KB | 4066 KB (-2%) | 2523 KB (+37%) | 2361 KB (+41%) | 2039 KB (+49%) | 2352 KB (+41%) | 1529 KB (+62%) | 37% |
-| flex/deep_auto/1000 | 771 | 307 KB | 313 KB (-2%) | 312 KB (-2%) | 336 KB (-9%) | 360 KB (-17%) | 384 KB (-25%) | 240 KB (+22%) | 37% |
-| flex/deep_auto/10000 | 8195 | 3265 KB | 3329 KB (-2%) | 3328 KB (-2%) | 3584 KB (-10%) | 3840 KB (-18%) | 4096 KB (-25%) | 2560 KB (+22%) | 37% |
-| flex/deep_random/1000 | 771 | 307 KB | 313 KB (-2%) | 312 KB (-2%) | 178 KB (+42%) | 145 KB (+53%) | 169 KB (+45%) | 127 KB (+59%) | 37% |
-| flex/deep_random/10000 | 8195 | 3265 KB | 3329 KB (-2%) | 3328 KB (-2%) | 1885 KB (+42%) | 1537 KB (+53%) | 1793 KB (+45%) | 1348 KB (+59%) | 37% |
-| flex/huge_nested/1000 | 915 | 365 KB | 372 KB (-2%) | 371 KB (-2%) | 143 KB (+61%) | 172 KB (+53%) | 200 KB (+45%) | 143 KB (+61%) | 37% |
-| flex/huge_nested/10000 | 9115 | 3632 KB | 3703 KB (-2%) | 3702 KB (-2%) | 1424 KB (+61%) | 1709 KB (+53%) | 1994 KB (+45%) | 1424 KB (+61%) | 37% |
-| flex/superdeep/100 | 305 | 122 KB | 124 KB (-2%) | 123 KB (-1%) | 132 KB (-9%) | 142 KB (-16%) | 151 KB (-24%) | 100 KB (+17%) | 37% |
-| flex/superdeep/50 | 155 | 62 KB | 63 KB (-2%) | 62 KB (-0%) | 66 KB (-8%) | 71 KB (-15%) | 76 KB (-23%) | 50 KB (+19%) | 37% |
-| flex/wide/1000 | 1004 | 400 KB | 408 KB (-2%) | 407 KB (-2%) | 264 KB (+34%) | 209 KB (+48%) | 236 KB (+41%) | 174 KB (+56%) | 37% |
-| flex/wide/10000 | 10005 | 3986 KB | 4065 KB (-2%) | 4063 KB (-2%) | 2621 KB (+34%) | 2128 KB (+47%) | 2394 KB (+40%) | 1751 KB (+56%) | 37% |
-| grid/deep/2x2x5 | 1369 | 545 KB | 556 KB (-2%) | 262 KB (+52%) | 294 KB (+46%) | 320 KB (+41%) | 352 KB (+35%) | 207 KB (+62%) | 37% |
-| grid/deep/3x3x4 | 7385 | 2942 KB | 3000 KB (-2%) | 1148 KB (+61%) | 1356 KB (+54%) | 1544 KB (+48%) | 1756 KB (+40%) | 1020 KB (+65%) | 37% |
-| grid/superdeep/100 | 105 | 42 KB | 43 KB (-2%) | 40 KB (+5%) | 41 KB (+3%) | 38 KB (+9%) | 39 KB (+7%) | 23 KB (+44%) | 36% |
-| grid/wide/100x100 | 10005 | 3986 KB | 4065 KB (-2%) | 3994 KB (-0%) | 4089 KB (-3%) | 3850 KB (+3%) | 4002 KB (-0%) | 2541 KB (+36%) | 37% |
-| grid/wide/31x31 | 966 | 385 KB | 392 KB (-2%) | 383 KB (+0%) | 390 KB (-1%) | 363 KB (+6%) | 382 KB (+1%) | 270 KB (+30%) | 37% |
-| text/flex_cards/100 | 305 | 122 KB | 124 KB (-2%) | 122 KB (-1%) | 132 KB (-9%) | 142 KB (-16%) | 106 KB (+13%) | 69 KB (+43%) | 33% |
-| text/flex_cards/1000 | 3005 | 1197 KB | 1221 KB (-2%) | 1219 KB (-2%) | 1313 KB (-10%) | 1407 KB (-18%) | 1051 KB (+12%) | 682 KB (+43%) | 33% |
-| text/inline_mixed/100 | 105 | 42 KB | 43 KB (-2%) | 13 KB (+69%) | 16 KB (+61%) | 20 KB (+53%) | 23 KB (+45%) | 13 KB (+69%) | 3% |
-| text/inline_mixed/1000 | 1005 | 400 KB | 408 KB (-2%) | 126 KB (+69%) | 157 KB (+61%) | 188 KB (+53%) | 220 KB (+45%) | 126 KB (+69%) | 3% |
-| text/paragraphs/100 | 105 | 42 KB | 43 KB (-2%) | 13 KB (+69%) | 16 KB (+61%) | 20 KB (+53%) | 23 KB (+45%) | 13 KB (+69%) | 31% |
-| text/paragraphs/1000 | 1005 | 400 KB | 408 KB (-2%) | 126 KB (+69%) | 157 KB (+61%) | 188 KB (+53%) | 220 KB (+45%) | 126 KB (+69%) | 32% |
-| **all 43 pages** | 407544 | 158.6 MB | 161.7 MB (-2%) | 124.3 MB (+22%) | 85.9 MB (+46%) | 89.5 MB (+44%) | 99.7 MB (+37%) | 65.8 MB (+59%) | 34% |
+| page | cache owners | today (eager) | A: box whole `Cache` | B: final inline + boxed 9-slot array | C1: 1 inline slot + spill | C2: 2 inline + spill | C3: 3 inline + spill | D: exact | C2 at peak relayout snapshot | cache share of node memory today |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| real/bootstrap-dashboard | 178 | 71 KB | 72 KB (-2%) | 68 KB (+4%) | 70 KB (+2%) | 72 KB (-1%) | 77 KB (-9%) | 46 KB (+35%) | 75 KB (-6%) | 25% |
+| real/css-flexbox-1 | 7564 | 3014 KB | 3063 KB (-2%) | 2316 KB (+23%) | 2542 KB (+16%) | 2776 KB (+8%) | 3008 KB (+0%) | 1655 KB (+45%) | 2776 KB (+8%) | 18% |
+| real/dioxuslabs-com | 145 | 58 KB | 59 KB (-2%) | 53 KB (+9%) | 50 KB (+14%) | 47 KB (+18%) | 42 KB (+28%) | 32 KB (+45%) | 49 KB (+14%) | 32% |
+| real/mdn | 1434 | 571 KB | 583 KB (-2%) | 538 KB (+6%) | 297 KB (+48%) | 338 KB (+41%) | 347 KB (+39%) | 245 KB (+57%) | 341 KB (+40%) | 24% |
+| real/rustdoc | 7981 | 3180 KB | 3242 KB (-2%) | 2793 KB (+12%) | 2709 KB (+15%) | 1604 KB (+50%) | 1746 KB (+45%) | 1372 KB (+57%) | 2958 KB (+7%) | 19% |
+| real/servo-org | 187 | 75 KB | 76 KB (-2%) | 72 KB (+4%) | 55 KB (+26%) | 40 KB (+47%) | 43 KB (+43%) | 32 KB (+56%) | 48 KB (+36%) | 24% |
+| real/wikipedia | 3974 | 1583 KB | 1614 KB (-2%) | 1475 KB (+7%) | 1088 KB (+31%) | 1179 KB (+26%) | 1128 KB (+29%) | 763 KB (+52%) | 1179 KB (+26%) | 9% |
+| pangui/expand_with_max_constraint | 3005 | 1197 KB | 1221 KB (-2%) | 1220 KB (-2%) | 751 KB (+37%) | 845 KB (+29%) | 657 KB (+45%) | 532 KB (+56%) | 845 KB (+29%) | 37% |
+| pangui/expand_with_min_constraint | 3005 | 1197 KB | 1221 KB (-2%) | 1220 KB (-2%) | 751 KB (+37%) | 845 KB (+29%) | 657 KB (+45%) | 532 KB (+56%) | 845 KB (+29%) | 37% |
+| pangui/fit_nesting | 101115 | 39.3 MB | 40.1 MB (-2%) | 12.6 MB (+68%) | 15.7 MB (+60%) | 18.5 MB (+53%) | 21.6 MB (+45%) | 12.4 MB (+68%) | 18.8 MB (+52%) | 37% |
+| pangui/flex_expand_equal_weights | 15005 | 5979 KB | 6096 KB (-2%) | 1876 KB (+69%) | 2345 KB (+61%) | 2813 KB (+53%) | 3282 KB (+45%) | 1876 KB (+69%) | 2813 KB (+53%) | 37% |
+| pangui/flex_expand_weights | 15005 | 5979 KB | 6096 KB (-2%) | 6094 KB (-2%) | 2345 KB (+61%) | 2813 KB (+53%) | 3282 KB (+45%) | 2344 KB (+61%) | 2813 KB (+53%) | 37% |
+| pangui/nested_vertical_stack | 10005 | 3986 KB | 4065 KB (-2%) | 4063 KB (-2%) | 1563 KB (+61%) | 1876 KB (+53%) | 2189 KB (+45%) | 1563 KB (+61%) | 1876 KB (+53%) | 37% |
+| pangui/padding_and_margin | 105 | 42 KB | 43 KB (-2%) | 42 KB (+1%) | 16 KB (+61%) | 20 KB (+53%) | 23 KB (+45%) | 16 KB (+61%) | 20 KB (+53%) | 36% |
+| pangui/percentage_and_ratio | 10005 | 3986 KB | 4065 KB (-2%) | 4063 KB (-2%) | 1563 KB (+61%) | 1876 KB (+53%) | 2189 KB (+45%) | 1563 KB (+61%) | 1876 KB (+53%) | 37% |
+| pangui/perpendicular_expand_with_wrap | 12005 | 4783 KB | 4877 KB (-2%) | 4876 KB (-2%) | 3563 KB (+26%) | 3938 KB (+18%) | 4314 KB (+10%) | 2438 KB (+49%) | 3938 KB (+18%) | 37% |
+| pangui/pixels_with_min_expand_constraint | 30005 | 11.7 MB | 11.9 MB (-2%) | 11.9 MB (-2%) | 7501 KB (+37%) | 8438 KB (+29%) | 6564 KB (+45%) | 5313 KB (+56%) | 8438 KB (+29%) | 37% |
+| pangui/wide_no_wrap_simple_few | 1005 | 400 KB | 408 KB (-2%) | 407 KB (-2%) | 157 KB (+61%) | 188 KB (+53%) | 220 KB (+45%) | 157 KB (+61%) | 188 KB (+53%) | 37% |
+| pangui/wide_no_wrap_simple_many | 100005 | 38.9 MB | 39.7 MB (-2%) | 39.7 MB (-2%) | 15.3 MB (+61%) | 18.3 MB (+53%) | 21.4 MB (+45%) | 15.3 MB (+61%) | 18.3 MB (+53%) | 37% |
+| pangui/wide_wrapping | 10005 | 3986 KB | 4065 KB (-2%) | 4063 KB (-2%) | 1563 KB (+61%) | 1876 KB (+53%) | 2189 KB (+45%) | 1563 KB (+61%) | 1876 KB (+53%) | 37% |
+| flex/absolute/1000 | 1007 | 401 KB | 409 KB (-2%) | 253 KB (+37%) | 198 KB (+51%) | 202 KB (+50%) | 226 KB (+44%) | 147 KB (+63%) | 202 KB (+50%) | 37% |
+| flex/absolute/10000 | 10008 | 3988 KB | 4066 KB (-2%) | 2523 KB (+37%) | 1981 KB (+50%) | 2039 KB (+49%) | 2260 KB (+43%) | 1469 KB (+63%) | 2039 KB (+49%) | 37% |
+| flex/deep_auto/1000 | 771 | 307 KB | 313 KB (-2%) | 312 KB (-2%) | 336 KB (-9%) | 360 KB (-17%) | 384 KB (-25%) | 216 KB (+30%) | 360 KB (-17%) | 37% |
+| flex/deep_auto/10000 | 8195 | 3265 KB | 3329 KB (-2%) | 3328 KB (-2%) | 3584 KB (-10%) | 3840 KB (-18%) | 4096 KB (-25%) | 2304 KB (+29%) | 3840 KB (-18%) | 37% |
+| flex/deep_random/1000 | 771 | 307 KB | 313 KB (-2%) | 312 KB (-2%) | 178 KB (+42%) | 145 KB (+53%) | 169 KB (+45%) | 127 KB (+59%) | 145 KB (+53%) | 37% |
+| flex/deep_random/10000 | 8195 | 3265 KB | 3329 KB (-2%) | 3328 KB (-2%) | 1885 KB (+42%) | 1537 KB (+53%) | 1793 KB (+45%) | 1348 KB (+59%) | 1537 KB (+53%) | 37% |
+| flex/huge_nested/1000 | 915 | 365 KB | 372 KB (-2%) | 371 KB (-2%) | 143 KB (+61%) | 172 KB (+53%) | 200 KB (+45%) | 143 KB (+61%) | 172 KB (+53%) | 37% |
+| flex/huge_nested/10000 | 9115 | 3632 KB | 3703 KB (-2%) | 3702 KB (-2%) | 1424 KB (+61%) | 1709 KB (+53%) | 1994 KB (+45%) | 1424 KB (+61%) | 1709 KB (+53%) | 37% |
+| flex/superdeep/100 | 305 | 122 KB | 124 KB (-2%) | 123 KB (-1%) | 132 KB (-9%) | 142 KB (-16%) | 151 KB (-24%) | 85 KB (+30%) | 142 KB (-16%) | 37% |
+| flex/superdeep/50 | 155 | 62 KB | 63 KB (-2%) | 62 KB (-0%) | 66 KB (-8%) | 71 KB (-15%) | 76 KB (-23%) | 43 KB (+31%) | 71 KB (-15%) | 37% |
+| flex/wide/1000 | 1004 | 400 KB | 408 KB (-2%) | 407 KB (-2%) | 264 KB (+34%) | 209 KB (+48%) | 227 KB (+43%) | 172 KB (+57%) | 209 KB (+48%) | 37% |
+| flex/wide/10000 | 10005 | 3986 KB | 4065 KB (-2%) | 4063 KB (-2%) | 2621 KB (+34%) | 2128 KB (+47%) | 2275 KB (+43%) | 1724 KB (+57%) | 2128 KB (+47%) | 37% |
+| grid/deep/2x2x5 | 1369 | 545 KB | 556 KB (-2%) | 262 KB (+52%) | 294 KB (+46%) | 320 KB (+41%) | 352 KB (+36%) | 206 KB (+62%) | 320 KB (+41%) | 37% |
+| grid/deep/3x3x4 | 7385 | 2942 KB | 3000 KB (-2%) | 1148 KB (+61%) | 1356 KB (+54%) | 1544 KB (+48%) | 1754 KB (+40%) | 1017 KB (+65%) | 1544 KB (+48%) | 37% |
+| grid/superdeep/100 | 105 | 42 KB | 43 KB (-2%) | 40 KB (+5%) | 41 KB (+3%) | 38 KB (+9%) | 38 KB (+8%) | 23 KB (+44%) | 38 KB (+9%) | 36% |
+| grid/wide/100x100 | 10005 | 3986 KB | 4065 KB (-2%) | 3994 KB (-0%) | 4089 KB (-3%) | 3840 KB (+4%) | 3972 KB (+0%) | 2429 KB (+39%) | 3850 KB (+3%) | 37% |
+| grid/wide/31x31 | 966 | 385 KB | 392 KB (-2%) | 383 KB (+0%) | 390 KB (-1%) | 363 KB (+6%) | 379 KB (+2%) | 233 KB (+39%) | 363 KB (+6%) | 37% |
+| text/flex_cards/100 | 305 | 122 KB | 124 KB (-2%) | 122 KB (-1%) | 132 KB (-9%) | 57 KB (+53%) | 67 KB (+45%) | 57 KB (+53%) | 142 KB (-16%) | 33% |
+| text/flex_cards/1000 | 3005 | 1197 KB | 1221 KB (-2%) | 1219 KB (-2%) | 1313 KB (-10%) | 563 KB (+53%) | 657 KB (+45%) | 563 KB (+53%) | 1407 KB (-18%) | 33% |
+| text/inline_mixed/100 | 105 | 42 KB | 43 KB (-2%) | 13 KB (+69%) | 16 KB (+61%) | 20 KB (+53%) | 23 KB (+45%) | 13 KB (+69%) | 20 KB (+53%) | 3% |
+| text/inline_mixed/1000 | 1005 | 400 KB | 408 KB (-2%) | 126 KB (+69%) | 157 KB (+61%) | 188 KB (+53%) | 220 KB (+45%) | 126 KB (+69%) | 188 KB (+53%) | 3% |
+| text/paragraphs/100 | 105 | 42 KB | 43 KB (-2%) | 13 KB (+69%) | 16 KB (+61%) | 20 KB (+53%) | 23 KB (+45%) | 13 KB (+69%) | 20 KB (+53%) | 31% |
+| text/paragraphs/1000 | 1005 | 400 KB | 408 KB (-2%) | 126 KB (+69%) | 157 KB (+61%) | 188 KB (+53%) | 220 KB (+45%) | 126 KB (+69%) | 188 KB (+53%) | 32% |
+| **all 43 pages** | 407544 | 158.6 MB | 161.7 MB (-2%) | 124.3 MB (+22%) | 79.5 MB (+50%) | 86.9 MB (+45%) | 95.2 MB (+40%) | 62.9 MB (+60%) | 89.5 MB (+44%) | 34% |
 
 ## Relayout steps
 
