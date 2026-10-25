@@ -167,7 +167,7 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
     for line in out.splitlines():
         if line.startswith("PHASES"):
             phases = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", line.split("|", 1)[1])}
-        elif line.startswith("RELAYOUT"):
+        elif line.startswith("RELAYOUT "):
             kv = dict(re.findall(r"(\w+)=(\w+)", line))
             samples[-1].setdefault("relayout", {})[kv["step"]] = dict(
                 style=phases["style"], construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
