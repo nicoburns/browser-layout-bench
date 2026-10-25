@@ -198,9 +198,8 @@ def servo_trace_rows(path):
     round's trace runs to GBs (every layout query a page script makes - `getClientRects`,
     `getComputedStyle`, 10^5 per relayout step on the large pages - is a `handle_reflow` span of its
     own), past protobuf's 2 GB limit on one message. Only the spans the samples use (SERVO_SPANS) are
-    kept, and a `handle_reflow` only if it encloses one of them, i.e. laid something out. Each span
-    keeps its `track` and `thread` name (one track per thread) as the trace has no pipeline attributes.
-    tracing_perfetto writes a span's BEGIN and END packets together when it closes, children before
+    kept, and a `handle_reflow` only if it encloses one of them, i.e. laid something out; a
+    `handle_reflow` keeps its `webview_id` field (servo/servo#49259) as `webview`. tracing_perfetto writes a span's BEGIN and END packets together when it closes, children before
     their parent, so they pair up per track as read; the rows are nested by time afterwards."""
     from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import TracePacket, TrackEvent
     threads, rows, open_spans, last_kept = {}, [], {}, {}
@@ -213,14 +212,16 @@ def servo_trace_rows(path):
         event, ts = packet.track_event, packet.timestamp
         stack = open_spans.setdefault(event.track_uuid, [])
         if event.type == TrackEvent.TYPE_SLICE_BEGIN:
-            stack.append((event.name, ts))
+            webview = next((str(getattr(a, a.WhichOneof("value"))) for a in event.debug_annotations
+                            if a.name == "webview_id" and a.WhichOneof("value")), None)
+            stack.append((event.name, ts, webview))
         elif event.type == TrackEvent.TYPE_SLICE_END and stack:
-            name, begin = stack.pop()
+            name, begin, webview = stack.pop()
             if name not in SERVO_SPANS or (name == "handle_reflow" and last_kept.get(event.track_uuid, -1) < begin):
                 continue
             last_kept[event.track_uuid] = begin
             rows.append(dict(name=name, ts=begin, dur=ts - begin, track=event.track_uuid,
-                             thread=threads.get(event.track_uuid, "")))
+                             thread=threads.get(event.track_uuid, ""), webview=webview))
     # Nest per track: a span's parent is the innermost span enclosing it (spans ending at ts do not
     # enclose one beginning at ts, as in the trace processor).
     rows.sort(key=lambda r: (r["track"], r["ts"], -r["dur"]))
@@ -302,33 +303,28 @@ def servo_relayout_steps(browser):
 
 
 def servo_window_sample(rows, window):
-    """The reveal reflow of one WebDriver window (see engines_servo). The page runs on a script thread
-    of its own, the `Script#N` thread whose first span lies between the window's navigation and its
-    close (the window's `about:blank` thread starts earlier; other windows are closed before the next
-    opens; `StyleThread#N` workers start lazily, so only script threads are considered). Of
-    that thread's `restyle_and_build_trees` spans up to the observed reveal, the reveal's is the one
-    that built the tree: the others laid the page out with `#cb` hidden (0 to 4 of them, one per 20 ms
-    of parsing) or relaid a wide page out for its scrollbar right after the reveal, 0.01-0.02 ms of
-    box construction each, so neither their count nor their order tells them apart."""
-    first = {}
-    for r in rows:
-        if r["thread"].startswith("Script"):
-            first.setdefault(r["track"], r["ts"])
-    tracks = [t for t, ts in first.items() if window["nav"] <= ts < window["closed"]]
-    if len(tracks) != 1:
-        raise RuntimeError(f"{window['url']}: {len(tracks)} script threads started while it was open")
+    """The reveal reflow of one WebDriver window: its `handle_reflow` spans are the ones whose `webview`
+    is the window's WebDriver handle (servo prints a WebViewId the same way in both). Of the window's
+    `restyle_and_build_trees` spans up to the observed reveal, the reveal's is the one that built the
+    tree: the others laid the page out with `#cb` hidden (0 to 4 of them, one per 20 ms of parsing) or
+    relaid a wide page out for its scrollbar right after the reveal, 0.01-0.02 ms of box construction
+    each, so neither their count nor their order tells them apart."""
+    reflows = {r["id"] for r in rows if r["name"] == "handle_reflow" and r["webview"] == window["handle"]}
+    if not reflows:
+        raise RuntimeError(f"{window['url']}: no reflow of webview {window['handle']} in the trace "
+                           "(a servoshell without servo/servo#49259?)")
     # A reflow still open when servoshell is killed at the end of the round (it waits on the painter
     # after a page's last restyle) has no `handle_reflow` parent; the reveal's reflow is complete,
     # as the reveal script's `offsetHeight` forced it.
-    restyles = [r for r in rows if r["track"] == tracks[0] and r["name"] == "restyle_and_build_trees"
-                and r["ts"] <= window["revealed"] and r["parent_id"] is not None]
+    restyles = [r for r in rows if r["name"] == "restyle_and_build_trees" and r["parent_id"] in reflows
+                and window["nav"] <= r["ts"] <= window["revealed"]]
     if not restyles:
         raise RuntimeError(f"{window['url']}: no reflow before the reveal")
     sample = max((servo_sample(rows, r, len(restyles)) for r in restyles), key=lambda s: s["box+fragment"])
     sample["relayout"] = {}
     for step, (t0, t1) in window.get("steps", {}).items():
-        spans = [r for r in rows if r["track"] == tracks[0] and r["name"] == "restyle_and_build_trees"
-                 and t0 <= r["ts"] <= t1 and r["parent_id"] is not None]
+        spans = [r for r in rows if r["name"] == "restyle_and_build_trees" and r["parent_id"] in reflows
+                 and t0 <= r["ts"] <= t1]
         if spans:
             sample["relayout"][step] = servo_sample(rows, max(spans, key=lambda r: r["dur"]), len(spans))
     return sample

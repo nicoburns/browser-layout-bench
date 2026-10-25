@@ -3,8 +3,9 @@ WebDriver HTTP endpoint with urllib. Every page gets a fresh window (`New Window
 Rect`, which resizes the headless webview) that is closed once its reveal has been observed; a window
 loaded with `about:blank` from the command line stays open so the process never runs out of windows.
 Timings come from the Perfetto trace servoshell writes (`SERVO_TRACING`, parsed in run.py); this module
-only records, per window, the wall-clock (CLOCK_REALTIME, the trace's clock) instants of the navigation,
-the observed reveal and the close, which run.py uses to find the window's spans in the round's trace."""
+only records, per window, its WebDriver handle (the `webview_id` servo tags the trace's `handle_reflow`
+spans with) and the wall-clock (CLOCK_REALTIME, the trace's clock) instants of the navigation, the observed
+reveal and the close, which run.py uses to find the window's spans in the round's trace."""
 import base64, json, os, socket, subprocess, time, urllib.error, urllib.request
 from pathlib import Path
 
@@ -73,7 +74,7 @@ class Browser:
             if time.time() > deadline:
                 raise RuntimeError(f"{url}: not revealed after {WAIT_SECONDS} s")
             time.sleep(0.005)
-        return dict(url=url, nav=nav, revealed=time.time_ns(), closed=None)
+        return dict(url=url, handle=handle, nav=nav, revealed=time.time_ns(), closed=None)
 
     def screenshot(self, path):
         Path(path).write_bytes(base64.b64decode(self.request("GET", self.session + "/screenshot")))
