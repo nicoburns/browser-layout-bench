@@ -189,33 +189,81 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
     return samples
 
 
+SERVO_SPANS = {"handle_reflow", "prepare_stylist_for_reflow", "restyle_and_build_trees", "Styling", "Box Tree Construction",
+               "Fragment Tree Construction", "Stacking Context Tree Construction", "Display List Construction"}
+
+
 def servo_trace_rows(path):
-    """Spans of servoshell's perfetto trace, decoded straight from the protobuf: the trace is a few
-    KB, and perfetto's TraceProcessor spends ~1 s per trace starting trace_processor_shell. Each
-    span keeps its `track` and `thread` name (one track per thread) as the trace has no pipeline
-    attributes."""
-    from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import Trace, TrackEvent
-    trace = Trace()
-    trace.ParseFromString(Path(path).read_bytes())
-    # tracing_perfetto emits a span's BEGIN packet when the span closes, so packets are not in
-    # timestamp order; nest by (timestamp, ends before begins) per thread track, as the trace
-    # processor does.
-    events = sorted(((p.timestamp, p.track_event) for p in trace.packet if p.HasField("track_event")),
-                    key=lambda e: (e[0], e[1].type != TrackEvent.TYPE_SLICE_END))
-    threads = {p.track_descriptor.uuid: p.track_descriptor.thread.thread_name
-               for p in trace.packet if p.HasField("track_descriptor")}
-    rows, open_spans = [], {}
-    for ts, event in events:
+    """Spans of servoshell's perfetto trace, decoded packet by packet straight from the protobuf: a
+    round's trace runs to GBs (every layout query a page script makes - `getClientRects`,
+    `getComputedStyle`, 10^5 per relayout step on the large pages - is a `handle_reflow` span of its
+    own), past protobuf's 2 GB limit on one message. Only the spans the samples use (SERVO_SPANS) are
+    kept, and a `handle_reflow` only if it encloses one of them, i.e. laid something out. Each span
+    keeps its `track` and `thread` name (one track per thread) as the trace has no pipeline attributes.
+    tracing_perfetto writes a span's BEGIN and END packets together when it closes, children before
+    their parent, so they pair up per track as read; the rows are nested by time afterwards."""
+    from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import TracePacket, TrackEvent
+    threads, rows, open_spans, last_kept = {}, [], {}, {}
+    for packet in servo_trace_packets(path):
+        if packet.HasField("track_descriptor"):
+            threads[packet.track_descriptor.uuid] = packet.track_descriptor.thread.thread_name
+            continue
+        if not packet.HasField("track_event"):
+            continue
+        event, ts = packet.track_event, packet.timestamp
         stack = open_spans.setdefault(event.track_uuid, [])
         if event.type == TrackEvent.TYPE_SLICE_BEGIN:
-            row = dict(id=len(rows), parent_id=stack[-1]["id"] if stack else None, name=event.name, ts=ts, dur=None,
-                       track=event.track_uuid, thread=threads.get(event.track_uuid, ""))
-            rows.append(row)
-            stack.append(row)
+            stack.append((event.name, ts))
         elif event.type == TrackEvent.TYPE_SLICE_END and stack:
-            row = stack.pop()
-            row["dur"] = ts - row["ts"]
-    return [r for r in rows if r["dur"] is not None]
+            name, begin = stack.pop()
+            if name not in SERVO_SPANS or (name == "handle_reflow" and last_kept.get(event.track_uuid, -1) < begin):
+                continue
+            last_kept[event.track_uuid] = begin
+            rows.append(dict(name=name, ts=begin, dur=ts - begin, track=event.track_uuid,
+                             thread=threads.get(event.track_uuid, "")))
+    # Nest per track: a span's parent is the innermost span enclosing it (spans ending at ts do not
+    # enclose one beginning at ts, as in the trace processor).
+    rows.sort(key=lambda r: (r["track"], r["ts"], -r["dur"]))
+    stack = []
+    for i, row in enumerate(rows):
+        while stack and (stack[-1]["track"] != row["track"] or stack[-1]["ts"] + stack[-1]["dur"] <= row["ts"]):
+            stack.pop()
+        row["id"], row["parent_id"] = i, stack[-1]["id"] if stack else None
+        stack.append(row)
+    return rows
+
+
+def servo_trace_packets(path, chunk=64 << 20):
+    """The TracePackets of a perfetto trace file, streamed: a Trace is a sequence of length-delimited
+    `packet` fields (tag 0x0a)."""
+    from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import TracePacket
+    buf = b""
+    with open(path, "rb") as f:
+        while True:
+            data = f.read(chunk)
+            if not data:
+                break
+            buf += data
+            n, i = len(buf), 0
+            while True:
+                j = i
+                while j < n and buf[j] & 0x80:
+                    j += 1
+                if j + 1 >= n:
+                    break
+                length, shift, j = 0, 0, j + 1
+                while True:
+                    b = buf[j]
+                    j += 1
+                    length |= (b & 0x7F) << shift
+                    shift += 7
+                    if not b & 0x80:
+                        break
+                if j + length > n:
+                    break
+                yield TracePacket.FromString(buf[j:j + length])
+                i = j + length
+            buf = buf[i:]
 
 
 def servo_sample(rows, main, n_reflows):
