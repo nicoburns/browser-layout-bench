@@ -98,7 +98,8 @@ def plot_case(name, data, columns_by_table, path):
         top, ticks = axis(max(vals[-1] for _, _, _, vals, _ in bars))
         x = lambda v: LEFT + v / top * (WIDTH - LEFT - RIGHT)
         browsers = [lo for e, _, lo, _, _ in bars if e != "taffy"]
-        fastest = min(browsers) if browsers else min(lo for _, _, lo, _, _ in bars)
+        # WebKit's timeline has 20 us resolution, so a tiny relayout can record as 0 ms: the reference is the fastest non-zero
+        fastest = min((lo for lo in browsers if lo > 0), default=0) or min((lo for _, _, lo, _, _ in bars if lo > 0), default=1)
         body.append(f'<text x="16" y="{y + 14}" fill="#f9fafb" font-size="13" font-weight="600">{html.escape(title)}</text>')
         if any(parts for *_, parts in bars):
             y += 16

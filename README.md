@@ -290,9 +290,9 @@ and reports the minimum (or `--agg median`) over all samples. The Firefox, Servo
 (`BATCH_ENGINES`) take a whole round at once — one browser for all of the round's cases, run before
 or after the per-case engines according to their place in the round's engine order — so each round
 costs one launch and one profile/trace decode instead of one per case (Servo: per iteration).
-`--cpus` pins the single-threaded runners (`taffy`, `blitz`, `servo1`) with `taskset`; give `servo1`
-two CPUs (`--cpus 2,3`), see the note below the WebKit paragraph; `blitz-par`, `servo`, `chrome`,
-`firefox` and `ladybird` run unpinned.
+`--cpus` pins the single-threaded runners (`taffy`, `blitz`, `servo1`) with `taskset` (give `servo1`
+two CPUs, `--cpus 2,3`, so its script and layout threads do not share one); `blitz-par`, `servo`, `chrome`,
+`firefox` and `ladybird` always run unpinned. The current dataset was run without `--cpus` (see Methodology).
 
 `verify` is the equal-work check: before trusting a timing, confirm the engines agree on the layout
 (pixel diff of the 1280×800 viewport, Chrome's `totalObjects` layout-object count, Servo's reflow
@@ -315,36 +315,26 @@ grid differently, while the box sizes agree within 1px.
 
 ## Versions and methodology
 
-Measured on 2026-10-23 in one 27-minute window (all engines interleaved, `bench --rounds 3 --iters 3 --cpus 2`)
-on an 8-vCPU Intel Xeon AWS VM (31 GB, Ubuntu 22.04.5, kernel 6.8.0-1060-aws), rustc 1.99.1, Python
-Playwright 1.64.0; the raw run is `out/runs/2026-10-23-full.json`. WebKit was added on 2026-10-24 and is not in
-that run yet (its column appears once it is measured here with `bench --merge`; the branch's smoke run is in
-`out/webkit.md`). Every number in `out/` comes from this machine; children
-sessions that add engines or cases only verify equal work and run a one-round smoke test, the
-measurement is redone here with `bench --merge`. The Ladybird column of that run was measured with
-the previous runner (one `--headless=layout-tree` process per iteration); the WebDriver runner
-(one browser per round, warm font service, see the table) lowers `layout` on the real pages by
-13–16 % and is what `bench --merge --engines ladybird` measures from now on.
+Measured on 2026-10-25 on an 8-vCPU Intel Xeon AWS VM (31 GB, Ubuntu 22.04.5, kernel 6.8.0-1060-aws),
+rustc 1.99.1, Python Playwright 1.64.0, in two windows: all engines interleaved, 15:33–16:58 UTC
+(`bench --rounds 3 --iters 3`, raw run `out/runs/2026-10-25-full.json`; its Servo rounds failed, the 3-iteration
+trace being over the Python protobuf parser's 2 GB message limit), then Servo(1), Servo(3) and Chrome
+interleaved, 17:44–18:22 UTC (`out/runs/2026-10-25-servo-chrome.json`). Chrome's per-case minima in the second
+window are those of the first within noise (new/old median 0.998, p10 0.97, p90 1.03 over the initial layout and
+the five relayout steps of all 43 cases), so the Servo columns are merged in as measured, unscaled. Every sample
+is the relayout protocol's (one load, the initial layout, then the five mutation steps), so the initial-layout
+numbers come from the same documents and processes as the relayout ones. No runner was pinned in this run
+(`--cpus` not given): `servo1` differs from `servo` only by `layout_threads=1`. Every number in `out/` comes
+from this machine; children sessions that add engines or cases only verify equal work and run a one-round
+smoke test, the measurement is redone here with `bench --merge`.
 
-Earlier epochs: the 2026-10-20 run (`out/runs/2026-10-23-blitz-servo-chrome.json` re-measured its Servo and
-Blitz columns on 2026-10-23 and folded them in via `run.py normalize`). Against that epoch the 2026-10-23
-window is a uniform ~11% slower for every engine (per-case minimum new/old median 1.08–1.14, Chrome
-`style+layout` 1.115, p10 1.09, p90 1.17), so the absolute times rose but the cross-engine ratios did not.
-
-The WebKit column was measured on 2026-10-24 (`out/runs/2026-10-24-webkit-chrome.json`, 3×3 interleaved with
-Chrome) and folded in by `run.py normalize`: the VM was ~13% faster that day (Chrome `style+layout` minimum
-new/old median 0.87, p10 0.83, p90 0.91), so every WebKit duration is multiplied by its case's stored/new
-Chrome ratio (kept in each sample as `chrome_norm`). The factor carries Chrome's own 1–3% sample noise and
-the drift is not necessarily engine-neutral, so differences under ~10% between WebKit and the other columns
-are within the normalisation's uncertainty.
-
-Known artefact of this run: `servo1` is pinned as a whole process to one CPU, and in this window its thread
-handoffs between the style, box and fragment spans paid a scheduler slice of ~3 ms on a share of samples, so
-the Servo(1) `restyle_and_build` ("Whole pipeline") column is 3–5 ms high on cases under ~20 ms (e.g.
-`flex/absolute/1000` 14.3 ms where the spans sum to 9.3; the earlier run of the same binary had a 1.3 ms gap).
-The per-stage Servo(1) columns and `servo` (unpinned) are unaffected. `layout_threads=1` already makes
-Servo's style and layout single-threaded, so `servo1` is now run with two CPUs (`--cpus 2,3`: a steady
-1.0–2.5 ms gap on the seven validation cases, 11 ms on `pangui/fit_nesting` in both protocols).
+Earlier epochs: the 2026-10-23 dataset (`out/runs/2026-10-23-full.json`, one 27-minute window, single-threaded
+runners pinned with `--cpus 2`, Ladybird with the previous one-process-per-iteration runner) with WebKit measured
+on 2026-10-24 (`out/runs/2026-10-24-webkit-chrome.json`) and folded in via `run.py normalize`; and before it the
+2026-10-20 run (`out/runs/2026-10-23-blitz-servo-chrome.json`). Against the 2026-10-23 epoch the 2026-10-25
+windows are a uniform 9–17 % faster for every engine (initial-layout minima of the same cases, new/old: Chrome
+0.89, WebKit 0.88, Firefox 0.83, Blitz 0.89, Taffy 0.92, Ladybird 0.86, p10–p90 within ±5 % of each median), so
+the absolute times fell but the cross-engine ratios did not.
 
 | engine | version | how it is driven and timed |
 |---|---|---|

@@ -123,8 +123,10 @@ thread-pool, and other process-local caches. This is neither a consistently cold
 nor consistently warmed protocol. Choose and document a common lifecycle, or
 report cold and warmed cases separately.
 
-CPU placement also differs: pinned single-threaded configurations, unpinned
-parallel configurations, and content-process-only pinning for Firefox. Those are
+CPU placement is a configuration choice: the 2026-10-23 dataset pinned the
+single-threaded runners (`--cpus`) while the current one runs everything
+unpinned on 8 vCPUs, so Servo(1) vs Servo(3) is a thread-count comparison and
+Blitz vs `blitz-par` a 1-thread vs pool comparison on the same cores. Those are
 valid **configuration comparisons**, but not controlled equal-resource
 comparisons. Separate single-threaded layout/style and default-parallelism
 results, with affinity and worker counts stated explicitly.
