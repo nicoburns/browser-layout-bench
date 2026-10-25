@@ -44,6 +44,40 @@ ROOT_RECT_JS = ("(()=>{const cb=document.getElementById('cb');const d=document.d
 FIREFOX_PROFILER_ENV = dict(MOZ_PROFILER_STARTUP="1", MOZ_PROFILER_STARTUP_FEATURES="nostacksampling,nomarkerstacks",
                             MOZ_PROFILER_STARTUP_FILTERS="GeckoMain")
 
+# Relayout scenarios: after the first layout, `relayout.js` applies each mutation as one batch, forces one layout
+# (bracketed by `performance.mark`s `lb:<step>:start`/`end`) and reverts it (layout discarded) before the next step.
+RELAYOUT_STEPS = ["root_width", "leaf_1", "leaf_10pct", "leaf_all", "append"]
+RELAYOUT_JS = (ROOT / "relayout.js").read_text()
+RELAYOUT_METRICS = ["style", "construct", "layout", "style+layout"]
+
+
+def run_relayout_steps(evaluate):
+    """Drives the scenario steps through `evaluate(js)`; returns the script's {leaves, depth} info."""
+    evaluate(RELAYOUT_JS)
+    info = None
+    for step in RELAYOUT_STEPS:
+        info = evaluate(f"window.__lb.relayout({step!r}, 'apply')")
+        evaluate(f"window.__lb.relayout({step!r}, 'revert')")
+    return info
+
+
+def chrome_relayout(events):
+    """Per step: the trace's style/construct/layout work between the step's user-timing marks (ns)."""
+    marks = {e["name"]: e["ts"] for e in events if e.get("cat") == "blink.user_timing" and e.get("name", "").startswith("lb:")}
+    xs = [e for e in events if e.get("ph") == "X"]
+    out = {}
+    for step in RELAYOUT_STEPS:
+        a, b = marks.get(f"lb:{step}:start"), marks.get(f"lb:{step}:end")
+        if a is None or b is None:
+            continue
+        within = lambda name: sum(e["dur"] for e in xs if e["name"] == name and a <= e["ts"] <= b) * 1000
+        r = dict(style=within("Document::recalcStyle"), construct=within("Document::rebuildLayoutTree"), layout=within("Layout"),
+                 n_layouts=sum(1 for e in xs if e["name"] == "Layout" and a <= e["ts"] <= b))
+        r["style+layout"] = within("UpdateLayoutTree") + r["layout"]
+        out[step] = r
+    return out
+
+
 
 def sh(cmd, cpus=None, **kw):
     if cpus:
@@ -281,11 +315,12 @@ def run_chrome(case, iters, cpus, screenshot=None):
             events, done = [], []
             cdp.on("Tracing.dataCollected", lambda e: events.extend(e["value"]))
             cdp.on("Tracing.tracingComplete", lambda e: done.append(True))
-            cdp.send("Tracing.start", {"traceConfig": {"includedCategories": ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "blink_style"]}})
+            cdp.send("Tracing.start", {"traceConfig": {"includedCategories": ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "blink_style", "blink.user_timing"]}})
             page.goto(url, wait_until="load", timeout=600_000)
             page.wait_for_function("document.getElementById('cb').style.display !== 'none'", timeout=600_000)
             page.evaluate("document.body.offsetHeight")
             root = page.evaluate(ROOT_RECT_JS)
+            run_relayout_steps(page.evaluate)
             cdp.send("Tracing.end")
             while not done:
                 page.wait_for_timeout(50)
@@ -300,6 +335,7 @@ def run_chrome(case, iters, cpus, screenshot=None):
                      n_layouts=len(layouts), root=root, total_objects=main.get("args", {}).get("beginData", {}).get("totalObjects"))
             s["construct+layout"] = s["construct"] + s["layout"]
             s["style+layout"] = s["update_layout_tree"] + s["layout"]
+            s["relayout"] = chrome_relayout(events)
             if screenshot and i == iters - 1:
                 page.screenshot(path=str(screenshot))
                 s["boxes"] = [tuple(b) for b in page.evaluate(
@@ -730,7 +766,7 @@ def cmd_compare(args):
 
 
 # Sample keys that are counts or identities, not durations; everything else in a sample is ns.
-COUNT_KEYS = {"n_reflows", "n_layouts", "n_boxes", "total_objects", "root", "hash", "boxes", "chrome_norm"}
+COUNT_KEYS = {"n_reflows", "n_layouts", "n_boxes", "total_objects", "root", "hash", "boxes", "chrome_norm", "relayout"}
 
 
 def cmd_normalize(args):
