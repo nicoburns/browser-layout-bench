@@ -112,15 +112,27 @@ and [documented protocol](README.md#versions-and-methodology).
   global allocator (with glibc, allocator work and page faults were ~37% of the `layout`
   phase on the 100k-node cases).
 - **Chrome:** fresh pages within one browser launch.
-- **Servo/Firefox/Ladybird:** fresh process per iteration.
+- **Servo/Firefox:** one process per round, a fresh window/tab per iteration after a
+  discarded warm-up load of the case (Servo over WebDriver, Firefox via Playwright; all Firefox tabs
+  in one content process).
+- **Ladybird:** one `WebDriver --headless` browser per round, a fresh window (and WebContent process)
+  per iteration, the UI process's font service warm, a warm-up load only for the real pages.
 
 Excluding startup time does not eliminate differences in allocator, font,
 thread-pool, and other process-local caches. This is neither a consistently cold
 nor consistently warmed protocol. Choose and document a common lifecycle, or
 report cold and warmed cases separately.
 
-CPU placement also differs: pinned single-threaded configurations, unpinned
-parallel configurations, and content-process-only pinning for Firefox. Those are
+CPU placement is a configuration choice: the 2026-10-23 dataset pinned the
+single-threaded runners (`--cpus`) while the current one runs everything
+unpinned on 8 vCPUs, so Servo(1) vs Servo(3) is a thread-count comparison and
+Blitz vs `blitz-par` a 1-thread vs pool comparison on the same cores. Servo's
+`layout_threads` sizes only the style pool used for styling and the full
+box-tree build and layout; the incremental `try_layout` pass of the relayout
+steps runs its `par_iter`s on rayon's global pool (all 8 vCPUs here) in
+Servo(3), and `layout_threads=1` also disables Servo's block-level layout cache
+(`SequentialLayoutState`), so Servo(1) relayout is a different code path, not
+just fewer threads. Those are
 valid **configuration comparisons**, but not controlled equal-resource
 comparisons. Separate single-threaded layout/style and default-parallelism
 results, with affinity and worker counts stated explicitly.
@@ -164,6 +176,27 @@ them by the construction time and the Style table over-counts them by the same a
 tree walk with no shaping, so the amount is small relative to layout on text-heavy pages). The `flex/`,
 `grid/` and most `pangui/` cases have no text, so there the two tables differ only by genuine
 construction cost and "Layout only" is comparable across all engines.
+
+## 7. Relayout scenarios measure invalidation strategy, with warm caches
+
+The relayout steps run after the first layout in the same document, in a fixed order, each on the reverted tree, so
+every step sees the allocator, font and layout caches left by the previous ones (identical across engines, but not a
+cold relayout, and the revert's layout is not measured). The numbers compare how much work each engine's invalidation
+lets through as much as how fast it lays out: Blitz currently restyles the whole subtree on any inline-style change
+(`set_attribute` → `RestyleHint::restyle_subtree()` + full damage), so its whole-pipeline relayout figures are
+dominated by style even when `layout` is small; Servo's repair path reports no box/fragment spans, so only
+`restyle_and_build_trees` is available. Small incremental relayouts (tens of µs in Chrome) sit at the trace clocks'
+resolution — prefer the median there. Only elements with a box take part (`getClientRects()` non-empty; Blitz:
+not `display: none`/`contents`, nor inside `display: none`), and leaves are the innermost block-level elements (`display: inline`
+is excluded, replaced or not, since `width` on a non-replaced inline changes no geometry and Blitz gives inline elements no node
+layout to mutate; so on the text cases the leaves are the paragraphs, not the spans in them); the root children
+cloned by `append` are the boxed ones, so on the real pages it clones top-level sections rather than list items and
+can cost as much as a full layout (rustdoc). The browsers' and Blitz's selections were compared on every text and
+real case and the generated smoke cases: same leaf/root-child counts and deepest leaves everywhere, except where
+Blitz styles the page differently — real/mdn, 566 vs 558 leaves (Blitz does not apply the page's
+`.code-example:has(…) {display: none}` and lays those divs out) and real/wikipedia, 2109 vs 2107 (Blitz gives
+`<picture>` no box, so the `<a>` and `<img>` around two of them become leaves instead). Taffy's direct trees have
+no inline or hidden nodes. Post-mutation geometry is not yet part of `verify`.
 
 ## How to interpret the results
 

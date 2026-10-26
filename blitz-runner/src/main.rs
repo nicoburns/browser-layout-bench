@@ -7,7 +7,7 @@ use std::time::Instant;
 
 use anyrender::render_to_buffer;
 use anyrender_vello_cpu::VelloCpuImageRenderer;
-use blitz_dom::{BaseDocument, DocumentConfig, StyleThreading};
+use blitz_dom::{BaseDocument, CopyStyleGetters, DocumentConfig, NodeId, StyleThreading};
 use blitz_html::{HtmlDocument, HtmlProvider};
 use blitz_paint::paint_scene;
 use blitz_traits::net::{Bytes, NetHandler, NetProvider, Request};
@@ -42,10 +42,12 @@ struct Args {
     hash: bool,
     boxes: bool,
     dump: bool,
+    relayout: bool,
+    check: bool,
 }
 
 fn parse_args() -> Args {
-    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false, dump: false };
+    let mut args = Args { file: String::new(), width: 1280, height: 800, iters: 5, parallel: false, screenshot: None, hash: false, boxes: false, dump: false, relayout: false, check: false };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
@@ -56,11 +58,13 @@ fn parse_args() -> Args {
             "--screenshot" => args.screenshot = it.next(),
             "--hash" => args.hash = true,
             "--boxes" => args.boxes = true,
+            "--relayout" => args.relayout = true,
             "--dump" => args.dump = true,
+            "--check" => args.check = true,
             _ => args.file = a,
         }
     }
-    assert!(!args.file.is_empty(), "usage: blitz-runner <file.html> [--width W] [--height H] [--iters N] [--parallel] [--hash] [--boxes] [--screenshot out.png]");
+    assert!(!args.file.is_empty(), "usage: blitz-runner <file.html> [--width W] [--height H] [--iters N] [--parallel] [--hash] [--boxes] [--relayout] [--check] [--screenshot out.png]");
     args
 }
 
@@ -128,7 +132,7 @@ fn main() {
             html_parser_provider: Some(Arc::new(HtmlProvider)),
             net_provider: Some(Arc::new(FileNetProvider)),
             style_threading,
-            incremental: Some(false),
+            incremental: Some(args.relayout),
             ..Default::default()
         };
         let t = Instant::now();
@@ -139,6 +143,27 @@ fn main() {
         doc.as_mut().resolve(0.0);
         let resolve = t.elapsed().as_nanos();
         println!("BLITZ parse={parse} resolve={resolve}");
+        if args.relayout {
+            // --check: after every step, lay out the mutated document from scratch
+            // (serialised and re-parsed, non-incremental) and compare element geometry and styles
+            let fresh = |html: &str| {
+                let config = DocumentConfig {
+                    viewport: Some(Viewport::new(args.width, args.height, 1.0, ColorScheme::Light)),
+                    base_url: Some(base_url.clone()),
+                    html_parser_provider: Some(Arc::new(HtmlProvider)),
+                    net_provider: Some(Arc::new(FileNetProvider)),
+                    style_threading,
+                    incremental: Some(false),
+                    ..Default::default()
+                };
+                let mut fresh = HtmlDocument::from_html(html, config);
+                fresh.as_mut().handle_messages();
+                fresh.as_mut().resolve(0.0);
+                (element_layouts(fresh.as_ref()), fresh)
+            };
+            let fresh: &dyn Fn(&str) -> (Vec<ElementLayout>, HtmlDocument) = &fresh;
+            relayout_steps(doc.as_mut(), args.check.then_some(fresh));
+        }
 
         if i + 1 == args.iters {
             if args.dump {
@@ -180,4 +205,246 @@ fn main() {
             }
         }
     }
+}
+
+
+/// The relayout scenarios of `relayout.js`, applied natively: each step mutates the tree in one batch, times one
+/// incremental `resolve()` (printed as `RELAYOUT step=<name> resolve=<ns>` after that resolve's `PHASES` line) and
+/// is reverted, the revert's `resolve()` discarded, before the next step.
+
+/// Tag (`div`, `div::before`), final layout and a hash of every resolved longhand
+type ElementLayout = (String, [f32; 4], u64);
+
+/// Every element and `::before`/`::after`, in tree order, with its pseudo-element suffix
+fn element_ids(doc: &BaseDocument) -> Vec<(NodeId, &'static str)> {
+    let mut out = Vec::new();
+    let mut stack = vec![(doc.root_node().id, "")];
+    while let Some((id, pseudo)) = stack.pop() {
+        let node = &doc.tree()[id];
+        if node.element_data().is_some() {
+            out.push((id, pseudo));
+        }
+        stack.extend(node.after().map(|id| (id, "::after")));
+        stack.extend(node.children.iter().rev().map(|id| (*id, "")));
+        stack.extend(node.before().map(|id| (id, "::before")));
+    }
+    out
+}
+
+fn style_hash(doc: &BaseDocument, id: NodeId) -> u64 {
+    use std::hash::{Hash, Hasher};
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+    for name in blitz_dom::resolved_style_property_names() {
+        doc.resolved_style_value(id, name).hash(&mut hasher);
+    }
+    hasher.finish()
+}
+
+fn element_layouts(doc: &BaseDocument) -> Vec<ElementLayout> {
+    element_ids(doc)
+        .into_iter()
+        .map(|(id, pseudo)| {
+            let node = &doc.tree()[id];
+            let l = node.final_layout();
+            let name = format!("{}{pseudo}", node.element_data().unwrap().name.local);
+            (name, [l.location.x, l.location.y, l.size.width, l.size.height], style_hash(doc, id))
+        })
+        .collect()
+}
+
+/// The resolved properties of element `index` (in `element_ids` order) that differ between two documents
+fn differing_properties(a: &BaseDocument, b: &BaseDocument, index: usize) -> Vec<String> {
+    let (Some(&(a_id, _)), Some(&(b_id, _))) = (element_ids(a).get(index), element_ids(b).get(index)) else {
+        return Vec::new();
+    };
+    blitz_dom::resolved_style_property_names()
+        .iter()
+        .filter_map(|name| {
+            let (x, y) = (a.resolved_style_value(a_id, name), b.resolved_style_value(b_id, name));
+            (x != y).then(|| format!("{name}: {x:?} vs {y:?}"))
+        })
+        .collect()
+}
+
+/// Blitz serialises empty elements as `<div />`, which the HTML parser reads as an open tag;
+/// expand them to `<div></div>` (void elements are left as they are)
+fn expand_self_closing_tags(html: &str) -> String {
+    const VOID: [&str; 14] = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+    let mut out = String::with_capacity(html.len());
+    let mut rest = html;
+    while let Some(i) = rest.find(" />") {
+        let (before, after) = rest.split_at(i);
+        let start = before.rfind('<').unwrap();
+        let tag: String = before[start + 1..].chars().take_while(|c| c.is_ascii_alphanumeric()).collect();
+        out.push_str(before);
+        if VOID.contains(&tag.as_str()) {
+            out.push_str(" />");
+        } else {
+            out.push_str("></");
+            out.push_str(&tag);
+            out.push('>');
+        }
+        rest = &after[3..];
+    }
+    out.push_str(rest);
+    out
+}
+
+fn relayout_steps(doc: &mut BaseDocument, check: Option<&dyn Fn(&str) -> (Vec<ElementLayout>, HtmlDocument)>) {
+    let verify = |doc: &mut BaseDocument, step: &str| {
+        let Some(fresh) = check else { return };
+        let incremental = element_layouts(doc);
+        let root = doc.root_element().id;
+        doc.get_node_mut(root).unwrap().set_restyle_hint(blitz_dom::RestyleHint::restyle_subtree());
+        doc.resolve(0.0);
+        let full = element_layouts(doc);
+        let (fresh, fresh_doc) = fresh(&expand_self_closing_tags(&doc.root_element().outer_html()));
+        let mut line = format!("CHECK step={step} elements={}", incremental.len());
+        for (name, reference, reference_doc) in [("full", &full, None), ("fresh", &fresh, Some(fresh_doc.as_ref()))] {
+            if incremental == *reference {
+                line.push_str(&format!(" {name}=ok"));
+                continue;
+            }
+            let diffs: Vec<usize> = (0..incremental.len().max(reference.len())).filter(|&i| incremental.get(i) != reference.get(i)).collect();
+            // elements whose size differs are the likely culprits; position-only differences follow from them
+            let sized: Vec<usize> = diffs.iter().copied().filter(|&i| match (incremental.get(i), reference.get(i)) {
+                (Some((_, a, _)), Some((_, b, _))) => a[2..] != b[2..],
+                _ => true,
+            }).collect();
+            // elements with the same box but a different resolved style: a restyle that was missed
+            let styled: Vec<usize> = diffs.iter().copied().filter(|&i| match (incremental.get(i), reference.get(i)) {
+                (Some((_, a, x)), Some((_, b, y))) => a == b && x != y,
+                _ => false,
+            }).collect();
+            let last_sized = sized.last().copied().unwrap_or(diffs[0]);
+            let verbose = std::env::var_os("BLB_CHECK_VERBOSE").is_some();
+            if verbose {
+                let ids = element_ids(doc);
+                let html = doc.tree()[ids[last_sized].0].outer_html();
+                eprintln!("CHECK {step} {name} last_size_diff html: {}", &html[..html.len().min(1500)]);
+                for &i in sized.iter().take(20) {
+                    let html = doc.tree()[ids[i].0].outer_html();
+                    eprintln!("  {i} incremental={:?} {name}={:?} {}", incremental.get(i), reference.get(i), html.chars().take(100).collect::<String>());
+                }
+            }
+            line.push_str(&format!(
+                " {name}=mismatch({}_elements={} differing={} size_differing={} style_differing={} first={} incremental={:?} {name}={:?} last_size_diff={} incremental={:?} {name}={:?}",
+                name, reference.len(), diffs.len(), sized.len(), styled.len(), diffs[0], incremental.get(diffs[0]), reference.get(diffs[0]),
+                last_sized, incremental.get(last_sized), reference.get(last_sized)
+            ));
+            if let (Some(&i), Some(reference_doc)) = (styled.first(), reference_doc) {
+                let properties = differing_properties(doc, reference_doc, i);
+                line.push_str(&format!(" first_style_diff={i} properties={}", properties.len()));
+                for property in properties.iter().take(if verbose { usize::MAX } else { 5 }) {
+                    line.push_str(&format!(" [{property}]"));
+                }
+            }
+            line.push(')');
+        }
+        println!("{line}");
+    };
+    verify(doc, "initial");
+    let style_attr = || blitz_dom::QualName::new(None, blitz_dom::ns!(), blitz_dom::local_name!("style"));
+    let (root, leaves, deepest) = {
+        let tree = doc.tree();
+        let cb = doc.query_selector("#cb").expect("selector").expect("#cb");
+        let is_body = tree[cb].element_data().is_some_and(|e| e.name.local == blitz_dom::local_name!("body"));
+        let root = if is_body { cb } else { *tree[cb].children.iter().find(|c| tree[**c].is_element()).expect("root") };
+        // as relayout.js: elements with a box (not display:none/contents, nor inside display:none; the children of a
+        // display:contents element do take part); leaves are the innermost block-level elements
+        let display = |id: NodeId| tree[id].primary_styles().map(|s| (**s).clone_display());
+        let block_level = |id: NodeId| tree[id].has_boxes() && display(id).is_some_and(|d| !d.is_inline_flow());
+        let mut leaves = Vec::new();
+        let mut stack: Vec<(NodeId, usize)> = tree[cb].children.iter().rev().map(|c| (*c, 1)).collect();
+        while let Some((id, depth)) = stack.pop() {
+            if !tree[id].is_element() || display(id).is_none_or(|d| d.is_none()) {
+                continue;
+            }
+            let kids: Vec<NodeId> = tree[id].children.iter().copied().filter(|c| tree[*c].is_element()).collect();
+            if block_level(id) && !kids.iter().any(|c| block_level(*c)) {
+                leaves.push((id, depth));
+            }
+            stack.extend(kids.into_iter().rev().map(|c| (c, depth + 1)));
+        }
+        let max_depth = leaves.iter().map(|l| l.1).max().unwrap_or(0);
+        let deepest: Vec<NodeId> = leaves.iter().filter(|l| l.1 == max_depth).map(|l| l.0).collect();
+        let kids = tree[root].children.iter().filter(|c| tree[**c].is_element() && tree[**c].has_boxes()).count();
+        println!("RELAYOUT_INFO leaves={} deepest={} kids={}", leaves.len(), deepest.len(), kids);
+        if std::env::var_os("LB_LEAF_DUMP").is_some() {
+            for (id, _) in &leaves {
+                let mut path = Vec::new();
+                let mut cur = *id;
+                while cur != cb {
+                    let parent = tree[cur].parent.expect("parent");
+                    let idx = tree[parent].children.iter().filter(|c| tree[**c].is_element()).position(|c| *c == cur).unwrap();
+                    path.push(format!("{}:{idx}", tree[cur].element_data().unwrap().name.local));
+                    cur = parent;
+                }
+                path.reverse();
+                println!("LEAF {}", path.join("/"));
+            }
+        }
+        (root, leaves.into_iter().map(|l| l.0).collect::<Vec<NodeId>>(), deepest)
+    };
+    let widen = |doc: &mut BaseDocument, ids: &[NodeId]| -> Vec<(NodeId, Option<String>)> {
+        let saved: Vec<(NodeId, Option<String>, f32)> = {
+            let tree = doc.tree();
+            ids.iter().map(|&id| (id, tree[id].attr(blitz_dom::local_name!("style")).map(str::to_string), tree[id].final_layout().size.width)).collect()
+        };
+        let mut m = doc.mutate();
+        for (id, style, w) in &saved {
+            let base = style.clone().unwrap_or_default();
+            m.set_attribute(*id, style_attr(), &format!("{base};width:{}px", w + 1.0));
+        }
+        drop(m);
+        saved.into_iter().map(|(id, style, _)| (id, style)).collect()
+    };
+    let restore = |doc: &mut BaseDocument, saved: Vec<(NodeId, Option<String>)>| {
+        let mut m = doc.mutate();
+        for (id, style) in saved {
+            m.set_attribute(id, style_attr(), style.as_deref().unwrap_or(""));
+        }
+    };
+    let timed = |doc: &mut BaseDocument, step: &str| {
+        let t = Instant::now();
+        doc.resolve(0.0);
+        println!("RELAYOUT step={step} resolve={}", t.elapsed().as_nanos());
+        verify(doc, step);
+    };
+    // root_width: 0.8x the root's current width
+    let saved = {
+        let (style, w) = { let n = &doc.tree()[root]; (n.attr(blitz_dom::local_name!("style")).map(str::to_string), n.final_layout().size.width) };
+        let base = style.clone().unwrap_or_default();
+        doc.mutate().set_attribute(root, style_attr(), &format!("{base};width:{}px", (w * 0.8).round()));
+        vec![(root, style)]
+    };
+    timed(doc, "root_width");
+    restore(doc, saved);
+    doc.resolve(0.0);
+    let one = vec![deepest[deepest.len() / 2]];
+    let tenth: Vec<NodeId> = leaves.iter().copied().step_by(10).collect();
+    for (name, ids) in [("leaf_1", &one), ("leaf_10pct", &tenth), ("leaf_all", &leaves)] {
+        let saved = widen(doc, ids);
+        timed(doc, name);
+        restore(doc, saved);
+        doc.resolve(0.0);
+    }
+    // append: clones of the last 10% of the root's children
+    let kids: Vec<NodeId> = doc.tree()[root].children.iter().copied()
+        .filter(|c| { let n = &doc.tree()[*c]; n.is_element() && n.has_boxes() }).collect();
+    let n = (kids.len() / 10).max(1);
+    let clones: Vec<NodeId> = {
+        let mut m = doc.mutate();
+        let clones: Vec<NodeId> = kids[kids.len() - n..].iter().map(|&c| m.deep_clone_node(c)).collect();
+        m.append_children(root, &clones);
+        clones
+    };
+    timed(doc, "append");
+    {
+        let mut m = doc.mutate();
+        for c in clones {
+            m.remove_node(c);
+        }
+    }
+    doc.resolve(0.0);
 }

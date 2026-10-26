@@ -412,6 +412,59 @@ fn page(case: &Case) -> (String, u32) {
     (out, count)
 }
 
+/// The relayout scenarios of `relayout.js` on the laid-out tree: each mutation, one timed `compute_layout`, then
+/// the mutation reverted (its layout unmeasured). Taffy marks the mutated nodes dirty itself.
+fn relayout_steps(c: &mut Case) -> Vec<(&'static str, u128)> {
+    let scenario_root = if c.tree.style(c.root).unwrap().position == Position::Relative && c.tree.child_count(c.root) == 1 {
+        c.tree.child_at_index(c.root, 0).unwrap()
+    } else { c.root };
+    let leaves: Vec<NodeId> = all_nodes(&c.tree, scenario_root).into_iter().filter(|&n| n != scenario_root && c.tree.child_count(n) == 0).collect();
+    let depth = |tree: &TaffyTree, mut n: NodeId| { let mut d = 0; while let Some(p) = tree.parent(n) { d += 1; n = p; } d };
+    let max_depth = leaves.iter().map(|&n| depth(&c.tree, n)).max().unwrap_or(0);
+    let deepest: Vec<NodeId> = leaves.iter().copied().filter(|&n| depth(&c.tree, n) == max_depth).collect();
+    let mut out = Vec::new();
+    let mut timed = |c: &mut Case| { let t = Instant::now(); c.tree.compute_layout(c.root, c.avail).unwrap(); t.elapsed().as_nanos() };
+    let set_widths = |c: &mut Case, nodes: &[NodeId], f: &dyn Fn(f32) -> f32| -> Vec<Style> {
+        let widths: Vec<f32> = nodes.iter().map(|&n| c.tree.layout(n).unwrap().size.width).collect();
+        nodes.iter().zip(widths).map(|(&n, w)| {
+            let saved = c.tree.style(n).unwrap().clone();
+            let mut st = saved.clone();
+            st.size.width = length(f(w));
+            c.tree.set_style(n, st).unwrap();
+            saved
+        }).collect()
+    };
+    let restore = |c: &mut Case, nodes: &[NodeId], saved: Vec<Style>| {
+        for (&n, st) in nodes.iter().zip(saved) { c.tree.set_style(n, st).unwrap(); }
+        c.tree.compute_layout(c.root, c.avail).unwrap();
+    };
+    let width_step = |c: &mut Case, out: &mut Vec<(&'static str, u128)>, name: &'static str, nodes: Vec<NodeId>, f: &dyn Fn(f32) -> f32| {
+        let saved = set_widths(c, &nodes, f);
+        let ns = timed(c);
+        restore(c, &nodes, saved);
+        out.push((name, ns));
+    };
+    width_step(c, &mut out, "root_width", vec![scenario_root], &|w| (w * 0.8).round());
+    width_step(c, &mut out, "leaf_1", vec![deepest[deepest.len() / 2]], &|w| w + 1.0);
+    width_step(c, &mut out, "leaf_10pct", leaves.iter().copied().step_by(10).collect(), &|w| w + 1.0);
+    width_step(c, &mut out, "leaf_all", leaves.clone(), &|w| w + 1.0);
+    // append: the last 10 % of the scenario root's children cloned (styles and subtrees) and appended
+    fn clone_subtree(tree: &mut TaffyTree, n: NodeId) -> NodeId {
+        let style = tree.style(n).unwrap().clone();
+        let kids: Vec<NodeId> = tree.children(n).unwrap().into_iter().map(|k| clone_subtree(tree, k)).collect();
+        tree.new_with_children(style, &kids).unwrap()
+    }
+    let children = c.tree.children(scenario_root).unwrap();
+    let n = (children.len() / 10).max(1).min(children.len());
+    let clones: Vec<NodeId> = children[children.len() - n..].iter().map(|&k| clone_subtree(&mut c.tree, k)).collect();
+    for &k in &clones { c.tree.add_child(scenario_root, k).unwrap(); }
+    let ns = timed(c);
+    for &k in &clones { c.tree.remove_child(scenario_root, k).unwrap(); c.tree.remove(k).unwrap(); }
+    c.tree.compute_layout(c.root, c.avail).unwrap();
+    out.push(("append", ns));
+    out
+}
+
 fn all_nodes(tree: &TaffyTree, root: NodeId) -> Vec<NodeId> {
     let mut nodes = vec![root];
     let mut i = 0;
@@ -485,7 +538,10 @@ fn main() {
                     let t = Instant::now();
                     c.tree.compute_layout(c.root, c.avail).unwrap();
                     let ns = t.elapsed().as_nanos();
-                    if i >= 2 { println!("taffy\t{}\t{ns}", c.name); }
+                    if i >= 2 {
+                        println!("taffy\t{}\t{ns}", c.name);
+                        for (step, ns) in relayout_steps(&mut c) { println!("taffy-relayout\t{}\t{step}\t{ns}", c.name); }
+                    }
                 }
                 let l = c.tree.layout(c.root).unwrap();
                 eprintln!("{}: root {}x{}", c.name, l.size.width, l.size.height);

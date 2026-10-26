@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Driver: generates the corpus, runs each engine on every page in interleaved rounds, and
 writes results.json + a Markdown report. See README.md for the measurement model."""
-import argparse, functools, http.server, json, os, re, shutil, statistics, subprocess, sys, tempfile, threading
+import argparse, functools, http.server, json, os, re, shutil, statistics, subprocess, sys, tempfile, threading, time
 from pathlib import Path
 
 import engines_ladybird
+import engines_servo
 import engines_webkit
 import pages
 import plot
@@ -16,6 +17,7 @@ REAL = ROOT / "real"
 OUT = ROOT / "out"
 GEN = ROOT / "target/release/gen"
 BLITZ = ROOT / "target/release/blitz-runner"
+SERVO_TRACE = ROOT / "target/release/servo-trace"  # `cargo build --release -p servo-trace`
 # `cargo build --release -p layout-bench-blitz --features floats,writing-mode,parallel-construct --target-dir target-pcon`
 BLITZ_PCON = ROOT / "target-pcon/release/blitz-runner"
 # `cargo build --release --manifest-path blitz-runner-pl/Cargo.toml --target-dir target-pl` (see blitz-runner-pl/Cargo.toml)
@@ -42,6 +44,57 @@ ROOT_RECT_JS = ("(()=>{const cb=document.getElementById('cb');const d=document.d
 # parent writes the profile (with the content processes' exit profiles) to MOZ_PROFILER_SHUTDOWN.
 FIREFOX_PROFILER_ENV = dict(MOZ_PROFILER_STARTUP="1", MOZ_PROFILER_STARTUP_FEATURES="nostacksampling,nomarkerstacks",
                             MOZ_PROFILER_STARTUP_FILTERS="GeckoMain")
+
+# Relayout scenarios: after the first layout, `relayout.js` applies each mutation as one batch, forces one layout
+# (bracketed by `performance.mark`s `lb:<step>:start`/`end`) and reverts it (layout discarded) before the next step.
+CHECK = False  # pass --check to blitz-runner, see run_blitz
+RELAYOUT_STEPS = ["root_width", "leaf_1", "leaf_10pct", "leaf_all", "append"]
+RELAYOUT_JS = (ROOT / "relayout.js").read_text()
+RELAYOUT_METRICS = ["style", "construct", "layout", "style+layout"]
+
+
+SELECTIONS = {}
+
+
+def run_relayout_steps(evaluate, times=None):
+    """Drives the scenario steps through `evaluate(js)` (the install script, or an expression whose value it
+    returns); returns the script's {leaves, depth} info. The leaf selection costs two layout queries per
+    element (seconds per document on the 100k-node pages in Servo), so it is computed in the first document
+    an engine opens of a page and handed to its later ones (`SELECTIONS`, keyed by user agent and path).
+    `times`, if given, collects each step's apply call as a (t0, t1) `time.time_ns()` interval."""
+    evaluate(RELAYOUT_JS)
+    key = evaluate("window.__lb.key")
+    selection = SELECTIONS.get(key)
+    evaluate(f"window.__lb.init({json.dumps(selection)})")
+    if selection is None:
+        SELECTIONS[key] = evaluate("window.__lb.selection")
+    info = None
+    for step in RELAYOUT_STEPS:
+        t0 = time.time_ns()
+        info = evaluate(f"window.__lb.relayout({step!r}, 'apply')")
+        if times is not None:
+            times[step] = (t0, time.time_ns())
+        evaluate(f"window.__lb.relayout({step!r}, 'revert')")
+    return info
+
+
+def chrome_relayout(events):
+    """Per step: the trace's style/construct/layout work between the step's user-timing marks (ns)."""
+    marks = {e["name"]: e["ts"] for e in events if e.get("cat") == "blink.user_timing" and e.get("name", "").startswith("lb:")}
+    xs = [e for e in events if e.get("ph") == "X"]
+    out = {}
+    for step in RELAYOUT_STEPS:
+        a, b = marks.get(f"lb:{step}:start"), marks.get(f"lb:{step}:end")
+        if a is None or b is None:
+            continue
+        within = lambda name: sum(e["dur"] for e in xs if e["name"] == name and a <= e["ts"] <= b) * 1000
+        r = dict(style=within("Document::recalcStyle"), construct=within("Document::rebuildLayoutTree"), layout=within("Layout"))
+        r["style+layout"] = within("UpdateLayoutTree") + r["layout"]
+        if (n := sum(1 for e in xs if e["name"] == "Layout" and a <= e["ts"] <= b)) != 1:
+            print(f"warning: {n} Layout events in relayout step {step}", file=sys.stderr)
+        out[step] = r
+    return out
+
 
 
 def sh(cmd, cpus=None, **kw):
@@ -107,16 +160,23 @@ def run_taffy(case, iters, cpus):
     out = sh([str(GEN), "bench", case["name"], "--iters", str(iters)], cpus)
     samples = []
     for line in out.splitlines():
-        eng, name, ns = line.split("\t")
-        if name == case["name"]:
-            samples.append({"layout": int(ns)})
+        eng, name, *rest = line.split("\t")
+        if name != case["name"]:
+            continue
+        if eng == "taffy":
+            samples.append({"layout": int(rest[0])})
+        else:  # taffy-relayout <case> <step> <ns>, after the iteration's `taffy` line
+            step, ns = rest
+            samples[-1][f"relayout/{step}/layout"] = int(ns)
     return samples
 
 
 def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, env=None):
     if not binary.exists():
         raise FileNotFoundError(f"{binary.relative_to(ROOT)} not built, see README")
-    cmd = [str(binary), str(CORPUS / case["file"]), "--width", str(case["width"]), "--height", str(case["height"]), "--iters", str(iters), "--hash"]
+    cmd = [str(binary), str(CORPUS / case["file"]), "--width", str(case["width"]), "--height", str(case["height"]), "--iters", str(iters), "--hash", "--relayout"]
+    if CHECK:
+        cmd.append("--check")
     if parallel:
         cmd.append("--parallel")
     if screenshot:
@@ -126,11 +186,26 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
     for line in out.splitlines():
         if line.startswith("PHASES"):
             phases = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", line.split("|", 1)[1])}
+        elif line.startswith("RELAYOUT "):
+            kv = dict(re.findall(r"(\w+)=(\w+)", line))
+            samples[-1].setdefault("relayout", {})[kv["step"]] = dict(
+                style=phases["style"], damage=phases.get("damage", 0), construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
+                resolve=int(kv["resolve"]))
+        elif line.startswith("CHECK"):
+            # --check: the incremental layout and resolved styles (elements and ::before/::after)
+            # vs a forced full restyle (`full`) and vs a fresh layout of the serialised document
+            # (`fresh`), each "ok" or "mismatch"
+            kv = dict(re.findall(r"(\w+)=(\w+)", line))
+            check = {k: kv[k] for k in ("full", "fresh")}
+            if any(v != "ok" for v in check.values()):
+                print(f"  CHECK {kv['step']}: {line.strip()[:300]}", file=sys.stderr)
+            if kv["step"] != "initial":
+                samples[-1].setdefault("relayout", {}).setdefault(kv["step"], {})["check"] = check
         elif line.startswith("BLITZ"):
             kv = {k: int(v) for k, v in re.findall(r"(\w+)=(\d+)", line)}
             # pconstruct = the deferred tasks that run between box construction and layout, where
             # Blitz builds the Parley layouts, i.e. shapes the text; it belongs with construction
-            s = dict(style=phases["style"], construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
+            s = dict(style=phases["style"], damage=phases.get("damage", 0), construct=phases["construct"] + phases["pconstruct"], layout=phases["layout"],
                      paint_tree=phases["paint_tree"], resolve=kv["resolve"], parse=kv["parse"])
             s["construct+layout"] = s["construct"] + s["layout"]
             samples.append(s)
@@ -143,63 +218,152 @@ def run_blitz(case, iters, cpus, parallel=False, screenshot=None, binary=BLITZ, 
     return samples
 
 
-def parse_servo_trace(path):
-    """Spans of servoshell's perfetto trace, decoded straight from the protobuf: the trace is a few
-    KB, and perfetto's TraceProcessor spends ~1 s per trace starting trace_processor_shell."""
-    from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import Trace, TrackEvent
-    trace = Trace()
-    trace.ParseFromString(Path(path).read_bytes())
-    # tracing_perfetto emits a span's BEGIN packet when the span closes, so packets are not in
-    # timestamp order; nest by (timestamp, ends before begins) per thread track, as the trace
-    # processor does.
-    events = sorted(((p.timestamp, p.track_event) for p in trace.packet if p.HasField("track_event")),
-                    key=lambda e: (e[0], e[1].type != TrackEvent.TYPE_SLICE_END))
-    rows, open_spans = [], {}
-    for ts, event in events:
+SERVO_SPANS = {"handle_reflow", "prepare_stylist_for_reflow", "restyle_and_build_trees", "Styling", "Box Tree Construction",
+               "Fragment Tree Construction", "Stacking Context Tree Construction", "Display List Construction"}
+
+
+def servo_trace_rows(path):
+    """Spans of servoshell's perfetto trace: the rows `servo-trace` (Rust, prost) prints, or the same
+    rows decoded here if it is not built; nested by time per track (a span's parent is the innermost
+    span enclosing it; spans ending at ts do not enclose one beginning at ts, as in the trace processor)."""
+    if SERVO_TRACE.exists():
+        out = subprocess.run([str(SERVO_TRACE), str(path)], capture_output=True, text=True, check=True).stdout
+        rows = [json.loads(line) for line in out.splitlines()]
+    else:
+        rows = servo_trace_rows_py(path)
+    rows.sort(key=lambda r: (r["track"], r["ts"], -r["dur"]))
+    stack = []
+    for i, row in enumerate(rows):
+        while stack and (stack[-1]["track"] != row["track"] or stack[-1]["ts"] + stack[-1]["dur"] <= row["ts"]):
+            stack.pop()
+        row["id"], row["parent_id"] = i, stack[-1]["id"] if stack else None
+        stack.append(row)
+    return rows
+
+
+def servo_trace_rows_py(path):
+    """Spans of servoshell's perfetto trace, decoded packet by packet straight from the protobuf: a
+    round's trace runs to GBs (every layout query a page script makes - `getClientRects`,
+    `getComputedStyle`, 10^5 per relayout step on the large pages - is a `handle_reflow` span of its
+    own), past protobuf's 2 GB limit on one message. Only the spans the samples use (SERVO_SPANS) are
+    kept, and a `handle_reflow` only if it encloses one of them, i.e. laid something out; a
+    `handle_reflow` keeps its `webview_id` field (servo/servo#49259) as `webview`. tracing_perfetto writes a span's BEGIN and END packets together when it closes, children before
+    their parent, so they pair up per track as read; the rows are nested by time afterwards."""
+    from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import TracePacket, TrackEvent
+    threads, rows, open_spans, last_kept = {}, [], {}, {}
+    for packet in servo_trace_packets(path):
+        if packet.HasField("track_descriptor"):
+            threads[packet.track_descriptor.uuid] = packet.track_descriptor.thread.thread_name
+            continue
+        if not packet.HasField("track_event"):
+            continue
+        event, ts = packet.track_event, packet.timestamp
         stack = open_spans.setdefault(event.track_uuid, [])
         if event.type == TrackEvent.TYPE_SLICE_BEGIN:
-            row = dict(id=len(rows), parent_id=stack[-1]["id"] if stack else None, name=event.name, ts=ts, dur=None)
-            rows.append(row)
-            stack.append(row)
+            webview = next((str(getattr(a, a.WhichOneof("value"))) for a in event.debug_annotations
+                            if a.name == "webview_id" and a.WhichOneof("value")), None)
+            stack.append((event.name, ts, webview))
         elif event.type == TrackEvent.TYPE_SLICE_END and stack:
-            row = stack.pop()
-            row["dur"] = ts - row["ts"]
-    rows = [r for r in rows if r["dur"] is not None]
-    by_id = {r["id"]: r for r in rows}
-    restyles = [r for r in rows if r["name"] == "restyle_and_build_trees"]
-    if not restyles:
-        raise RuntimeError(f"no restyle_and_build_trees span in {path}")
-    children = {}
-    for r in rows:
-        children.setdefault(r["parent_id"], []).append(r)
+            name, begin, webview = stack.pop()
+            if name not in SERVO_SPANS or (name == "handle_reflow" and last_kept.get(event.track_uuid, -1) < begin):
+                continue
+            last_kept[event.track_uuid] = begin
+            rows.append(dict(name=name, ts=begin, dur=ts - begin, track=event.track_uuid,
+                             thread=threads.get(event.track_uuid, ""), webview=webview))
+    return rows
 
-    def descendants(root_id):
-        out, stack = [], [root_id]
-        while stack:
-            for r in children.get(stack.pop(), []):
-                out.append(r)
-                stack.append(r["id"])
-        return out
+
+def servo_trace_packets(path, chunk=64 << 20):
+    """The TracePackets of a perfetto trace file, streamed: a Trace is a sequence of length-delimited
+    `packet` fields (tag 0x0a)."""
+    from perfetto.protos.perfetto.trace.perfetto_trace_pb2 import TracePacket
+    buf = b""
+    with open(path, "rb") as f:
+        while True:
+            data = f.read(chunk)
+            if not data:
+                break
+            buf += data
+            n, i = len(buf), 0
+            while True:
+                j = i
+                while j < n and buf[j] & 0x80:
+                    j += 1
+                if j + 1 >= n:
+                    break
+                length, shift, j = 0, 0, j + 1
+                while True:
+                    b = buf[j]
+                    j += 1
+                    length |= (b & 0x7F) << shift
+                    shift += 7
+                    if not b & 0x80:
+                        break
+                if j + length > n:
+                    break
+                yield TracePacket.FromString(buf[j:j + length])
+                i = j + length
+            buf = buf[i:]
+
+
+def servo_sample(rows, main, n_reflows):
+    """The sample for the `restyle_and_build_trees` span `main` and its enclosing `handle_reflow`. The
+    phases are the spans within a span's time on any track: with `layout_threads` > 1 the box and
+    fragment passes run on a rayon worker (`StyleThread#N`), nested under nothing."""
+    by_id = {r["id"]: r for r in rows}
 
     def total(root_id, name):
-        return sum(r["dur"] for r in descendants(root_id) if r["name"] == name)
+        root = by_id[root_id]
+        end = root["ts"] + root["dur"]
+        return sum(r["dur"] for r in rows if r["name"] == name and root["ts"] <= r["ts"] and r["ts"] + r["dur"] <= end)
 
-    # The reflow that laid the page out, i.e. the one after the reveal: the longest span is not
-    # always it, as the first (`display:none`) reflow's `prepare_stylist_for_reflow` can outlast the
-    # whole layout of a small page.
-    main = max(restyles, key=lambda r: total(r["id"], "Box Tree Construction") + total(r["id"], "Fragment Tree Construction"))
     reflow = by_id[main["parent_id"]]
 
     s = dict(style=total(main["id"], "Styling"), box=total(main["id"], "Box Tree Construction"),
              fragment=total(main["id"], "Fragment Tree Construction"), restyle_and_build=main["dur"],
              stacking_context=total(reflow["id"], "Stacking Context Tree Construction"),
              display_list=total(reflow["id"], "Display List Construction"), reflow=reflow["dur"],
-             n_reflows=len(restyles))
+             n_reflows=n_reflows)
     s["box+fragment"] = s["box"] + s["fragment"]
     return s
 
 
-@functools.cache
+def servo_relayout_steps(browser):
+    """Runs the scenario steps in the current window; returns {step: (t0, t1)} wall-clock intervals (the trace
+    clock) of each step's apply call, so its reflow can be found among the window's later reflows."""
+    steps = {}
+    run_relayout_steps(lambda js: browser.js("return " + js if js.startswith("window.__lb.") else js), times=steps)
+    return steps
+
+
+def servo_window_sample(rows, window):
+    """The reveal reflow of one WebDriver window: its `handle_reflow` spans are the ones whose `webview`
+    is the window's WebDriver handle (servo prints a WebViewId the same way in both). Of the window's
+    `restyle_and_build_trees` spans up to the observed reveal, the reveal's is the one that built the
+    tree: the others laid the page out with `#cb` hidden (0 to 4 of them, one per 20 ms of parsing) or
+    relaid a wide page out for its scrollbar right after the reveal, 0.01-0.02 ms of box construction
+    each, so neither their count nor their order tells them apart."""
+    reflows = {r["id"] for r in rows if r["name"] == "handle_reflow" and r["webview"] == window["handle"]}
+    if not reflows:
+        raise RuntimeError(f"{window['url']}: no reflow of webview {window['handle']} in the trace "
+                           "(a servoshell without servo/servo#49259?)")
+    # A reflow still open when servoshell is killed at the end of the round (it waits on the painter
+    # after a page's last restyle) has no `handle_reflow` parent; the reveal's reflow is complete,
+    # as the reveal script's `offsetHeight` forced it.
+    restyles = [r for r in rows if r["name"] == "restyle_and_build_trees" and r["parent_id"] in reflows
+                and window["nav"] <= r["ts"] <= window["revealed"]]
+    if not restyles:
+        raise RuntimeError(f"{window['url']}: no reflow before the reveal")
+    sample = max((servo_sample(rows, r, len(restyles)) for r in restyles), key=lambda s: s["box+fragment"])
+    sample["relayout"] = {}
+    for step, (t0, t1) in window.get("steps", {}).items():
+        spans = [r for r in rows if r["name"] == "restyle_and_build_trees" and r["parent_id"] in reflows
+                 and t0 <= r["ts"] <= t1]
+        if spans:
+            sample["relayout"][step] = servo_sample(rows, max(spans, key=lambda r: r["dur"]), len(spans))
+    return sample
+
+
 def corpus_server():
     """Servo's fetch rejects `file://` fonts (CORS mode, opaque origin), so it gets the corpus over
     localhost HTTP instead. Returns the base URL."""
@@ -211,20 +375,42 @@ def corpus_server():
     return f"http://127.0.0.1:{server.server_address[1]}"
 
 
-def run_servo(case, iters, cpus, threads, screenshot=None):
-    samples = []
-    url = f"{corpus_server()}/reveal/{case['file']}"
-    env = dict(os.environ, SERVO_TRACING="layout::layout_impl=trace,layout::flow::root=trace")
-    for i in range(iters):
-        with tempfile.TemporaryDirectory() as d:
-            cmd = [str(SERVOSHELL), "-z", "-x", f"--window-size={case['width']}x{case['height']}", "--pref", f"layout_threads={threads}"]
-            if screenshot and i == iters - 1:
-                cmd += ["-o", str(screenshot)]
-            cmd.append(url)
-            subprocess.run((["taskset", "-c", cpus] if cpus else []) + cmd, check=True, cwd=d, env=env,
-                           capture_output=True, text=True, timeout=600)
-            samples.append(parse_servo_trace(Path(d) / "servo.pftrace"))
-    return samples
+def run_servo_round(cases, iters, cpus, threads, screenshot=None, warmup=True):
+    """One servoshell per call (= per round, for every case of the round) driven over WebDriver
+    (engines_servo), a fresh window per iteration (`?i=N`, closed once revealed) so every sample is
+    still a first layout, but in a warm process like Chrome's, WebKit's and Firefox's. Each case first
+    loads its page as a discarded warm-up (`?warmup`). Returns {case name: samples}."""
+    windows = {}
+    with tempfile.TemporaryDirectory() as d:
+        browser = engines_servo.Browser(SERVOSHELL, threads, cpus, d, WIDTH, HEIGHT)
+        try:
+            for case in cases:
+                url = f"{corpus_server()}/reveal/{case['file']}"
+                if warmup:
+                    browser.close(browser.load(url + "?warmup", case["width"], case["height"]))
+                windows[case["name"]] = []
+                for i in range(iters):
+                    w = browser.load(f"{url}?i={i}", case["width"], case["height"])
+                    w["root"] = browser.js("return " + ROOT_RECT_JS)
+                    w["steps"] = servo_relayout_steps(browser)
+                    if screenshot and i == iters - 1:
+                        browser.screenshot(screenshot)
+                        w["boxes"] = [tuple(b) for b in browser.js(
+                            "return [...document.querySelectorAll('#cb div, #cb p, #cb h3')].map(e=>{const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height]})")]
+                        w["fonts"] = browser.js("return [...document.fonts].map(f=>f.status).join(',')")
+                    browser.close(w)
+                    windows[case["name"]].append(w)
+        finally:
+            browser.quit()
+        rows = servo_trace_rows(Path(d) / "servo.pftrace")
+    results = {}
+    for name, ws in windows.items():
+        results[name] = []
+        for w in ws:
+            s = servo_window_sample(rows, w)
+            s.update({k: w[k] for k in ("root", "boxes", "fonts") if k in w})
+            results[name].append(s)
+    return results
 
 
 def run_chrome(case, iters, cpus, screenshot=None):
@@ -239,17 +425,23 @@ def run_chrome(case, iters, cpus, screenshot=None):
             events, done = [], []
             cdp.on("Tracing.dataCollected", lambda e: events.extend(e["value"]))
             cdp.on("Tracing.tracingComplete", lambda e: done.append(True))
-            cdp.send("Tracing.start", {"traceConfig": {"includedCategories": ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "blink_style"]}})
+            cdp.send("Tracing.start", {"traceConfig": {"includedCategories": ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "blink_style", "blink.user_timing"]}})
             page.goto(url, wait_until="load", timeout=600_000)
             page.wait_for_function("document.getElementById('cb').style.display !== 'none'", timeout=600_000)
             page.evaluate("document.body.offsetHeight")
             root = page.evaluate(ROOT_RECT_JS)
+            run_relayout_steps(page.evaluate)
             cdp.send("Tracing.end")
             while not done:
                 page.wait_for_timeout(50)
+            # the first layout's metrics come from the events before the first relayout mark: a step's
+            # recalcStyle/Layout can outlast the reveal's (e.g. `leaf_all` on real pages)
+            cut = min((e["ts"] for e in events if e.get("cat") == "blink.user_timing" and e.get("name", "").startswith("lb:")),
+                      default=float("inf"))
+            initial = [e for e in events if e.get("ph") == "X" and e.get("ts", 0) < cut]
             def longest(name):
-                return max(e["dur"] for e in events if e.get("name") == name and e.get("ph") == "X") * 1000
-            layouts = [e for e in events if e.get("name") == "Layout" and e.get("ph") == "X"]
+                return max(e["dur"] for e in initial if e.get("name") == name) * 1000
+            layouts = [e for e in initial if e.get("name") == "Layout"]
             main = max(layouts, key=lambda e: e["dur"])
             # `UpdateLayoutTree` = `Document::recalcStyle` (style) + `Document::rebuildLayoutTree`
             # (LayoutObject construction); `Layout` is fragment-tree work only.
@@ -258,6 +450,7 @@ def run_chrome(case, iters, cpus, screenshot=None):
                      n_layouts=len(layouts), root=root, total_objects=main.get("args", {}).get("beginData", {}).get("totalObjects"))
             s["construct+layout"] = s["construct"] + s["layout"]
             s["style+layout"] = s["update_layout_tree"] + s["layout"]
+            s["relayout"] = chrome_relayout(events)
             if screenshot and i == iters - 1:
                 page.screenshot(path=str(screenshot))
                 s["boxes"] = [tuple(b) for b in page.evaluate(
@@ -288,7 +481,7 @@ def parse_firefox_profile(profile, url):
     thread = next(t for t in proc["threads"] if t["name"] == "GeckoMain")
     strings = thread["stringTable"]
     schema = thread["markers"]["schema"]
-    intervals, open_starts = {}, {}
+    intervals, open_starts, marks = {}, {}, {}
     for row in thread["markers"]["data"]:
         name, start, end, phase = (row[schema[k]] for k in ("name", "startTime", "endTime", "phase"))
         name = strings[name]
@@ -296,6 +489,9 @@ def parse_firefox_profile(profile, url):
         if name.startswith("Reflow"):
             name = "Reflow"
         if data and "innerWindowID" in data and data["innerWindowID"] not in window_ids:
+            continue
+        if name == "UserTiming" and data and data.get("entryType") == "mark":
+            marks[data["name"]] = start
             continue
         if phase == 1:
             intervals.setdefault(name, []).append((end - start, data, start))
@@ -305,9 +501,14 @@ def parse_firefox_profile(profile, url):
             start = open_starts[name].pop()
             intervals.setdefault(name, []).append((end - start, data, start))
 
+    # the first layout's metrics come from the intervals before the first relayout mark (a step's
+    # Reflow/Styles can outlast the reveal's); the steps are read from the full set below
+    cut = min(marks.values(), default=float("inf"))
+    initial = {k: [i for i in v if i[2] < cut] for k, v in intervals.items()}
+
     def longest(name, within=None):
-        """Longest interval of `name`, restricted to those inside `within` = (dur, data, start) if given."""
-        cands = intervals.get(name, [])
+        """Longest interval of `name` before the relayout steps, inside `within` = (dur, data, start) if given."""
+        cands = initial.get(name, [])
         if within:
             cands = [i for i in cands if i[2] >= within[2] and i[2] + i[0] <= within[2] + within[0]]
         return max(cands, key=lambda i: i[0], default=(None, None, None))
@@ -316,16 +517,25 @@ def parse_firefox_profile(profile, url):
     # (the one the reveal triggers), not the longest anywhere: Firefox restyles the page again after
     # load (`:visited`, image state) and on a warm process that restyle can outlast the main traversal.
     reflow = longest("Reflow")
-    flush = min((i for i in intervals.get("DoFlushPendingNotifications", [])
+    flush = min((i for i in initial.get("DoFlushPendingNotifications", [])
                  if reflow[2] is not None and i[2] <= reflow[2] and i[2] + i[0] >= reflow[2] + reflow[0]),
                 key=lambda i: i[0], default=None)
     style, style_data, _ = longest("Styles", flush) if flush else longest("Styles")
-    reflows = [d for d, _, _ in intervals.get("Reflow", [])]
+    reflows = [d for d, _, _ in initial.get("Reflow", [])]
     ms = lambda v: None if v is None else int(v * 1e6)
     s = dict(layout=ms(reflow[0]), style=ms(style), flush=ms(flush[0] if flush else longest("DoFlushPendingNotifications")[0]),
              display_list=ms(longest("DisplayList")[0]), layout_sum=ms(sum(reflows)), n_reflows=len(reflows),
              styled=style_data["elementsTraversed"] if style_data else None)
     s["style+layout"] = s["style"] + s["layout"]
+    def within(name, a, b):
+        return sum(d for d, _, st in intervals.get(name, []) if a <= st <= b)
+    s["relayout"] = {}
+    for step in RELAYOUT_STEPS:
+        a, b = marks.get(f"lb:{step}:start"), marks.get(f"lb:{step}:end")
+        if a is not None and b is not None:
+            r = dict(style=ms(within("Styles", a, b)), layout=ms(within("Reflow", a, b)))
+            r["style+layout"] = r["style"] + r["layout"]
+            s["relayout"][step] = r
     return s
 
 
@@ -384,6 +594,7 @@ def run_firefox_round(cases, iters, screenshot=None):
                 page = load(case, f"{url}?i={i}")
                 page.evaluate("document.body.offsetHeight")
                 roots[case["name"]].append(page.evaluate(ROOT_RECT_JS))
+                run_relayout_steps(page.evaluate)
                 if screenshot and i == iters - 1:
                     page.screenshot(path=str(screenshot))
                 page.close()
@@ -399,13 +610,20 @@ def run_firefox_round(cases, iters, screenshot=None):
     return results
 
 # Engines measured one process per round for all of the round's cases (`run_engine_round`) instead of one
-# process per case: Firefox's launch, warm-up, profile dump and decode are then paid once per round.
-BATCH_ENGINES = {"firefox"}
+# process per case: Firefox's launch, warm-up, profile dump and decode, servoshell's launch, warm-up and trace
+# decode, and Ladybird's WebDriver server and UI process start are then paid once per round.
+BATCH_ENGINES = {"firefox", "servo1", "servo", "ladybird"}
 
 
 def run_engine_round(engine, cases, iters, cpus):
     if engine == "firefox":
         return run_firefox_round(cases, iters)
+    if engine == "servo1":
+        return run_servo_round(cases, iters, cpus, 1)
+    if engine == "servo":
+        return run_servo_round(cases, iters, None, 3)
+    if engine == "ladybird":
+        return engines_ladybird.run_ladybird_round(cases, iters, REVEAL, ROOT_RECT_JS, relayout=run_relayout_steps, steps=RELAYOUT_STEPS)
     raise ValueError(engine)
 
 
@@ -427,19 +645,20 @@ def run_engine(engine, case, iters, cpus, screenshot=None):
     if engine == "blitz-par-pcon-pl":
         return run_blitz(case, iters, None, parallel=True, screenshot=screenshot, binary=BLITZ_PL)
     if engine == "servo1":
-        return run_servo(case, iters, cpus, 1, screenshot=screenshot)
+        return run_servo_round([case], iters, cpus, 1, screenshot=screenshot)[case["name"]]
     if engine == "servo":
-        return run_servo(case, iters, None, 3, screenshot=screenshot)
+        return run_servo_round([case], iters, None, 3, screenshot=screenshot)[case["name"]]
     if m := re.fullmatch(r"servo(\d+)", engine):  # ad-hoc `layout_threads=N` sweeps, not in ENGINES
-        return run_servo(case, iters, None, int(m.group(1)), screenshot=screenshot)
+        return run_servo_round([case], iters, None, int(m.group(1)), screenshot=screenshot)[case["name"]]
     if engine == "chrome":
         return run_chrome(case, iters, None, screenshot=screenshot)
     if engine == "webkit":
-        return engines_webkit.run_webkit(case, iters, CORPUS, case["width"], case["height"], ROOT_RECT_JS, screenshot=screenshot)
+        return engines_webkit.run_webkit(case, iters, CORPUS, case["width"], case["height"], ROOT_RECT_JS, screenshot=screenshot,
+                                         relayout=run_relayout_steps)
     if engine == "firefox":
         return run_firefox(case, iters, screenshot=screenshot)
     if engine == "ladybird":
-        return engines_ladybird.run_ladybird(case, iters, None, REVEAL, case["width"], case["height"], screenshot=screenshot)
+        return engines_ladybird.run_ladybird(case, iters, REVEAL, ROOT_RECT_JS, screenshot=screenshot)
     raise ValueError(engine)
 
 
@@ -511,6 +730,27 @@ COLUMNS = [
         ("blitz-par-pcon", "resolve", "Blitz resolve() (parallel style+construct)"),
         ("blitz-par-pcon-pl", "resolve", "Blitz resolve() (parallel style+construct+layout)")]),
 ]
+
+# Relayout scenarios (see RELAYOUT_STEPS): the same engines' layout and whole-pipeline phases for the step's
+# incremental layout. Servo's incremental reflows run no box/fragment spans, so only its whole pipeline is listed.
+RELAYOUT_LABELS = {"root_width": "root width 0.8x", "leaf_1": "1 leaf +1px", "leaf_10pct": "10% of leaves +1px",
+                   "leaf_all": "all leaves +1px", "append": "append 10% more children"}
+for _step, _label in RELAYOUT_LABELS.items():
+    _k = f"relayout/{_step}/"
+    COLUMNS += [
+        (f"Relayout ({_label}): layout", [
+            ("taffy", _k + "layout", "Taffy compute_layout"),
+            ("chrome", _k + "layout", "Chrome Layout"), ("webkit", _k + "layout", "WebKit Layout"),
+            ("firefox", _k + "layout", "Firefox Reflow"), ("ladybird", _k + "layout", "Ladybird layout"),
+            ("blitz", _k + "layout", "Blitz `layout`"), ("blitz-par-pcon", _k + "layout", "Blitz `layout` (parallel style+construct)"),
+            ("blitz-par-pcon-pl", _k + "layout", "Blitz `layout` (#1034 build, parallel)")]),
+        (f"Relayout ({_label}): whole pipeline", [
+            ("chrome", _k + "style+layout", "Chrome UpdateLayoutTree+Layout"), ("webkit", _k + "style+layout", "WebKit RecalculateStyles+Layout"),
+            ("firefox", _k + "style+layout", "Firefox Styles+Reflow"), ("ladybird", _k + "total", "Ladybird update_layout()"),
+            ("servo1", _k + "restyle_and_build", "Servo(1) restyle_and_build_trees"), ("servo", _k + "restyle_and_build", "Servo(3) restyle_and_build_trees"),
+            ("blitz", _k + "resolve", "Blitz resolve()"), ("blitz-par-pcon", _k + "resolve", "Blitz resolve() (parallel style+construct)"),
+            ("blitz-par-pcon-pl", _k + "resolve", "Blitz resolve() (parallel style+construct+layout)")]),
+    ]
 
 
 def fmt_cell(ns, ref, best=False):
@@ -609,6 +849,8 @@ def cmd_report(args):
 
 
 def cmd_bench(args):
+    global CHECK
+    CHECK = args.check
     cases = [c for c in read_manifest() if args.filter in c["name"]]
     engines = available_engines(args.engines.split(","))
     results = {c["name"]: dict(nodes=c["nodes"], engines={e: [] for e in engines}) for c in cases}
@@ -621,6 +863,9 @@ def cmd_bench(args):
         order = [c["name"] for c in read_manifest()]
         results = dict(sorted(results.items(), key=lambda kv: order.index(kv[0]) if kv[0] in order else len(order)))
     def record(r, name, e, samples):
+        for s in samples:  # `relayout/<step>/<metric>` keys: plain metrics for the tables, pages and normalize
+            for step, metrics in s.pop("relayout", {}).items():
+                s.update({f"relayout/{step}/{m}": v for m, v in metrics.items()})
         results[name]["engines"][e] += samples
         best = agg([list(s.values())[0] for s in samples], "min")
         print(f"round {r} {name:24s} {e:10s} {len(samples)} samples, min first metric {fmt_ms(best)} ms", flush=True)
@@ -821,9 +1066,12 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("gen")
     b = sub.add_parser("bench")
-    b.add_argument("--engines", default=",".join(ENGINES))
+    b.add_argument("--engines", default=",".join(ENGINES),
+                   help="comma-separated engine ids (servoN = N layout threads); firefox, servo1 and servo run one "
+                        "browser per round for all of the round's cases")
     b.add_argument("--rounds", type=int, default=3)
     b.add_argument("--iters", type=int, default=3)
+    b.add_argument("--check", action="store_true", help="Blitz: compare each relayout step with a full restyle and a fresh layout")
     b.add_argument("--filter", default="")
     b.add_argument("--cpus", default=None, help="taskset CPU list for the single-threaded runners (taffy, blitz, servo1)")
     b.add_argument("--agg", default="min", choices=["min", "median"])
