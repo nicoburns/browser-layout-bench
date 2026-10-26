@@ -2,14 +2,15 @@
 """Run the instrumented Blitz runner (`--cache-stats`, Taffy patched with `patches/taffy-cache-occupancy.patch`)
 over the corpus and write one JSON per case to cache-occupancy/raw/.
 
-usage: collect.py <runner-binary> [case-substring...]
+usage: collect.py <runner-binary> [case-substring...]   (CACHE_OCCUPANCY_RAW=<dir> overrides the output directory)
 """
 import json, re, subprocess, sys, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CORPUS = ROOT / "corpus"
-RAW = Path(__file__).resolve().parent / "raw"
+import os
+RAW = Path(os.environ.get("CACHE_OCCUPANCY_RAW", Path(__file__).resolve().parent / "raw"))
 
 
 def cases():
