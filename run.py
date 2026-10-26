@@ -17,6 +17,7 @@ REAL = ROOT / "real"
 OUT = ROOT / "out"
 GEN = ROOT / "target/release/gen"
 BLITZ = ROOT / "target/release/blitz-runner"
+SERVO_TRACE = ROOT / "target/release/servo-trace"  # `cargo build --release -p servo-trace`
 # `cargo build --release -p layout-bench-blitz --features floats,writing-mode,parallel-construct --target-dir target-pcon`
 BLITZ_PCON = ROOT / "target-pcon/release/blitz-runner"
 # `cargo build --release --manifest-path blitz-runner-pl/Cargo.toml --target-dir target-pl` (see blitz-runner-pl/Cargo.toml)
@@ -52,12 +53,27 @@ RELAYOUT_JS = (ROOT / "relayout.js").read_text()
 RELAYOUT_METRICS = ["style", "construct", "layout", "style+layout"]
 
 
-def run_relayout_steps(evaluate):
-    """Drives the scenario steps through `evaluate(js)`; returns the script's {leaves, depth} info."""
+SELECTIONS = {}
+
+
+def run_relayout_steps(evaluate, times=None):
+    """Drives the scenario steps through `evaluate(js)` (the install script, or an expression whose value it
+    returns); returns the script's {leaves, depth} info. The leaf selection costs two layout queries per
+    element (seconds per document on the 100k-node pages in Servo), so it is computed in the first document
+    an engine opens of a page and handed to its later ones (`SELECTIONS`, keyed by user agent and path).
+    `times`, if given, collects each step's apply call as a (t0, t1) `time.time_ns()` interval."""
     evaluate(RELAYOUT_JS)
+    key = evaluate("window.__lb.key")
+    selection = SELECTIONS.get(key)
+    evaluate(f"window.__lb.init({json.dumps(selection)})")
+    if selection is None:
+        SELECTIONS[key] = evaluate("window.__lb.selection")
     info = None
     for step in RELAYOUT_STEPS:
+        t0 = time.time_ns()
         info = evaluate(f"window.__lb.relayout({step!r}, 'apply')")
+        if times is not None:
+            times[step] = (t0, time.time_ns())
         evaluate(f"window.__lb.relayout({step!r}, 'revert')")
     return info
 
@@ -206,6 +222,25 @@ SERVO_SPANS = {"handle_reflow", "prepare_stylist_for_reflow", "restyle_and_build
 
 
 def servo_trace_rows(path):
+    """Spans of servoshell's perfetto trace: the rows `servo-trace` (Rust, prost) prints, or the same
+    rows decoded here if it is not built; nested by time per track (a span's parent is the innermost
+    span enclosing it; spans ending at ts do not enclose one beginning at ts, as in the trace processor)."""
+    if SERVO_TRACE.exists():
+        out = subprocess.run([str(SERVO_TRACE), str(path)], capture_output=True, text=True, check=True).stdout
+        rows = [json.loads(line) for line in out.splitlines()]
+    else:
+        rows = servo_trace_rows_py(path)
+    rows.sort(key=lambda r: (r["track"], r["ts"], -r["dur"]))
+    stack = []
+    for i, row in enumerate(rows):
+        while stack and (stack[-1]["track"] != row["track"] or stack[-1]["ts"] + stack[-1]["dur"] <= row["ts"]):
+            stack.pop()
+        row["id"], row["parent_id"] = i, stack[-1]["id"] if stack else None
+        stack.append(row)
+    return rows
+
+
+def servo_trace_rows_py(path):
     """Spans of servoshell's perfetto trace, decoded packet by packet straight from the protobuf: a
     round's trace runs to GBs (every layout query a page script makes - `getClientRects`,
     `getComputedStyle`, 10^5 per relayout step on the large pages - is a `handle_reflow` span of its
@@ -234,15 +269,6 @@ def servo_trace_rows(path):
             last_kept[event.track_uuid] = begin
             rows.append(dict(name=name, ts=begin, dur=ts - begin, track=event.track_uuid,
                              thread=threads.get(event.track_uuid, ""), webview=webview))
-    # Nest per track: a span's parent is the innermost span enclosing it (spans ending at ts do not
-    # enclose one beginning at ts, as in the trace processor).
-    rows.sort(key=lambda r: (r["track"], r["ts"], -r["dur"]))
-    stack = []
-    for i, row in enumerate(rows):
-        while stack and (stack[-1]["track"] != row["track"] or stack[-1]["ts"] + stack[-1]["dur"] <= row["ts"]):
-            stack.pop()
-        row["id"], row["parent_id"] = i, stack[-1]["id"] if stack else None
-        stack.append(row)
     return rows
 
 
@@ -304,13 +330,8 @@ def servo_sample(rows, main, n_reflows):
 def servo_relayout_steps(browser):
     """Runs the scenario steps in the current window; returns {step: (t0, t1)} wall-clock intervals (the trace
     clock) of each step's apply call, so its reflow can be found among the window's later reflows."""
-    browser.js(RELAYOUT_JS)
     steps = {}
-    for step in RELAYOUT_STEPS:
-        t0 = time.time_ns()
-        browser.js(f"return window.__lb.relayout({step!r}, 'apply')")
-        steps[step] = (t0, time.time_ns())
-        browser.js(f"return window.__lb.relayout({step!r}, 'revert')")
+    run_relayout_steps(lambda js: browser.js("return " + js if js.startswith("window.__lb.") else js), times=steps)
     return steps
 
 
