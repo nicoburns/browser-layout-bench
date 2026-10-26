@@ -145,7 +145,7 @@ fn main() {
         println!("BLITZ parse={parse} resolve={resolve}");
         if args.relayout {
             // --check: after every step, lay out the mutated document from scratch
-            // (serialised and re-parsed, non-incremental) and compare element geometry
+            // (serialised and re-parsed, non-incremental) and compare element geometry and styles
             let fresh = |html: &str| {
                 let config = DocumentConfig {
                     viewport: Some(Viewport::new(args.width, args.height, 1.0, ColorScheme::Light)),
@@ -159,9 +159,9 @@ fn main() {
                 let mut fresh = HtmlDocument::from_html(html, config);
                 fresh.as_mut().handle_messages();
                 fresh.as_mut().resolve(0.0);
-                element_layouts(fresh.as_mut())
+                (element_layouts(fresh.as_ref()), fresh)
             };
-            let fresh: &dyn Fn(&str) -> Vec<ElementLayout> = &fresh;
+            let fresh: &dyn Fn(&str) -> (Vec<ElementLayout>, HtmlDocument) = &fresh;
             relayout_steps(doc.as_mut(), args.check.then_some(fresh));
         }
 
@@ -212,21 +212,58 @@ fn main() {
 /// incremental `resolve()` (printed as `RELAYOUT step=<name> resolve=<ns>` after that resolve's `PHASES` line) and
 /// is reverted, the revert's `resolve()` discarded, before the next step.
 
-type ElementLayout = (String, [f32; 4]);
+/// Tag (`div`, `div::before`), final layout and a hash of every resolved longhand
+type ElementLayout = (String, [f32; 4], u64);
 
-/// Tag and final layout of every element, in tree order
-fn element_layouts(doc: &BaseDocument) -> Vec<ElementLayout> {
+/// Every element and `::before`/`::after`, in tree order, with its pseudo-element suffix
+fn element_ids(doc: &BaseDocument) -> Vec<(NodeId, &'static str)> {
     let mut out = Vec::new();
-    let mut stack = vec![doc.root_node().id];
-    while let Some(id) = stack.pop() {
+    let mut stack = vec![(doc.root_node().id, "")];
+    while let Some((id, pseudo)) = stack.pop() {
         let node = &doc.tree()[id];
-        if let Some(el) = node.element_data() {
-            let l = node.final_layout();
-            out.push((el.name.local.to_string(), [l.location.x, l.location.y, l.size.width, l.size.height]));
+        if node.element_data().is_some() {
+            out.push((id, pseudo));
         }
-        stack.extend(node.children.iter().rev());
+        stack.extend(node.after().map(|id| (id, "::after")));
+        stack.extend(node.children.iter().rev().map(|id| (*id, "")));
+        stack.extend(node.before().map(|id| (id, "::before")));
     }
     out
+}
+
+fn style_hash(doc: &BaseDocument, id: NodeId) -> u64 {
+    use std::hash::{Hash, Hasher};
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+    for name in blitz_dom::resolved_style_property_names() {
+        doc.resolved_style_value(id, name).hash(&mut hasher);
+    }
+    hasher.finish()
+}
+
+fn element_layouts(doc: &BaseDocument) -> Vec<ElementLayout> {
+    element_ids(doc)
+        .into_iter()
+        .map(|(id, pseudo)| {
+            let node = &doc.tree()[id];
+            let l = node.final_layout();
+            let name = format!("{}{pseudo}", node.element_data().unwrap().name.local);
+            (name, [l.location.x, l.location.y, l.size.width, l.size.height], style_hash(doc, id))
+        })
+        .collect()
+}
+
+/// The resolved properties of element `index` (in `element_ids` order) that differ between two documents
+fn differing_properties(a: &BaseDocument, b: &BaseDocument, index: usize) -> Vec<String> {
+    let (Some(&(a_id, _)), Some(&(b_id, _))) = (element_ids(a).get(index), element_ids(b).get(index)) else {
+        return Vec::new();
+    };
+    blitz_dom::resolved_style_property_names()
+        .iter()
+        .filter_map(|name| {
+            let (x, y) = (a.resolved_style_value(a_id, name), b.resolved_style_value(b_id, name));
+            (x != y).then(|| format!("{name}: {x:?} vs {y:?}"))
+        })
+        .collect()
 }
 
 /// Blitz serialises empty elements as `<div />`, which the HTML parser reads as an open tag;
@@ -253,23 +290,7 @@ fn expand_self_closing_tags(html: &str) -> String {
     out
 }
 
-fn element_ids(doc: &BaseDocument) -> Vec<NodeId> {
-    let mut out = Vec::new();
-    let mut stack = vec![doc.root_node().id];
-    while let Some(id) = stack.pop() {
-        let node = &doc.tree()[id];
-        if node.is_element() {
-            out.push(id);
-        }
-        stack.extend(node.children.iter().rev());
-    }
-    out
-}
-
-fn relayout_steps(doc: &mut BaseDocument, check: Option<&dyn Fn(&str) -> Vec<ElementLayout>>) {
-    // Two references for the incremental layout: the same document after a forced restyle of
-    // every element (`full`: were the right elements restyled?), and a fresh document parsed
-    // from the serialised DOM (`fresh`: does it match a from-scratch layout?)
+fn relayout_steps(doc: &mut BaseDocument, check: Option<&dyn Fn(&str) -> (Vec<ElementLayout>, HtmlDocument)>) {
     let verify = |doc: &mut BaseDocument, step: &str| {
         let Some(fresh) = check else { return };
         let incremental = element_layouts(doc);
@@ -277,34 +298,48 @@ fn relayout_steps(doc: &mut BaseDocument, check: Option<&dyn Fn(&str) -> Vec<Ele
         doc.get_node_mut(root).unwrap().set_restyle_hint(blitz_dom::RestyleHint::restyle_subtree());
         doc.resolve(0.0);
         let full = element_layouts(doc);
-        let fresh = fresh(&expand_self_closing_tags(&doc.root_element().outer_html()));
+        let (fresh, fresh_doc) = fresh(&expand_self_closing_tags(&doc.root_element().outer_html()));
         let mut line = format!("CHECK step={step} elements={}", incremental.len());
-        for (name, reference) in [("full", &full), ("fresh", &fresh)] {
+        for (name, reference, reference_doc) in [("full", &full, None), ("fresh", &fresh, Some(fresh_doc.as_ref()))] {
             if incremental == *reference {
                 line.push_str(&format!(" {name}=ok"));
-            } else {
-                let diffs: Vec<usize> = (0..incremental.len().max(reference.len())).filter(|&i| incremental.get(i) != reference.get(i)).collect();
-                // elements whose size differs are the likely culprits; position-only differences follow from them
-                let sized: Vec<usize> = diffs.iter().copied().filter(|&i| match (incremental.get(i), reference.get(i)) {
-                    (Some((_, a)), Some((_, b))) => a[2..] != b[2..],
-                    _ => true,
-                }).collect();
-                let last_sized = sized.last().copied().unwrap_or(diffs[0]);
-                if std::env::var_os("BLB_CHECK_VERBOSE").is_some() {
-                    let ids = element_ids(doc);
-                    let html = doc.tree()[ids[last_sized]].outer_html();
-                    eprintln!("CHECK {step} {name} last_size_diff html: {}", &html[..html.len().min(1500)]);
-                    for &i in sized.iter().take(20) {
-                        let html = doc.tree()[ids[i]].outer_html();
-                        eprintln!("  {i} incremental={:?} {name}={:?} {}", incremental.get(i), reference.get(i), html.chars().take(100).collect::<String>());
-                    }
-                }
-                line.push_str(&format!(
-                    " {name}=mismatch({}_elements={} differing={} size_differing={} first={} incremental={:?} {name}={:?} last_size_diff={} incremental={:?} {name}={:?})",
-                    name, reference.len(), diffs.len(), sized.len(), diffs[0], incremental.get(diffs[0]), reference.get(diffs[0]),
-                    last_sized, incremental.get(last_sized), reference.get(last_sized)
-                ));
+                continue;
             }
+            let diffs: Vec<usize> = (0..incremental.len().max(reference.len())).filter(|&i| incremental.get(i) != reference.get(i)).collect();
+            // elements whose size differs are the likely culprits; position-only differences follow from them
+            let sized: Vec<usize> = diffs.iter().copied().filter(|&i| match (incremental.get(i), reference.get(i)) {
+                (Some((_, a, _)), Some((_, b, _))) => a[2..] != b[2..],
+                _ => true,
+            }).collect();
+            // elements with the same box but a different resolved style: a restyle that was missed
+            let styled: Vec<usize> = diffs.iter().copied().filter(|&i| match (incremental.get(i), reference.get(i)) {
+                (Some((_, a, x)), Some((_, b, y))) => a == b && x != y,
+                _ => false,
+            }).collect();
+            let last_sized = sized.last().copied().unwrap_or(diffs[0]);
+            let verbose = std::env::var_os("BLB_CHECK_VERBOSE").is_some();
+            if verbose {
+                let ids = element_ids(doc);
+                let html = doc.tree()[ids[last_sized].0].outer_html();
+                eprintln!("CHECK {step} {name} last_size_diff html: {}", &html[..html.len().min(1500)]);
+                for &i in sized.iter().take(20) {
+                    let html = doc.tree()[ids[i].0].outer_html();
+                    eprintln!("  {i} incremental={:?} {name}={:?} {}", incremental.get(i), reference.get(i), html.chars().take(100).collect::<String>());
+                }
+            }
+            line.push_str(&format!(
+                " {name}=mismatch({}_elements={} differing={} size_differing={} style_differing={} first={} incremental={:?} {name}={:?} last_size_diff={} incremental={:?} {name}={:?}",
+                name, reference.len(), diffs.len(), sized.len(), styled.len(), diffs[0], incremental.get(diffs[0]), reference.get(diffs[0]),
+                last_sized, incremental.get(last_sized), reference.get(last_sized)
+            ));
+            if let (Some(&i), Some(reference_doc)) = (styled.first(), reference_doc) {
+                let properties = differing_properties(doc, reference_doc, i);
+                line.push_str(&format!(" first_style_diff={i} properties={}", properties.len()));
+                for property in properties.iter().take(if verbose { usize::MAX } else { 5 }) {
+                    line.push_str(&format!(" [{property}]"));
+                }
+            }
+            line.push(')');
         }
         println!("{line}");
     };
