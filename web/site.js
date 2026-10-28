@@ -69,12 +69,14 @@
     };
   }
   function stages(c, cl) {
-    const spec = D.stages[cl.col.metric];
+    // A `relayout/<step>/` metric's stages carry the same prefix.
+    const metric = cl.col.metric, cut = metric.lastIndexOf("/") + 1;
+    const spec = D.stages[metric.slice(cut)];
     if (!spec) return [];
     const e = c.engines[cl.col.engine], row = e.samples[cl.sample];
     const parts = [];
     for (const [key, label] of spec) {
-      const k = e.metrics.indexOf(key);
+      const k = e.metrics.indexOf(metric.slice(0, cut) + key);
       if (k >= 0 && row[k] != null) parts.push([label, row[k]]);
     }
     const total = row[e.metrics.indexOf(cl.col.metric)];
