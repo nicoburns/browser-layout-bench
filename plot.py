@@ -59,9 +59,15 @@ def axis(max_value):
     return top, [i * step for i in range(int(round(top / step)) + 1)]
 
 
+def stage_spec(key):
+    """STAGES entry of `key`; a `relayout/<step>/` metric's stages carry the same prefix."""
+    prefix, _, metric = key.rpartition("/")
+    return [(f"{prefix}/{k}" if prefix else k, label) for k, label in STAGES.get(metric, [])]
+
+
 def stages(sample, key):
     """[(stage label, ms)] making up `sample[key]`, from the stages the sample records plus "other"."""
-    parts = [(label, sample[k] / 1e6) for k, label in STAGES.get(key, []) if sample.get(k) is not None]
+    parts = [(label, sample[k] / 1e6) for k, label in stage_spec(key) if sample.get(k) is not None]
     rest = sample[key] / 1e6 - sum(v for _, v in parts)
     if parts and rest > 1e-3:  # below 1 us it is floating-point residue, not a stage
         parts.append(("other", rest))
